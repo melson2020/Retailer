@@ -20,6 +20,13 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.melson</groupId>
+            <artifactId>base</artifactId>
+            <version>0.0.1-dev</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
