@@ -12,8 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {"com.melson"})
 @Configuration
 @EnableScheduling
-@EnableJpaRepositories(basePackages = {"com.melson.base.dao"})//jpa repositry 路径
-@EntityScan(basePackages = {"com.melson.base.entity"}) // 3. Entity 所在的包
+@EnableJpaRepositories(basePackages = {"com.melson.base.dao","com.melson.webserver.dao","com.melson.wechatmini.dao"})//jpa repositry 路径
+@EntityScan(basePackages = {"com.melson.base.entity","com.melson.webserver.entity","com.melson.wechatmini.entity"}) // 3. Entity 所在的包
 public class RetailerstarterApplication {
 
     public static void main(String[] args) {

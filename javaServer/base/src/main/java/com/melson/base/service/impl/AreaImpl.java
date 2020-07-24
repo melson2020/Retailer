@@ -4,6 +4,7 @@ import com.melson.base.AbstractService;
 import com.melson.base.dao.IAreaDao;
 import com.melson.base.entity.Area;
 import com.melson.base.service.IArea;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AreaImpl extends AbstractService<Area> implements IArea {
-   private final IAreaDao areaDao;
-
+    private final IAreaDao areaDao;
     public AreaImpl(IAreaDao areaDao) {
         this.areaDao = areaDao;
     }

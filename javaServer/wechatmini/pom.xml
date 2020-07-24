@@ -26,6 +26,17 @@
             <artifactId>base</artifactId>
             <version>0.0.1-dev</version>
         </dependency>
+        <!--小程序security 使用 2个-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>1.46</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

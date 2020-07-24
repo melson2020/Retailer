@@ -1,4 +1,4 @@
-package com.melson.wechatmini.resource;
+package com.melson.retailerstarter;
 
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
@@ -6,14 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by Nelson on 2020/7/20.
+ * @Author Nelson
+ * @Description
+ * @Date 2020/7/24
  */
 @RestController
-@RequestMapping("/testmini")
-public class test {
-    @RequiredPermission(SecurityLevel.Admin)
+@RequestMapping(value = "/test")
+public class testResoruce {
     @RequestMapping(value = "/hello")
     public String test(){
-        return "helloWorld from wechatmini";
+        return "helloWorld";
     }
 }

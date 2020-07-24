@@ -12,11 +12,12 @@ public class StoreEmployee {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     private String storeCode;
-    private String name;
+    private String userName;
+    private String userId;
     //1 男 2 女 0 未知
     private Integer gender;
     private String phone;
-    private String permission;
+    private Integer permission;
     private String loginName;
     private String password;
 
@@ -36,12 +37,12 @@ public class StoreEmployee {
         this.storeCode = storeCode;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Integer getGender() {
@@ -60,11 +61,19 @@ public class StoreEmployee {
         this.phone = phone;
     }
 
-    public String getPermission() {
+    public Integer getPermission() {
         return permission;
     }
 
-    public void setPermission(String permission) {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setPermission(Integer permission) {
         this.permission = permission;
     }
 
