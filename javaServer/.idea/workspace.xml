@@ -2,66 +2,22 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="starter:war exploded" />
+      <artifact name="retailer" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f439d9b-8b5e-4f97-81af-5ecf5851f4d7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_druid_1_1_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_druid_spring_boot_starter_1_1_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_fastjson_1_2_37.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_beanutils_commons_beanutils_1_8_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_14.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_collections_commons_collections_3_2_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_1_3_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_logging_commons_logging_1_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_servlet_javax_servlet_api_4_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_ehcache_ehcache_2_10_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_ezmorph_ezmorph_1_0_6.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_json_lib_json_lib_jdk15_2_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpasyncclient_4_1_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_5_12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_4_13.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_nio_4_4_13.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpmime_4_5_12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_bouncycastle_bcprov_jdk16_1_46.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_support_4_2_5_RELEASE.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/cache/CacheConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/cache/CacheKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/cache/CacheUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/interceptor/RequiredPermission.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/interceptor/SecurityInterceptor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/interceptor/SecurityLevel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/utils/EntityUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/utils/HttpClientUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/utils/JsonToObjectUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/utils/SpringContextUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/commandLineRunner/Cachelistener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/configuration/ConfigAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/configuration/WebMVCConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/testResoruce.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/starter/src/main/resources/ehcache.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wechatmini/src/main/java/com/melson/wechatmini/security/AES.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wechatmini/src/main/java/com/melson/wechatmini/security/WXCore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wechatmini/src/main/java/com/melson/wechatmini/security/WxPKCS7Encoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/retailer.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starter_war.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starter_war_exploded.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/src/main/java/com/melson/base/dao/IStoreEmployeeDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/dao/IStoreEmployeeDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/src/main/java/com/melson/base/entity/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/entity/Permission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/src/main/java/com/melson/base/entity/StoreEmployee.java" beforeDir="false" afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/entity/StoreEmployee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/src/main/java/com/melson/base/service/IStroeEmployee.java" beforeDir="false" afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/service/IStoreEmployee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/src/main/java/com/melson/base/service/impl/AreaImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/service/impl/AreaImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/src/main/java/com/melson/base/service/impl/StroeEmployeeImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/base/src/main/java/com/melson/base/service/impl/StroeEmployeeImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/base/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/javaServer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/javaServer.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/starter/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/starter/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/RetailerstarterApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/RetailerstarterApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/resource/starterResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/starter/src/main/resources/application-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/starter/src/main/resources/application-local.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webserver/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/webserver/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wechatmini/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/wechatmini/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wechatmini/src/main/java/com/melson/wechatmini/resource/City.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wechatmini/src/main/java/com/melson/wechatmini/resource/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/wechatmini/src/main/java/com/melson/wechatmini/resource/test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,6 +57,13 @@
     <option name="FILTER_DEBUG" value="true" />
     <option name="CUSTOM_FILTER" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
+      </MavenImportingSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="1ewGZcX2zG7YJWHMokReoAhSGyM" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -117,11 +80,11 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/base/src/main/java/com/melson/base/test" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="fileTemplates" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/starter/target" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.14749263" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/starter/src/main/java/com/melson/retailerstarter/dao" />
   </component>
   <component name="RecentsManager">
@@ -137,6 +100,7 @@
       <recent name="D:\Codes\Retailer\javaServer\starter\src\main\java\com\melson\retailerstarter\cache" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.melson.retailerstarter" />
       <recent name="com.melson.retailerstarter.commandLineRunner" />
       <recent name="com.melson.base.cache" />
       <recent name="com.melson.retailerstarter.configuration" />
@@ -146,7 +110,7 @@
       <recent name="com.melson.base.service.impl" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.RetailerstarterApplication">
+  <component name="RunManager" selected="Tomcat Server.tomcat9">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
@@ -174,13 +138,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StarterApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <module name="starter" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.melson.starter.StarterApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="TestNG">
       <option name="TEST_OBJECT" value="CLASS" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -191,12 +148,12 @@
       </method>
     </configuration>
     <configuration name="tomcat9" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat9" ALTERNATIVE_JRE_ENABLED="false">
-      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/starter_war" />
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/retailer" />
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
-        <artifact name="starter:war exploded">
+        <artifact name="retailer">
           <settings>
-            <option name="CONTEXT_PATH" value="/starter_war_exploded" />
+            <option name="CONTEXT_PATH" value="/retailer" />
           </settings>
         </artifact>
       </deployment>
@@ -260,7 +217,7 @@
       <method v="2">
         <option name="Make" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
-          <artifact name="starter:war exploded" />
+          <artifact name="retailer" />
         </option>
       </method>
     </configuration>
@@ -274,7 +231,6 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Spring Boot.StarterApplication" />
       <item itemvalue="Spring Boot.RetailerstarterApplication" />
       <item itemvalue="Tomcat Server.tomcat9" />
     </list>
@@ -283,7 +239,7 @@
     <option name="viewStates">
       <list>
         <serviceView>
-          <option name="contentProportion" value="0.15360697" />
+          <option name="contentProportion" value="0.07089552" />
           <treeState>
             <expand>
               <path>
@@ -293,7 +249,7 @@
               <path>
                 <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
                 <item name="Tomcat Server" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="Finished" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="Running" type="7427dc5b:ServiceModel$ServiceGroupNode" />
               </path>
             </expand>
             <select />
@@ -316,7 +272,8 @@
       <workItem from="1595292331127" duration="37000" />
       <workItem from="1595389344152" duration="2849000" />
       <workItem from="1595474694893" duration="14354000" />
-      <workItem from="1595553105673" duration="14780000" />
+      <workItem from="1595553105673" duration="21484000" />
+      <workItem from="1595810936781" duration="4511000" />
     </task>
     <servers />
   </component>
@@ -328,18 +285,18 @@
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="432" y="166" key="#Assign_Data_Sources/0.0.1680.1010@0.0.1680.1010" timestamp="1595484263298" />
-    <state x="588" y="310" key="#BuildArtifactsBeforeRunChooser" timestamp="1595230054151">
+    <state x="588" y="310" key="#BuildArtifactsBeforeRunChooser" timestamp="1595814757575">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="588" y="310" key="#BuildArtifactsBeforeRunChooser/0.0.1680.1010@0.0.1680.1010" timestamp="1595230054151" />
-    <state x="432" y="166" key="#Project_Structure" timestamp="1595227166490">
+    <state x="588" y="310" key="#BuildArtifactsBeforeRunChooser/0.0.1680.1010@0.0.1680.1010" timestamp="1595814757575" />
+    <state x="432" y="166" key="#Project_Structure" timestamp="1595814437286">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="432" y="166" key="#Project_Structure/0.0.1680.1010@0.0.1680.1010" timestamp="1595227166490" />
-    <state x="262" y="160" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595234100906">
+    <state x="432" y="166" key="#Project_Structure/0.0.1680.1010@0.0.1680.1010" timestamp="1595814437286" />
+    <state x="262" y="160" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595814859573">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="262" y="160" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1595234100906" />
+    <state x="262" y="160" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1595814859573" />
     <state x="645" y="198" key="#com.intellij.ide.util.MemberChooser" timestamp="1595571339184">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
@@ -364,94 +321,94 @@
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="92" y="92" width="1496" height="826" key="DiffContextDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1595489267330" />
-    <state x="498" y="235" key="FileChooserDialogImpl" timestamp="1595555485562">
+    <state x="498" y="235" key="FileChooserDialogImpl" timestamp="1595814780801">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="498" y="235" key="FileChooserDialogImpl/0.0.1680.1010@0.0.1680.1010" timestamp="1595555485562" />
-    <state width="1637" height="301" key="GridCell.Tab.0.bottom" timestamp="1595572181582">
+    <state x="498" y="235" key="FileChooserDialogImpl/0.0.1680.1010@0.0.1680.1010" timestamp="1595814780801" />
+    <state width="1493" height="377" key="GridCell.Tab.0.bottom" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1595399287124" />
-    <state width="1637" height="301" key="GridCell.Tab.0.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181582" />
-    <state width="1637" height="301" key="GridCell.Tab.0.center" timestamp="1595572181582">
+    <state width="1493" height="377" key="GridCell.Tab.0.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.0.center" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1595399287124" />
-    <state width="1637" height="301" key="GridCell.Tab.0.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181582" />
-    <state width="1637" height="301" key="GridCell.Tab.0.left" timestamp="1595572181582">
+    <state width="1493" height="377" key="GridCell.Tab.0.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.0.left" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1595399287124" />
-    <state width="1637" height="301" key="GridCell.Tab.0.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181582" />
-    <state width="1637" height="301" key="GridCell.Tab.0.right" timestamp="1595572181582">
+    <state width="1493" height="377" key="GridCell.Tab.0.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.0.right" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1595399287124" />
-    <state width="1637" height="301" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181582" />
-    <state width="1637" height="301" key="GridCell.Tab.1.bottom" timestamp="1595572181443">
+    <state width="1493" height="377" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.1.bottom" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.1.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181443" />
-    <state width="1637" height="301" key="GridCell.Tab.1.center" timestamp="1595572181443">
+    <state width="1493" height="377" key="GridCell.Tab.1.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.1.center" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.1.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181443" />
-    <state width="1637" height="301" key="GridCell.Tab.1.left" timestamp="1595572181443">
+    <state width="1493" height="377" key="GridCell.Tab.1.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.1.left" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.1.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181443" />
-    <state width="1637" height="301" key="GridCell.Tab.1.right" timestamp="1595572181443">
+    <state width="1493" height="377" key="GridCell.Tab.1.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.1.right" timestamp="1595815458554">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.1.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181443" />
-    <state width="1637" height="301" key="GridCell.Tab.2.bottom" timestamp="1595572181444">
+    <state width="1493" height="377" key="GridCell.Tab.1.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458554" />
+    <state width="1493" height="377" key="GridCell.Tab.2.bottom" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.2.bottom/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.2.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181444" />
-    <state width="1637" height="301" key="GridCell.Tab.2.center" timestamp="1595572181444">
+    <state width="1493" height="377" key="GridCell.Tab.2.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
+    <state width="1493" height="377" key="GridCell.Tab.2.center" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.2.center/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.2.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181444" />
-    <state width="1637" height="301" key="GridCell.Tab.2.left" timestamp="1595572181444">
+    <state width="1493" height="377" key="GridCell.Tab.2.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
+    <state width="1493" height="377" key="GridCell.Tab.2.left" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.2.left/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.2.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181444" />
-    <state width="1637" height="301" key="GridCell.Tab.2.right" timestamp="1595572181444">
+    <state width="1493" height="377" key="GridCell.Tab.2.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
+    <state width="1493" height="377" key="GridCell.Tab.2.right" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state width="1493" height="297" key="GridCell.Tab.2.right/0.0.1536.824@0.0.1536.824" timestamp="1595399287125" />
-    <state width="1637" height="301" key="GridCell.Tab.2.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595572181444" />
-    <state width="1360" height="135" key="GridCell.Tab.3.bottom" timestamp="1595237025758">
+    <state width="1493" height="377" key="GridCell.Tab.2.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
+    <state width="1493" height="377" key="GridCell.Tab.3.bottom" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1360" height="135" key="GridCell.Tab.3.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595237025758" />
-    <state width="1360" height="135" key="GridCell.Tab.3.center" timestamp="1595237025758">
+    <state width="1493" height="377" key="GridCell.Tab.3.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
+    <state width="1493" height="377" key="GridCell.Tab.3.center" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1360" height="135" key="GridCell.Tab.3.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595237025758" />
-    <state width="1360" height="135" key="GridCell.Tab.3.left" timestamp="1595237025758">
+    <state width="1493" height="377" key="GridCell.Tab.3.center/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
+    <state width="1493" height="377" key="GridCell.Tab.3.left" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1360" height="135" key="GridCell.Tab.3.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595237025758" />
-    <state width="1360" height="135" key="GridCell.Tab.3.right" timestamp="1595237025758">
+    <state width="1493" height="377" key="GridCell.Tab.3.left/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
+    <state width="1493" height="377" key="GridCell.Tab.3.right" timestamp="1595815458555">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1360" height="135" key="GridCell.Tab.3.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595237025758" />
+    <state width="1493" height="377" key="GridCell.Tab.3.right/0.0.1680.1010@0.0.1680.1010" timestamp="1595815458555" />
     <state x="370" y="163" key="Maven.ArtifactSearchDialog" timestamp="1595496143692">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="370" y="163" key="Maven.ArtifactSearchDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1595496143692" />
-    <state x="231" y="246" key="SettingsEditor" timestamp="1595558667447">
+    <state x="365" y="165" key="SettingsEditor" timestamp="1595814807235">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="231" y="246" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1595558667447" />
+    <state x="365" y="165" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1595814807235" />
     <state x="532" y="332" key="com.intellij.ide.util.TipDialog" timestamp="1595292333556">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
