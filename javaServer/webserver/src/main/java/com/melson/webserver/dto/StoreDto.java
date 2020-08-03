@@ -1,17 +1,13 @@
-package com.melson.base.entity;
+package com.melson.webserver.dto;
 
-import javax.persistence.*;
+import com.melson.base.entity.Store;
 
 /**
- * Created by Nelson on 2020/7/23.
- * 商户表
+ * @Author Nelson
+ * @Description
+ * @Date 2020/8/3
  */
-@Entity
-@Table(name = "store")
-public class Store {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+public class StoreDto {
     private String storeName;
     private String location;
     private String provinceCode;
@@ -23,16 +19,8 @@ public class Store {
     private String phone;
     private String communicateName;
     private String description;
-    //商家编码
-    private String code;
+    private String password;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getStoreName() {
         return storeName;
@@ -122,11 +110,26 @@ public class Store {
         this.description = description;
     }
 
-    public String getCode() {
-        return code;
+    public String getPassword() {
+        return password;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public Store GenerateStore(){
+        Store store=new Store();
+        store.setStoreName(this.storeName);
+        store.setLocation(this.location);
+        store.setProvinceCode(this.provinceCode);
+        store.setProvinceName(this.provinceName);
+        store.setCityCode(this.cityCode);
+        store.setCityName(this.cityName);
+        store.setAreaCode(this.areaCode);
+        store.setAreaName(this.areaName);
+        store.setPhone(this.phone);
+        store.setCommunicateName(this.communicateName);
+        store.setDescription(this.description);
+        return store;
     }
 }

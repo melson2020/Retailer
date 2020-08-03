@@ -5,7 +5,12 @@
         <i class="el-icon-back back-icon" @click="backClick"></i>
         <span class="title">商户注册</span>
       </div>
-      <el-form ref="store" :model="store" label-width="100px" :rules="rules">
+      <el-form
+        ref="storeForm"
+        :model="store"
+        label-width="100px"
+        :rules="rules"
+      >
         <el-form-item label="商户名称" prop="storeName">
           <el-input v-model="store.storeName"></el-input>
         </el-form-item>
@@ -13,7 +18,7 @@
           <div class="row-between">
             <el-select
               placeholder="省"
-              v-model="store.province"
+              v-model="store.provinceCode"
               @change="provinceChanged"
             >
               <el-option
@@ -26,7 +31,7 @@
             <el-select
               placeholder="市"
               :disabled="showCity"
-              v-model="store.city"
+              v-model="store.cityCode"
               @change="cityChanged"
             >
               <el-option
@@ -39,7 +44,7 @@
             <el-select
               placeholder="区"
               :disabled="showArea"
-              v-model="store.area"
+              v-model="store.areaCode"
               @change="areaChanged"
             >
               <el-option
@@ -71,15 +76,36 @@
             v-model="store.phone"
           ></el-input>
         </el-form-item>
-        <el-form-item label="验证码">
-          <div class="row-between">
-            <el-input placeholder="验证码"></el-input>
-            <el-input placeholder="验证码"></el-input>
-            <el-input placeholder="验证码"></el-input>
-          </div>
+        <el-form-item label="登录密码" prop="password">
+          <el-input
+            type="password"
+            v-model="store.password"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="再次输入密码" prop="checkpassword">
+          <el-input
+            type="password"
+            v-model="store.checkpassword"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input
+            rows="3"
+            type="textarea"
+            maxlength="200"
+            show-word-limit
+            v-model="store.description"
+          ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="register-button">注册</el-button>
+          <el-button
+            type="primary"
+            class="register-button"
+            @click="onSubmit('storeForm')"
+            >注册</el-button
+          >
         </el-form-item>
       </el-form>
     </el-card>
@@ -91,20 +117,59 @@ import { mapGetters } from "vuex";
 
 export default {
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.checkpassword !== "") {
+          this.$refs.storeForm.validateField("checkpassword");
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.store.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    var validatePhone = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入联系电话"));
+      } else {
+        let phoneNumber = { phoneNumber: value };
+        this.CheckPhone(phoneNumber)
+          .then(res => {
+            if (res.data) {
+              callback();
+            } else {
+              callback(new Error("该号码已存在"));
+            }
+          })
+          .catch(error => {
+            this.$message.error(error.message);
+          });
+      }
+    };
     return {
       store: {
         storeName: "",
         location: "",
-        province: "",
-        city: "",
-        area: "",
+        provinceCode: "",
+        provinceName: "",
+        cityCode: "",
+        cityName: "",
+        areaCode: "",
+        areaName: "",
         communicateName: "",
         phone: "",
-        descrition: ""
+        password: "",
+        checkpassword: "",
+        description: ""
       },
-      provinceName: "",
-      cityName: "",
-      areaName: "",
       loginBackground: {
         backgroundImage:
           "url(" + require("../assets/login-background.png") + ")",
@@ -122,41 +187,48 @@ export default {
         ],
         phone: [
           {
-            required: true,
-            message: "请填写联系电话",
+            validator: validatePhone,
             trigger: "blur"
           }
-        ]
+        ],
+        password: [{ validator: validatePass, trigger: "blur" }],
+        checkpassword: [{ validator: validatePass2, trigger: "blur" }]
       }
     };
   },
   computed: {
-    ...mapGetters(["errorMessage", "provinceList", "cityList", "areaList"]),
+    ...mapGetters(["alterMessage", "provinceList", "cityList", "areaList"]),
     showCity: function() {
       return (
-        typeof this.store.province == "undefined" ||
-        this.store.province == null ||
-        this.store.province == ""
+        typeof this.store.provinceCode == "undefined" ||
+        this.store.provinceCode == null ||
+        this.store.provinceCode == ""
       );
     },
     showArea: function() {
       return (
-        typeof this.store.city === "undefined" ||
-        this.store.city == null ||
-        this.store.city == ""
+        typeof this.store.cityCode === "undefined" ||
+        this.store.cityCode == null ||
+        this.store.cityCode == ""
       );
     },
     address: function() {
       return (
-        this.provinceName + this.cityName + this.areaName + this.store.location
+        this.store.provinceName +
+        this.store.cityName +
+        this.store.areaName +
+        this.store.location
       );
     }
   },
   watch: {
     // 如果 `errorMessage` 发生改变，这个函数就会运行
-    errorMessage: function() {
-      if (this.errorMessage.show) {
-        this.$message.error(this.errorMessage.message);
+    alterMessage: function() {
+      if (this.alterMessage.show) {
+        this.$message({
+          message: this.alterMessage.message,
+          type: this.alterMessage.type
+        });
       }
     }
   },
@@ -164,10 +236,19 @@ export default {
     ...mapActions({
       GetProvinceList: "GetProvinceList",
       GetCityList: "GetCityWithCode",
-      GetAreaList: "GetAreaWithCode"
+      GetAreaList: "GetAreaWithCode",
+      RegisterStore: "RegisterStore",
+      CheckPhone: "CheckPhone"
     }),
-    onSubmit() {
-      console.log("submit!");
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.RegisterStore(this.store);
+        } else {
+          this.$message.warning("请填写准确信息");
+          return false;
+        }
+      });
     },
 
     backClick: function() {
@@ -178,7 +259,7 @@ export default {
       let provinceName = this.provinceList.find(province => {
         return province.code == item;
       }).name;
-      this.provinceName = provinceName;
+      this.store.provinceName = provinceName;
       this.GetCityList(privinceCode);
     },
     cityChanged: function(item) {
@@ -186,11 +267,11 @@ export default {
       let cityName = this.cityList.find(city => {
         return city.code == item;
       }).name;
-      this.cityName = cityName;
+      this.store.cityName = cityName;
       this.GetAreaList(cityCode);
     },
     areaChanged: function(item) {
-      this.areaName = this.areaList.find(area => {
+      this.store.areaName = this.areaList.find(area => {
         return area.code == item;
       }).name;
     }

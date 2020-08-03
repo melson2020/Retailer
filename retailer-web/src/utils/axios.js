@@ -4,7 +4,7 @@ import { Message } from "element-ui";
 axios.defaults.timeout = 10000;
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded;charset=UTF-8";
-axios.defaults.baseURL = "http://localhost:8080/retailer";
+axios.defaults.baseURL = "/api";
 
 //请求拦截器
 axios.interceptors.request.use(
@@ -37,7 +37,6 @@ axios.interceptors.response.use(
   // 服务器状态码不是200的情况
   error => {
     let errorStatus = error.response ? error.response.status : undefined;
-    console.log(errorStatus);
     if (errorStatus) {
       switch (errorStatus) {
         // 401: 未登录

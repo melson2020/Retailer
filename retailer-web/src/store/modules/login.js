@@ -7,7 +7,7 @@ const state = {
   provinceList: [],
   cityList: [],
   areaList: [],
-  errorMessage: { show: false, message: "" }
+  alterMessage: { show: false, type: "info", message: "" }
 };
 
 const actions = {
@@ -22,7 +22,11 @@ const actions = {
           commit("SetProvinceList", res.data);
         })
         .catch(error => {
-          commit("SetErrorMessage", { show: true, message: error.message });
+          commit("SetMessage", {
+            show: true,
+            type: "error",
+            message: error.message
+          });
         });
     }
   },
@@ -36,7 +40,11 @@ const actions = {
         commit("SetCityList", res.data);
       })
       .catch(error => {
-        commit("SetErrorMessage", { show: true, message: error.message });
+        commit("SetMessage", {
+          show: true,
+          type: "error",
+          message: error.message
+        });
       });
   },
   /**
@@ -50,21 +58,55 @@ const actions = {
         commit("SetAreaList", res.data);
       })
       .catch(error => {
-        commit("SetErrorMessage", { show: true, message: error.message });
+        commit("SetMessage", {
+          show: true,
+          type: "error",
+          message: error.message
+        });
       });
+  },
+  /**
+   * 注册商户
+   * @param {*} store 商户信息
+   */
+  RegisterStore({ commit }, store) {
+    request
+      .RegisterStore(store)
+      .then(res => {
+        let alter = { show: true, type: "", message: "" };
+        if (res.resultStatus == 1) {
+          alter.type = "success";
+          alter.message = "创建成功！";
+        } else {
+          alter.type = "warning";
+          alter.message = "创建失败！";
+        }
+        commit("SetMessage", alter);
+      })
+      .catch(error => {
+        commit("SetMessage", {
+          show: true,
+          type: "error",
+          message: error.message
+        });
+      });
+  },
+  // eslint-disable-next-line no-empty-pattern
+  CheckPhone({}, phoneNumber) {
+    return request.CheckPhone(phoneNumber);
   }
 };
 
 const getters = {
-  errorMessage: state => state.errorMessage,
+  alterMessage: state => state.alterMessage,
   provinceList: state => state.provinceList,
   cityList: state => state.cityList,
   areaList: state => state.areaList
 };
 
 const mutations = {
-  SetErrorMessage(state, data) {
-    state.errorMessage = data;
+  SetMessage(state, data) {
+    state.alterMessage = data;
   },
   SetProvinceList(state, data) {
     state.provinceList = data;
