@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="retailer">
-    <output-path>$PROJECT_DIR$/starter/target</output-path>
-    <root id="archive" name="retailer.war" />
-  </artifact>
-</component>

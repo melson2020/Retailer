@@ -13,10 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 /**
  * Created by Nelson on 2020/6/5.
  */
-@Configuration
-@EnableScheduling
-@EnableJpaRepositories(basePackages = {"com.melson.base.dao","com.melson.webserver.dao","com.melson.wechatmini.dao"})//jpa repositry 路径
-@EntityScan(basePackages = {"com.melson.base.entity","com.melson.webserver.entity","com.melson.wechatmini.entity"}) // 3. Entity 所在的包
+
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface ICity extends IService<City> {
     List<City> findAll();
+    List<City> findWithProvinceCode(String code);
 }

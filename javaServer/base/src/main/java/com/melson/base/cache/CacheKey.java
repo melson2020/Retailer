@@ -10,5 +10,8 @@ public final class CacheKey {
     public static String DicCaching = "Dictionary";
 
     public static String StoreEmployee="StoreEmployee";
+    public static String Province="Province";
+    public static String City="City";
+    public static String Area="Area";
 
 }
