@@ -1,5 +1,7 @@
 package com.melson.wechatmini.resource;
 
+import com.melson.base.interceptor.RequiredPermission;
+import com.melson.base.interceptor.SecurityLevel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/testmini")
 public class test {
+    @RequiredPermission(SecurityLevel.Admin)
     @RequestMapping(value = "/hello")
     public String test(){
         return "helloWorld from wechatmini";

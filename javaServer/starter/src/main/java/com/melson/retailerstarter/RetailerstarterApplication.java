@@ -6,12 +6,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.melson"})
 @Configuration
 @EnableScheduling
-@ComponentScan(basePackages = { "com.melson.webserver","com.melson.wechatmini","com.melson.retailerstarter"})
+@EnableJpaRepositories(basePackages = {"com.melson.base.dao","com.melson.webserver.dao","com.melson.wechatmini.dao"})//jpa repositry 路径
+@EntityScan(basePackages = {"com.melson.base.entity","com.melson.webserver.entity","com.melson.wechatmini.entity"}) // 3. Entity 所在的包
 public class RetailerstarterApplication {
 
     public static void main(String[] args) {
