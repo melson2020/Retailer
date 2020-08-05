@@ -44,6 +44,7 @@ public class PublicResource extends BaseResource {
         List<Province> provinceList=provinceService.findAllFromCache();
         Result result = new Result();
         result.setData(provinceList);
+        System.out.println("GET Rest Call: /public/provinceList ...");
         return result;
     }
 
@@ -53,6 +54,7 @@ public class PublicResource extends BaseResource {
         List<City> cityList=cityService.findWithProvinceCode(code);
         Result result = new Result();
         result.setData(cityList);
+        System.out.println("GET Rest Call: /public/cityList ...");
         return result;
     }
 
@@ -62,6 +64,7 @@ public class PublicResource extends BaseResource {
         List<Area> areaList=areaService.findWithCityCode(code);
         Result result = new Result();
         result.setData(areaList);
+        System.out.println("GET Rest Call: /public/areaList ...");
         return result;
     }
 
@@ -72,6 +75,7 @@ public class PublicResource extends BaseResource {
        boolean successed=storeService.RegisterStore(store,storeDto.getPassword());
        int res=successed?1:2;
        result.setResultStatus(res);
+       System.out.println("POST Rest Call: /public/registerStore ...");
        return  result;
     }
 
@@ -81,6 +85,7 @@ public class PublicResource extends BaseResource {
         boolean exist=storeService.CheckPhone(phoneNum);
         Result result=new Result();
         result.setData(exist);
+        System.out.println("Rest Call: /public/phoneCheck ...");
         return result;
     }
 }
