@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by Nelson on 2020/7/23.
  */
 @Entity
-@Table(name="employeePermission")
+@Table(name="employee_permission")
 public class EmployeePermission {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

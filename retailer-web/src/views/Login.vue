@@ -5,21 +5,32 @@
         <span class="title">欢迎登陆</span>
       </div>
       <div class="card-content">
-        <el-form label-width="80px" :model="formLabelAlign">
-          <el-form-item label="用户名称">
+        <el-form
+          ref="loginForm"
+          label-width="80px"
+          :model="loginUser"
+          :rules="rules"
+        >
+          <el-form-item label="用户名称" prop="loginName">
             <el-input
               placeholder="注册手机号"
-              v-model="formLabelAlign.name"
+              v-model="loginUser.loginName"
             ></el-input>
           </el-form-item>
-          <el-form-item label="用户密码">
+          <el-form-item label="用户密码" prop="password">
             <el-input
+              type="password"
               placeholder="用户密码"
-              v-model="formLabelAlign.region"
+              v-model="loginUser.password"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button class="login-button" type="primary">登陆</el-button>
+            <el-button
+              class="login-button"
+              type="primary"
+              @click="userLogin('loginForm')"
+              >登陆</el-button
+            >
           </el-form-item>
         </el-form>
         <router-link to="/register">注册商户</router-link>
@@ -29,20 +40,53 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      formLabelAlign: {
-        name: "",
-        region: "",
-        type: ""
+      loginUser: {
+        loginName: "",
+        password: ""
       },
       loginBackground: {
         backgroundImage:
           "url(" + require("../assets/login-background.png") + ")",
         backgroundRepeat: "no-repeat"
+      },
+      rules: {
+        loginName: [{ required: true, message: "请输入账户", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
+  },
+  methods: {
+    ...mapActions({
+      UserLogin: "UserLogin",
+      SetLoginStatus: "SetLoginStatus"
+    }),
+    userLogin(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.UserLogin(this.loginUser)
+            .then(res => {
+              if (res.data) {
+                localStorage.setItem("userInfo", res.data);
+                this.SetLoginStatus(res.data);
+                this.$router.push({ path: "/main" });
+              } else {
+                this.$message.error("账户密码不正确");
+              }
+            })
+            .catch(error => {
+              let messageStr = error.message ? error.message : error;
+              this.$message.error(messageStr);
+            });
+        } else {
+          this.$message.warning("请填写准确信息");
+          return false;
+        }
+      });
+    }
   }
 };
 </script>

@@ -27,13 +27,20 @@ export default {
    * @param {*} params 商户信息
    */
   RegisterStore(params) {
-    return service.post("/public/registerStore", params);
+    return service.post("/system/registerStore", params);
   },
   /**
    * 检测联系电话是否重复
    * @param {*} params 联系电话
    */
   CheckPhone(params) {
-    return service.get("/public/phoneCheck", params);
+    return service.get("/system/phoneCheck", params);
+  },
+  /**
+   * 用户登录
+   * @param {*} params
+   */
+  UserLogin(params) {
+    return service.post("/system/login", params);
   }
 };

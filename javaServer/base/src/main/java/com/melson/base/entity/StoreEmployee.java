@@ -1,12 +1,14 @@
 package com.melson.base.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nelson on 2020/7/23.
  */
 @Entity
-@Table(name = "storeEmployee")
+@Table(name = "store_employee")
 public class StoreEmployee {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -20,6 +22,16 @@ public class StoreEmployee {
     private Integer permission;
     private String loginName;
     private String password;
+    @Transient
+    private List menuList;
+
+    public List getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List menuList) {
+        this.menuList = menuList;
+    }
 
     public Integer getId() {
         return id;
