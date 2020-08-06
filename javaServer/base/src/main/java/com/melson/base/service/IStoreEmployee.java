@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface IStoreEmployee extends IService<StoreEmployee> {
     List<StoreEmployee> findAll();
+    StoreEmployee Login(StoreEmployee employee);
 }

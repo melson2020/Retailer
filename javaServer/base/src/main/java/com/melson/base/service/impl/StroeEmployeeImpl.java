@@ -4,6 +4,7 @@ import com.melson.base.AbstractService;
 import com.melson.base.dao.IStoreEmployeeDao;
 import com.melson.base.entity.StoreEmployee;
 import com.melson.base.service.IStoreEmployee;
+import com.melson.base.utils.MD5Util;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,12 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
     @Override
     public List<StoreEmployee> findAll() {
         return storeEmployeeDao.findAll();
+    }
+
+    @Override
+    public StoreEmployee Login(StoreEmployee employee) {
+        String md5Pass= MD5Util.string2MD5(employee.getPassword());
+        StoreEmployee existEmployee=storeEmployeeDao.findByLoginNameAndPassword(employee.getLoginName(),md5Pass);
+        return existEmployee;
     }
 }

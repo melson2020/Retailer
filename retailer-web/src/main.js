@@ -13,7 +13,16 @@ import {
   Select,
   Icon,
   Message,
-  Option
+  Option,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Footer,
+  Menu,
+  Submenu,
+  MenuItem,
+  MenuItemGroup
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -32,6 +41,15 @@ Vue.use(Select);
 Vue.use(Icon);
 Vue.use(Message);
 Vue.use(Option);
+Vue.use(Container);
+Vue.use(Header);
+Vue.use(Aside);
+Vue.use(Main);
+Vue.use(Footer);
+Vue.use(Menu);
+Vue.use(Submenu);
+Vue.use(MenuItem);
+Vue.use(MenuItemGroup);
 
 new Vue({
   router,

@@ -7,6 +7,8 @@ const state = {
   provinceList: [],
   cityList: [],
   areaList: [],
+  loginStatus: false,
+  userInfo: {},
   alterMessage: { show: false, type: "info", message: "" }
 };
 
@@ -94,6 +96,15 @@ const actions = {
   // eslint-disable-next-line no-empty-pattern
   CheckPhone({}, phoneNumber) {
     return request.CheckPhone(phoneNumber);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  UserLogin({}, user) {
+    return request.UserLogin(user);
+  },
+  SetLoginStatus({ commit }, user) {
+    let loginStatus = true;
+    commit("SetLoginStatus", loginStatus);
+    commit("SetUserInfo", user);
   }
 };
 
@@ -101,7 +112,8 @@ const getters = {
   alterMessage: state => state.alterMessage,
   provinceList: state => state.provinceList,
   cityList: state => state.cityList,
-  areaList: state => state.areaList
+  areaList: state => state.areaList,
+  userInfo: state => state.userInfo
 };
 
 const mutations = {
@@ -116,6 +128,12 @@ const mutations = {
   },
   SetAreaList(state, data) {
     state.areaList = data;
+  },
+  SetLoginStatus(state, data) {
+    state.loginStatus = data;
+  },
+  SetUserInfo(state, data) {
+    state.userInfo = data;
   }
 };
 

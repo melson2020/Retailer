@@ -42,11 +42,7 @@ public class StoreImpl extends AbstractService<Store> implements IStore {
         Store saved=storeDao.save(store);
         if(saved!=null){
            StoreEmployee employee=GenerateAdminUserForStore(saved,password);
-           if(storeEmployeeDao.save(employee)!=null){
-               return true;
-           }else {
-               return false;
-           }
+           return storeEmployeeDao.save(employee)!=null;
         }else {
             return false;
         }
