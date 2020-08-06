@@ -2,53 +2,33 @@
   <el-container class="container">
     <el-aside width="auto">
       <el-menu
-        default-active="0"
+        default-active="1-1"
         class="el-menu-vertical"
         background-color="#2c61b1"
         text-color="#fff"
+        router
         active-text-color="#ffd04b"
         :collapse="isCollapse"
       >
-        <el-submenu
-          v-for="menu in userInfo.menuList"
-          :key="menu.id"
-          :index="menu.index"
-        >
-          <template slot="title">
+        <template v-for="menu in userInfo.menuList">
+          <el-submenu v-if="menu.subs === 1" :key="menu.id" :index="menu.index">
+            <template slot="title">
+              <i :class="'el-icon-' + menu.icon"></i>
+              <span>{{ menu.name }}</span>
+            </template>
+            <el-menu-item
+              class="el-submenu-item"
+              v-for="subMenu in menu.subMenus"
+              :index="subMenu.index"
+              :key="subMenu.id"
+              >{{ subMenu.name }}</el-menu-item
+            >
+          </el-submenu>
+          <el-menu-item v-else :index="menu.index" :key="menu.id">
             <i :class="'el-icon-' + menu.icon"></i>
-            <span>{{ menu.name }}</span>
-          </template>
-          <el-menu-item
-            class="el-submenu-item"
-            v-for="subMenu in menu.subMenus"
-            :index="subMenu.index"
-            :key="subMenu.id"
-            >{{ subMenu.name }}</el-menu-item
-          >
-        </el-submenu>
-
-        <!-- <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>导航一</span>
-          </template>
-          <el-menu-item class="el-submenu-item" index="1-1">选项1</el-menu-item>
-          <el-menu-item class="el-submenu-item" index="1-2">选项2</el-menu-item>
-          <el-menu-item class="el-submenu-item" index="1-3">选项3</el-menu-item>
-          <el-menu-item class="el-submenu-item" index="1-4">选项4</el-menu-item>
-        </el-submenu>
-        <el-menu-item index="2">
-          <i class="el-icon-menu"></i>
-          <span slot="title">导航二</span>
-        </el-menu-item>
-        <el-menu-item index="3">
-          <i class="el-icon-document"></i>
-          <span slot="title">导航三</span>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <i class="el-icon-setting"></i>
-          <span slot="title">导航四</span>
-        </el-menu-item>-->
+            <span slot="title">{{ menu.name }}</span>
+          </el-menu-item>
+        </template>
       </el-menu>
     </el-aside>
     <el-container>
@@ -64,12 +44,15 @@
           <i class="el-icon-user icon icon-right"></i>
         </div>
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view />
+      </el-main>
     </el-container>
   </el-container>
 </template>
 <script>
 import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -81,9 +64,18 @@ export default {
     ...mapGetters(["userInfo"])
   },
   methods: {
+    ...mapActions({
+      SetLoginStatus: "SetLoginStatus"
+    }),
     menuCollapseChange() {
       this.isCollapse = !this.isCollapse;
       this.menuArrow = this.isCollapse ? "el-icon-s-unfold" : "el-icon-s-fold";
+    }
+  },
+  beforeMount: function() {
+    let userInfo = localStorage.getItem("userInfo");
+    if (userInfo) {
+      this.SetLoginStatus(JSON.parse(userInfo));
     }
   }
 };

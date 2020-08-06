@@ -16,7 +16,6 @@ public class SubMenu {
     private String name;
     private String index;
     private String icon;
-    private String path;
     private Integer permission;
 
     public Integer getId() {
@@ -49,14 +48,6 @@ public class SubMenu {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public Integer getPermission() {

@@ -70,7 +70,7 @@ export default {
           this.UserLogin(this.loginUser)
             .then(res => {
               if (res.data) {
-                localStorage.setItem("userInfo", res.data);
+                localStorage.setItem("userInfo", JSON.stringify(res.data));
                 this.SetLoginStatus(res.data);
                 this.$router.push({ path: "/main" });
               } else {

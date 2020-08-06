@@ -17,7 +17,6 @@ public class Menu {
     private String name;
     private Integer subs;
     private String icon;
-    private String path;
     private String index;
 
     public String getIndex() {
@@ -71,14 +70,6 @@ public class Menu {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public Integer getPermission() {
