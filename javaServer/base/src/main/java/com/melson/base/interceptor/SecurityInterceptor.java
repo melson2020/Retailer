@@ -12,6 +12,7 @@ import com.melson.base.cache.CacheUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
 import java.util.Map;
 
 /**
@@ -25,7 +26,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
     @Override
     // 在目标方法执行前执行
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token=request.getParameter("token");
+        String token=request.getHeader("token");
         // 验证权限
         if (this.hasPermission(handler,token)) {
             return true;

@@ -9,4 +9,5 @@ import com.melson.base.entity.Store;
 public interface IStore extends IService<Store> {
     boolean RegisterStore(Store store,String password);
     boolean CheckPhone(String phone);
+    Store findByCode(String code);
 }

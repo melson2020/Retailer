@@ -9,7 +9,9 @@ import com.melson.base.interceptor.SecurityLevel;
 import com.melson.base.service.IStoreEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,20 @@ public class EmployeeResource extends BaseResource {
         List<StoreEmployee> employeeList=employeeService.findByStoreCode(storeCode);
         Result result=new Result();
         result.setData(employeeList);
+        return result;
+    }
+
+    @RequestMapping(value = "/createEmployee",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result CreateEmployee(@RequestBody StoreEmployee employee){
+        Result result=new Result();
+        StoreEmployee saved=employeeService.CreateEmployee(employee);
+        if(saved==null){
+            result.setResultStatus(-1);
+            result.setMessage("create fail");
+        }else {
+            result.setData(saved);
+        }
         return result;
     }
 }

@@ -26,7 +26,8 @@ import {
   Row,
   Col,
   Table,
-  TableColumn
+  TableColumn,
+  Dialog
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -58,6 +59,7 @@ Vue.use(Row);
 Vue.use(Col);
 Vue.use(Table);
 Vue.use(TableColumn);
+Vue.use(Dialog);
 
 new Vue({
   router,

@@ -24,6 +24,8 @@ public class StoreEmployee {
     private String password;
     @Transient
     private List menuList;
+    @Transient
+    private Store store;
 
     public List getMenuList() {
         return menuList;
@@ -35,6 +37,14 @@ public class StoreEmployee {
 
     public Integer getId() {
         return id;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public void setId(Integer id) {

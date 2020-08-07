@@ -33,13 +33,24 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
 
     @Override
     public StoreEmployee Login(StoreEmployee employee) {
-        String md5Pass= MD5Util.string2MD5(employee.getPassword());
-        StoreEmployee existEmployee=storeEmployeeDao.findByLoginNameAndPassword(employee.getLoginName(),md5Pass);
+        String md5Pass = MD5Util.string2MD5(employee.getPassword());
+        StoreEmployee existEmployee = storeEmployeeDao.findByLoginNameAndPassword(employee.getLoginName(), md5Pass);
         return existEmployee;
     }
 
     @Override
     public List<StoreEmployee> findByStoreCode(String stroeCode) {
         return storeEmployeeDao.findAllByStoreCode(stroeCode);
+    }
+
+    @Override
+    public StoreEmployee CreateEmployee(StoreEmployee employee) {
+        String md5Pass = MD5Util.string2MD5(employee.getPassword());
+        employee.setPassword(md5Pass);
+        if(employee.getPermission()==null){
+            employee.setPermission(1);
+        }
+        StoreEmployee saved = storeEmployeeDao.save(employee);
+        return saved;
     }
 }

@@ -54,6 +54,11 @@ public class StoreImpl extends AbstractService<Store> implements IStore {
          return StringUtils.isEmpty(phoneNum);
     }
 
+    @Override
+    public Store findByCode(String code) {
+        return storeDao.findByCode(code);
+    }
+
     private StoreEmployee GenerateAdminUserForStore(Store store,String password){
         StoreEmployee employee=new StoreEmployee();
         employee.setStoreCode(store.getCode());

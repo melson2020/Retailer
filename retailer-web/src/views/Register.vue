@@ -121,7 +121,7 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (this.checkpassword !== "") {
+        if (this.store.checkpassword !== "") {
           this.$refs.storeForm.validateField("checkpassword");
         }
         callback();

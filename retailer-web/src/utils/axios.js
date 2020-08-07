@@ -9,9 +9,9 @@ axios.defaults.baseURL = "/api";
 //请求拦截器
 axios.interceptors.request.use(
   config => {
-    if (config.method === "post") {
-      var token = localStorage.getItem(" token ");
-      config.headers.Authorization = token;
+    var token = JSON.parse(localStorage.getItem("userInfo")).userId;
+    if (token) {
+      config.headers.token = token;
     }
     return config;
   },

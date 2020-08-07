@@ -62,6 +62,8 @@ public class SystemResource extends BaseResource {
         if(exist!=null) {
             List<Menu> menuList = menuService.GetMenuListWithPermission(exist.getPermission());
             exist.setMenuList(menuList);
+            Store store=storeService.findByCode(exist.getStoreCode());
+            exist.setStore(store);
         }
         result.setData(exist);
         return result;

@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface IStoreDao extends JpaRepository<Store,String> {
     @Query("select phone from Store where phone=?1")
     String findByPhone(String phone);
+    Store findByCode(String code);
 }
