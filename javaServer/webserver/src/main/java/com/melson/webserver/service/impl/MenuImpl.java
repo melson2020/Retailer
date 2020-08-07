@@ -62,7 +62,7 @@ public class MenuImpl extends AbstractService<Menu> implements IMenu {
         }
         for (Menu menu : menuList) {
             List<Integer> subMenuIds = menuToSubMenuMap.get(menu.getId());
-            if (subMenuIds != null & subMenuIds.size() > 1) {
+            if (subMenuIds != null & subMenuIds.size() > 0) {
                 List<SubMenu> subMenus = new ArrayList<>();
                 for(Integer subMenuId:subMenuIds){
                     SubMenu subMenu=subMenuMap.get(subMenuId);

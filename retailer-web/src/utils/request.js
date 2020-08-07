@@ -42,5 +42,8 @@ export default {
    */
   UserLogin(params) {
     return service.post("/system/login", params);
+  },
+  GetStoreEmployeeList(params) {
+    return service.get("/employee/employeeList", params);
   }
 };

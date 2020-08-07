@@ -53,6 +53,9 @@ public class BaseResource {
                 result.setResultStatus(-1);
                 result.setMessage("Exception Catched");
                 break;
+            case ParametersNeeded:
+                result.setResultStatus(-1);
+                result.setMessage("Params Needed");
             default:
                 break;
         }

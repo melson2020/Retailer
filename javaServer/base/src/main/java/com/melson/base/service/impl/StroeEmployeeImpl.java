@@ -37,4 +37,9 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
         StoreEmployee existEmployee=storeEmployeeDao.findByLoginNameAndPassword(employee.getLoginName(),md5Pass);
         return existEmployee;
     }
+
+    @Override
+    public List<StoreEmployee> findByStoreCode(String stroeCode) {
+        return storeEmployeeDao.findAllByStoreCode(stroeCode);
+    }
 }

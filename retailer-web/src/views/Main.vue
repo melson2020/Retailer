@@ -101,9 +101,8 @@ export default {
   color: #ffd04b !important;
 }
 
-.el-header,
-.el-footer {
-  color: #333;
+.el-header {
+  border-bottom: rgb(224, 222, 222) solid 0.1px;
   padding: 0;
   margin: 0;
 }
@@ -114,10 +113,9 @@ export default {
 }
 
 .el-main {
-  background-color: #e9eef3;
-  color: #333;
+  background-color: white;
   text-align: center;
-  line-height: 160px;
+  padding: 12px;
 }
 
 .container {

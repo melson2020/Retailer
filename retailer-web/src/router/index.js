@@ -4,9 +4,10 @@ import VueRouter from "vue-router";
 const Login = () => import("../views/Login.vue");
 const Register = () => import("../views/Register.vue");
 const Main = () => import("../views/Main.vue");
-const Supply = () => import("../views/Supply.vue");
-const Product = () => import("../views/Product.vue");
 const Error = () => import("../views/404.vue");
+const Supply = () => import("../views/dicts/Supply.vue");
+const Product = () => import("../views/dicts/Product.vue");
+const Employee = () => import("../views/dicts/Employee.vue");
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,11 @@ const routes = [
         path: "supply",
         name: "supply",
         component: Supply
+      },
+      {
+        path: "employee",
+        name: "employee",
+        component: Employee
       },
       {
         path: "/",
