@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Nelson on 2020/7/23.
  */
@@ -22,5 +24,10 @@ public class PermissionImpl extends AbstractService<Permission> implements IPerm
     @Override
     public JpaRepository<Permission, String> getRepository() {
         return permissionDao;
+    }
+
+    @Override
+    public List<Permission> findAll() {
+        return permissionDao.findAll();
     }
 }

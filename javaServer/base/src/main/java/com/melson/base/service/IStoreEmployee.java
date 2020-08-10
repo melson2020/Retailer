@@ -13,4 +13,5 @@ public interface IStoreEmployee extends IService<StoreEmployee> {
     StoreEmployee Login(StoreEmployee employee);
     List<StoreEmployee> findByStoreCode(String stroeCode);
     StoreEmployee CreateEmployee(StoreEmployee employee);
+    StoreEmployee findByLoginName(String loginName);
 }

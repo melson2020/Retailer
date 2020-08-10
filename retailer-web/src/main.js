@@ -27,7 +27,8 @@ import {
   Col,
   Table,
   TableColumn,
-  Dialog
+  Dialog,
+  Loading
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -60,6 +61,7 @@ Vue.use(Col);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Dialog);
+Vue.use(Loading);
 
 new Vue({
   router,

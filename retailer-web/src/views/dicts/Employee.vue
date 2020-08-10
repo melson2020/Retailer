@@ -19,12 +19,46 @@
           class="employee-table"
         >
           <el-table-column prop="userName" label="姓名"></el-table-column>
-          <el-table-column prop="gender" label="性别"></el-table-column>
+          <el-table-column prop="gender" label="性别" align="center">
+            <template slot-scope="scope">
+              {{
+                scope.row.gender == 1
+                  ? "男"
+                  : scope.row.gender == 2
+                  ? "女"
+                  : "未知"
+              }}
+            </template>
+          </el-table-column>
           <el-table-column prop="phone" label="联系电话"></el-table-column>
-          <el-table-column prop="permission" label="角色"></el-table-column>
+          <el-table-column
+            prop="permission"
+            :formatter="roleFormatter"
+            label="角色"
+          ></el-table-column>
           <el-table-column prop="loginName" label="账户"></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)"
+                >编辑</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
         </el-table>
-        <el-dialog title="新增员工" :visible.sync="dialogFormVisible">
+        <el-dialog
+          title="新增员工"
+          :visible.sync="dialogFormVisible"
+          :close-on-click-modal="false"
+          :show-close="false"
+        >
           <el-form :model="newEmployee" :rules="rules" ref="createEmployeeForm">
             <el-form-item
               label="用户姓名"
@@ -94,10 +128,13 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button @click="dialogFormVisible = false" v-if="!loading"
+              >取 消</el-button
+            >
             <el-button
               type="primary"
               @click="onCreateEmployee('createEmployeeForm')"
+              :loading="loading"
               >确 定</el-button
             >
           </div>
@@ -130,6 +167,27 @@ export default {
         callback();
       }
     };
+    var validateLoginName = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入登录账户"));
+      } else {
+        let loginName = { loginName: value };
+        this.loading = true;
+        this.CheckLoginName(loginName)
+          .then(res => {
+            if (res.data) {
+              callback();
+            } else {
+              callback(new Error("该账户已存在"));
+            }
+            this.loading = false;
+          })
+          .catch(error => {
+            this.$message.error(error.message);
+            this.loading = false;
+          });
+      }
+    };
     return {
       dialogFormVisible: false,
       newEmployee: {
@@ -143,28 +201,43 @@ export default {
         storeCode: "",
         userId: ""
       },
+      loading: false,
       formLabelWidth: "120px",
       rules: {
         userName: [
           { required: true, message: "请输入用户名称", trigger: "blur" }
         ],
         phone: [{ required: true, message: "请输入联系电话", trigger: "blur" }],
-        loginName: [
-          { required: true, message: "请输入登录账户", trigger: "blur" }
-        ],
+        loginName: [{ validator: validateLoginName, trigger: "blur" }],
         password: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }]
       }
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "employeeList"])
+    ...mapGetters(["userInfo", "employeeList", "closeDialog", "permissionList"])
   },
   methods: {
     ...mapActions({
       GetEmployeeList: "GetEmployeeList",
-      CreateEmployee: "CreateEmployee"
+      CreateEmployee: "CreateEmployee",
+      AddEmployee: "AddEmployee",
+      CheckLoginName: "CheckLoginName",
+      GetPermissList: "GetPermissList"
     }),
+    roleFormatter(row) {
+      if (this.permissionList.length <= 0) {
+        return "";
+      }
+      let permission = row.permission;
+      if (permission) {
+        let permissionName = this.permissionList.find(per => {
+          return per.level == permission;
+        }).name;
+        return permissionName;
+      }
+      return "";
+    },
     onCreateEmployee(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -173,7 +246,24 @@ export default {
             employee: this.newEmployee,
             token: this.userInfo.userId
           };
-          this.CreateEmployee(payload);
+          this.CreateEmployee(payload)
+            .then(res => {
+              if (res.resultStatus == 1) {
+                this.dialogFormVisible = false;
+                this.AddEmployee(res.data);
+                this.$message({
+                  showClose: true,
+                  message: "添加成功",
+                  type: "success"
+                });
+              } else {
+                this.$messgae.error(res.message);
+              }
+            })
+            .catch(err => {
+              let alert = err.message ? err.message : err;
+              this.$messgae.error(alert);
+            });
         } else {
           this.$message.warning("请填写准确信息");
           return false;
@@ -185,10 +275,17 @@ export default {
         this.$refs[formName].resetFields();
       }
       this.dialogFormVisible = true;
+    },
+    handleEdit(index, row) {
+      console.log(index, row);
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
     }
   },
   beforeMount: function() {
     this.GetEmployeeList(this.userInfo);
+    this.GetPermissList();
   }
 };
 </script>

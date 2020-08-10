@@ -13,4 +13,5 @@ import java.util.List;
 public interface IStoreEmployeeDao extends JpaRepository<StoreEmployee,String> {
     StoreEmployee findByLoginNameAndPassword(String loginName,String password);
     List<StoreEmployee> findAllByStoreCode(String storeCode);
+    StoreEmployee findByLoginName(String loginName);
 }
