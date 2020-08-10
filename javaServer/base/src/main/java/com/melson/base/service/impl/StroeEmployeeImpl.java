@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Nelson on 2020/7/23.
@@ -47,10 +48,16 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
     public StoreEmployee CreateEmployee(StoreEmployee employee) {
         String md5Pass = MD5Util.string2MD5(employee.getPassword());
         employee.setPassword(md5Pass);
+        employee.setUserId(UUID.randomUUID().toString());
         if(employee.getPermission()==null){
             employee.setPermission(1);
         }
         StoreEmployee saved = storeEmployeeDao.save(employee);
         return saved;
+    }
+
+    @Override
+    public StoreEmployee findByLoginName(String loginName) {
+        return storeEmployeeDao.findByLoginName(loginName);
     }
 }

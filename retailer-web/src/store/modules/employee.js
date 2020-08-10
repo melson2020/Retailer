@@ -6,7 +6,9 @@ import { Message } from "element-ui";
  */
 const state = {
   employeeList: [],
-  store: []
+  store: [],
+  closeDialog: false,
+  permissionList: []
 };
 
 const actions = {
@@ -26,12 +28,14 @@ const actions = {
         Message.error(alert);
       });
   },
-  CreateEmployee({ commit }, payload) {
+  GetPermissList({ commit }) {
     request
-      .CreateEmployee(payload)
+      .GetPermissionList()
       .then(res => {
         if (res.resultStatus == 1) {
-          commit("AddEmployee", res.data);
+          console.log("权限列表");
+          console.log(res.data);
+          commit("SetPermissionList", res.data);
         } else {
           Message.error(res.message);
         }
@@ -40,11 +44,23 @@ const actions = {
         let alert = error.message ? error.message : error;
         Message.error(alert);
       });
+  },
+  // eslint-disable-next-line no-empty-pattern
+  CreateEmployee({}, payload) {
+    return request.CreateEmployee(payload);
+  },
+  AddEmployee({ commit }, employee) {
+    commit("AddEmployee", employee);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  CheckLoginName({}, palyload) {
+    return request.CheckLoginName(palyload);
   }
 };
 
 const getters = {
-  employeeList: state => state.employeeList
+  employeeList: state => state.employeeList,
+  permissionList: state => state.permissionList
 };
 
 const mutations = {
@@ -53,6 +69,9 @@ const mutations = {
   },
   AddEmployee(state, data) {
     state.employeeList.push(data);
+  },
+  SetPermissionList(state, data) {
+    state.permissionList = data;
   }
 };
 
