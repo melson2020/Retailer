@@ -14,6 +14,7 @@ public class Supply {
     private Integer id;
     private String name;
     private String address;
+    private String contact;
     private String phone;
     private String comment;
 
@@ -39,6 +40,14 @@ public class Supply {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     public String getPhone() {
