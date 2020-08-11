@@ -33,8 +33,6 @@ const actions = {
       .GetPermissionList()
       .then(res => {
         if (res.resultStatus == 1) {
-          console.log("权限列表");
-          console.log(res.data);
           commit("SetPermissionList", res.data);
         } else {
           Message.error(res.message);

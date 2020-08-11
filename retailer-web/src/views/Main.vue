@@ -21,8 +21,7 @@
               v-for="subMenu in menu.subMenus"
               :index="subMenu.index"
               :key="subMenu.id"
-              >{{ subMenu.name }}</el-menu-item
-            >
+            >{{ subMenu.name }}</el-menu-item>
           </el-submenu>
           <el-menu-item v-else :index="menu.index" :key="menu.id">
             <i :class="'el-icon-' + menu.icon"></i>
@@ -34,11 +33,7 @@
     <el-container>
       <el-header height="auto">
         <div>
-          <i
-            class="icon icon-left"
-            :class="menuArrow"
-            @click="menuCollapseChange"
-          ></i>
+          <i class="icon icon-left" :class="menuArrow" @click="menuCollapseChange"></i>
           <i class="el-icon-setting icon icon-right"></i>
           <div class="user-info">{{ userInfo.userName }}</div>
           <i class="el-icon-user icon icon-right"></i>

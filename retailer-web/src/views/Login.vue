@@ -5,32 +5,15 @@
         <span class="title">欢迎登陆</span>
       </div>
       <div class="card-content">
-        <el-form
-          ref="loginForm"
-          label-width="80px"
-          :model="loginUser"
-          :rules="rules"
-        >
+        <el-form ref="loginForm" label-width="80px" :model="loginUser" :rules="rules">
           <el-form-item label="用户名称" prop="loginName">
-            <el-input
-              placeholder="注册手机号"
-              v-model="loginUser.loginName"
-            ></el-input>
+            <el-input placeholder="注册手机号" v-model="loginUser.loginName"></el-input>
           </el-form-item>
           <el-form-item label="用户密码" prop="password">
-            <el-input
-              type="password"
-              placeholder="用户密码"
-              v-model="loginUser.password"
-            ></el-input>
+            <el-input type="password" placeholder="用户密码" v-model="loginUser.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button
-              class="login-button"
-              type="primary"
-              @click="userLogin('loginForm')"
-              >登陆</el-button
-            >
+            <el-button class="login-button" type="primary" @click="userLogin('loginForm')">登陆</el-button>
           </el-form-item>
         </el-form>
         <router-link to="/register">注册商户</router-link>

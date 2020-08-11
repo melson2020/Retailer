@@ -2,6 +2,7 @@ package com.melson.base.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +23,16 @@ public class StoreEmployee {
     private Integer permission;
     private String loginName;
     private String password;
+    private Date createDate;
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
     @Transient
     private List menuList;
     @Transient

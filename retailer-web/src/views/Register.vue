@@ -5,22 +5,13 @@
         <i class="el-icon-back back-icon" @click="backClick"></i>
         <span class="title">商户注册</span>
       </div>
-      <el-form
-        ref="storeForm"
-        :model="store"
-        label-width="100px"
-        :rules="rules"
-      >
+      <el-form ref="storeForm" :model="store" label-width="100px" :rules="rules">
         <el-form-item label="商户名称" prop="storeName">
           <el-input v-model="store.storeName"></el-input>
         </el-form-item>
         <el-form-item label="商户地址">
           <div class="row-between">
-            <el-select
-              placeholder="省"
-              v-model="store.provinceCode"
-              @change="provinceChanged"
-            >
+            <el-select placeholder="省" v-model="store.provinceCode" @change="provinceChanged">
               <el-option
                 v-for="item in provinceList"
                 :key="item.id"
@@ -60,35 +51,19 @@
           <el-input placeholder="详细地址" v-model="store.location"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input
-            type="textarea"
-            autosize
-            v-model="address"
-            disabled
-          ></el-input>
+          <el-input type="textarea" autosize v-model="address" disabled></el-input>
         </el-form-item>
         <el-form-item label="联系人" prop="communicateName">
           <el-input v-model="store.communicateName"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input
-            placeholder="号码会被用作管理员登录账户"
-            v-model="store.phone"
-          ></el-input>
+          <el-input placeholder="号码会被用作管理员登录账户" v-model="store.phone"></el-input>
         </el-form-item>
         <el-form-item label="登录密码" prop="password">
-          <el-input
-            type="password"
-            v-model="store.password"
-            autocomplete="off"
-          ></el-input>
+          <el-input type="password" v-model="store.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="再次输入密码" prop="checkpassword">
-          <el-input
-            type="password"
-            v-model="store.checkpassword"
-            autocomplete="off"
-          ></el-input>
+          <el-input type="password" v-model="store.checkpassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="描述">
           <el-input
@@ -100,12 +75,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            class="register-button"
-            @click="onSubmit('storeForm')"
-            >注册</el-button
-          >
+          <el-button type="primary" class="register-button" @click="onSubmit('storeForm')">注册</el-button>
         </el-form-item>
       </el-form>
     </el-card>
