@@ -7,7 +7,9 @@ import com.melson.base.service.IStoreEmployee;
 import com.melson.base.utils.MD5Util;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,7 +51,8 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
         String md5Pass = MD5Util.string2MD5(employee.getPassword());
         employee.setPassword(md5Pass);
         employee.setUserId(UUID.randomUUID().toString());
-        if(employee.getPermission()==null){
+        employee.setCreateDate(new Date());
+        if(employee.getPermission()==null||employee.getPermission()<=0){
             employee.setPermission(1);
         }
         StoreEmployee saved = storeEmployeeDao.save(employee);
@@ -62,7 +65,13 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
     }
 
     @Override
-    public StoreEmployee UpdateEmployee(StoreEmployee employee) {
-        return storeEmployeeDao.save(employee);
+    @Transactional
+    public Integer UpdateEmployee(StoreEmployee employee) {
+        return storeEmployeeDao.updateEmployee(employee.getUserName(),employee.getPhone(),employee.getGender(),employee.getPermission(),employee.getUserId());
+    }
+
+    @Override
+    public Integer DeleteEmployee(StoreEmployee employee) {
+        return storeEmployeeDao.deleteByUserId(employee.getUserId());
     }
 }

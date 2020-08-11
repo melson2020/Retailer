@@ -57,5 +57,8 @@ export default {
   },
   UpdateEmployee(params) {
     return service.post("/employee/updateEmployee", params);
+  },
+  DeleteEmployee(params) {
+    return service.post("/employee/deleteEmployee", params);
   }
 };
