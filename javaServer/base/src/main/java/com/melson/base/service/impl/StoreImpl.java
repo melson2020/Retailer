@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -70,6 +71,7 @@ public class StoreImpl extends AbstractService<Store> implements IStore {
         employee.setLoginName(store.getPhone());
         String mdf5Pass= MD5Util.string2MD5(password);
         employee.setPassword(mdf5Pass);
+        employee.setCreateDate(new Date());
         return employee;
     }
 }

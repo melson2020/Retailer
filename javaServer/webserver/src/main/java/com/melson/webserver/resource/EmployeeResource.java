@@ -81,17 +81,31 @@ public class EmployeeResource extends BaseResource {
         return result;
     }
 
-    @RequestMapping(value = "/updateEmployee")
+    @RequestMapping(value = "/updateEmployee",method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Manager)
     public Result UpdateEmployee(@RequestBody StoreEmployee storeEmployee,HttpServletRequest request){
-         if(StringUtils.isEmpty(storeEmployee.getUserId())|| StringUtils.isEmpty(storeEmployee.getLoginName())|| StringUtils.isEmpty(storeEmployee.getPhone())
+         if(StringUtils.isEmpty(storeEmployee.getUserId())|| storeEmployee.getPermission()==null||storeEmployee.getGender()==null|| StringUtils.isEmpty(storeEmployee.getPhone())
                  || StringUtils.isEmpty(storeEmployee.getUserName())){
              return GenerateResult(ResultType.ParametersNeeded);
          }
-         StoreEmployee saved=employeeService.UpdateEmployee(storeEmployee);
+         Integer savedCount=employeeService.UpdateEmployee(storeEmployee);
          Result result=new Result();
-         result.setData(saved);
+         result.setResultStatus(savedCount>0?1:-1);
+         result.setData(savedCount);
          return result;
+    }
+
+    @RequestMapping(value = "/deleteEmployee",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result DeleteEmployee(@RequestBody StoreEmployee storeEmployee,HttpServletRequest request){
+        if(StringUtils.isEmpty(storeEmployee.getUserId())){
+            return GenerateResult(ResultType.ParametersNeeded);
+        }
+        Integer deleteCount=employeeService.DeleteEmployee(storeEmployee);
+        Result result=new Result();
+        result.setResultStatus(deleteCount>0?1:-1);
+        result.setData(deleteCount);
+        return result;
     }
 
 }

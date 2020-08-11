@@ -50,15 +50,21 @@
         >
           <el-form :model="editEmployee" ref="editEmployeeForm">
             <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="userName">
-               <el-input v-model="editEmployee.userName" autocomplete="off" ></el-input>
+              <el-input v-model="editEmployee.userName" autocomplete="off"></el-input>
             </el-form-item>
-             <el-form-item label="联系电话" :label-width="formLabelWidth" prop="loginName">
-               <el-input v-model="editEmployee.phone" autocomplete="off" ></el-input>
+            <el-form-item label="联系电话" :label-width="formLabelWidth" prop="loginName">
+              <el-input v-model="editEmployee.phone" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="用户角色" :label-width="formLabelWidth" prop="permission">
-               <el-col :span="11">
-                 <el-select v-model="editEmployee.permission" placeholder="性别" style="width: 100%;">
-                  <el-option v-for="permission in permissionList" :label="permission.name" :value="permission.level" :key="permission.id" :disabled="permission.level>userInfo.permission"></el-option>
+              <el-col :span="11">
+                <el-select v-model="editEmployee.permission" placeholder="性别" style="width: 100%;">
+                  <el-option
+                    v-for="permission in permissionList"
+                    :label="permission.name"
+                    :value="permission.level"
+                    :key="permission.id"
+                    :disabled="permission.level>userInfo.permission"
+                  ></el-option>
                 </el-select>
               </el-col>
               <el-col class="line" :span="2">性别</el-col>
@@ -73,7 +79,7 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="editFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="editFormVisible = false">提 交</el-button>
+            <el-button type="primary" @click="updateEmoployee()">提 交</el-button>
           </div>
         </el-dialog>
         <el-dialog
@@ -169,11 +175,12 @@ export default {
     return {
       dialogFormVisible: false,
       editFormVisible: false,
+      tableLoading:true,
       newEmployee: {
         userName: "",
         gender: "",
         phone: "",
-        permission:0,
+        permission: 0,
         loginName: "",
         password: "",
         checkPass: "",
@@ -181,11 +188,11 @@ export default {
         userId: ""
       },
       editEmployee: {
-         userId: "",
-         userName: "",
-         phone: "",
-         permission:0,
-         gender: "",
+        userId: "",
+        userName: "",
+        phone: "",
+        permission: 0,
+        gender: ""
       },
       loading: false,
       formLabelWidth: "120px",
@@ -217,7 +224,9 @@ export default {
       CreateEmployee: "CreateEmployee",
       AddEmployee: "AddEmployee",
       CheckLoginName: "CheckLoginName",
-      GetPermissList: "GetPermissList"
+      GetPermissList: "GetPermissList",
+      UpdateEmployee: "UpdateEmployee",
+      ReplaceEmployee: "ReplaceEmployee"
     }),
     roleFormatter(row) {
       if (this.permissionList.length <= 0) {
@@ -272,11 +281,35 @@ export default {
     },
     handleEdit(index, row) {
       this.editFormVisible = true;
-      let employee={userId:row.userId,userName:row.userName,loginName:row.loginName,phone:row.phone,gender:row.gender,permission:row.permission}
-      this.editEmployee=employee;
+      let employee = {
+        userId: row.userId,
+        userName: row.userName,
+        phone: row.phone,
+        gender: row.gender,
+        permission: row.permission,
+        index:index
+      };
+      this.editEmployee = employee;
     },
     handleDelete(index, row) {
       console.log(index, row);
+    },
+    updateEmoployee() {
+      this.UpdateEmployee(this.editEmployee)
+        .then(res => {
+          if (res.resultStatus == 1) {
+            this.ReplaceEmployee(this.editEmployee)
+            this.editFormVisible=false
+           
+            this.$message.success("更新成功");
+          } else {
+            this.$message.error("更新失败:"+res.message);
+          }
+        })
+        .catch(error => {
+          let al = error.message ? error.message : error;
+          this.$message.error(al);
+        });
     }
   },
   beforeMount: function() {

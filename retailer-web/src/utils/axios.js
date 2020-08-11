@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Message } from "element-ui";
+import store from "../store/store.js"
 
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 30000;
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded;charset=UTF-8";
 axios.defaults.baseURL = "/api";
@@ -9,6 +10,7 @@ axios.defaults.baseURL = "/api";
 //请求拦截器
 axios.interceptors.request.use(
   config => {
+    store.commit('showLoading')
     var token = JSON.parse(localStorage.getItem("userInfo")).userId;
     if (token) {
       config.headers.token = token;
@@ -16,6 +18,7 @@ axios.interceptors.request.use(
     return config;
   },
   error => {
+    store.commit('hideLoading')
     Message({
       showClose: true,
       message: "错误的传参",
@@ -28,6 +31,7 @@ axios.interceptors.request.use(
 // 响应拦截器
 axios.interceptors.response.use(
   response => {
+    store.commit('hideLoading')
     if (response.status === 200) {
       return Promise.resolve(response);
     } else {
@@ -36,6 +40,7 @@ axios.interceptors.response.use(
   },
   // 服务器状态码不是200的情况
   error => {
+    store.commit('hideLoading')
     let errorStatus = error.response ? error.response.status : undefined;
     if (errorStatus) {
       switch (errorStatus) {

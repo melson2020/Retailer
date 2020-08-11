@@ -1,9 +1,7 @@
 import request from "../../utils/request";
 import { Message } from "element-ui";
 
-/**
- * App通用配置
- */
+
 const state = {
   employeeList: [],
   store: [],
@@ -44,15 +42,22 @@ const actions = {
       });
   },
   // eslint-disable-next-line no-empty-pattern
-  CreateEmployee({}, payload) {
+  CreateEmployee({ }, payload) {
     return request.CreateEmployee(payload);
   },
   AddEmployee({ commit }, employee) {
     commit("AddEmployee", employee);
   },
   // eslint-disable-next-line no-empty-pattern
-  CheckLoginName({}, palyload) {
+  CheckLoginName({ }, palyload) {
     return request.CheckLoginName(palyload);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  UpdateEmployee({ }, employee) {
+    return request.UpdateEmployee(employee);
+  },
+  ReplaceEmployee({commit},employee){
+     commit("UpdateEmployee", employee);
   }
 };
 
@@ -70,6 +75,13 @@ const mutations = {
   },
   SetPermissionList(state, data) {
     state.permissionList = data;
+  },
+  UpdateEmployee(state,data){
+    let updatedEmp=state.employeeList[data.index]
+    updatedEmp.userName=data.userName;
+    updatedEmp.phone=data.phone;
+    updatedEmp.gender=data.gender;
+    updatedEmp.permission=data.permission;
   }
 };
 
