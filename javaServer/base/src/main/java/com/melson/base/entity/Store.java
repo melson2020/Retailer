@@ -1,6 +1,7 @@
 package com.melson.base.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by Nelson on 2020/7/23.
@@ -25,6 +26,15 @@ public class Store {
     private String description;
     //商家编码
     private String code;
+    private Date createDate;
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
     public Integer getId() {
         return id;

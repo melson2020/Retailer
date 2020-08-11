@@ -6,53 +6,76 @@
           <span class="title-name">{{ userInfo.store.storeName }}</span>
           <el-button
             icon="el-icon-plus"
-            :disabled="!userInfo.permission > 1"
+            :disabled="addEmployeePermission"
             @click="resetForm('createEmployeeForm')"
-            >添加</el-button
-          >
+          >添加</el-button>
         </div>
-        <el-table
-          :data="employeeList"
-          stripe
-          style="width: 100%"
-          border
-          class="employee-table"
-        >
+        <el-table :data="employeeList" stripe style="width: 100%" border class="employee-table">
           <el-table-column prop="userName" label="姓名"></el-table-column>
           <el-table-column prop="gender" label="性别" align="center">
             <template slot-scope="scope">
               {{
-                scope.row.gender == 1
-                  ? "男"
-                  : scope.row.gender == 2
-                  ? "女"
-                  : "未知"
+              scope.row.gender == 1
+              ? "男"
+              : scope.row.gender == 2
+              ? "女"
+              : "未知"
               }}
             </template>
           </el-table-column>
           <el-table-column prop="phone" label="联系电话"></el-table-column>
-          <el-table-column
-            prop="permission"
-            :formatter="roleFormatter"
-            label="角色"
-          ></el-table-column>
+          <el-table-column prop="permission" :formatter="roleFormatter" label="角色"></el-table-column>
           <el-table-column prop="loginName" label="账户"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
                 size="mini"
+                :disabled="scope.row.permission > userInfo.permission"
                 @click="handleEdit(scope.$index, scope.row)"
-                >编辑</el-button
-              >
+              >编辑</el-button>
               <el-button
                 size="mini"
+                :disabled="scope.row.permission > userInfo.permission"
                 type="danger"
                 @click="handleDelete(scope.$index, scope.row)"
-                >删除</el-button
-              >
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
+        <el-dialog
+          title="编辑"
+          :visible.sync="editFormVisible"
+          :close-on-click-modal="false"
+          :show-close="false"
+        >
+          <el-form :model="editEmployee" ref="editEmployeeForm">
+            <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="userName">
+               <el-input v-model="editEmployee.userName" autocomplete="off" ></el-input>
+            </el-form-item>
+             <el-form-item label="联系电话" :label-width="formLabelWidth" prop="loginName">
+               <el-input v-model="editEmployee.phone" autocomplete="off" ></el-input>
+            </el-form-item>
+            <el-form-item label="用户角色" :label-width="formLabelWidth" prop="permission">
+               <el-col :span="11">
+                 <el-select v-model="editEmployee.permission" placeholder="性别" style="width: 100%;">
+                  <el-option v-for="permission in permissionList" :label="permission.name" :value="permission.level" :key="permission.id" :disabled="permission.level>userInfo.permission"></el-option>
+                </el-select>
+              </el-col>
+              <el-col class="line" :span="2">性别</el-col>
+              <el-col :span="11">
+                <el-select v-model="editEmployee.gender" placeholder="性别" style="width: 100%;">
+                  <el-option label="男" :value="1"></el-option>
+                  <el-option label="女" :value="2"></el-option>
+                  <el-option label="未知" :value="0"></el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="editFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="editFormVisible = false">提 交</el-button>
+          </div>
+        </el-dialog>
         <el-dialog
           title="新增员工"
           :visible.sync="dialogFormVisible"
@@ -60,83 +83,38 @@
           :show-close="false"
         >
           <el-form :model="newEmployee" :rules="rules" ref="createEmployeeForm">
-            <el-form-item
-              label="用户姓名"
-              :label-width="formLabelWidth"
-              prop="userName"
-            >
+            <el-form-item label="用户姓名" :label-width="formLabelWidth" prop="userName">
               <el-col :span="11">
-                <el-input
-                  v-model="newEmployee.userName"
-                  autocomplete="off"
-                  style="width: 100%;"
-                ></el-input>
+                <el-input v-model="newEmployee.userName" autocomplete="off" style="width: 100%;"></el-input>
               </el-col>
               <el-col class="line" :span="2">性别</el-col>
               <el-col :span="11">
-                <el-select
-                  v-model="newEmployee.gender"
-                  placeholder="性别"
-                  style="width: 100%;"
-                >
+                <el-select v-model="newEmployee.gender" placeholder="性别" style="width: 100%;">
                   <el-option label="男" value="1"></el-option>
                   <el-option label="女" value="2"></el-option>
                 </el-select>
               </el-col>
             </el-form-item>
-            <el-form-item
-              label="联系电话"
-              :label-width="formLabelWidth"
-              prop="phone"
-            >
-              <el-input
-                v-model="newEmployee.phone"
-                autocomplete="off"
-              ></el-input>
+            <el-form-item label="联系电话" :label-width="formLabelWidth" prop="phone">
+              <el-input v-model="newEmployee.phone" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item
-              label="登录账户"
-              :label-width="formLabelWidth"
-              prop="loginName"
-            >
-              <el-input
-                v-model="newEmployee.loginName"
-                autocomplete="off"
-              ></el-input>
+            <el-form-item label="登录账户" :label-width="formLabelWidth" prop="loginName">
+              <el-input v-model="newEmployee.loginName" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item
-              label="登录密码"
-              :label-width="formLabelWidth"
-              prop="password"
-            >
-              <el-input
-                type="password"
-                v-model="newEmployee.password"
-                autocomplete="off"
-              ></el-input>
+            <el-form-item label="登录密码" :label-width="formLabelWidth" prop="password">
+              <el-input type="password" v-model="newEmployee.password" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item
-              label="确认密码"
-              :label-width="formLabelWidth"
-              prop="checkPass"
-            >
-              <el-input
-                type="password"
-                v-model="newEmployee.checkPass"
-                autocomplete="off"
-              ></el-input>
+            <el-form-item label="确认密码" :label-width="formLabelWidth" prop="checkPass">
+              <el-input type="password" v-model="newEmployee.checkPass" autocomplete="off"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false" v-if="!loading"
-              >取 消</el-button
-            >
+            <el-button @click="dialogFormVisible = false" v-if="!loading">取 消</el-button>
             <el-button
               type="primary"
               @click="onCreateEmployee('createEmployeeForm')"
               :loading="loading"
-              >确 定</el-button
-            >
+            >确 定</el-button>
           </div>
         </el-dialog>
       </div>
@@ -190,16 +168,24 @@ export default {
     };
     return {
       dialogFormVisible: false,
+      editFormVisible: false,
       newEmployee: {
         userName: "",
         gender: "",
         phone: "",
-        permission: "",
+        permission:0,
         loginName: "",
         password: "",
         checkPass: "",
         storeCode: "",
         userId: ""
+      },
+      editEmployee: {
+         userId: "",
+         userName: "",
+         phone: "",
+         permission:0,
+         gender: "",
       },
       loading: false,
       formLabelWidth: "120px",
@@ -215,7 +201,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "employeeList", "closeDialog", "permissionList"])
+    ...mapGetters([
+      "userInfo",
+      "employeeList",
+      "closeDialog",
+      "permissionList"
+    ]),
+    addEmployeePermission: function() {
+      return this.userInfo.permission ? !this.userInfo.permission > 1 : true;
+    }
   },
   methods: {
     ...mapActions({
@@ -277,7 +271,9 @@ export default {
       this.dialogFormVisible = true;
     },
     handleEdit(index, row) {
-      console.log(index, row);
+      this.editFormVisible = true;
+      let employee={userId:row.userId,userName:row.userName,loginName:row.loginName,phone:row.phone,gender:row.gender,permission:row.permission}
+      this.editEmployee=employee;
     },
     handleDelete(index, row) {
       console.log(index, row);

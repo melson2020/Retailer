@@ -80,4 +80,18 @@ public class EmployeeResource extends BaseResource {
         result.setData(permissionList);
         return result;
     }
+
+    @RequestMapping(value = "/updateEmployee")
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result UpdateEmployee(@RequestBody StoreEmployee storeEmployee,HttpServletRequest request){
+         if(StringUtils.isEmpty(storeEmployee.getUserId())|| StringUtils.isEmpty(storeEmployee.getLoginName())|| StringUtils.isEmpty(storeEmployee.getPhone())
+                 || StringUtils.isEmpty(storeEmployee.getUserName())){
+             return GenerateResult(ResultType.ParametersNeeded);
+         }
+         StoreEmployee saved=employeeService.UpdateEmployee(storeEmployee);
+         Result result=new Result();
+         result.setData(saved);
+         return result;
+    }
+
 }

@@ -46,13 +46,16 @@ export default {
   GetStoreEmployeeList(params) {
     return service.get("/employee/employeeList", params);
   },
-  GetPermissionList(params){
+  GetPermissionList(params) {
     return service.get("/employee/permissionList", params);
   },
   CreateEmployee(payload) {
     return service.post("/employee/createEmployee", payload.employee);
   },
-  CheckLoginName(params){
+  CheckLoginName(params) {
     return service.get("/employee/checkLoginName", params);
+  },
+  UpdateEmployee(params) {
+    return service.post("/employee/updateEmployee", params);
   }
 };

@@ -60,4 +60,9 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
     public StoreEmployee findByLoginName(String loginName) {
         return storeEmployeeDao.findByLoginName(loginName);
     }
+
+    @Override
+    public StoreEmployee UpdateEmployee(StoreEmployee employee) {
+        return storeEmployeeDao.save(employee);
+    }
 }
