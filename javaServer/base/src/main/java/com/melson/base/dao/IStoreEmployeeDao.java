@@ -20,6 +20,7 @@ public interface IStoreEmployeeDao extends JpaRepository<StoreEmployee,String> {
     @Query("UPDATE StoreEmployee se set  se.userName=?1,se.phone=?2,se.gender=?3,se.permission=?4 where se.userId=?5")
     int updateEmployee(String userName,String phone,Integer gender,Integer permission,String userId);
 
+    @Modifying
     @Query("delete from StoreEmployee se where se.userId=?1")
     int deleteByUserId(String userId);
 }

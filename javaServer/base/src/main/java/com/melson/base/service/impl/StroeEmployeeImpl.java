@@ -71,6 +71,7 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
     }
 
     @Override
+    @Transactional
     public Integer DeleteEmployee(StoreEmployee employee) {
         return storeEmployeeDao.deleteByUserId(employee.getUserId());
     }
