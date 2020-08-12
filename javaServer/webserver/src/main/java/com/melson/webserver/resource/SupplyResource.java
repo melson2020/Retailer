@@ -2,10 +2,12 @@ package com.melson.webserver.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.ResultType;
 import com.melson.webserver.entity.ProductCategory;
 import com.melson.webserver.entity.Supply;
 import com.melson.webserver.service.ISupply;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,17 +23,29 @@ import java.util.List;
 public class SupplyResource extends BaseResource {
     private final ISupply supply;
 
-
     public SupplyResource(ISupply supply) {
         this.supply = supply;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public Result RegisterStore(HttpServletRequest request){
+    public Result GetSupplyList(HttpServletRequest request){
+        String storeCode=request.getParameter("storeCode");
+        if(StringUtils.isEmpty(storeCode)){
+            return this.GenerateResult(ResultType.ParametersNeeded);
+        }
+        List<Supply> supplies = supply.findSupplyByStoreCode(storeCode);
+        Result result=new Result();
+        result.setData(supplies);
+        System.out.println("POST Rest Call: /supply/list ...");
+        return  result;
+    }
+
+    @RequestMapping(value = "/all",method = RequestMethod.GET)
+    public Result GetSupplyListAll(HttpServletRequest request){
         Result result=new Result();
         List<Supply> supplies = supply.findAll();
         result.setData(supplies);
-        System.out.println("POST Rest Call: /supply/list ...");
+        System.out.println("POST Rest Call: /supply/all ...");
         return  result;
     }
 }

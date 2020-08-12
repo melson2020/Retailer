@@ -10,4 +10,7 @@ import java.util.List;
  */
 public interface ISupply extends IService<Supply> {
     List<Supply> findAll();
+
+    List<Supply> findSupplyByStoreCode(String storeCode);
+
 }

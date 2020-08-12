@@ -60,5 +60,16 @@ export default {
   },
   DeleteEmployee(params) {
     return service.post("/employee/deleteEmployee", params);
-  }
+  },
+
+
+  /**
+   * Supply
+   */
+  FetchSupplyList(params) {
+    return service.get("/supply/list", params);
+  },
+
+
+  
 };
