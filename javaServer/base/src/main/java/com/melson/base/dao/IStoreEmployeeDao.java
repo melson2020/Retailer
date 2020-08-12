@@ -23,4 +23,8 @@ public interface IStoreEmployeeDao extends JpaRepository<StoreEmployee,String> {
     @Modifying
     @Query("delete from StoreEmployee se where se.userId=?1")
     int deleteByUserId(String userId);
+
+    @Modifying
+    @Query("UPDATE StoreEmployee se set se.password=?4, se.loginName=?2  where se.userId=?1 and se.password=?3")
+    int reSetPass(String userId,String loginName,String oldPass,String newPass);
 }

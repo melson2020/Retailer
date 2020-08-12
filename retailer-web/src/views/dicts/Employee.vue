@@ -30,12 +30,12 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                :disabled="scope.row.permission > userInfo.permission"
+                :disabled="scope.row.permission >= userInfo.permission&&scope.row.userId!=userInfo.userId"
                 @click="handleEdit(scope.$index, scope.row)"
               >编辑</el-button>
               <el-button
                 size="mini"
-                :disabled="scope.row.permission > userInfo.permission"
+                :disabled="scope.row.permission >= userInfo.permission&&scope.row.userId!=userInfo.userId"
                 type="danger"
                 @click="handleDelete(scope.$index, scope.row)"
               >删除</el-button>

@@ -9,6 +9,7 @@ import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
 import com.melson.base.service.IPermission;
 import com.melson.base.service.IStoreEmployee;
+import com.melson.webserver.dto.EmployeeDto;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,6 +106,18 @@ public class EmployeeResource extends BaseResource {
         Result result=new Result();
         result.setResultStatus(deleteCount>0?1:-1);
         result.setData(deleteCount);
+        return result;
+    }
+
+    @RequestMapping(value = "/restPassword",method = RequestMethod.POST)
+    public Result ResetPass(@RequestBody EmployeeDto employeeDto, HttpServletRequest request){
+        if(employeeDto.hasEmptyParams())return this.GenerateResult(ResultType.ParametersNeeded);
+        Result result=new Result();
+        Integer reseted=employeeService.RetSetPassword(employeeDto.getUserId(),employeeDto.getLoginName(),employeeDto.getOldPass(),employeeDto.getNewPass());
+        if(reseted==0){
+            result.setResultStatus(-1);
+            result.setMessage("reset count: 0");
+        }
         return result;
     }
 

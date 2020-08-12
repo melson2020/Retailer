@@ -94,17 +94,21 @@ const actions = {
       });
   },
   // eslint-disable-next-line no-empty-pattern
-  CheckPhone({}, phoneNumber) {
+  CheckPhone({ }, phoneNumber) {
     return request.CheckPhone(phoneNumber);
   },
   // eslint-disable-next-line no-empty-pattern
-  UserLogin({}, user) {
+  UserLogin({ }, user) {
     return request.UserLogin(user);
   },
   SetLoginStatus({ commit }, user) {
     let loginStatus = true;
     commit("SetLoginStatus", loginStatus);
     commit("SetUserInfo", user);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  ResetPassword({ }, employee) {
+    return request.ResetPassword(employee);
   }
 };
 

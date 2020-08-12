@@ -61,6 +61,9 @@ export default {
   DeleteEmployee(params) {
     return service.post("/employee/deleteEmployee", params);
   },
+  ResetPassword(params){
+    return service.post("/employee/restPassword",params)
+  },
 
 
   /**
