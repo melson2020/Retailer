@@ -11,7 +11,7 @@ axios.defaults.baseURL = "/api";
 axios.interceptors.request.use(
   config => {
     store.commit('showLoading')
-    var token = JSON.parse(localStorage.getItem("userInfo")).userId;
+    var token = JSON.parse(localStorage.getItem("userInfo"))==null?null:JSON.parse(localStorage.getItem("userInfo")).userId;
     if (token) {
       config.headers.token = token;
     }

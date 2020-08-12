@@ -226,7 +226,8 @@ export default {
       CheckLoginName: "CheckLoginName",
       GetPermissList: "GetPermissList",
       UpdateEmployee: "UpdateEmployee",
-      ReplaceEmployee: "ReplaceEmployee"
+      ReplaceEmployee: "ReplaceEmployee",
+      DeleteEmployee:"DeleteEmployee"
     }),
     roleFormatter(row) {
       if (this.permissionList.length <= 0) {
@@ -292,15 +293,23 @@ export default {
       this.editEmployee = employee;
     },
     handleDelete(index, row) {
-      console.log(index, row);
-    },
+      let emp={userId:row.userId,index:index}
+       this.$messageBox.confirm('确认删除？',"提示",{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.DeleteEmployee(emp)
+          })
+          .catch(e=>e);
+      },
     updateEmoployee() {
       this.UpdateEmployee(this.editEmployee)
         .then(res => {
           if (res.resultStatus == 1) {
             this.ReplaceEmployee(this.editEmployee)
-            this.editFormVisible=false
-           
+            this.editFormVisible=false    
             this.$message.success("更新成功");
           } else {
             this.$message.error("更新失败:"+res.message);

@@ -56,8 +56,21 @@ const actions = {
   UpdateEmployee({ }, employee) {
     return request.UpdateEmployee(employee);
   },
-  ReplaceEmployee({commit},employee){
-     commit("UpdateEmployee", employee);
+  ReplaceEmployee({ commit }, employee) {
+    commit("UpdateEmployee", employee);
+  },
+  DeleteEmployee({ commit }, employee) {
+    request.DeleteEmployee(employee).then(res => {
+      if (res.resultStatus == 1) {
+        commit("DeleteEmployee", employee)
+        Message.info("删除成功")
+      } else {
+        Message.warning("删除失败:" + res.message)
+      }
+    }).catch(error => {
+      let al = error.message ? error.message : error
+      Message.error(al)
+    })
   }
 };
 
@@ -76,12 +89,15 @@ const mutations = {
   SetPermissionList(state, data) {
     state.permissionList = data;
   },
-  UpdateEmployee(state,data){
-    let updatedEmp=state.employeeList[data.index]
-    updatedEmp.userName=data.userName;
-    updatedEmp.phone=data.phone;
-    updatedEmp.gender=data.gender;
-    updatedEmp.permission=data.permission;
+  UpdateEmployee(state, data) {
+    let updatedEmp = state.employeeList[data.index]
+    updatedEmp.userName = data.userName;
+    updatedEmp.phone = data.phone;
+    updatedEmp.gender = data.gender;
+    updatedEmp.permission = data.permission;
+  },
+  DeleteEmployee(state, data) {
+    state.employeeList.splice(data.index, 1)
   }
 };
 

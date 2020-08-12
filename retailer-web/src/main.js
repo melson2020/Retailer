@@ -29,13 +29,18 @@ import {
   TableColumn,
   Dialog,
   Autocomplete,
-  Loading
+  Loading,
+  MessageBox,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
 // 在调用 Vue.use 前，给 Message 添加 install 方法
 Message.install = function(Vue) {
   Vue.prototype.$message = Message;
+  Vue.prototype.$messageBox=MessageBox
 };
 
 Vue.config.productionTip = false;
@@ -63,7 +68,10 @@ Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Dialog);
 Vue.use(Autocomplete);
-Vue.use(Loading)
+Vue.use(Loading);
+Vue.use(Dropdown);
+Vue.use(DropdownItem);
+Vue.use(DropdownMenu)
 
 new Vue({
   router,

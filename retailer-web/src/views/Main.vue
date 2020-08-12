@@ -34,9 +34,17 @@
       <el-header height="auto">
         <div>
           <i class="icon icon-left" :class="menuArrow" @click="menuCollapseChange"></i>
-          <i class="el-icon-setting icon icon-right"></i>
-          <div class="user-info">{{ userInfo.userName }}</div>
-          <i class="el-icon-user icon icon-right"></i>
+          <el-dropdown trigger="click" class="icon-right">
+            <span class="el-dropdown-link user-info">            
+              <i class="el-icon-user icon icon-right"></i>
+               {{ userInfo.userName }}
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="logout">注销</el-dropdown-item>
+              <el-dropdown-item >修改密码</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+         
         </div>
       </el-header>
       <el-main>
@@ -65,6 +73,16 @@ export default {
     menuCollapseChange() {
       this.isCollapse = !this.isCollapse;
       this.menuArrow = this.isCollapse ? "el-icon-s-unfold" : "el-icon-s-fold";
+    },
+    logout:function(){
+      this.$messageBox.confirm("确定退出？","系统退出",{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'info'
+        }).then(()=>{
+           localStorage.removeItem("userInfo")
+           this.$router.replace({path:"/"})
+        }).catch(e=>e)
     }
   },
   beforeMount: function() {
