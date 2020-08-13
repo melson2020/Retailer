@@ -214,6 +214,7 @@ export default {
   border-bottom: rgb(224, 222, 222) solid 0.1px;
   padding: 0;
   margin: 0;
+  padding-right: 20px;
 }
 
 .el-aside {
@@ -246,20 +247,19 @@ export default {
   float: right;
 }
 .icon {
-  font-size: 60px;
+  font-size: 50px;
   margin: 20px;
   color: rgb(180, 176, 176);
 }
 .user-info {
   float: right;
-  color: rgb(33, 123, 241);
+  color: #909399;
   height: 100px;
   margin-left: 10px;
   margin-right: 10px;
   display: flex;
   align-items: center;
-  font-size: 30px;
+  font-size: 25px;
   letter-spacing: 5px;
-  font-weight: bold;
 }
 </style>

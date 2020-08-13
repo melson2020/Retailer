@@ -6,9 +6,9 @@ const state = {
 };
 
 const actions = {
-    LoadingShow({ commit }) {
-        commit("UpdateEmployee");
-    }
+    // LoadingShow({ commit }) {
+    //     commit("UpdateEmployee");
+    // }
 };
 
 const getters = {
