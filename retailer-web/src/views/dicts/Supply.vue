@@ -100,8 +100,8 @@ export default {
   methods: {
     ...mapActions({
       GetSupplyList: "GetSupplyList",
-      CreateSupply:"CreateSupply",
-      PushSupplyList:"PushSupplyList"
+      CreateSupply: "CreateSupply",
+      PushSupplyList: "PushSupplyList"
     }),
     resetForm(formName) {
       if (this.$refs[formName]) {
@@ -114,21 +114,23 @@ export default {
         if (valid) {
           this.newSupply.storeCode = this.userInfo.storeCode;
           this.CreateSupply(this.newSupply)
-            .then(res=>{
-              if(res.resultStatus==1){
-                this.dialogFormVisible=false;
+            .then(res => {
+              if (res.resultStatus == 1) {
+                this.dialogFormVisible = false;
                 this.PushSupplyList(res.data);
                 this.$message({
-                  showClose:true,
-                  message:"操作成功",
-                  type:"success"
+                  showClose: true,
+                  message: "操作成功",
+                  type: "success"
                 });
-              }
-              else{
-                let alert=err.message?err.message:err;
-                this.$message.error(alert);
+              } else {
+                this.$message.error(res.message);
               }
             })
+            .catch(err => {
+              let alert = err.message ? err.message : err;
+              this.$message.error(alert);
+            });
         } else {
           this.$message.warning("请填写准确信息");
           return false;
