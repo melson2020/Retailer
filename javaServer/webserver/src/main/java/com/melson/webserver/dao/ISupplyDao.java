@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface ISupplyDao extends JpaRepository<Supply,String> {
 
-    @Query(nativeQuery=true,value="SELECT s.id,s.name,s.address,s.contact,s.phone from supply s INNER JOIN supply_relation sr on s.id=sr.supplyId where sr.storeCode=?1")
-    List<Object[]> findByStoreCode(String storeCode);
+//    @Query(nativeQuery=true,value="select s.id,s.name,s.address,s.contact,s.phone from supply s INNER JOIN supply_relation sr on s.id=sr.supplyId where sr.storeCode=?1")
+//    List<Object[]> findByStoreCode(String storeCode);
+
+    List<Supply> findAllByStoreCode(String storeCode);
 }

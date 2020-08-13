@@ -72,7 +72,9 @@ export default {
   FetchSupplyList(params) {
     return service.get("/supply/list", params);
   },
-
+  CreateSupply(params){
+    return service.post("/supply/add",params)
+  }
 
   
 };
