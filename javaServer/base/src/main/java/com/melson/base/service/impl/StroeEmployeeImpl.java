@@ -75,4 +75,12 @@ public class StroeEmployeeImpl extends AbstractService<StoreEmployee> implements
     public Integer DeleteEmployee(StoreEmployee employee) {
         return storeEmployeeDao.deleteByUserId(employee.getUserId());
     }
+
+    @Override
+    @Transactional
+    public Integer RetSetPassword(String userId,String loginName, String oldPass, String newPass) {
+        String md5old=MD5Util.string2MD5(oldPass);
+        String md5new=MD5Util.string2MD5(newPass);
+        return storeEmployeeDao.reSetPass(userId,loginName,md5old,md5new);
+    }
 }

@@ -16,4 +16,5 @@ public interface IStoreEmployee extends IService<StoreEmployee> {
     StoreEmployee findByLoginName(String loginName);
     Integer UpdateEmployee(StoreEmployee employee);
     Integer DeleteEmployee(StoreEmployee employee);
+    Integer RetSetPassword(String userId,String loginName,String oldPass,String newPass);
 }
