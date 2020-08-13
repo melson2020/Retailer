@@ -3,7 +3,6 @@ import {Message} from "element-ui";
 
 const state={
     supplyList:[],
-    store:[],
     closeDialog:false
 };
 
@@ -24,6 +23,12 @@ const actions={
                 let alert=error.message?error.message:error;
                 Message.error(alert);
             })
+    },
+    CreateSupply({},newSupply){
+        return request.CreateSupply(newSupply);
+    },
+    PushSupplyList({commit}, newSupply){
+        commit("PushSupply",newSupply);
     }
 };
 
@@ -34,6 +39,9 @@ const getters={
 const mutations={
     SetSupplyList(state,data){
         state.supplyList=data;
+    },
+    PushSupply(state,data){
+        state.supplyList.push(data);
     }
 };
 

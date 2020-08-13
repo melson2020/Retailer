@@ -3,11 +3,13 @@ package com.melson.webserver.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.ResultType;
+import com.melson.base.entity.StoreEmployee;
 import com.melson.webserver.entity.ProductCategory;
 import com.melson.webserver.entity.Supply;
 import com.melson.webserver.service.ISupply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,10 +23,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/supply")
 public class SupplyResource extends BaseResource {
-    private final ISupply supply;
+    private final ISupply supplyService;
 
     public SupplyResource(ISupply supply) {
-        this.supply = supply;
+        this.supplyService = supply;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
@@ -33,7 +35,7 @@ public class SupplyResource extends BaseResource {
         if(StringUtils.isEmpty(storeCode)){
             return this.GenerateResult(ResultType.ParametersNeeded);
         }
-        List<Supply> supplies = supply.findSupplyByStoreCode(storeCode);
+        List<Supply> supplies = supplyService.findSupplyByStoreCode(storeCode);
         Result result=new Result();
         result.setData(supplies);
         System.out.println("POST Rest Call: /supply/list ...");
@@ -43,9 +45,22 @@ public class SupplyResource extends BaseResource {
     @RequestMapping(value = "/all",method = RequestMethod.GET)
     public Result GetSupplyListAll(HttpServletRequest request){
         Result result=new Result();
-        List<Supply> supplies = supply.findAll();
+        List<Supply> supplies = supplyService.findAll();
         result.setData(supplies);
         System.out.println("POST Rest Call: /supply/all ...");
         return  result;
+    }
+
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
+    public Result CreateSupply(@RequestBody Supply supply){
+        Result result=new Result();
+        Supply saved=supplyService.CreateSupply(supply);
+        if(saved==null){
+            result.setResultStatus(-1);
+            result.setMessage("create fail");
+        }else {
+            result.setData(saved);
+        }
+        return result;
     }
 }

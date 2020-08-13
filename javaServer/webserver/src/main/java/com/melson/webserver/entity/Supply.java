@@ -17,6 +17,7 @@ public class Supply {
     private String contact;
     private String phone;
     private String comment;
+    private String storeCode;
 
     public Integer getId() {
         return id;
@@ -64,5 +65,13 @@ public class Supply {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getStoreCode() {
+        return storeCode;
+    }
+
+    public void setStoreCode(String storeCode) {
+        this.storeCode = storeCode;
     }
 }
