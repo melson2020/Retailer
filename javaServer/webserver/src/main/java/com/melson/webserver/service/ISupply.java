@@ -14,5 +14,9 @@ public interface ISupply extends IService<Supply> {
 
     List<Supply> findSupplyByStoreCode(String storeCode);
 
-    Supply CreateSupply(Supply supply);
+    Integer DeleteSupply(Supply supply);
+
+    Supply Query(Supply supply);
+
+    Supply SaveSupply(Supply supply);
 }

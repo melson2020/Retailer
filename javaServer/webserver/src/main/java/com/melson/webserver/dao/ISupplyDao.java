@@ -2,6 +2,7 @@ package com.melson.webserver.dao;
 
 import com.melson.webserver.entity.Supply;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +18,10 @@ public interface ISupplyDao extends JpaRepository<Supply,String> {
 //    List<Object[]> findByStoreCode(String storeCode);
 
     List<Supply> findAllByStoreCode(String storeCode);
+
+    @Modifying
+    @Query("delete from Supply su where su.id=?1")
+    int deleteBySupplyId(Integer id);
+
+    Supply findById(Integer id);
 }

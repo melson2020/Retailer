@@ -51,10 +51,10 @@ public class SupplyResource extends BaseResource {
         return  result;
     }
 
-    @RequestMapping(value = "/add",method = RequestMethod.POST)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
     public Result CreateSupply(@RequestBody Supply supply){
         Result result=new Result();
-        Supply saved=supplyService.CreateSupply(supply);
+        Supply saved=supplyService.SaveSupply(supply);
         if(saved==null){
             result.setResultStatus(-1);
             result.setMessage("create fail");
@@ -63,4 +63,22 @@ public class SupplyResource extends BaseResource {
         }
         return result;
     }
+
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public Result DeleteSupply(@RequestBody Supply supply){
+        Result result=new Result();
+        Integer deleteCount=supplyService.DeleteSupply(supply);
+        result.setResultStatus(deleteCount>0?1:-1);
+        result.setData(deleteCount);
+        return result;
+    }
+
+    @RequestMapping(value = "/query",method = RequestMethod.POST)
+    public Result QuerySupply(@RequestBody Supply supply){
+        Supply sup=supplyService.Query(supply);
+        Result result=new Result();
+        result.setData(sup);
+        return result;
+    }
+
 }
