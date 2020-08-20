@@ -25,8 +25,6 @@ const actions={
             })
     },
     // eslint-disable-next-line no-empty-pattern
-    CreateSupply({},newSupply){
-        return request.CreateSupply(newSupply);
     SaveSupply({ },newSupply){
         return request.SaveSupply(newSupply);
     },
@@ -51,6 +49,7 @@ const actions={
         })
 
     },
+    // eslint-disable-next-line no-empty-pattern
     QuerySupplyObj({},Supply){
         return request.QuerySupplyObj(Supply);
     }
