@@ -33,7 +33,12 @@ import {
   MessageBox,
   Dropdown,
   DropdownItem,
-  DropdownMenu
+  DropdownMenu,
+  Upload,
+  Pagination,
+  Breadcrumb,
+  BreadcrumbItem,
+  Link
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -71,7 +76,12 @@ Vue.use(Autocomplete);
 Vue.use(Loading);
 Vue.use(Dropdown);
 Vue.use(DropdownItem);
-Vue.use(DropdownMenu)
+Vue.use(DropdownMenu);
+Vue.use(Upload);
+Vue.use(Pagination);
+Vue.use(Breadcrumb);
+Vue.use(BreadcrumbItem);
+Vue.use(Link)
 
 new Vue({
   router,

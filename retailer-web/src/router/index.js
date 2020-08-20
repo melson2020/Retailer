@@ -8,11 +8,16 @@ const Error = () => import("../views/404.vue");
 const Supply = () => import("../views/dicts/Supply.vue");
 const Product = () => import("../views/dicts/Product.vue");
 const Employee = () => import("../views/dicts/Employee.vue");
+const ProductDict=()=> import("../views/dicts/ProductDict.vue");
+const ProductImport=()=> import("../views/dicts/ProductImport.vue")
 
 Vue.use(VueRouter);
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+},
+VueRouter.prototype.replace = function replace (location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
@@ -35,7 +40,24 @@ const routes = [
       {
         path: "product", //以“/”开头的嵌套路径会被当作根路径，所以子路由上不用加“/”;在生成路由时，主路由上的path会被自动添加到子路由之前，所以子路由上的path不用在重新声明主路由上的path了。
         name: "product",
-        component: Product
+        component: Product,
+        children:[
+          {
+            path: "dict",
+            name: "dict",
+            component: ProductDict
+          },
+          {
+            path: "import",
+            name: "import",
+            component: ProductImport
+          },
+          {
+            path: "/",
+            name: "productRoot",
+            component: ProductDict
+          },
+        ]
       },
       {
         path: "supply",

@@ -67,6 +67,14 @@ export default {
 
 
   /**
+   * 
+   * Product
+   */
+  DownLoadProductDictTemplate(params){
+    return service.exportExcel("/product/downloadProductDictTemplate",params)
+  },
+
+  /**
    * Supply
    */
   FetchSupplyList(params) {
