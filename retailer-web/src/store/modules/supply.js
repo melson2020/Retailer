@@ -24,6 +24,9 @@ const actions={
                 Message.error(alert);
             })
     },
+    // eslint-disable-next-line no-empty-pattern
+    CreateSupply({},newSupply){
+        return request.CreateSupply(newSupply);
     SaveSupply({ },newSupply){
         return request.SaveSupply(newSupply);
     },

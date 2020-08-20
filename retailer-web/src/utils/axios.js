@@ -126,3 +126,21 @@ export function post(url, params) {
       });
   });
 }
+
+export function exportExcel(url, params) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'post',
+      url: url, // 请求地址
+      data: params, // 参数
+      responseType: 'blob' // 表明返回服务器返回的数据类型
+    }).then(
+      response => {
+        resolve(response.data)
+      },
+      err => {
+        reject(err)
+      }
+    )
+  })
+}
