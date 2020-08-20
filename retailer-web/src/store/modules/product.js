@@ -1,16 +1,16 @@
 import request from "../../utils/request";
 
 const state = {
-    categroyList: [],
-    productList: [],
-    uploadFileDialog: false
+    excelCategroyList: [],
+    excelProductList: [],
+    uploadFileDialog: false,
+    needToRecheckList:false
 };
 
 const actions = {
     GenrateCategroyListAndProductList({ commit }, xlsJson) {
         let categroys = []
         let productions = []
-        let count=1;
         for (let index = 0; index < xlsJson.length; index++) {
             let element = xlsJson[index];
             let categroy = { id: index, name: element.sheetName, comment: "", isSet: false }
@@ -18,17 +18,21 @@ const actions = {
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {
                 let p = products[j];
-                let product = {id:count, categroyId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"],isloaded:true}
+                let product = { categroyId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"],isRepeat:false,isSet:false}
                 productions.push(product)
-                count++
             }
         }
         commit("SetProductionList", productions)
         commit("SetCategroyList", categroys)
         commit("SetUploadDialog", false)
+        commit("SetNeedToRecheckList", true)
+        
     },
     SetUploadDialog({ commit }, show) {
         commit("SetUploadDialog", show)
+    },
+    RecheckList({ commit },check){
+        commit("SetNeedToRecheckList", check)
     },
     DownloadProductDictTem() {
         request.DownLoadProductDictTemplate().then(res => {
@@ -47,24 +51,42 @@ const actions = {
         }).catch(err => {
             console.log(err)
         })
+    },
+    DeleteOneInImportedList({commit},product){
+      commit("DeleteOne",product)
+      commit("SetNeedToRecheckList", true)
+    },
+    // eslint-disable-next-line no-unused-vars
+    SaveExcelList({commit},list){
+        console.log("保存数据值服务器")
+        console.log(list)
+        console.log(this.state.excelProductList)
     }
 };
 
 const getters = {
-    categroyList: state => state.categroyList,
-    productList: state => state.productList,
-    uploadFileDialog: state => state.uploadFileDialog
+    excelCategroyList: state => state.excelCategroyList,
+    excelProductList: state => state.excelProductList,
+    uploadFileDialog: state => state.uploadFileDialog,
+    needToRecheckList:state=>state.needToRecheckList
 };
 
 const mutations = {
     SetCategroyList(state, data) {
-        state.categroyList = data;
+        state.excelCategroyList = data;
     },
     SetUploadDialog(state, data) {
         state.uploadFileDialog = data;
     },
     SetProductionList(state, data) {
-        state.productList = data
+        state.excelProductList = data
+    },
+    DeleteOne(state,data){
+        let index=state.excelProductList.indexOf(data)
+        state.excelProductList.splice(index,1)
+    },
+    SetNeedToRecheckList(state,data){
+        state.needToRecheckList=data;
     }
 };
 

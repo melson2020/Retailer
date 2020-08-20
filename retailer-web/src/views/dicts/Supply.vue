@@ -1,7 +1,7 @@
 <template>
 <el-main>
   <el-row>
-    <el-col :span="24">
+    <!-- <el-col :span="24"> -->
       <div class="grid-content bg-purple">
         <div class="title-div">
           <span class="title-name">测试</span>
@@ -130,7 +130,7 @@
         </el-dialog>
 
       </div>
-    </el-col>
+    <!-- </el-col> -->
   </el-row>
 </el-main>
 </template>
@@ -298,10 +298,6 @@ export default {
 
 <style>
 .el-row {
-  height: 100%;
-}
-.el.col {
-  border-radius: 4px;
   height: 100%;
 }
 .grid-content {
