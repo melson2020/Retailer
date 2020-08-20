@@ -18,6 +18,7 @@ public class Supply {
     private String phone;
     private String comment;
     private String storeCode;
+    private Double discount;
 
     public Integer getId() {
         return id;
@@ -73,5 +74,13 @@ public class Supply {
 
     public void setStoreCode(String storeCode) {
         this.storeCode = storeCode;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
     }
 }

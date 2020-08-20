@@ -80,8 +80,14 @@ export default {
   FetchSupplyList(params) {
     return service.get("/supply/list", params);
   },
-  CreateSupply(params){
-    return service.post("/supply/add",params)
+  SaveSupply(params){
+    return service.post("/supply/save",params)
+  },
+  DeleteSupply(params){
+    return service.post("/supply/delete",params);
+  },
+  QuerySupplyObj(params){
+    return service.post("/supply/query",params);
   }
 
   

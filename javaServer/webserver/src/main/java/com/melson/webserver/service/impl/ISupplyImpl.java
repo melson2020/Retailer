@@ -8,6 +8,7 @@ import com.melson.webserver.service.ISupply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -52,9 +53,21 @@ public class ISupplyImpl extends AbstractService <Supply> implements ISupply {
     }
 
     @Override
-    public Supply CreateSupply(Supply supply) {
+    public Supply SaveSupply(Supply supply) {
         Supply saved=supplyDao.save(supply);
         return saved;
+    }
+
+    @Override
+    @Transactional
+    public Integer DeleteSupply(Supply supply) {
+        return supplyDao.deleteBySupplyId(supply.getId());
+    }
+
+    @Override
+    public Supply Query(Supply supply) {
+        Supply sup=supplyDao.findById(supply.getId());
+        return sup;
     }
 
 
