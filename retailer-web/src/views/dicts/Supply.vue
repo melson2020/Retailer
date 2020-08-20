@@ -9,10 +9,11 @@
         </div>
         <!-- <el-input placeholder="请输入要搜索的联系人" prefix-icon="el-icon-search" v-model="searchFile"></el-input> -->
         <el-table :data="supplyList" border class="supply-table">
-          <el-table-column prop="name" label="名称" align="left"></el-table-column>
-          <el-table-column prop="address" label="地址" align="left"></el-table-column>
-          <el-table-column prop="contact" label="联系人" align="left"></el-table-column>
-          <el-table-column prop="phone" label="联系电话" align="left"></el-table-column>
+          <el-table-column prop="name" label="供应商名" align="left"></el-table-column>
+          <el-table-column prop="address" label="联系地址" align="center"></el-table-column>
+          <el-table-column prop="contact" label="联系人员" align="center"></el-table-column>
+          <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
+          <el-table-column prop="discount" label="厂家折扣" align="center"></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>
