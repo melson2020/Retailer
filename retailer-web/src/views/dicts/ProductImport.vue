@@ -6,7 +6,7 @@
     element-loading-background="rgba(0, 0, 0, 0.6)"
   >
     <div class="header">
-      <el-button class="top-button" size="small">保存</el-button>
+      <el-button @click.prevent.stop="saveExcelList" class="top-button" size="small">保存</el-button>
       <el-button @click.prevent.stop="choseFile" class="top-button" size="small">数据导入</el-button>
       <el-button @click.prevent.stop="download" class="top-button" size="small">模板下载</el-button>
       <el-dialog
@@ -46,7 +46,7 @@
           <span class="table-title">商品类别</span>
           <!-- <el-button type="primary" size="medium">保存修改</el-button> -->
         </div>
-        <el-table border class="table-top" :data="categroyList" style="width: 100%">
+        <el-table border class="table-top" :data="excelCategroyList" style="width: 100%">
           <el-table-column type="index" label="#"></el-table-column>
           <el-table-column
             v-for="(v,i) in categroyTableColums"
@@ -92,11 +92,11 @@
       <div class="show-dict">
         <div class="title-div">
           <div class="title-div-left">
-            <span class="table-title">商品目录 ({{productList.length}})</span>
+            <span class="table-title">商品目录 ({{excelProductList.length}})</span>
             <el-link
               type="danger"
               class="duplicate-link"
-              v-if="duplicateCount>0"
+              v-if="duplicateCount>0||isSrearchDuplicate"
               @click.prevent.stop="duplicateSreach"
             >名称重复:{{duplicateCount}} 个 {{isSrearchDuplicate?'显示全部':'点击查看'}}</el-link>
           </div>
@@ -114,19 +114,51 @@
           style="width: 100%"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column label="#" prop="id" width="50px"></el-table-column>
+          <el-table-column type="index" label="#" :index="indexMethod"></el-table-column>
           <el-table-column
             v-for="(item,i) in productTableColums"
             :prop="item.field"
             :label="item.label"
             :width="item.width"
             :key="i"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.isSet">
+                <el-input size="mini" v-model="scope.row[item.field]"></el-input>
+              </span>
+              <span v-else>{{scope.row[item.field]}}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="auto">
             <template slot-scope="scope">
               <div class="table-operation-template">
-              <el-button size="mini" plain circle type="primary" icon="el-icon-edit"  @click="handleEdit(scope.$index, scope.row)"></el-button>
-              <el-button size="mini" plain circle type="danger" icon="el-icon-delete"  @click="handleDelete(scope.$index, scope.row)"></el-button>
+                <el-button
+                  size="mini"
+                  plain
+                  circle
+                  type="primary"
+                  icon="el-icon-edit"
+                  v-if="!scope.row.isSet"
+                  @click="handleEdit(scope.$index, scope.row)"
+                ></el-button>
+                <el-button
+                  size="mini"
+                  plain
+                  circle
+                  v-if="scope.row.isSet"
+                  type="success"
+                  icon="el-icon-s-claim"
+                 @click="handleSave(scope.$index, scope.row)"
+                ></el-button>
+                <el-button
+                  size="mini"
+                  plain
+                  circle
+                  v-if="!scope.row.isSet"
+                  type="danger"
+                  icon="el-icon-delete"
+                  @click="handleDelete(scope.$index, scope.row)"
+                ></el-button>
               </div>
             </template>
           </el-table-column>
@@ -134,6 +166,7 @@
         <div class="el-table-pagination-row">
           <el-pagination
             background
+            :current-page="productTablePage.currentPage"
             layout="prev, pager, next"
             @current-change="pageChanged"
             :page-size="productTablePage.pageSize"
@@ -173,28 +206,34 @@ export default {
         { field: "name", label: "名称", width: "auto" },
         { field: "type", label: "型号", width: "auto" },
         { field: "specification", label: "规格", width: "auto" },
-        { field: "unit", label: "单位", width: "60px" },
-        { field: "feature", label: "特征", width: "80px" }
+        { field: "unit", label: "单位", width: "auto" },
+        { field: "feature", label: "特征", width: "auto" }
       ]
     };
   },
   watch: {
-    // 如果 `errorMessage` 发生改变，这个函数就会运行
-    uploadFileDialog: function() {
-      if (!this.uploadFileDialog) {
+    // 如果 `needToRecheckList` 发生改变，这个函数就会运行
+    needToRecheckList: function() {
+      if (this.needToRecheckList) {
         this.checkProductionList();
+        this.RecheckList(false);
       }
     }
   },
   computed: {
-    ...mapGetters(["categroyList", "uploadFileDialog", "productList"]),
+    ...mapGetters([
+      "excelCategroyList",
+      "uploadFileDialog",
+      "excelProductList",
+      "needToRecheckList"
+    ]),
     productListShow: function() {
       if (this.isSrearchDuplicate) {
-        return this.productList.filter(item => {
+        return this.excelProductList.filter(item => {
           return item.isRepeat;
         });
       } else {
-        return this.productList.filter(item => {
+        return this.excelProductList.filter(item => {
           let key =
             item.name +
             item.type +
@@ -207,7 +246,7 @@ export default {
       }
     },
     duplicateCount: function() {
-      return this.productList.filter(item => {
+      return this.excelProductList.filter(item => {
         return item.isRepeat;
       }).length;
     }
@@ -216,8 +255,19 @@ export default {
     ...mapActions({
       GenrateCategroyListAndProductList: "GenrateCategroyListAndProductList",
       SetUploadDialog: "SetUploadDialog",
-      DownloadProductDictTem: "DownloadProductDictTem"
+      DownloadProductDictTem: "DownloadProductDictTem",
+      DeleteOneInImportedList: "DeleteOneInImportedList",
+      RecheckList:"RecheckList",
+      SaveExcelList:"SaveExcelList"
     }),
+    indexMethod(index) {
+      index =
+        index +
+        1 +
+        (this.productTablePage.currentPage - 1) *
+          this.productTablePage.pageSize;
+      return index;
+    },
     tableRowClassName({ row }) {
       if (row.isRepeat) {
         return "warning-row";
@@ -226,6 +276,7 @@ export default {
       }
     },
     duplicateSreach() {
+      this.excelProductList.map(item=>{item.isSet=false})
       this.isSrearchDuplicate = !this.isSrearchDuplicate;
     },
     pwdChange(row, index, cg) {
@@ -233,7 +284,7 @@ export default {
         //取消按钮点击
         row.isSet = false;
         if (row.id == 0) {
-          this.categroyList.splice(index, 1);
+          this.excelCategroyList.splice(index, 1);
         }
       } else {
         if (row.isSet) {
@@ -257,7 +308,12 @@ export default {
     categroyAdd() {
       this.selectedItem.name = "";
       this.selectedItem.comment = "";
-      this.categroyList.push({ id: 0, name: "", comment: "", isSet: true });
+      this.excelCategroyList.push({
+        id: 0,
+        name: "",
+        comment: "",
+        isSet: true
+      });
     },
     choseFile() {
       this.SetUploadDialog(true);
@@ -287,13 +343,17 @@ export default {
         });
     },
     checkProductionList() {
-      if (this.productList.length > 0) {
+      if (this.excelProductList.length > 0) {
         this.searchContent = "";
         this.maskloading = true;
-        for (let i = 0; i < this.productList.length; i++) {
-          const pi = this.productList[i];
-          for (let j = i + 1; j < this.productList.length - i - 1; j++) {
-            const pj = this.productList[j];
+        //重置检查结果
+        this.excelProductList.map(item => {
+          item.isRepeat = false;
+        });
+        for (let i = 0; i < this.excelProductList.length; i++) {
+          const pi = this.excelProductList[i];
+          for (let j = i + 1; j < this.excelProductList.length - i - 1; j++) {
+            const pj = this.excelProductList[j];
             if (pj) {
               if (pi.name === pj.name) {
                 pi.isRepeat = true;
@@ -316,8 +376,35 @@ export default {
       this.DownloadProductDictTem();
     },
     pageChanged(page) {
-      console.log(page);
+      this.excelProductList.map(item=>{item.isSet=false})    
       this.productTablePage.currentPage = page;
+      this.RecheckList(true)
+    },
+    CheckHaveUnSaveItem(){
+      return this.productListShow.filter(item=>{return item.isSet==true}).length>0
+    },
+    handleDelete(index, row) {
+      this.DeleteOneInImportedList(row);
+    },
+    handleEdit(index,row){   
+      if(this.CheckHaveUnSaveItem()){
+         this.$message.warning("有未保存项，请先保存")
+         return
+      }
+      row.isSet=!row.isSet
+    },
+    handleSave(index,row){
+      row.isSet=!row.isSet
+      this.RecheckList(true)
+    },
+    saveExcelList(){
+      this.excelProductList.map(item=>{item.isSet=false})
+      this.checkProductionList()
+      if(this.duplicateCount>0){
+         this.$message.warning("存在重复名称，请修改")
+         return
+      }
+      this.SaveExcelList(this.excelProductList)
     }
   }
 };
@@ -388,12 +475,11 @@ export default {
   height: 80px;
 }
 .el-table .warning-row {
-  background: #f39d9d;
+  background: #f8bdbd;
 }
-.table-operation-template{
+.table-operation-template {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 </style>

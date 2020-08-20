@@ -1,6 +1,10 @@
 package com.melson.webserver.resource;
 
 import com.melson.base.BaseResource;
+import com.melson.base.Result;
+import com.melson.base.interceptor.RequiredPermission;
+import com.melson.base.interceptor.SecurityLevel;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -45,5 +50,12 @@ public class ProductResource extends BaseResource {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @RequestMapping(value = "/importProductList",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result ImportProductList(HttpServletRequest request){
+        Result result=new Result();
+        return result;
     }
 }
