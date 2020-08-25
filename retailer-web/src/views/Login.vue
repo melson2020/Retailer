@@ -52,12 +52,18 @@ export default {
         if (valid) {
           this.UserLogin(this.loginUser)
             .then(res => {
-              if (res.data) {
-                localStorage.setItem("userInfo", JSON.stringify(res.data));
-                this.SetLoginStatus(res.data);
-                this.$router.push({ path: "/main" });
-              } else {
-                this.$message.error("账户密码不正确");
+              console.log(res)
+              if (res.resultStatus == 1) {
+                if (res.data) {
+                  localStorage.setItem("userInfo", JSON.stringify(res.data));
+                  this.SetLoginStatus(res.data);
+                  this.$router.push({ path: "/main" });
+                } else {
+                  this.$message.error("账户密码不正确");
+                }
+                }
+              else{
+                this.$message.error(res.message);
               }
             })
             .catch(error => {

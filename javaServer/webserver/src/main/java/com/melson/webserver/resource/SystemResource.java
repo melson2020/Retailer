@@ -8,12 +8,17 @@ import com.melson.base.service.*;
 import com.melson.webserver.dto.StoreDto;
 import com.melson.webserver.entity.Menu;
 import com.melson.webserver.service.IMenu;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +43,13 @@ public class SystemResource extends BaseResource {
     public Result RegisterStore(@RequestBody StoreDto storeDto, HttpServletRequest request) {
         Result result = new Result();
         Store store = storeDto.GenerateStore();
+        store.setCreateDate(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.YEAR, 1);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String ds=df.format(cal.getTime());
+        store.setExpireDate(ds);
         boolean successed = storeService.RegisterStore(store, storeDto.getPassword());
         int res = successed ? 1 : 2;
         result.setResultStatus(res);
@@ -56,14 +68,30 @@ public class SystemResource extends BaseResource {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Result SystemLogin(@RequestBody StoreEmployee employee, HttpServletRequest request) {
+    public Result SystemLogin(@RequestBody StoreEmployee employee, HttpServletRequest request) throws ParseException {
         Result result = new Result();
         StoreEmployee exist = employeeService.Login(employee);
         if(exist!=null) {
+            Store store=storeService.findByCode(exist.getStoreCode());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if(!StringUtils.isEmpty(store.getExpireDate())) {
+                Date date=new Date();
+                Date date2 = sdf.parse(store.getExpireDate());
+                if (date.getTime() > date2.getTime()) {
+                    result.setMessage("商户已过期，请联系管理员续费！");
+                    result.setResultStatus(-1);
+                    return result;
+                }
+            }
+            else
+            {
+                result.setMessage("商户信息异常，请联系管理员！");
+                result.setResultStatus(-1);
+                return result;
+            }
+            exist.setStore(store);
             List<Menu> menuList = menuService.GetMenuListWithPermission(exist.getPermission());
             exist.setMenuList(menuList);
-            Store store=storeService.findByCode(exist.getStoreCode());
-            exist.setStore(store);
         }
         result.setData(exist);
         return result;

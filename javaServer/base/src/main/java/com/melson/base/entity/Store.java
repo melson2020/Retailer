@@ -27,6 +27,7 @@ public class Store {
     //商家编码
     private String code;
     private Date createDate;
+    private String expireDate;
 
     public Date getCreateDate() {
         return createDate;
@@ -34,6 +35,14 @@ public class Store {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(String expireDate) {
+        this.expireDate = expireDate;
     }
 
     public Integer getId() {
