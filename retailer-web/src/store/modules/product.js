@@ -4,7 +4,7 @@ const state = {
     excelCategroyList: [],
     excelProductList: [],
     uploadFileDialog: false,
-    needToRecheckList:false
+    needToRecheckList: false,
 };
 
 const actions = {
@@ -13,25 +13,25 @@ const actions = {
         let productions = []
         for (let index = 0; index < xlsJson.length; index++) {
             let element = xlsJson[index];
-            let categroy = { id: index, name: element.sheetName, comment: "", isSet: false }
+            let categroy = { id: index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
             categroys.push(categroy)
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {
                 let p = products[j];
-                let product = { categroyId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"],isRepeat:false,isSet:false}
+                let product = { categoryId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"], isRepeat: false, isSet: false }
                 productions.push(product)
             }
         }
         commit("SetProductionList", productions)
         commit("SetCategroyList", categroys)
         commit("SetUploadDialog", false)
-        commit("SetNeedToRecheckList", true)
-        
+        commit("CheckDuplicateList")
+
     },
     SetUploadDialog({ commit }, show) {
         commit("SetUploadDialog", show)
     },
-    RecheckList({ commit },check){
+    RecheckList({ commit }, check) {
         commit("SetNeedToRecheckList", check)
     },
     DownloadProductDictTem() {
@@ -52,12 +52,19 @@ const actions = {
             console.log(err)
         })
     },
-    DeleteOneInImportedList({commit},product){
-      commit("DeleteOne",product)
-      commit("SetNeedToRecheckList", true)
+    DeleteOneInImportedList({ commit }, product) {
+        commit("DeleteOne", product)
+        commit("CheckDuplicateList")
+    },
+    DeleteOneInCategroyList({ commit }, categroy) {
+        commit("DeleteOneCategroy", categroy)
+        commit("CheckDuplicateList")
+    },
+    CheckDuplicateList({commit}){
+        commit("CheckDuplicateList")
     },
     // eslint-disable-next-line no-unused-vars
-    SaveExcelList({commit},list){
+    SaveExcelList({ commit }, list) {
         console.log("保存数据值服务器")
         console.log(list)
         console.log(this.state.excelProductList)
@@ -68,7 +75,8 @@ const getters = {
     excelCategroyList: state => state.excelCategroyList,
     excelProductList: state => state.excelProductList,
     uploadFileDialog: state => state.uploadFileDialog,
-    needToRecheckList:state=>state.needToRecheckList
+    needToRecheckList: state => state.needToRecheckList,
+    categroyDuplicateCount:state=>state.categroyDuplicateCount
 };
 
 const mutations = {
@@ -81,12 +89,47 @@ const mutations = {
     SetProductionList(state, data) {
         state.excelProductList = data
     },
-    DeleteOne(state,data){
-        let index=state.excelProductList.indexOf(data)
-        state.excelProductList.splice(index,1)
+    DeleteOne(state, data) {
+        let index = state.excelProductList.indexOf(data)
+        state.excelProductList.splice(index, 1)
     },
-    SetNeedToRecheckList(state,data){
-        state.needToRecheckList=data;
+    SetNeedToRecheckList(state, data) {
+        state.needToRecheckList = data;
+    },
+    DeleteOneCategroy(state, data) {
+        let index = state.excelCategroyList.indexOf(data)
+        state.excelCategroyList.splice(index, 1)
+    },
+    CheckDuplicateList(state) {
+        if (state.excelProductList.length > 0 || state.excelCategroyList.length > 0) {
+            //重置检查结果
+            state.excelProductList.map(item => {item.isRepeat = false;});
+            state.excelCategroyList.map(item => {item.isRepeat = false;});
+            for (let i = 0; i < state.excelProductList.length; i++) {
+                const pi = state.excelProductList[i];
+                for (let j = i + 1; j < state.excelProductList.length; j++) {
+                    const pj = state.excelProductList[j];
+                    if (pj) {
+                        if (pi.name === pj.name) {
+                            pi.isRepeat = true;
+                            pj.isRepeat = true;
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < state.excelCategroyList.length; i++) {
+                const pi = state.excelCategroyList[i];
+                for (let j = i + 1; j < state.excelCategroyList.length; j++) {
+                    const pj = state.excelCategroyList[j];
+                    if (pj) {
+                        if (pi.name === pj.name) {
+                            pi.isRepeat = true;
+                            pj.isRepeat = true;
+                        }
+                    }
+                }
+            }
+        }
     }
 };
 

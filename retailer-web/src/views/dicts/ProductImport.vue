@@ -43,10 +43,29 @@
     <el-col :span="8">
       <div class="show-categroy">
         <div class="title-div">
-          <span class="table-title">商品类别</span>
-          <!-- <el-button type="primary" size="medium">保存修改</el-button> -->
+          <div class="title-div-left">
+            <span class="table-title">商品类别 ({{excelCategroyList.length}})</span>
+            <el-link
+              type="danger"
+              class="duplicate-link"
+              v-if="categroyDuplicateCount>0||isCategroyDuplicate"
+              @click.prevent.stop="categroyDuplicateSreach"
+            >类别重复:{{categroyDuplicateCount}} 个 {{isCategroyDuplicate?'显示全部':'点击查看'}}</el-link>
+          </div>
+            <el-input
+            class="fliter-input"
+            v-model="categroySearchContent"
+            placeholder="请输入内容"
+            suffix-icon="el-icon-search"
+          ></el-input>
         </div>
-        <el-table border class="table-top" :data="excelCategroyList" style="width: 100%">
+        <el-table
+          border
+          :row-class-name="tableRowClassName"
+          class="table-top"
+          :data="excelCategroyListShow.slice((productCategroyPage.currentPage-1)*productCategroyPage.pageSize,productCategroyPage.currentPage*productCategroyPage.pageSize)"
+          style="width: 100%"
+        >
           <el-table-column type="index" label="#"></el-table-column>
           <el-table-column
             v-for="(v,i) in categroyTableColums"
@@ -57,34 +76,53 @@
           >
             <template slot-scope="scope">
               <span v-if="scope.row.isSet">
-                <el-input size="mini" placeholder="请输入内容" v-model="selectedItem[v.field]"></el-input>
+                <el-input size="mini" placeholder="请输入内容" v-model="scope.row[v.field]"></el-input>
               </span>
               <span v-else>{{scope.row[v.field]}}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <span
-                class="el-tag el-tag--info el-tag--mini"
-                style="cursor: pointer;"
-                @click="pwdChange(scope.row,scope.$index,true)"
-              >{{scope.row.isSet?'保存':"修改"}}</span>
-              <span
+              <el-button
+                size="mini"
+                plain
+                circle
+                type="primary"
+                icon="el-icon-edit"
                 v-if="!scope.row.isSet"
-                class="el-tag el-tag--danger el-tag--mini"
-                style="cursor: pointer;"
-              >删除</span>
-              <span
-                v-else
-                class="el-tag el-tag--mini"
-                style="cursor: pointer;"
-                @click="pwdChange(scope.row,scope.$index,false)"
-              >取消</span>
+                @click="categroyEdit(scope.$index, scope.row)"
+              ></el-button>
+              <el-button
+                size="mini"
+                plain
+                circle
+                v-if="scope.row.isSet"
+                type="success"
+                icon="el-icon-s-claim"
+                @click="categroySave(scope.$index, scope.row)"
+              ></el-button>
+              <el-button
+                size="mini"
+                plain
+                circle
+                v-if="!scope.row.isSet"
+                type="danger"
+                icon="el-icon-delete"
+                @click="categroyDelete(scope.$index, scope.row)"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
-        <div class="el-table-add-row">
-          <i class="el-icon-plus" @click="categroyAdd"></i>
+        <div class="el-table-pagination-row">
+          <el-pagination
+            background
+            :current-page="productCategroyPage.currentPage"
+            @current-change="categroyPageChanged"
+            layout="prev, pager, next"
+            :page-size="productCategroyPage.pageSize"
+            :total="excelCategroyListShow.length"
+            v-if="excelCategroyListShow.length>=productCategroyPage.pageSize"
+          ></el-pagination>
         </div>
       </div>
     </el-col>
@@ -148,7 +186,7 @@
                   v-if="scope.row.isSet"
                   type="success"
                   icon="el-icon-s-claim"
-                 @click="handleSave(scope.$index, scope.row)"
+                  @click="handleSave(scope.$index, scope.row)"
                 ></el-button>
                 <el-button
                   size="mini"
@@ -186,18 +224,19 @@ export default {
   data() {
     return {
       readingFile: false,
-      selectedItem: {
-        name: "",
-        comment: ""
-      },
       isSrearchDuplicate: false,
+      isCategroyDuplicate: false,
       maskloading: false,
       productTablePage: {
         pageSize: 12,
-        currentPage: 1,
-        total: 0
+        currentPage: 1
+      },
+      productCategroyPage: {
+        pageSize: 12,
+        currentPage: 1
       },
       searchContent: "",
+      categroySearchContent:"",
       categroyTableColums: [
         { field: "name", label: "类别", width: "auto" },
         { field: "comment", label: "描述", width: "auto" }
@@ -211,21 +250,12 @@ export default {
       ]
     };
   },
-  watch: {
-    // 如果 `needToRecheckList` 发生改变，这个函数就会运行
-    needToRecheckList: function() {
-      if (this.needToRecheckList) {
-        this.checkProductionList();
-        this.RecheckList(false);
-      }
-    }
-  },
   computed: {
     ...mapGetters([
       "excelCategroyList",
       "uploadFileDialog",
       "excelProductList",
-      "needToRecheckList"
+      "categroyDuplicateCount"
     ]),
     productListShow: function() {
       if (this.isSrearchDuplicate) {
@@ -245,6 +275,23 @@ export default {
         });
       }
     },
+    excelCategroyListShow: function() {
+      if (this.isCategroyDuplicate) {
+        return this.excelCategroyList.filter(item => {
+          return item.isRepeat;
+        });
+      } else {
+        return this.excelCategroyList.filter(item=>{
+          let key=item.name+item.comment;
+        let index=key.indexOf(this.categroySearchContent)
+         return index != -1;
+      })
+    }},
+    categroyDuplicateCount: function() {
+      return this.excelCategroyListShow.filter(item => {
+        return item.isRepeat;
+      }).length;
+    },
     duplicateCount: function() {
       return this.excelProductList.filter(item => {
         return item.isRepeat;
@@ -257,8 +304,9 @@ export default {
       SetUploadDialog: "SetUploadDialog",
       DownloadProductDictTem: "DownloadProductDictTem",
       DeleteOneInImportedList: "DeleteOneInImportedList",
-      RecheckList:"RecheckList",
-      SaveExcelList:"SaveExcelList"
+      CheckDuplicateList: "CheckDuplicateList",
+      SaveExcelList: "SaveExcelList",
+      DeleteOneInCategroyList: "DeleteOneInCategroyList"
     }),
     indexMethod(index) {
       index =
@@ -276,44 +324,18 @@ export default {
       }
     },
     duplicateSreach() {
-      this.excelProductList.map(item=>{item.isSet=false})
+      this.excelProductList.map(item => {
+        item.isSet = false;
+      });
+      this.productTablePage.currentPage = 1;
       this.isSrearchDuplicate = !this.isSrearchDuplicate;
     },
-    pwdChange(row, index, cg) {
-      if (!cg) {
-        //取消按钮点击
-        row.isSet = false;
-        if (row.id == 0) {
-          this.excelCategroyList.splice(index, 1);
-        }
-      } else {
-        if (row.isSet) {
-          //保存操作
-          console.log("保存");
-          row.isSet = false;
-          row.name = this.selectedItem.name;
-          row.comment = this.selectedItem.comment;
-          row.id = index;
-          this.selectedItem.name = "";
-          this.selectedItem.comment = "";
-        } else {
-          //修改按钮点击
-          console.log("修改");
-          this.selectedItem.name = row.name;
-          this.selectedItem.comment = row.comment;
-          row.isSet = true;
-        }
-      }
-    },
-    categroyAdd() {
-      this.selectedItem.name = "";
-      this.selectedItem.comment = "";
-      this.excelCategroyList.push({
-        id: 0,
-        name: "",
-        comment: "",
-        isSet: true
+    categroyDuplicateSreach() {
+      this.excelCategroyList.map(item => {
+        item.isSet = false;
       });
+      this.productCategroyPage.currentPage = 1;
+      this.isCategroyDuplicate = !this.isCategroyDuplicate;
     },
     choseFile() {
       this.SetUploadDialog(true);
@@ -342,29 +364,6 @@ export default {
           this.$message.warning("解析excel错误：" + mss);
         });
     },
-    checkProductionList() {
-      if (this.excelProductList.length > 0) {
-        this.searchContent = "";
-        this.maskloading = true;
-        //重置检查结果
-        this.excelProductList.map(item => {
-          item.isRepeat = false;
-        });
-        for (let i = 0; i < this.excelProductList.length; i++) {
-          const pi = this.excelProductList[i];
-          for (let j = i + 1; j < this.excelProductList.length - i - 1; j++) {
-            const pj = this.excelProductList[j];
-            if (pj) {
-              if (pi.name === pj.name) {
-                pi.isRepeat = true;
-                pj.isRepeat = true;
-              }
-            }
-          }
-        }
-        this.maskloading = false;
-      }
-    },
     uploadChange(event) {
       console.log("uploadChange");
       console.log(event);
@@ -375,36 +374,72 @@ export default {
     download() {
       this.DownloadProductDictTem();
     },
-    pageChanged(page) {
-      this.excelProductList.map(item=>{item.isSet=false})    
-      this.productTablePage.currentPage = page;
-      this.RecheckList(true)
+    categroyPageChanged(page) {
+      this.excelCategroyList.map(item => {
+        item.isSet = false;
+      });
+      this.productCategroyPage.currentPage = page;
+      this.CheckDuplicateList(true);
     },
-    CheckHaveUnSaveItem(){
-      return this.productListShow.filter(item=>{return item.isSet==true}).length>0
+    pageChanged(page) {
+      this.excelProductList.map(item => {
+        item.isSet = false;
+      });
+      this.productTablePage.currentPage = page;
+      this.CheckDuplicateList(true);
+    },
+    CheckHaveUnSaveItem() {
+      return (
+        this.productListShow.filter(item => {
+          return item.isSet == true;
+        }).length > 0
+      );
+    },
+    CheckUnSaveCategroy() {
+      return (
+        this.excelCategroyListShow.filter(item => {
+          return item.isSet;
+        }).length > 0
+      );
     },
     handleDelete(index, row) {
       this.DeleteOneInImportedList(row);
     },
-    handleEdit(index,row){   
-      if(this.CheckHaveUnSaveItem()){
-         this.$message.warning("有未保存项，请先保存")
-         return
+    handleEdit(index, row) {
+      if (this.CheckHaveUnSaveItem()) {
+        this.$message.warning("有未保存项，请先保存");
+        return;
       }
-      row.isSet=!row.isSet
+      row.isSet = !row.isSet;
     },
-    handleSave(index,row){
-      row.isSet=!row.isSet
-      this.RecheckList(true)
+    handleSave(index, row) {
+      row.isSet = !row.isSet;
+      this.CheckDuplicateList();
     },
-    saveExcelList(){
-      this.excelProductList.map(item=>{item.isSet=false})
-      this.checkProductionList()
-      if(this.duplicateCount>0){
-         this.$message.warning("存在重复名称，请修改")
-         return
+    categroyDelete(index, row) {
+      this.DeleteOneInCategroyList(row);
+    },
+    categroyEdit(index, row) {
+      if (this.CheckUnSaveCategroy()) {
+        this.$message.warning("有未保存项，请先保存");
+        return;
       }
-      this.SaveExcelList(this.excelProductList)
+      row.isSet = !row.isSet;
+    },
+    categroySave(index, row) {
+      row.isSet = !row.isSet;
+      this.CheckDuplicateList();
+    },
+    saveExcelList() {
+      this.excelProductList.map(item => {
+        item.isSet = false;
+      });
+      this.CheckDuplicateList();
+      if (this.duplicateCount > 0 || this.categroyDuplicateCount > 0) {
+        this.$message.warning("存在重复名称，请修改");
+        return;
+      }
+      this.SaveExcelList(this.excelProductList);
     }
   }
 };
@@ -432,6 +467,7 @@ export default {
 }
 .table-top {
   margin-top: 20px;
+  min-height: 1270px;
 }
 .show-categroy {
   min-height: 100%;

@@ -14,6 +14,8 @@ public class ProductCategory {
     private Integer id;
     private String name;
     private String comment;
+    private String storeCode;
+    private String categoryId;
 
     public Integer getId() {
         return id;
@@ -37,5 +39,21 @@ public class ProductCategory {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getStoreCode() {
+        return storeCode;
+    }
+
+    public void setStoreCode(String storeCode) {
+        this.storeCode = storeCode;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 }
