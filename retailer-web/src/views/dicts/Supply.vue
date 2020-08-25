@@ -1,13 +1,10 @@
 <template>
-<el-main>
   <el-row>
-    <!-- <el-col :span="24"> -->
       <div class="grid-content bg-purple">
         <div class="title-div">
           <span class="title-name">测试</span>
           <el-button icon="el-icon-plus" @click="resetForm('addNewSupply')">添加</el-button>
         </div>
-        <!-- <el-input placeholder="请输入要搜索的联系人" prefix-icon="el-icon-search" v-model="searchFile"></el-input> -->
         <el-table :data="supplyList" border class="supply-table">
           <el-table-column prop="name" label="供应商名" align="left"></el-table-column>
           <el-table-column prop="address" label="联系地址" align="center"></el-table-column>
@@ -21,17 +18,6 @@
             </template>
           </el-table-column>
         </el-table>
-
-
-        <!-- <pagination
-              v-show="total>0"
-              :total="total"
-              :page.sync="listQuery.page"
-              :limit.sync="listQuery.limit"
-              @pagination="GetSupplyList"
-          /> -->
-
-
         <el-dialog
           title="新增供应商"
           :visible.sync="newSupplyFormVisible"
@@ -131,9 +117,7 @@
         </el-dialog>
 
       </div>
-    <!-- </el-col> -->
   </el-row>
-</el-main>
 </template>
 
 
@@ -147,12 +131,6 @@ export default {
       editSupplyFormVisible:false,
       state2: "",
       loading: false,
-      // total: 0,
-      // listQuery: {
-      //     page: 1,
-      //     limit: 10
-      // },
-      // searchFile:"",
       newSupply: {
         id:"",
         name: "",
