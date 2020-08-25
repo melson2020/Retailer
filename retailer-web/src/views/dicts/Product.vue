@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <el-menu default-active="/main/product/dict" mode="horizontal" router>
+    <el-menu :default-active="defaultPath" mode="horizontal" router>
       <el-menu-item index="/main/product/dict">商品目录</el-menu-item>
       <el-menu-item index="/main/product/import">数据导入</el-menu-item>
     </el-menu>
@@ -8,6 +8,16 @@
   </div>
 </template>
 <script>
+export default {
+  data() {
+    return {
+      defaultPath:""
+    };
+  },
+  beforeMount: function() {
+    this.defaultPath=this.$route.path
+  }
+};
 </script>
 <style>
 .el-menu.el-menu--horizontal {
