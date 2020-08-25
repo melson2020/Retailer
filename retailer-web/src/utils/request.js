@@ -73,6 +73,9 @@ export default {
   DownLoadProductDictTemplate(params){
     return service.exportExcel("/product/downloadProductDictTemplate",params)
   },
+  SaveImportedList(params){
+    return service.post("/product/importProductList",params)
+  },
 
   /**
    * Supply

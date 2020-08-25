@@ -1,4 +1,5 @@
 import request from "../../utils/request";
+import { Message } from "element-ui";
 
 const state = {
     excelCategroyList: [],
@@ -13,7 +14,7 @@ const actions = {
         let productions = []
         for (let index = 0; index < xlsJson.length; index++) {
             let element = xlsJson[index];
-            let categroy = { id: index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
+            let categroy = { id: index,categoryId:index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
             categroys.push(categroy)
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {
@@ -65,9 +66,15 @@ const actions = {
     },
     // eslint-disable-next-line no-unused-vars
     SaveExcelList({ commit }, list) {
-        console.log("保存数据值服务器")
-        console.log(list)
-        console.log(this.state.excelProductList)
+        request.SaveImportedList(list).then(res=>{
+             if(res.resultStatus==1){
+               Message.success("导入成功")
+             }else{
+               Message.warning("导入失败")
+             }
+        }).catch(err=>{
+            Message.error(err.message?err.message:err)
+        })
     }
 };
 
