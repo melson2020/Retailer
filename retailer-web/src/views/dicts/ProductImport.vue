@@ -6,7 +6,7 @@
     element-loading-background="rgba(0, 0, 0, 0.6)"
   >
     <div class="header">
-      <el-button @click.prevent.stop="saveExcelList" class="top-button" size="small">保存</el-button>
+      <el-button @click.prevent.stop="saveExcelList" class="top-button" size="small" :disabled="excelProductList.length<=0||excelCategroyList.length<=0">保存</el-button>
       <el-button @click.prevent.stop="choseFile" class="top-button" size="small">数据导入</el-button>
       <el-button @click.prevent.stop="download" class="top-button" size="small">模板下载</el-button>
       <el-dialog
@@ -255,7 +255,8 @@ export default {
       "excelCategroyList",
       "uploadFileDialog",
       "excelProductList",
-      "categroyDuplicateCount"
+      "categroyDuplicateCount",
+      "userInfo"
     ]),
     productListShow: function() {
       if (this.isSrearchDuplicate) {
@@ -439,7 +440,8 @@ export default {
         this.$message.warning("存在重复名称，请修改");
         return;
       }
-      this.SaveExcelList(this.excelProductList);
+      let params={storeCode:this.userInfo.storeCode,productList:this.excelProductList,categoryList:this.excelCategroyList}
+      this.SaveExcelList(params);
     }
   }
 };
