@@ -3,6 +3,8 @@ package com.melson.webserver.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.ResultType;
+import com.melson.base.cache.CacheKey;
+import com.melson.base.cache.CacheUtil;
 import com.melson.base.entity.Permission;
 import com.melson.base.entity.StoreEmployee;
 import com.melson.base.interceptor.RequiredPermission;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Nelson
@@ -29,10 +32,12 @@ import java.util.List;
 public class EmployeeResource extends BaseResource {
     private final IStoreEmployee employeeService;
     private final IPermission permissionService;
+    private final CacheUtil cacheUtil;
 
-    public EmployeeResource(IStoreEmployee employeeService,IPermission permissionService) {
+    public EmployeeResource(IStoreEmployee employeeService,IPermission permissionService, CacheUtil catchUtil) {
         this.employeeService = employeeService;
         this.permissionService=permissionService;
+        this.cacheUtil=catchUtil;
     }
 
     @RequestMapping(value = "/employeeList")
@@ -91,7 +96,18 @@ public class EmployeeResource extends BaseResource {
          }
          Integer savedCount=employeeService.UpdateEmployee(storeEmployee);
          Result result=new Result();
-         result.setResultStatus(savedCount>0?1:-1);
+         if(savedCount>0){
+             result.setResultStatus(1);
+             //更新缓存
+             Map<String, StoreEmployee> map = cacheUtil.GetObjectValue(CacheKey.StoreEmployee, Map.class);
+             StoreEmployee emp=map.get(storeEmployee.getUserId());
+             emp.setPermission(storeEmployee.getPermission());
+         }
+         else
+         {
+             result.setResultStatus(-1);
+         }
+//         result.setResultStatus(savedCount>0?1:-1);
          result.setData(savedCount);
          return result;
     }
@@ -104,7 +120,16 @@ public class EmployeeResource extends BaseResource {
         }
         Integer deleteCount=employeeService.DeleteEmployee(storeEmployee);
         Result result=new Result();
-        result.setResultStatus(deleteCount>0?1:-1);
+        if(deleteCount>0){
+            result.setResultStatus(1);
+            //更新缓存
+            Map<String, StoreEmployee> map = cacheUtil.GetObjectValue(CacheKey.StoreEmployee, Map.class);
+            map.remove(storeEmployee.getUserId());
+        }
+        else {
+            result.setResultStatus(-1);
+        }
+//        result.setResultStatus(deleteCount>0?1:-1);
         result.setData(deleteCount);
         return result;
     }
