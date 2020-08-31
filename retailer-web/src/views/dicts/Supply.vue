@@ -2,10 +2,19 @@
   <el-row>
       <div class="grid-content bg-purple">
         <div class="title-div">
-          <span class="title-name">测试</span>
+          <div class="title-div-left">
+            <span class="table-title">供应商列表 ({{supplyList.length}})</span>
+            <el-input
+              class="fliter-input"
+              v-model="searchContent"
+              placeholder="请输入内容"
+              suffix-icon="el-icon-search"
+            ></el-input>
+          </div>
+
           <el-button icon="el-icon-plus" @click="resetForm('addNewSupply')">添加</el-button>
         </div>
-        <el-table :data="supplyList" border class="supply-table">
+        <el-table :data="supplyListShow" border class="supply-table">
           <el-table-column prop="name" label="供应商名" align="left"></el-table-column>
           <el-table-column prop="address" label="联系地址" align="center"></el-table-column>
           <el-table-column prop="contact" label="联系人员" align="center"></el-table-column>
@@ -131,6 +140,7 @@ export default {
       editSupplyFormVisible:false,
       state2: "",
       loading: false,
+      searchContent: "",
       newSupply: {
         id:"",
         name: "",
@@ -162,11 +172,35 @@ export default {
       }
     };
   },
-  created(){
-      this.GetSupplyList(this.userInfo);
-  },
   computed: {
-    ...mapGetters(["userInfo", "supplyList"])
+    ...mapGetters(["userInfo", "supplyList"]),
+    supplyListShow: function(){
+      return this.supplyList.filter(item=>{
+        let key=
+        item.name+
+        item.address;
+        if(item.contact){
+          key=key+item.contact;
+        }
+        else{
+          key=key+"";
+        }
+        if(item.phone){
+          key=key+item.phone;
+        }
+        else{
+          key=key+"";
+        }
+        if(item.discount){
+          key=key+item.discount;
+        }
+        else{
+          key=key+"";
+        }
+        let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
+          return index != -1;
+      })
+    }
   },
   methods: {
     ...mapActions({
@@ -269,9 +303,9 @@ export default {
       });
     }
   },
-  // beforeMount: function() {
-  //   this.GetSupplyList(this.userInfo);
-  // }
+  beforeMount: function() {
+    this.GetSupplyList(this.userInfo);
+  }
 };
 </script>
 
@@ -291,11 +325,22 @@ export default {
   height: 80px;
 }
 .title-name {
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   color: gray;
 }
 .supply-table {
   margin-top: 20px;
 }
+.title-div-left {
+  display: flex;
+  align-items: center;
+}
+.table-title {
+  float: left;
+  font-size: 25px;
+  color: #909399;
+  font-weight: bold;
+}
+
 </style>

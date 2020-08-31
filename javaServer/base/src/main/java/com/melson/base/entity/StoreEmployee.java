@@ -24,6 +24,8 @@ public class StoreEmployee {
     private String loginName;
     private String password;
     private Date createDate;
+    @Transient
+    private String loginFrom;
 
     public Date getCreateDate() {
         return createDate;
@@ -124,5 +126,13 @@ public class StoreEmployee {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getLoginFrom() {
+        return loginFrom;
+    }
+
+    public void setLoginFrom(String loginFrom) {
+        this.loginFrom = loginFrom;
     }
 }

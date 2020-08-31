@@ -29,7 +29,8 @@ export default {
     return {
       loginUser: {
         loginName: "",
-        password: ""
+        password: "",
+        loginFrom:""
       },
       loginBackground: {
         backgroundImage:
@@ -48,11 +49,11 @@ export default {
       SetLoginStatus: "SetLoginStatus"
     }),
     userLogin(formName) {
+      this.loginUser.loginFrom=JSON.stringify({user:this.loginUser.loginName,ip:returnCitySN["cip"],city:returnCitySN["cname"]});
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.UserLogin(this.loginUser)
             .then(res => {
-              console.log(res)
               if (res.resultStatus == 1) {
                 if (res.data) {
                   localStorage.setItem("userInfo", JSON.stringify(res.data));
@@ -67,7 +68,7 @@ export default {
               }
             })
             .catch(error => {
-              let messageStr = error.message ? error.message : error;
+              let messageStr =typeof error=='undefined'||error==null? error : error.message;
               this.$message.error(messageStr);
             });
         } else {
@@ -75,7 +76,7 @@ export default {
           return false;
         }
       });
-    }
+    },
   }
 };
 </script>

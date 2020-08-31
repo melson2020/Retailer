@@ -269,9 +269,13 @@ export default {
             item.name +
             item.type +
             item.specification +
-            item.unit +
-            (item.feature ? "" : item.feature);
-          let index = key.indexOf(this.searchContent);
+            item.unit;
+          if(item.feature){
+            key=key+item.feature;
+          }else{
+            key=key+"";
+          }
+          let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
           return index != -1;
         });
       }
@@ -284,7 +288,7 @@ export default {
       } else {
         return this.excelCategroyList.filter(item=>{
           let key=item.name+item.comment;
-        let index=key.indexOf(this.categroySearchContent)
+        let index=key.toUpperCase().indexOf(this.categroySearchContent.toUpperCase())
          return index != -1;
       })
     }},
