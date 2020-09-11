@@ -1,6 +1,7 @@
 package com.melson.webserver.service;
 
 import com.melson.base.IService;
+import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
 
@@ -13,5 +14,7 @@ import java.util.List;
  */
 public interface IProduct extends IService<Product> {
     boolean SaveImportedList(ProductImportDto dto);
-    List<Product> FindUsingList(String storeCode);
+//    List<Product> FindUsingList(String storeCode);
+
+    List<ProductDto> FindProductList(String storeCode);
 }

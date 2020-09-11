@@ -5,6 +5,7 @@ import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
+import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
 import com.melson.webserver.service.IProduct;
@@ -76,12 +77,23 @@ public class ProductResource extends BaseResource {
         return result;
     }
 
+//    @RequestMapping(value = "/productList")
+//    @RequiredPermission(SecurityLevel.Employee)
+//    public Result FindUseProductList(HttpServletRequest request){
+//        String storeCode=request.getParameter("storeCode");
+//        if(StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+//        List<Product> productList=productService.FindUsingList(storeCode);
+//        Result result=new Result();
+//        result.setData(productList);
+//        return  result;
+//    }
+
     @RequestMapping(value = "/productList")
     @RequiredPermission(SecurityLevel.Employee)
     public Result FindUseProductList(HttpServletRequest request){
         String storeCode=request.getParameter("storeCode");
         if(StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
-        List<Product> productList=productService.FindUsingList(storeCode);
+        List<ProductDto> productList=productService.FindProductList(storeCode);
         Result result=new Result();
         result.setData(productList);
         return  result;
