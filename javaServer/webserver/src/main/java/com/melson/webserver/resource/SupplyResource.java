@@ -4,6 +4,8 @@ import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.entity.StoreEmployee;
+import com.melson.base.interceptor.RequiredPermission;
+import com.melson.base.interceptor.SecurityLevel;
 import com.melson.webserver.entity.ProductCategory;
 import com.melson.webserver.entity.Supply;
 import com.melson.webserver.service.ISupply;
@@ -30,6 +32,7 @@ public class SupplyResource extends BaseResource {
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result GetSupplyList(HttpServletRequest request){
         String storeCode=request.getParameter("storeCode");
         if(StringUtils.isEmpty(storeCode)){

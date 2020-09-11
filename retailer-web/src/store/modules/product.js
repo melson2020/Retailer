@@ -6,6 +6,7 @@ const state = {
     excelProductList: [],
     uploadFileDialog: false,
     needToRecheckList: false,
+    productList:[],
 };
 
 const actions = {
@@ -75,6 +76,17 @@ const actions = {
         }).catch(err=>{
             Message.error(err.message?err.message:err)
         })
+    },
+    GetProductList({commit},params){
+        request.GetProductList(params).then(res=>{
+            if(res.resultStatus==1){
+                commit("SetProductList",res.data)
+              }else{
+                Message.warning(res.message)
+              }
+        }).catch(err=>{
+            Message.error(err.message?err.message:err)
+        })
     }
 };
 
@@ -83,7 +95,8 @@ const getters = {
     excelProductList: state => state.excelProductList,
     uploadFileDialog: state => state.uploadFileDialog,
     needToRecheckList: state => state.needToRecheckList,
-    categroyDuplicateCount:state=>state.categroyDuplicateCount
+    categroyDuplicateCount:state=>state.categroyDuplicateCount,
+    productList:state=>state.productList
 };
 
 const mutations = {
@@ -137,6 +150,9 @@ const mutations = {
                 }
             }
         }
+    },
+    SetProductList(state,data){
+        state.productList=data
     }
 };
 

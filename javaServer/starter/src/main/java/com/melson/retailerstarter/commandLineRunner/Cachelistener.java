@@ -11,6 +11,8 @@ import com.melson.base.service.IArea;
 import com.melson.base.service.ICity;
 import com.melson.base.service.IProvince;
 import com.melson.base.service.IStoreEmployee;
+import com.melson.webserver.entity.SysConfig;
+import com.melson.webserver.service.ISysConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +39,15 @@ public class Cachelistener implements CommandLineRunner {
     private final IProvince provinceService;
     private final ICity cityService;
     private final IArea areaService;
+    private final ISysConfig sysConfigService;
 
-    public Cachelistener(CacheUtil cacheUtil, IStoreEmployee employeeService, IProvince provinceService, ICity cityService, IArea areaService) {
+    public Cachelistener(CacheUtil cacheUtil, IStoreEmployee employeeService, IProvince provinceService, ICity cityService, IArea areaService,ISysConfig sysConfigService) {
         this.cacheUtil = cacheUtil;
         this.employeeService = employeeService;
         this.provinceService = provinceService;
         this.cityService = cityService;
         this.areaService = areaService;
+        this.sysConfigService=sysConfigService;
     }
 
     @Override
@@ -57,6 +61,8 @@ public class Cachelistener implements CommandLineRunner {
         LoadCity();
         //加载区域列表到缓存
         LoadArea();
+        //加载系统配置到缓存
+        LoadSysConfig();
         log.info("--------------------- cache init completed ------------------------");
     }
 
@@ -89,5 +95,15 @@ public class Cachelistener implements CommandLineRunner {
         List<Area> areaList = areaService.findAll();
         cacheUtil.Put(CacheKey.Area, areaList);
         log.info("--------------------- area added ----------------------------------");
+    }
+    private void LoadSysConfig(){
+        log.info("--------------------- add system config to cache ---------------------------");
+        List<SysConfig> configs = sysConfigService.FindAll();
+        Map<String,String> configMap=new HashMap<>(configs.size());
+        for(SysConfig config:configs){
+            configMap.put(config.getKey(),config.getValue());
+        }
+        cacheUtil.Put(CacheKey.SysConfig, configMap);
+        log.info("--------------------- system config added ----------------------------------");
     }
 }

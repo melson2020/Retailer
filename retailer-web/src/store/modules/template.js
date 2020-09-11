@@ -1,5 +1,5 @@
-import request from "../../utils/request";
-import {Message} from "element-ui";
+// import request from "../../utils/request";
+// import {Message} from "element-ui";
 
 const state={
     supplyList:[],

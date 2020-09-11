@@ -76,6 +76,9 @@ export default {
   SaveImportedList(params){
     return service.post("/product/importProductList",params)
   },
+  GetProductList(params){
+    return service.get("/product/productList",params)
+  },
 
   /**
    * Supply
@@ -91,7 +94,28 @@ export default {
   },
   QuerySupplyObj(params){
     return service.post("/supply/query",params);
-  }
+  },
 
-  
+  /**
+   * Storage
+   */
+  GetProductStorageCount(params){
+    return service.get("/storage/storageAndProductCount",params)
+  },
+  GenerateStorageList(params){
+    return service.get("/storage/generateStorage",params)
+  },
+  GetStorageList(params){
+    return service.get("/storage/storageList",params)
+  },
+  GetBatchList(params){
+    return service.get("/storage/storageDetail",params)
+  },
+
+  /**
+   * Storage In
+   */
+  SaveStorageInTicket(params){
+    return service.post("/storageIn/saveTicket",params)
+  },
 };

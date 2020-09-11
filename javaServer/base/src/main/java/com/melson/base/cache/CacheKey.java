@@ -13,5 +13,6 @@ public final class CacheKey {
     public static String Province="Province";
     public static String City="City";
     public static String Area="Area";
+    public static String SysConfig="SysConifg";
 
 }

@@ -2,11 +2,14 @@ package com.melson.webserver.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
 import com.melson.webserver.dto.ProductImportDto;
+import com.melson.webserver.entity.Product;
 import com.melson.webserver.service.IProduct;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.melson.webserver.service.ISysConfig;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -25,14 +29,17 @@ import java.io.*;
 @RequestMapping(value = "/product")
 public class ProductResource extends BaseResource {
     private final IProduct productService;
+    private final ISysConfig sysConfigService;
 
-    public ProductResource(IProduct productService) {
+
+    public ProductResource(IProduct productService,ISysConfig sysConfigService) {
         this.productService = productService;
+        this.sysConfigService=sysConfigService;
     }
 
     @RequestMapping(value = "/downloadProductDictTemplate",method = RequestMethod.POST)
     public void DownloadTemplate(HttpServletRequest request, HttpServletResponse response){
-        String path="D:\\Resource\\retailer-prod-template.xlsx";
+        String path=sysConfigService.FindValueFromCache("templatePath");
         try {
             // path是指欲下载的文件的路径。
             File file = new File(path);
@@ -68,4 +75,17 @@ public class ProductResource extends BaseResource {
         result.setResultStatus(saved?1:-1);
         return result;
     }
+
+    @RequestMapping(value = "/productList")
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result FindUseProductList(HttpServletRequest request){
+        String storeCode=request.getParameter("storeCode");
+        if(StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+        List<Product> productList=productService.FindUsingList(storeCode);
+        Result result=new Result();
+        result.setData(productList);
+        return  result;
+    }
+
+
 }

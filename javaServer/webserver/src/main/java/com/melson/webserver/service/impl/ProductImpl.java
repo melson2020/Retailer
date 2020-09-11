@@ -65,4 +65,9 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         List<ProductCategory> categorySaved= productCategoryDao.saveAll(categoryList);
         return saved.size()>0&categorySaved.size()>0;
     }
+
+    @Override
+    public List<Product> FindUsingList(String storeCode) {
+        return productDao.findByStoreCode(storeCode);
+    }
 }

@@ -3,8 +3,13 @@ package com.melson.webserver.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.entity.*;
+import com.melson.base.interceptor.RequiredPermission;
+import com.melson.base.interceptor.SecurityLevel;
 import com.melson.base.service.*;
+import com.melson.webserver.entity.TaxRate;
 import com.melson.webserver.service.IMenu;
+import com.melson.webserver.service.ISysConfig;
+import com.melson.webserver.service.ITaxRate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,12 +28,16 @@ public class PublicResource extends BaseResource {
     private final ICity cityService;
     private final IArea areaService;
     private final IMenu menuService;
+    private final ITaxRate taxRateService;
 
-    public PublicResource(IProvince provinceService, ICity cityService, IArea areaService, IMenu menuService) {
+
+    public PublicResource(IProvince provinceService, ICity cityService, IArea areaService, IMenu menuService,ITaxRate taxRateService) {
         this.provinceService = provinceService;
         this.cityService = cityService;
         this.areaService = areaService;
         this.menuService=menuService;
+        this.taxRateService=taxRateService;
+
     }
 
     @RequestMapping("/provinceList")
@@ -59,6 +68,12 @@ public class PublicResource extends BaseResource {
         System.out.println("GET Rest Call: /public/areaList ...");
         return result;
     }
-
-
+    @RequestMapping(value = "/taxRate")
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result GetTaxRateList(HttpServletRequest request){
+        Result result=new Result();
+        List<TaxRate> taxRateList=taxRateService.FindTaxRateList();
+        result.setData(taxRateList);
+        return  result;
+    }
 }

@@ -10,6 +10,8 @@ const Product = () => import("../views/dicts/Product.vue");
 const Employee = () => import("../views/dicts/Employee.vue");
 const ProductDict=()=> import("../views/dicts/ProductDict.vue");
 const ProductImport=()=> import("../views/dicts/ProductImport.vue")
+const ProductStock=()=>import("../views/storage/ProductStorage.vue")
+const StorageIn=()=>import("../views/storageIn/StorageIn.vue")
 
 Vue.use(VueRouter);
 
@@ -68,6 +70,16 @@ const routes = [
         path: "employee",
         name: "employee",
         component: Employee
+      },
+      {
+        path:"productStorage",
+        name:"productStorage",
+        component:ProductStock
+      },
+      {
+        path:"storageIn",
+        name:"storageIn",
+        component:StorageIn
       },
       {
         path: "/",
