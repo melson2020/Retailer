@@ -1,6 +1,8 @@
 package com.melson.base.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.base.cache.CacheKey;
+import com.melson.base.cache.CacheUtil;
 import com.melson.base.dao.IStoreDao;
 import com.melson.base.dao.IStoreEmployeeDao;
 import com.melson.base.entity.Store;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,10 +28,12 @@ import java.util.UUID;
 public class StoreImpl extends AbstractService<Store> implements IStore {
     private final IStoreDao storeDao;
     private final IStoreEmployeeDao storeEmployeeDao;
+    private final CacheUtil cacheUtil;
 
-    public StoreImpl(IStoreDao storeDao,IStoreEmployeeDao storeEmployeeDao) {
+    public StoreImpl(IStoreDao storeDao,IStoreEmployeeDao storeEmployeeDao,CacheUtil cacheUtil) {
         this.storeDao = storeDao;
         this.storeEmployeeDao=storeEmployeeDao;
+        this.cacheUtil=cacheUtil;
     }
 
     @Override
@@ -43,7 +49,13 @@ public class StoreImpl extends AbstractService<Store> implements IStore {
         Store saved=storeDao.save(store);
         if(saved!=null){
            StoreEmployee employee=GenerateAdminUserForStore(saved,password);
-           return storeEmployeeDao.save(employee)!=null;
+            StoreEmployee saveEP=storeEmployeeDao.save(employee);
+            if(saveEP!=null) {
+                //添加缓存
+                Map<String, StoreEmployee> map = cacheUtil.GetObjectValue(CacheKey.StoreEmployee, Map.class);
+                map.put(saveEP.getUserId(), saveEP);
+            }
+            return storeEmployeeDao.save(employee) != null;
         }else {
             return false;
         }
