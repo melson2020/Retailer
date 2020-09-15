@@ -42,7 +42,10 @@ import {
   Link,
   Tag,
   InputNumber,
-  Checkbox
+  Checkbox,
+  DatePicker,
+  Scrollbar,
+  Popover
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -128,7 +131,10 @@ Vue.use(BreadcrumbItem);
 Vue.use(Link);
 Vue.use(Tag);
 Vue.use(InputNumber);
-Vue.use(Checkbox)
+Vue.use(Checkbox);
+Vue.use(DatePicker);
+Vue.use(Scrollbar);
+Vue.use(Popover)
 
 new Vue({
   router,

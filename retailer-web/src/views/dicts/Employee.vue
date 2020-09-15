@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <div class="grid-content bg-purple">
+      <div class="grid-content">
         <div class="title-div">
           <span class="title-name">{{ userInfo.store.storeName }}</span>
           <el-button

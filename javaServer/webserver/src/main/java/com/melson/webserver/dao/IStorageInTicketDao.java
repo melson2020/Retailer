@@ -4,6 +4,9 @@ import com.melson.webserver.entity.StorageInTicket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @Author Nelson
  * @Description
@@ -11,4 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IStorageInTicketDao extends JpaRepository<StorageInTicket,String> {
+    List<StorageInTicket> findByCreateTimeBetweenAndStoreCode(Date startDate,Date endDate,String storeCode);
 }
