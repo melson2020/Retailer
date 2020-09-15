@@ -1,11 +1,15 @@
 package com.melson.base.utils;
 
+import com.melson.base.cache.CacheKey;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 import org.hibernate.internal.SessionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -56,5 +60,11 @@ public class EntityManagerUtil {
         }finally {
             return rs;
         }
+    }
+
+    public List<Object[]> ExcuteSql(String sql) {
+        Query query=entityManager.createNativeQuery(sql);
+        List<Object[]> list= query.getResultList();
+        return list;
     }
 }

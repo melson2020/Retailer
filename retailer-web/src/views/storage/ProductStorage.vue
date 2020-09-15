@@ -40,6 +40,7 @@
           v-model="searchContent"
           placeholder="搜索名称 / 型号"
           suffix-icon="el-icon-search"
+          @focus="searchFocus"
         ></el-input>
       </div>
       <el-table
@@ -145,6 +146,9 @@ export default {
       GetProductStorageList: "GetProductStorageList",
       GetBatchList: "GetBatchList"
     }),
+    searchFocus(){
+      this.storageTable.currentPage=1;
+    },
     GenerateAll() {
       let params = { storeCode: this.userInfo.storeCode };
       this.GenerateProductStorageList(params);

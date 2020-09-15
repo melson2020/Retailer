@@ -1,5 +1,6 @@
 package com.melson.webserver.dao;
 
+import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,5 @@ public interface IProductDao extends JpaRepository<Product,String> {
      Integer GetCountWithStore(String storeCode);
 
      List<Product> findByStoreCode(String storeCode);
+
 }

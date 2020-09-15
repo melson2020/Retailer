@@ -77,6 +77,7 @@ const actions = {
             Message.error(err.message?err.message:err)
         })
     },
+    
     GetProductList({commit},params){
         request.GetProductList(params).then(res=>{
             if(res.resultStatus==1){
