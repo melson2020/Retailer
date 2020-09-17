@@ -110,8 +110,12 @@
               placeholder="税点"
               size="small"
             >
-              <el-option label="3%" value="3"></el-option>
-              <el-option label="13%" value="13"></el-option>
+              <el-option
+                v-for="taxRate in taxRateList"
+                :label="taxRate.description"
+                :value="taxRate.rate"
+                :key="taxRate.id"
+              ></el-option>
             </el-select>
             <div>
               <el-button
@@ -194,8 +198,8 @@ import { mapActions } from "vuex";
 
 export default {
   data() {
-     var validateDetail = (rule, value, callback) => {
-      if (value === ""&&this.storageInTicket.type=="additional") {
+    var validateDetail = (rule, value, callback) => {
+      if (value === "" && this.storageInTicket.type == "additional") {
         callback(new Error("临时入库，请填写描述"));
       } else {
         callback();
@@ -229,12 +233,12 @@ export default {
       rules: {
         type: [{ required: true, message: "请选择类型", trigger: "blur" }],
         products: [{ required: true, message: "请添加商品", trigger: "blur" }],
-        description:[{ validator: validateDetail, trigger: "blur" }]
+        description: [{ validator: validateDetail, trigger: "blur" }]
       }
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "supplyList", "productList"]),
+    ...mapGetters(["userInfo", "supplyList", "productList", "taxRateList"]),
     addItemPrice: function() {
       return this.NumberDiv(
         this.addItem.totalPrice,
@@ -267,17 +271,14 @@ export default {
     ...mapActions({
       GetProductList: "GetProductList",
       GetSupplyList: "GetSupplyList",
-      SaveTicket:"SaveTicket"
+      SaveTicket: "SaveTicket",
+      GetTaxRateList: "GetTaxRateList"
     }),
     createTicket() {
       this.formDisabled = false;
       let localTime = this.getFullTime();
       this.storageInTicket.date =
-        localTime.Y +
-        "-" +
-        localTime.M +
-        "-" +
-        localTime.D;
+        localTime.Y + "-" + localTime.M + "-" + localTime.D;
       this.storageInTicket.batchNo =
         localTime.Y +
         localTime.M +
@@ -351,7 +352,7 @@ export default {
         count: this.addItem.count,
         countUnit: this.addItem.unit,
         discount: this.addItem.discount,
-        price:parseFloat(this.addItemPrice) ,
+        price: parseFloat(this.addItemPrice),
         vat: this.addItem.vat ? 1 : 0,
         taxRate: this.addItem.taxRate,
         totalPrice: parseFloat(this.addItem.totalPrice)
@@ -398,11 +399,24 @@ export default {
     handleDelete(index) {
       this.storageInTicket.products.splice(index, 1);
     },
-    createStorageInTicket(formName){
-       this.$refs[formName].validate(valid => {
+    createStorageInTicket(formName) {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-         this.storageInTicket.storeCode=this.userInfo.storeCode;
-         this.SaveTicket(this.storageInTicket);
+          this.storageInTicket.storeCode = this.userInfo.storeCode;
+          this.SaveTicket(this.storageInTicket)
+            .then(res => {
+              if (res.resultStatus == 1) {
+                this.$message.success("保存成功");
+                this.$refs["ticketForm"].resetFields();
+                this.clearAddItem();
+                this.formDisabled = true;
+              } else {
+                this.$message.error(res.message);
+              }
+            })
+            .catch(err => {
+              this.$message.error(err.message ? err.message : err);
+            });
         } else {
           this.$message.warning("请填写准确信息");
           return false;
@@ -415,6 +429,7 @@ export default {
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductList(params);
     this.GetSupplyList(params);
+    this.GetTaxRateList();
   }
 };
 </script>
@@ -435,7 +450,7 @@ export default {
   height: auto;
   padding: 30px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
-  margin: 20px;
+  margin: 20px 0px;
 }
 .form-title {
   height: 100px;

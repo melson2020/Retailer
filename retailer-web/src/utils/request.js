@@ -127,4 +127,13 @@ export default {
   SaveStorageInTicket(params){
     return service.post("/storageIn/saveTicket",params)
   },
+  GetTaxRateList(){
+    return service.get("/storageIn/taxRateList")
+  },
+  GetRecordList(params){
+    return service.get("/storageIn/storageInRecord",params)
+  },
+  GetRecordDetail(params){
+    return service.get("/storageIn/storageInRecordDetails",params)
+  }
 };

@@ -3,6 +3,7 @@ package com.melson.webserver.service.impl;
 import com.melson.base.AbstractService;
 import com.melson.base.utils.EntityManagerExcuteRs;
 import com.melson.base.utils.EntityManagerUtil;
+import com.melson.webserver.Vo.StoreInTicketVo;
 import com.melson.webserver.dao.IProductBatchDao;
 import com.melson.webserver.dao.IStorageInDetailDao;
 import com.melson.webserver.dao.IStorageInTicketDao;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -78,6 +80,28 @@ public class StorageInTicketImpl extends AbstractService<StorageInTicket> implem
         }
     }
 
+    @Override
+    public List<StoreInTicketVo> FindTickets(String startDate, String endDate, String storeCode) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date dateBegin = sdf.parse(startDate);
+            Date dateEnd = sdf.parse(endDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateEnd);
+            calendar.add(Calendar.DATE, 1);
+            Date newEnd = calendar.getTime();
+            List<StorageInTicket> tickets= storageInTicketDao.findByCreateTimeBetweenAndStoreCode(dateBegin, newEnd, storeCode);
+            return ConvertToVos(tickets);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<StorageInDetail> FindTicketDetails(String code) {
+        return storageInDetailDao.findByStorageInTicketCode(code);
+    }
+
     private ProductBatch GenerateBatch(StorageInDetail detail, StorageInTicket ticket) {
         ProductBatch pb = new ProductBatch();
         pb.setStoreCode(ticket.getStoreCode());
@@ -95,5 +119,27 @@ public class StorageInTicketImpl extends AbstractService<StorageInTicket> implem
         pb.setDiscount(detail.getDiscount());
         pb.setTotalPrice(detail.getTotalPrice());
         return pb;
+    }
+
+    private List<StoreInTicketVo> ConvertToVos(List<StorageInTicket> tickets){
+        Map<String,List<StorageInTicket>> ticketMap=new HashMap<>();
+        for (StorageInTicket ticket:tickets){
+            List<StorageInTicket> existTickets=ticketMap.get(ticket.getDate());
+            if(existTickets==null){
+                existTickets=new ArrayList<>();
+                existTickets.add(ticket);
+                ticketMap.put(ticket.getDate(),existTickets);
+            }else {
+                existTickets.add(ticket);
+            }
+        }
+        List<StoreInTicketVo> vos=new ArrayList<>(ticketMap.size());
+        for (String date:ticketMap.keySet()){
+            StoreInTicketVo vo=new StoreInTicketVo();
+            vo.setDate(date);
+            vo.setTickets(ticketMap.get(date));
+            vos.add(vo);
+        }
+        return vos;
     }
 }

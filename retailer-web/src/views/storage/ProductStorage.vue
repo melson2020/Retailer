@@ -65,9 +65,10 @@
             >
               <el-table-column prop="batchNo" label="批次号" width="auto"></el-table-column>
               <el-table-column prop="supplyName" label="供应商" width="auto"></el-table-column>
-              <el-table-column label="是否含税" width="auto">
+              <el-table-column label="税/回点" width="auto">
                  <template slot-scope="scope">
                    <el-tag v-if="scope.row.vat==1"  size="mini">税 ({{scope.row.taxRate}}%)</el-tag>
+                   <el-tag v-if="scope.row.discount>0" type="success"  size="mini">回点 ({{scope.row.discount}}%)</el-tag>
                 </template>
               </el-table-column>
               <el-table-column label="单价">
@@ -249,5 +250,8 @@ export default {
   font-size: 20px;
   color: #e6a23c;
   font-weight: bold;
+}
+.el-tag{
+  margin: 0px 10px;
 }
 </style>

@@ -12,6 +12,7 @@ const ProductDict=()=> import("../views/dicts/ProductDict.vue");
 const ProductImport=()=> import("../views/dicts/ProductImport.vue")
 const ProductStock=()=>import("../views/storage/ProductStorage.vue")
 const StorageIn=()=>import("../views/storageIn/StorageIn.vue")
+const StorageInRecord=()=>import("../views/storageIn/StorageInRecord.vue")
 
 Vue.use(VueRouter);
 
@@ -80,6 +81,11 @@ const routes = [
         path:"storageIn",
         name:"storageIn",
         component:StorageIn
+      },
+      {
+        path:"storageRecord",
+        name:"storageRecord",
+        component:StorageInRecord
       },
       {
         path: "/",
