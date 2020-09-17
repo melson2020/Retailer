@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import request from "../../utils/request";
 import { Message } from "element-ui";
 
@@ -79,7 +80,7 @@ const actions = {
     },
     
     GetProductList({commit},params){
-        request.GetProductList(params).then(res=>{
+        request.GetProductListReq(params).then(res=>{
             if(res.resultStatus==1){
                 commit("SetProductList",res.data)
               }else{
@@ -88,7 +89,30 @@ const actions = {
         }).catch(err=>{
             Message.error(err.message?err.message:err)
         })
-    }
+    },
+    DeleteProduct({commit},product){
+        request
+        .DeleteProductReq(product)
+        .then(res=>{
+            if(res.resultStatus==1){
+                commit("SpliceProductionList",product)
+                Message.info("删除成功")
+            }
+            else{
+                Message.info("删除失败")
+            }
+        })
+        .catch(error=>{
+            let al=error.message?error.message:error
+            Message.error(al)
+        })
+    },
+    QueryProductObj({},product){
+        return request.QueryProductObjReq(product)
+    },
+    SaveProduct({},product){
+        return request.SaveProductReq(product)
+    },
 };
 
 const getters = {
@@ -101,6 +125,9 @@ const getters = {
 };
 
 const mutations = {
+    SpliceProductionList(state,data){
+        state.productList.splice(data.index,1);
+    },
     SetCategroyList(state, data) {
         state.excelCategroyList = data;
     },

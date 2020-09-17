@@ -76,23 +76,32 @@ export default {
   SaveImportedList(params){
     return service.post("/product/importProductList",params)
   },
-  GetProductList(params){
+  GetProductListReq(params){
     return service.get("/product/productList",params)
+  },
+  DeleteProductReq(params){
+    return service.post("/product/delete",params)
+  },
+  QueryProductObjReq(params){
+    return service.post("/product/query",params)
+  },
+  SaveProductReq(params){
+    return service.post("/product/save",params)
   },
 
   /**
    * Supply
    */
-  FetchSupplyList(params) {
+  FetchSupplyListReq(params) {
     return service.get("/supply/list", params);
   },
-  SaveSupply(params){
+  SaveSupplyReq(params){
     return service.post("/supply/save",params)
   },
-  DeleteSupply(params){
+  DeleteSupplyReq(params){
     return service.post("/supply/delete",params);
   },
-  QuerySupplyObj(params){
+  QuerySupplyObjReq(params){
     return service.post("/supply/query",params);
   },
 

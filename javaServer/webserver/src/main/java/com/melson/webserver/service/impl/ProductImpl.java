@@ -8,6 +8,7 @@ import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
 import com.melson.webserver.entity.ProductCategory;
+import com.melson.webserver.entity.Supply;
 import com.melson.webserver.service.IProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -94,4 +95,64 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         }
         return dtoList;
     }
+
+    @Override
+    @Transactional
+    public Integer DeleteProduct(ProductDto productDto) {
+        return productDao.deleteByProductDtoId(productDto.getId());
+    }
+
+    @Override
+    public ProductDto Query(ProductDto product) {
+        Product prod=productDao.findById(product.getId());
+        ProductCategory productCategory=productCategoryDao.findByCategoryId(prod.getCategoryId());
+        ProductDto prodDto=new ProductDto();
+        prodDto.setId(prod.getId());
+        prodDto.setCategoryName(productCategory.getName());
+        prodDto.setCategoryId(prod.getCategoryId());
+        prodDto.setFeature(prod.getFeature());
+        prodDto.setUnit(prod.getUnit());
+        prodDto.setType(prod.getType());
+        prodDto.setSpecification(prod.getSpecification());
+        prodDto.setStoreCode(prod.getStoreCode());
+        prodDto.setCategoryComment(productCategory.getComment());
+        prodDto.setName(prod.getName());
+        prodDto.setCategoryKeyId(productCategory.getId());
+        return prodDto;
+    }
+
+    @Override
+    public ProductDto SaveProduct(ProductDto productDto) {
+        Product prod=new Product();
+        ProductCategory prodCate=new ProductCategory();
+        String newKey=UUID.randomUUID().toString();
+        if(productDto.getCategoryKeyId()!=null) {
+            prodCate.setId(productDto.getCategoryKeyId());
+        }
+        if(productDto.getCategoryId()!=null){
+            prodCate.setCategoryId(productDto.getCategoryId());
+            prod.setCategoryId(productDto.getCategoryId());
+        }
+        else {
+            prodCate.setCategoryId(newKey);
+            prod.setCategoryId(newKey);
+        }
+        prodCate.setName(productDto.getCategoryName());
+        prodCate.setStoreCode(productDto.getStoreCode());
+        prodCate.setComment(productDto.getCategoryComment());
+        productCategoryDao.save(prodCate);
+        if(productDto.getId()!=null){
+            prod.setId(productDto.getId());
+        }
+        prod.setStoreCode(productDto.getStoreCode());
+        prod.setName(productDto.getName());
+        prod.setSpecification(productDto.getSpecification());
+        prod.setFeature(productDto.getFeature());
+        prod.setUnit(productDto.getUnit());
+        prod.setType(productDto.getType());
+        productDao.save(prod);
+        return productDto;
+    }
+
+
 }

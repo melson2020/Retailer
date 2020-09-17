@@ -17,6 +17,7 @@ public class ProductDto {
     private String categoryId;
     private String categoryName;
     private String categoryComment;
+    private Integer categoryKeyId;
 
     public Integer getId() {
         return id;
@@ -96,5 +97,13 @@ public class ProductDto {
 
     public void setFeature(String feature) {
         this.feature = feature;
+    }
+
+    public Integer getCategoryKeyId() {
+        return categoryKeyId;
+    }
+
+    public void setCategoryKeyId(Integer categoryKeyId) {
+        this.categoryKeyId = categoryKeyId;
     }
 }

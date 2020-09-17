@@ -41,7 +41,6 @@ public class SupplyResource extends BaseResource {
         List<Supply> supplies = supplyService.findSupplyByStoreCode(storeCode);
         Result result=new Result();
         result.setData(supplies);
-        System.out.println("POST Rest Call: /supply/list ...");
         return  result;
     }
 
@@ -50,7 +49,6 @@ public class SupplyResource extends BaseResource {
         Result result=new Result();
         List<Supply> supplies = supplyService.findAll();
         result.setData(supplies);
-        System.out.println("POST Rest Call: /supply/all ...");
         return  result;
     }
 

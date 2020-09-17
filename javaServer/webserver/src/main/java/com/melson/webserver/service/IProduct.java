@@ -4,6 +4,7 @@ import com.melson.base.IService;
 import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
+import com.melson.webserver.entity.Supply;
 
 import java.util.List;
 
@@ -17,4 +18,11 @@ public interface IProduct extends IService<Product> {
 //    List<Product> FindUsingList(String storeCode);
 
     List<ProductDto> FindProductList(String storeCode);
+
+    Integer DeleteProduct(ProductDto productDto);
+
+
+    ProductDto Query(ProductDto product);
+
+    ProductDto SaveProduct(ProductDto productDto);
 }

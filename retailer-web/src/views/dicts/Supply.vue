@@ -14,7 +14,7 @@
             ></el-input>
           </div>
 
-          <el-button icon="el-icon-plus" @click="resetForm('addNewSupply')">添加</el-button>
+          <el-button plain circle type="primary" icon="el-icon-plus" @click="resetForm('addNewSupply')"/>
         </div>
         <!-- <el-table :data="supplyListShow" border class="supply-table"> -->
         <el-table :data="list" border class="supply-table">
@@ -25,8 +25,8 @@
           <el-table-column prop="discount" label="厂家折扣" align="center"></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index,scope.row)">删除</el-button>
+              <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
+              <el-button size="mini" @click="handleDelete(scope.$index,scope.row)" plain circle type="danger" icon="el-icon-delete"/>
             </template>
           </el-table-column>
         </el-table>
@@ -227,15 +227,15 @@ export default {
           key=key+"";
         }
         let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
-          return index != -1;
+        return index != -1;
       })
     },
     list(){
       return this.supplyListShow.slice((this.listQuery.page - 1) * this.listQuery.limit, this.listQuery.page * this.listQuery.limit);
     },
-    total(){
-      return this.list.length;
-    }
+    // total(){
+    //   return this.list.length;
+    // }
   },
   // created() {
   //       this.getList();
@@ -327,7 +327,6 @@ export default {
       this.QuerySupplyObj(sup)
         .then(res=>{
           if (res.resultStatus == 1) {
-            console.log(res);
             this.editSupply=res.data;
             this.editSupplyFormVisible = true;
           }

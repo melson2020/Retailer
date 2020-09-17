@@ -8,6 +8,7 @@ import com.melson.base.interceptor.SecurityLevel;
 import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
+import com.melson.webserver.entity.Supply;
 import com.melson.webserver.service.IProduct;
 import com.melson.webserver.service.ISysConfig;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -91,13 +93,45 @@ public class ProductResource extends BaseResource {
     @RequestMapping(value = "/productList")
     @RequiredPermission(SecurityLevel.Employee)
     public Result FindUseProductList(HttpServletRequest request){
+        long t1 = new Date().getTime();
         String storeCode=request.getParameter("storeCode");
         if(StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
         List<ProductDto> productList=productService.FindProductList(storeCode);
         Result result=new Result();
         result.setData(productList);
+        long t2 = new Date().getTime();
+        System.out.println("GET Rest Call: /product/productList ..."+(t2-t1));
         return  result;
     }
 
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public Result DeleteProduct(@RequestBody ProductDto productDto){
+        Result result=new Result();
+        Integer deleteCount=productService.DeleteProduct(productDto);
+        result.setResultStatus(deleteCount>0?1:-1);
+        result.setData(deleteCount);
+        return result;
+    }
+
+    @RequestMapping(value = "/query",method = RequestMethod.POST)
+    public Result QueryProduct(@RequestBody ProductDto productDto){
+        ProductDto prod=productService.Query(productDto);
+        Result result=new Result();
+        result.setData(prod);
+        return result;
+    }
+
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public Result SaveProduct(@RequestBody ProductDto productDto){
+        Result result=new Result();
+        ProductDto saved=productService.SaveProduct(productDto);
+        if(saved==null){
+            result.setResultStatus(-1);
+            result.setMessage("create fail");
+        }else {
+            result.setData(saved);
+        }
+        return result;
+    }
 
 }

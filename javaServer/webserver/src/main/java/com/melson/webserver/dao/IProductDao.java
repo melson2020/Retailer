@@ -2,7 +2,9 @@ package com.melson.webserver.dao;
 
 import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.entity.Product;
+import com.melson.webserver.entity.Supply;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +22,9 @@ public interface IProductDao extends JpaRepository<Product,String> {
 
      List<Product> findByStoreCode(String storeCode);
 
+    @Modifying
+    @Query(value = "DELETE from product where id=?1",nativeQuery = true)
+    Integer deleteByProductDtoId(Integer id);
+
+    Product findById(Integer id);
 }

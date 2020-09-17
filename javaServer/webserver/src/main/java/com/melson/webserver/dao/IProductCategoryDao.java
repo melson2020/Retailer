@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IProductCategoryDao extends JpaRepository<ProductCategory,String> {
 
+    ProductCategory findByCategoryId(String categoryId);
 }
