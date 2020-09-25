@@ -312,14 +312,14 @@ export default {
       })
     },
     handleDelete(index,row){
-      let sup={id:row.id,index:index}
+      // let sup={id:row.id}
         this.$messageBox.confirm('确认删除？',"提示",{
           confirmButtonText:'确定',
           cancelButtonText:'取消',
           type:'warning'
         })
           .then(()=>{
-            this.DeleteSupply(sup);
+            this.DeleteSupply(row);
           })
     },
     handleEdit(index,row){

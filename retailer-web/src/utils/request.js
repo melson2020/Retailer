@@ -79,8 +79,14 @@ export default {
   GetProductListReq(params){
     return service.get("/product/productList",params)
   },
+  GetCategoryListReq(params){
+    return service.get("/product/categoryList",params)
+  },
   DeleteProductReq(params){
     return service.post("/product/delete",params)
+  },
+  DeleteCategoryReq(params){
+    return service.post("/product/deleteCategory",params)
   },
   QueryProductObjReq(params){
     return service.post("/product/query",params)
@@ -88,6 +94,10 @@ export default {
   SaveProductReq(params){
     return service.post("/product/save",params)
   },
+  SaveCategoryReq(params){
+    return service.post("/product/saveCategory",params)
+  },
+
 
   /**
    * Supply

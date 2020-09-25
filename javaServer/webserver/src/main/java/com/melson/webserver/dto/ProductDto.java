@@ -1,6 +1,9 @@
 package com.melson.webserver.dto;
 
+import com.melson.webserver.entity.ProductCategory;
+
 import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * Created by Messi on 2020/9/11
@@ -18,6 +21,7 @@ public class ProductDto {
     private String categoryName;
     private String categoryComment;
     private Integer categoryKeyId;
+    private List<ProductCategoryDto> categoryList;
 
     public Integer getId() {
         return id;
@@ -106,4 +110,13 @@ public class ProductDto {
     public void setCategoryKeyId(Integer categoryKeyId) {
         this.categoryKeyId = categoryKeyId;
     }
+
+    public List<ProductCategoryDto> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<ProductCategoryDto> categoryList) {
+        this.categoryList = categoryList;
+    }
+
 }

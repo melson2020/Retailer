@@ -1,9 +1,11 @@
 package com.melson.webserver.service;
 
 import com.melson.base.IService;
+import com.melson.webserver.dto.ProductCategoryDto;
 import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
+import com.melson.webserver.entity.ProductCategory;
 import com.melson.webserver.entity.Supply;
 
 import java.util.List;
@@ -25,4 +27,12 @@ public interface IProduct extends IService<Product> {
     ProductDto Query(ProductDto product);
 
     ProductDto SaveProduct(ProductDto productDto);
+
+    List<ProductCategoryDto> QueryCategoryList(String storeCode);
+
+    ProductCategory SaveCategory(ProductCategory category);
+
+    List<ProductCategory> FindCategoryList(String storeCode);
+
+    Integer DeleteCategory(ProductCategory productCategory);
 }

@@ -7,7 +7,8 @@ const state = {
     excelProductList: [],
     uploadFileDialog: false,
     needToRecheckList: false,
-    productList:[],
+    productList: [],
+    categoryList:[],
 };
 
 const actions = {
@@ -16,7 +17,7 @@ const actions = {
         let productions = []
         for (let index = 0; index < xlsJson.length; index++) {
             let element = xlsJson[index];
-            let categroy = { id: index,categoryId:index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
+            let categroy = { id: index, categoryId: index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
             categroys.push(categroy)
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {
@@ -63,43 +64,60 @@ const actions = {
         commit("DeleteOneCategroy", categroy)
         commit("CheckDuplicateList")
     },
-    CheckDuplicateList({commit}){
+    CheckDuplicateList({ commit }) {
         commit("CheckDuplicateList")
     },
     // eslint-disable-next-line no-unused-vars
     SaveExcelList({ commit }, list) {
-        request.SaveImportedList(list).then(res=>{
-             if(res.resultStatus==1){
-               Message.success("导入成功")
-             }else{
-               Message.warning("导入失败")
-             }
-        }).catch(err=>{
-            Message.error(err.message?err.message:err)
+        request.SaveImportedList(list).then(res => {
+            if (res.resultStatus == 1) {
+                Message.success("导入成功")
+            } else {
+                Message.warning("导入失败")
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
         })
     },
-    
-    GetProductList({commit},params){
-        request.GetProductListReq(params).then(res=>{
-            if(res.resultStatus==1){
-                commit("SetProductList",res.data)
-              }else{
+
+    GetProductList({ commit }, params) {
+        request.GetProductListReq(params)
+        .then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetProductList", res.data)
+            } else {
                 Message.warning(res.message)
-              }
-        }).catch(err=>{
-            Message.error(err.message?err.message:err)
+            }
+        })
+        .catch(err => {
+            Message.error(err.message ? err.message : err)
         })
     },
-    DeleteProduct({commit},product){
-        request
-        .DeleteProductReq(product)
+    GetCategoryList({commit},params){
+
+        request.GetCategoryListReq(params)
         .then(res=>{
             if(res.resultStatus==1){
-                commit("SpliceProductionList",product)
+                commit("SetCategoryList",res.data);
+            }
+            else{
+                Message.warning(res.message);
+            }
+        })
+        .catch(err=>{
+            Message.error(err.message?err.message:err)
+        })
+    },
+    DeleteCategory({commit},category){
+        request
+        .DeleteCategoryReq(category)
+        .then(res=>{
+            if(res.resultStatus==1){
+                commit("DeleteCategoryMut",category)
                 Message.info("删除成功")
             }
             else{
-                Message.info("删除失败")
+                Message.warning("删除失败",res.message)
             }
         })
         .catch(error=>{
@@ -107,11 +125,34 @@ const actions = {
             Message.error(al)
         })
     },
-    QueryProductObj({},product){
+    DeleteProduct({ commit }, product) {
+        request
+            .DeleteProductReq(product)
+            .then(res => {
+                if (res.resultStatus == 1) {
+                    commit("SpliceProductionList", product)
+                    Message.info("删除成功")
+                }
+                else {
+                    Message.info("删除失败")
+                }
+            })
+            .catch(error => {
+                let al = error.message ? error.message : error
+                Message.error(al)
+            })
+    },
+    QueryProductObj({ }, product) {
         return request.QueryProductObjReq(product)
     },
-    SaveProduct({},product){
+    SaveProduct({ }, product) {
         return request.SaveProductReq(product)
+    },
+    SaveCategory({},category){
+        return request.SaveCategoryReq(category)
+    },
+    PushCategoryList({commit},catetory){
+        commit("PushCategoryListMut",catetory)
     },
 };
 
@@ -120,13 +161,14 @@ const getters = {
     excelProductList: state => state.excelProductList,
     uploadFileDialog: state => state.uploadFileDialog,
     needToRecheckList: state => state.needToRecheckList,
-    categroyDuplicateCount:state=>state.categroyDuplicateCount,
-    productList:state=>state.productList
+    categroyDuplicateCount: state => state.categroyDuplicateCount,
+    productList: state => state.productList,
+    categoryList:state=>state.categoryList,
 };
 
 const mutations = {
-    SpliceProductionList(state,data){
-        state.productList.splice(data.index,1);
+    SpliceProductionList(state, data) {
+        state.productList.splice(data.index, 1);
     },
     SetCategroyList(state, data) {
         state.excelCategroyList = data;
@@ -148,11 +190,15 @@ const mutations = {
         let index = state.excelCategroyList.indexOf(data)
         state.excelCategroyList.splice(index, 1)
     },
+    DeleteCategoryMut(state,data){
+        let index=state.categoryList.indexOf(data);
+        state.categoryList.splice(index,1);
+    },
     CheckDuplicateList(state) {
         if (state.excelProductList.length > 0 || state.excelCategroyList.length > 0) {
             //重置检查结果
-            state.excelProductList.map(item => {item.isRepeat = false;});
-            state.excelCategroyList.map(item => {item.isRepeat = false;});
+            state.excelProductList.map(item => { item.isRepeat = false; });
+            state.excelCategroyList.map(item => { item.isRepeat = false; });
             for (let i = 0; i < state.excelProductList.length; i++) {
                 const pi = state.excelProductList[i];
                 for (let j = i + 1; j < state.excelProductList.length; j++) {
@@ -179,9 +225,31 @@ const mutations = {
             }
         }
     },
-    SetProductList(state,data){
-        state.productList=data
-    }
+    SetProductList(state, data) {
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            if (element.feature&&element.feature.length!=0) {
+                element.feature = JSON.parse(element.feature);
+            }else{
+               element.feature=[];
+            }
+        }
+        state.productList = data
+    },
+    SetCategoryList(state,data){
+        let categs=[];
+        for (let index=0;index<data.length;index++){
+            const element=data[index];
+            let cate={id:element.id,name:element.name,storeCode:element.storecode,categoryId:element.categoryId,comment: "", isSet: false};
+            categs.push(cate);
+        }
+        state.categoryList=categs;
+    },
+    PushCategoryListMut(state,data)
+    {
+        let cate={id:data.id,name:data.name,storeCode:data.storecode,categoryId:data.categoryId,comment: "", isSet: false};
+        state.categoryList.push(cate);
+    },
 };
 
 export default {

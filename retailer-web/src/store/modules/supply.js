@@ -66,7 +66,8 @@ const mutations={
         state.supplyList.push(data);
     },
     SpliceSupplyList(state,data){
-        state.supplyList.splice(data.index,1)
+        let index=state.supplyList.indexOf(data);
+        state.supplyList.splice(index,1)
     }
 };
 

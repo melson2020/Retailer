@@ -5,9 +5,11 @@ import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
+import com.melson.webserver.dto.ProductCategoryDto;
 import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
+import com.melson.webserver.entity.ProductCategory;
 import com.melson.webserver.entity.Supply;
 import com.melson.webserver.service.IProduct;
 import com.melson.webserver.service.ISysConfig;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @Author Nelson
@@ -104,10 +107,32 @@ public class ProductResource extends BaseResource {
         return  result;
     }
 
+    @RequestMapping(value = "/categoryList")
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result FindCategoryList(HttpServletRequest request){
+        String storeCode=request.getParameter("storeCode");
+        if(StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+//        List<ProductCategoryDto> productCategoryDtos= productService.QueryCategoryList(storeCode);
+        List<ProductCategory> productCategories=productService.FindCategoryList(storeCode);
+        Result result=new Result();
+        result.setData(productCategories);
+        return result;
+    }
+
+
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public Result DeleteProduct(@RequestBody ProductDto productDto){
         Result result=new Result();
         Integer deleteCount=productService.DeleteProduct(productDto);
+        result.setResultStatus(deleteCount>0?1:-1);
+        result.setData(deleteCount);
+        return result;
+    }
+
+    @RequestMapping(value = "/deleteCategory",method = RequestMethod.POST)
+    public Result DeleteCategory(@RequestBody ProductCategory productCategory){
+        Result result=new Result();
+        Integer deleteCount=productService.DeleteCategory(productCategory);
         result.setResultStatus(deleteCount>0?1:-1);
         result.setData(deleteCount);
         return result;
@@ -134,4 +159,16 @@ public class ProductResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/saveCategory",method = RequestMethod.POST)
+    public Result SaveCategory(@RequestBody ProductCategory category){
+        Result result=new Result();
+        ProductCategory saved=productService.SaveCategory(category);
+        if(saved==null){
+            result.setResultStatus(-1);
+            result.setMessage("create fail");
+        }else {
+            result.setData(saved);
+        }
+        return result;
+    }
 }
