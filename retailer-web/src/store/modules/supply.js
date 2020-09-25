@@ -2,15 +2,14 @@ import request from "../../utils/request";
 import {Message} from "element-ui";
 
 const state={
-    supplyList:[],
-    closeDialog:false
+    supplyList:[]
 };
 
 const actions={
     GetSupplyList({commit},userInfo){
         let params={storeCode:userInfo.storeCode};
         request
-            .FetchSupplyList(params)
+            .FetchSupplyListReq(params)
             .then(res=>{
                 if(res.resultStatus==1){
                     commit("SetSupplyList",res.data);
@@ -26,14 +25,14 @@ const actions={
     },
     // eslint-disable-next-line no-empty-pattern
     SaveSupply({ },newSupply){
-        return request.SaveSupply(newSupply);
+        return request.SaveSupplyReq(newSupply);
     },
     PushSupplyList({commit}, newSupply){
         commit("PushSupplyList",newSupply);
     },
     DeleteSupply({commit},supply){
         request
-        .DeleteSupply(supply)
+        .DeleteSupplyReq(supply)
         .then(res=>{
             if(res.resultStatus==1){
                 commit("SpliceSupplyList",supply)   //更新前台表格数据
@@ -51,7 +50,7 @@ const actions={
     },
     // eslint-disable-next-line no-empty-pattern
     QuerySupplyObj({},Supply){
-        return request.QuerySupplyObj(Supply);
+        return request.QuerySupplyObjReq(Supply);
     }
 };
 
@@ -67,7 +66,8 @@ const mutations={
         state.supplyList.push(data);
     },
     SpliceSupplyList(state,data){
-        state.supplyList.splice(data.index,1)
+        let index=state.supplyList.indexOf(data);
+        state.supplyList.splice(index,1)
     }
 };
 

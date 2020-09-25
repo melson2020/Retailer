@@ -5,10 +5,11 @@
         <div class="title-div">
           <span class="title-name">{{ userInfo.store.storeName }}</span>
           <el-button
+            plain circle type="primary" 
             icon="el-icon-plus"
             :disabled="addEmployeePermission"
             @click="resetForm('createEmployeeForm')"
-          >添加</el-button>
+          />
         </div>
         <el-table :data="employeeList" stripe style="width: 100%" border class="employee-table">
           <el-table-column prop="userName" label="姓名"></el-table-column>
@@ -23,22 +24,21 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="phone" label="联系电话"></el-table-column>
-          <el-table-column prop="permission" :formatter="roleFormatter" label="角色"></el-table-column>
-          <el-table-column prop="loginName" label="账户"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
+          <el-table-column prop="permission" :formatter="roleFormatter" label="角色" align="center"></el-table-column>
+          <el-table-column prop="loginName" label="账户" align="center"></el-table-column>
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 :disabled="scope.row.permission >= userInfo.permission&&scope.row.userId!=userInfo.userId"
                 @click="handleEdit(scope.$index, scope.row)"
-              >编辑</el-button>
+              plain circle type="primary" icon="el-icon-edit"/>
               <el-button
                 size="mini"
                 :disabled="scope.row.permission >= userInfo.permission&&scope.row.userId!=userInfo.userId"
-                type="danger"
                 @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button>
+              plain circle type="danger" icon="el-icon-delete"/>
             </template>
           </el-table-column>
         </el-table>
