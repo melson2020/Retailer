@@ -49,6 +49,7 @@ export default {
       SetLoginStatus: "SetLoginStatus"
     }),
     userLogin(formName) {
+      // eslint-disable-next-line no-undef
       this.loginUser.loginFrom=JSON.stringify({user:this.loginUser.loginName,ip:returnCitySN["cip"],city:returnCitySN["cname"]});
       this.$refs[formName].validate(valid => {
         if (valid) {

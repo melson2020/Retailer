@@ -1,6 +1,7 @@
 package com.melson.webserver.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 /**
  * @Author Nelson
@@ -17,7 +18,7 @@ public class ProductBatch {
     private String batchNo;
     private Integer supplyId;
     private String supplyName;
-    private double price;
+    private BigDecimal price;
     private String priceUnit;
     private Integer vat;
     private Integer finished;
@@ -27,7 +28,7 @@ public class ProductBatch {
     private String storageInCode;
     private Integer discount;
     private String taxRate;
-    private double totalPrice;
+    private BigDecimal totalPrice;
 
     public Integer getId() {
         return id;
@@ -61,13 +62,6 @@ public class ProductBatch {
         this.supplyName = supplyName;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 
     public String getPriceUnit() {
         return priceUnit;
@@ -149,11 +143,19 @@ public class ProductBatch {
         this.taxRate = taxRate;
     }
 
-    public double getTotalPrice() {
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 }

@@ -45,7 +45,8 @@ import {
   Checkbox,
   DatePicker,
   Scrollbar,
-  Popover
+  Popover,
+  CheckboxGroup,
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -134,7 +135,8 @@ Vue.use(InputNumber);
 Vue.use(Checkbox);
 Vue.use(DatePicker);
 Vue.use(Scrollbar);
-Vue.use(Popover)
+Vue.use(Popover);
+Vue.use(CheckboxGroup);
 
 new Vue({
   router,

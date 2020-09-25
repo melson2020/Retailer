@@ -98,11 +98,7 @@
         </div>
       </el-scrollbar>
       <el-dialog title="入库详细" :visible.sync="dialogVisible" width="40%">
-        <el-table
-          :data="recordDetails"
-          border
-          size="mini"
-        >
+        <el-table :data="recordDetails" border size="mini">
           <el-table-column prop="productName" label="商品名" width="auto"></el-table-column>
           <el-table-column prop="supplyName" label="供应商" width="auto"></el-table-column>
           <el-table-column label="是否含税" width="auto">
@@ -190,12 +186,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "recordList","recordDetails"])
+    ...mapGetters(["userInfo", "recordList", "recordDetails"])
   },
   methods: {
     ...mapActions({
       GetRecordList: "GetRecordList",
-      GetRecordDetails:"GetRecordDetails"
+      GetRecordDetails: "GetRecordDetails"
     }),
     searchOnClick() {
       let params = {
@@ -225,8 +221,8 @@ export default {
     },
     detailOnClick: function(e) {
       let code = e.currentTarget.id;
-      let params={storeInTicketCode:code}
-      this.GetRecordDetails(params)
+      let params = { storeInTicketCode: code };
+      this.GetRecordDetails(params);
       this.dialogVisible = true;
     }
   },
@@ -292,8 +288,8 @@ export default {
 }
 .card-col {
   padding-top: 10px;
-  padding-right: 10px;
-  width: 525px;
+  margin-right: 10px;
+  width: 515px;
   height: 480px;
 }
 .card-title {

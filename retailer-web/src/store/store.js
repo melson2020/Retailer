@@ -8,6 +8,7 @@ import supply from "./modules/supply";
 import product from "./modules/product";
 import storage from "./modules/productStorage"
 import storageIn from "./modules/storageIn"
+import storageOut from "./modules/storageOut"
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     supply,
     product,
     storage,
-    storageIn
+    storageIn,
+    storageOut
   }
 });
