@@ -18,7 +18,9 @@ public class StorageOutBill {
     private String employeeId;
     private String employeeName;
     private BigDecimal cost;
-    private BigDecimal totalPrice;
+    private BigDecimal totalPriceIn;
+    private BigDecimal totalPriceOut;
+    private BigDecimal sales;
     private BigDecimal profit;
     private Date createTime;
     private String date;
@@ -57,12 +59,28 @@ public class StorageOutBill {
         this.cost = cost;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getTotalPriceIn() {
+        return totalPriceIn;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotalPriceIn(BigDecimal totalPriceIn) {
+        this.totalPriceIn = totalPriceIn;
+    }
+
+    public BigDecimal getTotalPriceOut() {
+        return totalPriceOut;
+    }
+
+    public void setTotalPriceOut(BigDecimal totalPriceOut) {
+        this.totalPriceOut = totalPriceOut;
+    }
+
+    public BigDecimal getSales() {
+        return sales;
+    }
+
+    public void setSales(BigDecimal sales) {
+        this.sales = sales;
     }
 
     public BigDecimal getProfit() {

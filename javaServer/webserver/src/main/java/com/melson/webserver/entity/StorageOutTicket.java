@@ -2,6 +2,7 @@ package com.melson.webserver.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -24,6 +25,16 @@ public class StorageOutTicket {
     private String description;
     private Integer categroyCount;
     private String billCode;
+    @Transient
+    private List<StorageOutDetail> details;
+
+    public List<StorageOutDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<StorageOutDetail> details) {
+        this.details = details;
+    }
 
     public Integer getId() {
         return id;

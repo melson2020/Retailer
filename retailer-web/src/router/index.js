@@ -14,6 +14,8 @@ const ProductStock=()=>import("../views/storage/ProductStorage.vue")
 const StorageIn=()=>import("../views/storageIn/StorageIn.vue")
 const StorageInRecord=()=>import("../views/storageIn/StorageInRecord.vue")
 const StorageOut=()=>import("../views/storageOut/StorageOut.vue")
+const StorageOutRecord=()=>import("../views/storageOut/StorageOutRecord.vue")
+const StorageOutRecordDetail=()=>import("../views/storageOut/StorageOutRecordDetail.vue")
 
 Vue.use(VueRouter);
 
@@ -92,6 +94,16 @@ const routes = [
         path:"storageOut",
         name:"storageOut",
         component:StorageOut
+      },
+      {
+        path:"storageOutRecord",
+        name:"storageOutRecord",
+        component:StorageOutRecord,
+      },
+      {
+        path:"storageOutRecord/detail",
+        name:"storageOutRecordDetail",
+        component:StorageOutRecordDetail,
       },
       {
         path: "/",

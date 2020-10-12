@@ -4,6 +4,9 @@ import com.melson.webserver.entity.StorageOutBill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @Author Nelson
  * @Description
@@ -11,4 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IStorageOutBillDao extends JpaRepository<StorageOutBill,String> {
+    List<StorageOutBill> findByCreateTimeBetweenAndStoreCode(Date startDate,Date endDate,String storeCode);
 }

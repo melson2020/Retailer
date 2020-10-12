@@ -24,6 +24,15 @@ public class StorageOutDetail {
     private BigDecimal outPrice;
     private String storeCode;
     private String outTicketCode;
+    private BigDecimal totalPrice;
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public Integer getId() {
         return id;

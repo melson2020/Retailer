@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author Nelson
@@ -14,4 +15,5 @@ import java.util.List;
 @Repository
 public interface IProductBatchDao extends JpaRepository<ProductBatch,String> {
     List<ProductBatch> findByStoreCodeAndProductIdAndFinished(String storeCode,Integer productId,Integer finished);
+    List<ProductBatch> findByBatchNoIn(Set<String> batchNos);
 }

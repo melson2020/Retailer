@@ -145,5 +145,17 @@ export default {
   },
   GetRecordDetail(params){
     return service.get("/storageIn/storageInRecordDetails",params)
+  },
+  /**
+   * Storage Out
+   */
+  SaveStorageOutTicket(params){
+    return service.post("/storageOut/saveOutTicket",params)
+  },
+  GetStorageOutRecordList(params){
+    return service.get("/storageOut/ticketRecord",params)
+  },
+  GetStorageOutRecordDetails(params){
+    return service.get("/storageOut/recordDetail",params)
   }
 };

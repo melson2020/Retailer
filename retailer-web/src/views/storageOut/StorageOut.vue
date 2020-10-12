@@ -25,22 +25,22 @@
               >返回</el-button
             >
           </div>
-          <el-form ref="form">
+          <el-form ref="outTicketForm" :rules="rules" :model="storageOutTicket">
             <el-col :span="12">
-              <el-form-item class="item" label="出库单号:">
+              <el-form-item class="item" label="出库单号:" prop="code">
                 <span class="content-left">{{ storageOutTicket.code }}</span>
               </el-form-item>
-              <el-form-item class="item" label="出库人员：">
+              <el-form-item class="item" label="出库人员：" prop="employeeName">
                 <span class="content-left">{{
                   storageOutTicket.employeeName
                 }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item class="item" label="出库时间：">
+              <el-form-item class="item" label="出库时间：" prop="date">
                 <span class="content-left">{{ storageOutTicket.date }}</span>
               </el-form-item>
-              <el-form-item class="item" label="出库类型:">
+              <el-form-item class="item" label="出库类型:" prop="type">
                 <el-select
                   v-model="storageOutTicket.type"
                   placeholder="请选择类型"
@@ -52,7 +52,7 @@
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item class="item" label="出库详细：">
+              <el-form-item class="item" label="出库详细：" prop="details">
                 <el-table border size="mini" :data="storageOutTicket.details">
                   <el-table-column
                     prop="productName"
@@ -110,7 +110,71 @@
             </el-col>
             <el-col>
               <el-form-item class="item" label="核算：">
-                  
+                <el-table
+                  border
+                  size="mini"
+                  :data="outTicketProfitList"
+                  show-summary
+                  :summary-method="getSummaries"
+                >
+                  <el-table-column
+                    prop="productName"
+                    label="商品名"
+                  ></el-table-column>
+                  <el-table-column
+                    prop="batchNo"
+                    label="批次号"
+                    width="auto"
+                  ></el-table-column>
+                  <el-table-column
+                    prop="unitPriceIn"
+                    label="单价（进）"
+                    width="auto"
+                  ></el-table-column>
+                  <el-table-column prop="vatIn" label="税（进）" width="auto">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.vatIn == 1" size="mini">
+                        税 ({{ scope.row.taxRateIn }}%)
+                      </el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="discount"
+                    label="回点"
+                    width="auto"
+                  ></el-table-column>
+                  <el-table-column
+                    prop="unitPriceOut"
+                    label="单价（出）"
+                    width="auto"
+                  ></el-table-column>
+                  <el-table-column label="税（出）" width="auto">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.vatOut == 1" size="mini">
+                        税 ({{ scope.row.taxRateOut }}%)
+                      </el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="数量" width="auto">
+                    <template slot-scope="scope">
+                      {{ scope.row.outCount }}{{ scope.row.countUnit }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="profit" label="利润" width="auto">
+                    <template slot-scope="scope">
+                      <span class="color-orange"> {{ scope.row.profit }}</span>
+                    </template></el-table-column
+                  >
+                </el-table>
+              </el-form-item>
+            </el-col>
+            <el-col>
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  @click="submitOutTicket('outTicketForm')"
+                  >立即创建</el-button
+                >
               </el-form-item>
             </el-col>
           </el-form>
@@ -285,6 +349,10 @@ export default {
         code: "",
         type: "",
         details: []
+      },
+      rules: {
+        type: [{ required: true, message: "请选择类型", trigger: "blur" }],
+        details: [{ required: true, message: "请添加商品", trigger: "blur" }]
       }
     };
   },
@@ -324,14 +392,14 @@ export default {
           supplyId: item.supplyId,
           supplyName: item.supplyName,
           batchNo: item.storageInBatchNo,
-          unitPriceIn:item.priceIn,
-          vatIn:item.vatIn,
-          taxRateIn:item.taxRateIn,
-          discount:item.discount,
-          vatOut:item.vat,
-          taxRateOut:item.taxRate,
-          outCount:item.outCount,
-          unitPriceOut:item.outPrice,
+          unitPriceIn: item.priceIn,
+          vatIn: item.vatIn,
+          taxRateIn: item.taxRateIn,
+          discount: item.discount,
+          vatOut: item.vat,
+          taxRateOut: item.taxRate,
+          outCount: item.outCount,
+          unitPriceOut: item.outPrice,
           profit: item.profit,
           countUnit: item.countUnit
         };
@@ -345,7 +413,8 @@ export default {
       GetProductList: "GetProductList",
       GetProductBatchList: "GetProductBatchList",
       ClearProductBatchList: "ClearProductBatchList",
-      GetTaxRateList: "GetTaxRateList"
+      GetTaxRateList: "GetTaxRateList",
+      SaveStorageOutTicket: "SaveStorageOutTicket"
     }),
     direct() {
       this.showTicket = !this.showTicket;
@@ -458,7 +527,7 @@ export default {
           supplyName: item.supplyName,
           priceIn: item.price,
           discount: item.discount,
-          vat: item.outVat,
+          vat: item.outVat ? 1 : 0,
           taxRate: item.outTaxRate,
           outCount: item.outCount,
           outPrice: item.outPrice,
@@ -513,6 +582,60 @@ export default {
     },
     handleDelete(index) {
       this.storageOutTicket.details.splice(index, 1);
+    },
+    getSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "总价";
+          return;
+        }
+        if (column.property == "profit") {
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return this.NumberAdd(prev, curr).toFixed(2);
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = "N/A";
+          }
+        }
+      });
+      return sums;
+    },
+    submitOutTicket(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.storageOutTicket.storeCode = this.userInfo.storeCode;
+          let params = {
+            outTicket: this.storageOutTicket,
+            billDetailList: this.outTicketProfitList
+          };
+          this.SaveStorageOutTicket(params)
+            .then(res => {
+              console.log(res)
+              if (res.resultStatus == 1) {
+                this.$message.success("保存成功");
+                this.clearOutTicket();
+                this.showTicket = false;
+              } else {
+                this.$message.error(res.message);
+              }
+            })
+            .catch(err => {
+              this.$message.error(err.message ? err.message : err);
+            });
+        } else {
+          this.$message.warning("请填写必要信息");
+          return false;
+        }
+      });
     }
   },
   beforeMount() {
