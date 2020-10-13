@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="content-no-shadow">
-      <el-scrollbar style="height:100%" class="content-scrollbar">
+      <el-scrollbar  class="content-scrollbar">
         <div
           v-for="(item, index) in storageOutRecordList"
           :key="index"
@@ -279,6 +279,9 @@ export default {
 }
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
+}
+.content-scrollbar{
+  height: 85vh;
 }
 .message-info {
   color: #79bbff;

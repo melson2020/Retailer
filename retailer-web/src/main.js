@@ -47,7 +47,9 @@ import {
   Scrollbar,
   Popover,
   CheckboxGroup,
-  Divider
+  Divider,
+  Step,
+  Steps
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -138,7 +140,9 @@ Vue.use(DatePicker);
 Vue.use(Scrollbar);
 Vue.use(Popover);
 Vue.use(CheckboxGroup);
-Vue.use(Divider)
+Vue.use(Divider);
+Vue.use(Step);
+Vue.use(Steps)
 
 new Vue({
   router,

@@ -4,7 +4,7 @@
       <span class="title-name">出库单详细</span>
       <el-button type="text" @click="direct">返回</el-button>
     </div>
-    <el-scrollbar style="height:350px" class="content-scrollbar">
+    <el-scrollbar  class="content-scrollbar scrollbar-height">
       <el-table
         :data="storageOutDetails.ticketDetails"
         style="width: 100%"
@@ -40,7 +40,7 @@
     <div class="header-div">
       <span class="title-name">出库单详细核算</span>
     </div>
-    <el-scrollbar style="height:350px" class="content-scrollbar">
+    <el-scrollbar  class="content-scrollbar scrollbar-height">
       <el-table
         :data="storageOutDetails.billDetails"
         border
@@ -147,5 +147,8 @@ export default {
 }
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
+}
+.scrollbar-height{
+    height: 40vh;
 }
 </style>

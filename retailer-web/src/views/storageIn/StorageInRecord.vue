@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:100%">
     <div class="content-header">
       <span class="header-title">入库记录</span>
       <div>
@@ -248,7 +248,7 @@ export default {
   margin: 0px 20px;
 }
 .content {
-  height: 1450px;
+  height: 85vh;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin: 20px 0px;
 }

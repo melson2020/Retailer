@@ -11,6 +11,7 @@ const Employee = () => import("../views/dicts/Employee.vue");
 const ProductDict=()=> import("../views/dicts/ProductDict.vue");
 const ProductImport=()=> import("../views/dicts/ProductImport.vue")
 const ProductStock=()=>import("../views/storage/ProductStorage.vue")
+const StorageCount=()=>import("../views/storage/StorageCount.vue")
 const StorageIn=()=>import("../views/storageIn/StorageIn.vue")
 const StorageInRecord=()=>import("../views/storageIn/StorageInRecord.vue")
 const StorageOut=()=>import("../views/storageOut/StorageOut.vue")
@@ -79,6 +80,11 @@ const routes = [
         path:"productStorage",
         name:"productStorage",
         component:ProductStock
+      },
+      {
+        path:"storageCount",
+        name:"StorageCount",
+        component:StorageCount
       },
       {
         path:"storageIn",

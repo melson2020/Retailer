@@ -2,33 +2,60 @@
   <div>
     <div
       class="info-div"
-      v-if="productAndStorageCount.productCount!=productAndStorageCount.storageCount"
+      v-if="
+        productAndStorageCount.productCount !=
+          productAndStorageCount.storageCount
+      "
     >
       <el-card class="box-card" shadow="always">
         <div slot="header" class="clearfix">
           <span class="title">提示</span>
         </div>
         <div class="message-div">
-          <span class="message">已有商品数量：{{productAndStorageCount.productCount}}</span>
+          <span class="message"
+            >已有商品数量：{{ productAndStorageCount.productCount }}</span
+          >
         </div>
         <div class="message-div">
-          <span class="message">库存数量：{{productAndStorageCount.storageCount}}</span>
+          <span class="message"
+            >库存数量：{{ productAndStorageCount.storageCount }}</span
+          >
         </div>
         <div class="message-button">
           <el-button
             type="success"
-            v-if="productAndStorageCount.productCount>0&productAndStorageCount.storageCount==0"
+            v-if="
+              (productAndStorageCount.productCount > 0) &
+                (productAndStorageCount.storageCount == 0)
+            "
             @click.prevent.stop="GenerateAll"
-          >生成库存</el-button>
-          <el-button type="primary" v-if="productAndStorageCount.productCount==0">导入商品</el-button>
+            >生成库存</el-button
+          >
           <el-button
             type="primary"
-            v-if="productAndStorageCount.productCount>0&productAndStorageCount.storageCount>0&productAndStorageCount.productCount>productAndStorageCount.storageCount"
-          >添加库存</el-button>
+            v-if="productAndStorageCount.productCount == 0"
+            >导入商品</el-button
+          >
           <el-button
             type="primary"
-            v-if="productAndStorageCount.productCount>0&productAndStorageCount.storageCount>0&productAndStorageCount.productCount>productAndStorageCount.storageCount"
-          >跳过提示</el-button>
+            v-if="
+              (productAndStorageCount.productCount > 0) &
+                (productAndStorageCount.storageCount > 0) &
+                (productAndStorageCount.productCount >
+                  productAndStorageCount.storageCount)
+            "
+            >添加库存</el-button
+          >
+          <el-button
+            type="primary"
+            v-if="
+              (productAndStorageCount.productCount > 0) &
+                (productAndStorageCount.storageCount > 0) &
+                (productAndStorageCount.productCount >
+                  productAndStorageCount.storageCount)
+            "
+            >跳过提示</el-button
+          >
         </div>
       </el-card>
     </div>
@@ -44,41 +71,70 @@
         ></el-input>
       </div>
       <el-table
-        :data="storageListShow.slice((storageTable.currentPage-1)*storageTable.pageSize,storageTable.currentPage*storageTable.pageSize)"
-        style="width: 100%"
+        :data="
+          storageListShow.slice(
+            (storageTable.currentPage - 1) * storageTable.pageSize,
+            storageTable.currentPage * storageTable.pageSize
+          )
+        "
+        :height="storageTable.height"
         border
-         :header-cell-style="{background:'#606266',color:'white'}"
+        ref="tableStorage"
+        :header-row-style="{ height: '50px' }"
+        :row-style="{ height: '45px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        class="storage-table"
+        :header-cell-style="{ background: '#606266', color: 'white' }"
         @expand-change="expandChanged"
       >
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-table
-              v-if="props.row.batchList.length>0"
+              v-if="props.row.batchList.length > 0"
               :data="props.row.batchList"
               class="inner-table"
               border
               :show-header="false"
-              :header-row-style="{height:'30px'}"
-              :header-cell-style="{padding:'2px',background:'#606266'}"
-              :row-style="{height:'30px'}"
-              :cell-style="{padding:'2px',color:'#909399'}"
+              :header-row-style="{ height: '30px' }"
+              :header-cell-style="{ padding: '2px', background: '#606266' }"
+              :row-style="{ height: '30px' }"
+              :cell-style="{ padding: '2px', color: '#909399' }"
             >
-              <el-table-column prop="batchNo" label="批次号" width="auto"></el-table-column>
-              <el-table-column prop="supplyName" label="供应商" width="auto"></el-table-column>
+              <el-table-column
+                prop="batchNo"
+                label="批次号"
+                width="auto"
+              ></el-table-column>
+              <el-table-column
+                prop="supplyName"
+                label="供应商"
+                width="auto"
+              ></el-table-column>
               <el-table-column label="税/回点" width="auto">
-                 <template slot-scope="scope">
-                   <el-tag v-if="scope.row.vat==1"  size="mini">税 ({{scope.row.taxRate}}%)</el-tag>
-                   <el-tag v-if="scope.row.discount>0" type="success"  size="mini">回点 ({{scope.row.discount}}%)</el-tag>
+                <template slot-scope="scope">
+                  <el-tag v-if="scope.row.vat == 1" size="mini"
+                    >税 ({{ scope.row.taxRate }}%)</el-tag
+                  >
+                  <el-tag
+                    v-if="scope.row.discount > 0"
+                    type="success"
+                    size="mini"
+                    >回点 ({{ scope.row.discount }}%)</el-tag
+                  >
                 </template>
               </el-table-column>
               <el-table-column label="单价">
                 <template slot-scope="scope">
-                  <span>{{scope.row.price}}{{scope.row.priceUnit}}￥/{{scope.row.countUnit}}</span>
+                  <span
+                    >{{ scope.row.price }}{{ scope.row.priceUnit }}￥/{{
+                      scope.row.countUnit
+                    }}</span
+                  >
                 </template>
               </el-table-column>
               <el-table-column label="数量">
                 <template slot-scope="scope">
-                  <span>{{scope.row.count}}{{scope.row.countUnit}}</span>
+                  <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -88,7 +144,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-for="(item,i) in tableColums"
+          v-for="(item, i) in tableColums"
           :key="i"
           :prop="item.field"
           :label="item.label"
@@ -103,7 +159,7 @@
           @current-change="pageChanged"
           :page-size="storageTable.pageSize"
           :total="storageListShow.length"
-          v-if="storageListShow.length>=storageTable.pageSize"
+          v-if="storageListShow.length >= storageTable.pageSize"
         ></el-pagination>
       </div>
     </div>
@@ -118,7 +174,8 @@ export default {
     return {
       storageTable: {
         pageSize: 15,
-        currentPage: 1
+        currentPage: 1,
+        height:""
       },
       searchContent: "",
       tableColums: [
@@ -146,8 +203,8 @@ export default {
       GetProductStorageList: "GetProductStorageList",
       GetBatchList: "GetBatchList"
     }),
-    searchFocus(){
-      this.storageTable.currentPage=1;
+    searchFocus() {
+      this.storageTable.currentPage = 1;
     },
     GenerateAll() {
       let params = { storeCode: this.userInfo.storeCode };
@@ -169,12 +226,23 @@ export default {
     },
     pageChanged(page) {
       this.storageTable.currentPage = page;
+    },
+    setpageSize() {
+      let rect = this.$refs.tableStorage.$el.offsetHeight-50;
+      this.storageTable.height=rect+50;
+      let pageSize = Math.floor(rect / 45);
+      this.storageTable.pageSize=pageSize;
     }
   },
   beforeMount: function() {
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductAndStorageCount(params);
     this.GetProductStorageList(params);
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      this.setpageSize();
+    });
   }
 };
 </script>
@@ -222,7 +290,7 @@ export default {
 .title-name {
   font-size: 30px;
   font-weight: bold;
-  color:#409EFF;
+  color: #409eff;
 }
 .fliter-input {
   width: 400px;
@@ -251,7 +319,10 @@ export default {
   color: #e6a23c;
   font-weight: bold;
 }
-.el-tag{
+.el-tag {
   margin: 0px 10px;
+}
+.storage-table {
+  height: 80vh;
 }
 </style>
