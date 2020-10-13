@@ -460,6 +460,7 @@ export default {
     handleNewProduct(newForm){
       let params = { storeCode: this.userInfo.storeCode };
       this.GetCategoryList(params);
+      this.editTags=[];
       if (this.$refs[newForm]) {
         this.$refs[newForm].resetFields();
       }
@@ -478,6 +479,7 @@ export default {
                 let params = { storeCode: this.userInfo.storeCode };
                 this.GetProductList(params);
                 this.editProductFormVisible = false;
+                this.editTags=[];
                 this.$message({
                   showClose: true,
                   message: "操作成功",
