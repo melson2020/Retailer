@@ -11,7 +11,10 @@
             @click="resetForm('createEmployeeForm')"
           />
         </div>
-        <el-table :data="employeeList" stripe style="width: 100%" border class="employee-table">
+        <el-table :data="employeeList" border class="employee-table" :header-row-style="{ height: '50px' }"
+        :row-style="{ height: '45px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }">
           <el-table-column prop="userName" label="姓名"></el-table-column>
           <el-table-column prop="gender" label="性别" align="center">
             <template slot-scope="scope">
@@ -329,7 +332,7 @@ export default {
 </script>
 <style>
 .employee-table {
-  margin-top: 20px;
+  height: 80vh;
 }
 .title-div {
   display: flex;

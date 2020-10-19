@@ -1,27 +1,31 @@
 <template>
-  <div>
-    <div class="top-area">
-      <div class="title-div">
-        <div class="title-div-left">
-          <span class="title-name">商品目录</span>
-          <el-input
-            class="fliter-input"
-            v-model="searchContent"
-            placeholder="搜索名称 / 型号"
-            suffix-icon="el-icon-search"
-            @focus="searchFocus"
-          ></el-input>
+  <div style="height:100%">
+    <div class="content-header">
+          <div>
+            <span class="title-name">商品目录</span>
+          </div>
+          <div>
+            <el-input
+              class="fliter-input"
+              v-model="searchContent"
+              placeholder="搜索名称 / 型号"
+              suffix-icon="el-icon-search"
+              @focus="searchFocus"
+            ></el-input>
+            <el-button
+            plain
+            circle
+            type="primary"
+            icon="el-icon-plus"
+            @click="handleNewProduct('newProduct')"
+            />
         </div>
-        <el-button
-          plain
-          circle
-          type="primary"
-          icon="el-icon-plus"
-          @click="handleNewProduct('newProduct')"
-        />
-      </div>
     </div>
-    <el-table :data="list" border class="product-table">
+
+    <el-table :data="list" border class="product-table" :header-row-style="{ height: '50px' }"
+        :row-style="{ height: '45px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }">
       <el-table-column prop="name" label="名字" align="left"></el-table-column>
       <el-table-column prop="type" label="型号" align="center"></el-table-column>
       <el-table-column prop="specification" label="规格" align="center"></el-table-column>
@@ -718,10 +722,30 @@ console.log("value:_"+value)
 </script>
 <style>
 .title-div {
+  height: 80px;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  height: 80;
+}
+.content-header {
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.title-name {
+  font-size: 30px;
+  font-weight: bold;
+  color: #409eff;
+}
+.fliter-input {
+  width: 400px;
+  height: 80px;
+}
+.product-table{
+  height: 80vh;
 }
 .title-div-left {
   display: flex;

@@ -1,10 +1,12 @@
 <template>
   <el-row>
-      <div class="grid-content bg-purple">
-        <div class="title-div">
-          <div class="title-div-left">
+      <div>
+        <div class="content-header">
+          <div>
             <!-- <span class="table-title">供应商列表 ({{supplyList.length}})</span> -->
-            <span class="table-title">供应商列表</span>
+            <span class="title-name">供应商列表</span>
+          </div>
+          <div>
             <el-input
               class="fliter-input"
               v-model="searchContent"
@@ -12,12 +14,14 @@
               suffix-icon="el-icon-search"
               @focus="searchFocus"
             ></el-input>
+            <el-button plain circle type="primary" icon="el-icon-plus" @click="resetForm('addNewSupply')"/>
           </div>
-
-          <el-button plain circle type="primary" icon="el-icon-plus" @click="resetForm('addNewSupply')"/>
         </div>
         <!-- <el-table :data="supplyListShow" border class="supply-table"> -->
-        <el-table :data="list" border class="supply-table">
+        <el-table :data="list" border class="supply-table" :header-row-style="{ height: '50px' }"
+        :row-style="{ height: '45px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }">
           <el-table-column prop="name" label="供应商名" align="left"></el-table-column>
           <el-table-column prop="address" label="联系地址" align="center"></el-table-column>
           <el-table-column prop="contact" label="联系人员" align="center"></el-table-column>
@@ -364,6 +368,17 @@ export default {
 .el-row {
   height: 100%;
 }
+.content-header {
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.fliter-input {
+  width: 400px;
+  height: 80px;
+}
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
@@ -374,14 +389,15 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 80px;
+  flex-direction: row;
 }
 .title-name {
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
-  color: gray;
+  color: #409eff;
 }
 .supply-table {
-  margin-top: 20px;
+  height: 80vh;
 }
 .title-div-left {
   display: flex;

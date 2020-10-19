@@ -64,8 +64,10 @@
           :row-class-name="tableRowClassName"
           class="table-top"
           :data="excelCategroyListShow.slice((productCategroyPage.currentPage-1)*productCategroyPage.pageSize,productCategroyPage.currentPage*productCategroyPage.pageSize)"
-          style="width: 100%"
-        >
+          :header-row-style="{ height: '50px' }"
+          :row-style="{ height: '45px' }"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white' }">
           <el-table-column type="index" label="#"></el-table-column>
           <el-table-column
             v-for="(v,i) in categroyTableColums"
@@ -147,11 +149,13 @@
         </div>
         <el-table
           border
+          :row-class-name="tableRowClassName"
           class="table-top"
           :data="productListShow.slice((productTablePage.currentPage-1)*productTablePage.pageSize,productTablePage.currentPage*productTablePage.pageSize)"
-          style="width: 100%"
-          :row-class-name="tableRowClassName"
-        >
+          :header-row-style="{ height: '50px' }"
+          :row-style="{ height: '45px' }"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white' }">
           <el-table-column type="index" label="#" :index="indexMethod"></el-table-column>
           <el-table-column
             v-for="(item,i) in productTableColums"
@@ -472,8 +476,7 @@ export default {
   height: 80px;
 }
 .table-top {
-  margin-top: 20px;
-  min-height: 1270px;
+  height: 80vh;
 }
 .show-categroy {
   min-height: 100%;
