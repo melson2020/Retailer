@@ -124,7 +124,7 @@ const routes = [
       {
         path: "/",
         name: "root",
-        component: ProductDict
+        component: ProductStock
       },
       {
         path: "*",
