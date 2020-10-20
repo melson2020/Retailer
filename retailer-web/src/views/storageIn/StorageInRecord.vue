@@ -240,7 +240,7 @@ export default {
   justify-content: space-between;
 }
 .header-title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #409eff;
 }
@@ -262,7 +262,7 @@ export default {
 .card-area-title {
   float: left;
   color: #e6a23c;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   padding: 10px;
 }

@@ -392,7 +392,7 @@ export default {
   flex-direction: row;
 }
 .title-name {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #409eff;
 }

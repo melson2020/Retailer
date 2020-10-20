@@ -341,9 +341,9 @@ export default {
   height: 80px;
 }
 .title-name {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
-  color: gray;
+  color: #409eff;
 }
 .el-row {
   height: 100%;

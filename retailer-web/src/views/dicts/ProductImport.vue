@@ -6,9 +6,9 @@
     element-loading-background="rgba(0, 0, 0, 0.6)"
   >
     <div class="header">
-      <el-button @click.prevent.stop="saveExcelList" class="top-button" size="small" :disabled="excelProductList.length<=0||excelCategroyList.length<=0">保存</el-button>
-      <el-button @click.prevent.stop="choseFile" class="top-button" size="small">数据导入</el-button>
-      <el-button @click.prevent.stop="download" class="top-button" size="small">模板下载</el-button>
+      <el-button @click.prevent.stop="saveExcelList" class="top-button" type="primary" size="small" :disabled="excelProductList.length<=0||excelCategroyList.length<=0">保存</el-button>
+      <el-button @click.prevent.stop="choseFile" class="top-button" type="primary" size="small">数据导入</el-button>
+      <el-button @click.prevent.stop="download" class="top-button" type="primary" size="small">模板下载</el-button>
       <el-dialog
         title="文件加载"
         :visible.sync="uploadFileDialog"
@@ -44,7 +44,7 @@
       <div class="show-categroy">
         <div class="title-div">
           <div class="title-div-left">
-            <span class="table-title">商品类别 ({{excelCategroyList.length}})</span>
+            <span class="title-name">商品类别 ({{excelCategroyList.length}})</span>
             <el-link
               type="danger"
               class="duplicate-link"
@@ -132,7 +132,7 @@
       <div class="show-dict">
         <div class="title-div">
           <div class="title-div-left">
-            <span class="table-title">商品目录 ({{excelProductList.length}})</span>
+            <span class="title-name">商品目录 ({{excelProductList.length}})</span>
             <el-link
               type="danger"
               class="duplicate-link"
@@ -455,11 +455,11 @@ export default {
 };
 </script>
 <style>
-.table-title {
+.title-name {
   float: left;
-  font-size: 30px;
-  color: #909399;
+  font-size: 28px;
   font-weight: bold;
+  color: #409eff;
 }
 .title-div-left {
   display: flex;

@@ -264,7 +264,7 @@ export default {
   justify-content: space-between;
 }
 .header-title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #409eff;
 }

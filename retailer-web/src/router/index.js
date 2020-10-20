@@ -6,7 +6,6 @@ const Register = () => import("../views/Register.vue");
 const Main = () => import("../views/Main.vue");
 const Error = () => import("../views/404.vue");
 const Supply = () => import("../views/dicts/Supply.vue");
-const Product = () => import("../views/dicts/Product.vue");
 const Employee = () => import("../views/dicts/Employee.vue");
 const ProductDict=()=> import("../views/dicts/ProductDict.vue");
 const ProductImport=()=> import("../views/dicts/ProductImport.vue")
@@ -125,7 +124,7 @@ const routes = [
       {
         path: "/",
         name: "root",
-        component: Product
+        component: ProductDict
       },
       {
         path: "*",
