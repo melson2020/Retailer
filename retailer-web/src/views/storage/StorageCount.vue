@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="header-div">
+      <span class="title-name">盘点</span>
+    </div>
     <el-button
       v-if="!showTicket"
       class="button-box"
@@ -35,6 +38,17 @@ export default {
 };
 </script>
 <style>
+.header-div {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.title-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+}
 .button-box {
   float: left;
   width: 500px;

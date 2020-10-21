@@ -2,193 +2,206 @@
   <div>
     <div class="header-div">
       <span class="title-name">入库单</span>
-      <el-button
-        icon="el-icon-plus"
-        :disabled="!formDisabled"
-        @click.prevent.stop="createTicket"
-      >新建入库单</el-button>
     </div>
-    <div class="ticket-form">
-      <div class="form-title">
-        <span>{{userInfo.store.storeName}} 入库单</span>
-      </div>
-      <el-form
-        ref="ticketForm"
-        :model="storageInTicket"
-        label-width="120px"
-        :disabled="formDisabled"
-        label-position="left"
-        :rules="rules"
-      >
-        <el-col :span="12" class="big-font-size">
-          <el-form-item label="日期：" class="item" prop="date">
-            <span class="content-left">{{storageInTicket.date}}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="批次号:" class="item" prop="batchNo">
-            <span class="content-left">{{storageInTicket.batchNo}}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="入库单号:" class="item" prop="code">
-            <span class="content-left">{{storageInTicket.code}}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="操作人员：" class="item" prop="employeeName">
-            <span class="content-left">{{storageInTicket.employeeName}}</span>
-          </el-form-item>
-        </el-col>
-        <el-form-item label="入库类型：" class="item" prop="type">
-          <el-select
-            v-model="storageInTicket.type"
-            placeholder="请选择类型"
-            class="content-left width-input"
-            size="small"
-          >
-            <el-option label="正常入库" value="normal"></el-option>
-            <el-option label="临时补货" value="additional"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="入库详细" class="item" prop="products">
-          <div class="detail-action-area">
-            <el-select
-              v-model="addItem.productId"
-              filterable
-              placeholder="请选择商品"
-              size="small"
-              class="width-input content-left"
-              @change="productChange"
-            >
-              <el-option
-                v-for="item in productList"
-                :key="item.id"
-                :label="item.name+' ('+item.type+')'"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-            <el-select
-              v-model="addItem.supplyId"
-              filterable
-              placeholder="请选择供应商"
-              size="small"
-              class="width-input content-left"
-              @change="supplyChange"
-            >
-              <el-option
-                v-for="item in supplyList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-            <div>
-              <el-input-number
-                v-model="addItem.count"
-                controls-position="right"
-                :min="0"
-                label="数量"
-                size="small"
-              ></el-input-number>
-              <span class="add-unit">{{addItem.unit}}</span>
-            </div>
-            <div>
-              <el-input
-                v-model="addItem.totalPrice"
-                placeholder="总价"
-                size="small"
-                class="short-input"
-              ></el-input>
-              <span>￥</span>
-            </div>
-            <el-checkbox v-model="addItem.vat">是否含税</el-checkbox>
-            <el-select
-              :disabled="!addItem.vat"
-              v-model="addItem.taxRate"
-              filterable
-              placeholder="税点"
-              size="small"
-            >
-              <el-option
-                v-for="taxRate in taxRateList"
-                :label="taxRate.description"
-                :value="taxRate.rate"
-                :key="taxRate.id"
-              ></el-option>
-            </el-select>
-            <div>
+    <div class="mian-content">
+      <el-button
+        v-if="!showTicket"
+        class="create-storage-in"
+        type="primary"
+        icon="el-icon-plus"
+        @click="createTicket"
+      >新建入库单</el-button>
+
+      <div v-else class="form-area">
+        <el-card class="in-ticket-form">
+          <div slot="header">
+            <div class="form-title">
+              <span>{{userInfo.store.storeName}} 入库单</span>
               <el-button
-                type="primary"
-                icon="el-icon-plus"
-                size="small"
-                class="add-button"
-                @click="addItemToDetail"
-              >添加</el-button>
+              style="float: left; padding: 3px 0"
+              type="text"
+              @click="createTicket"
+              >返回</el-button>
             </div>
           </div>
-          <div class="content-right font-info">
-            <span class="addDetailInfoSpan">单价：{{addItemPrice}}￥/{{addItem.unit}}</span>
-            <span class="addDetailInfoSpan">回点：{{addItem.discount}}</span>
-            <span class="addDetailInfoSpan">成本价：{{addItemCostPrice}}￥/{{addItem.unit}}</span>
-            <span
-              class="addDetailInfoSpan"
-              v-if="addItem.vat"
-            >税：{{addItemTaxPrice}}￥/{{addItem.unit}}</span>
-          </div>
-          <el-table
-            :data="storageInTicket.products"
-            border
-            size="mini"
-            :header-row-style="{height:'30px'}"
-            :header-cell-style="{padding:'0px',background:'#C0C4CC',color:'white'}"
-            :row-style="{height:'35px'}"
-            :cell-style="{padding:'0px'}"
+          <el-form
+            ref="ticketForm"
+            :model="storageInTicket"
+            label-width="120px"
+            label-position="left"
+            :rules="rules"
           >
-            <el-table-column prop="productName" label="商品名" width="auto"></el-table-column>
-            <el-table-column prop="supplyName" label="供应商" width="auto"></el-table-column>
-            <el-table-column label="是否含税" width="auto">
-              <template slot-scope="scope">
-                <el-tag v-if="scope.row.vat==1" size="mini">税 ({{scope.row.taxRate}}%)</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="discount" label="回点" width="auto"></el-table-column>
-            <el-table-column label="单价">
-              <template slot-scope="scope">
-                <span>{{scope.row.price}}￥</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="数量">
-              <template slot-scope="scope">
-                <span>{{scope.row.count}}{{scope.row.countUnit}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="总价">
-              <template slot-scope="scope">
-                <span>{{scope.row.totalPrice}}￥</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  type="danger"
-                  icon="el-icon-delete"
-                  circle
-                  size="mini"
-                  @click="handleDelete(scope.$index, scope.row)"
-                ></el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
-        <el-form-item label="描述" class="item" prop="description">
-          <el-input type="textarea" v-model="storageInTicket.description"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createStorageInTicket('ticketForm')">立即创建</el-button>
-          <el-button @click="cancel('ticketForm')">取消</el-button>
-        </el-form-item>
-      </el-form>
+            <el-col :span="12" class="big-font-size">
+              <el-form-item label="日期：" class="item" prop="date">
+                <span class="content-left">{{storageInTicket.date}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="批次号:" class="item" prop="batchNo">
+                <span class="content-left">{{storageInTicket.batchNo}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="入库单号:" class="item" prop="code">
+                <span class="content-left">{{storageInTicket.code}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="操作人员：" class="item" prop="employeeName">
+                <span class="content-left">{{storageInTicket.employeeName}}</span>
+              </el-form-item>
+            </el-col>
+            <el-form-item label="入库类型：" class="item" prop="type">
+              <el-select
+                v-model="storageInTicket.type"
+                placeholder="请选择类型"
+                class="content-left width-input"
+                size="small"
+              >
+                <el-option label="正常入库" value="normal"></el-option>
+                <el-option label="临时补货" value="additional"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="入库详细" class="item" prop="products">
+              <div class="detail-action-area">
+                <el-select
+                  v-model="addItem.productId"
+                  filterable
+                  placeholder="请选择商品"
+                  size="small"
+                  class="width-input content-left"
+                  @change="productChange"
+                >
+                  <el-option
+                    v-for="item in productList"
+                    :key="item.id"
+                    :label="item.name+' ('+item.type+')'"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+                <el-select
+                  v-model="addItem.supplyId"
+                  filterable
+                  placeholder="请选择供应商"
+                  size="small"
+                  class="width-input content-left"
+                  @change="supplyChange"
+                >
+                  <el-option
+                    v-for="item in supplyList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+                <div>
+                  <el-input-number
+                    v-model="addItem.count"
+                    controls-position="right"
+                    :min="0"
+                    label="数量"
+                    size="small"
+                  ></el-input-number>
+                  <span class="add-unit">{{addItem.unit}}</span>
+                </div>
+                <div>
+                  <el-input
+                    v-model="addItem.totalPrice"
+                    placeholder="总价"
+                    size="small"
+                    class="short-input"
+                  ></el-input>
+                  <span>￥</span>
+                </div>
+                <el-checkbox v-model="addItem.vat">是否含税</el-checkbox>
+                <el-select
+                  :disabled="!addItem.vat"
+                  v-model="addItem.taxRate"
+                  filterable
+                  placeholder="税点"
+                  size="small"
+                >
+                  <el-option
+                    v-for="taxRate in taxRateList"
+                    :label="taxRate.description"
+                    :value="taxRate.rate"
+                    :key="taxRate.id"
+                  ></el-option>
+                </el-select>
+                <div>
+                  <el-button
+                    type="primary"
+                    icon="el-icon-plus"
+                    size="small"
+                    class="add-button"
+                    @click="addItemToDetail"
+                  >添加</el-button>
+                </div>
+              </div>
+              <div class="content-right font-info">
+                <span class="addDetailInfoSpan">单价：{{addItemPrice}}￥/{{addItem.unit}}</span>
+                <span class="addDetailInfoSpan">回点：{{addItem.discount}}</span>
+                <span class="addDetailInfoSpan">成本价：{{addItemCostPrice}}￥/{{addItem.unit}}</span>
+                <span
+                  class="addDetailInfoSpan"
+                  v-if="addItem.vat"
+                >税：{{addItemTaxPrice}}￥/{{addItem.unit}}</span>
+              </div>
+              <el-table
+                :data="storageInTicket.products"
+                border
+                size="mini"
+                :header-row-style="{height:'30px'}"
+                :header-cell-style="{padding:'0px',background:'#C0C4CC',color:'white'}"
+                :row-style="{height:'35px'}"
+                :cell-style="{padding:'0px'}"
+              >
+                <el-table-column prop="productName" label="商品名" width="auto"></el-table-column>
+                <el-table-column prop="supplyName" label="供应商" width="auto"></el-table-column>
+                <el-table-column label="是否含税" width="auto">
+                  <template slot-scope="scope">
+                    <el-tag v-if="scope.row.vat==1" size="mini">税 ({{scope.row.taxRate}}%)</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="discount" label="回点" width="auto"></el-table-column>
+                <el-table-column label="单价">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.price}}￥</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="数量">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.count}}{{scope.row.countUnit}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="总价">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.totalPrice}}￥</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      size="mini"
+                      @click="handleDelete(scope.$index, scope.row)"
+                    ></el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-form-item>
+            <el-form-item label="描述" class="item" prop="description">
+              <el-input type="textarea" v-model="storageInTicket.description"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="createStorageInTicket('ticketForm')">立即创建</el-button>
+              <!-- <el-button @click="cancel('ticketForm')">取消</el-button> -->
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
     </div>
   </div>
 </template>
@@ -216,7 +229,7 @@ export default {
         products: [],
         description: ""
       },
-      formDisabled: true,
+      showTicket: false,
       addItem: {
         productId: "",
         productName: "",
@@ -275,7 +288,11 @@ export default {
       GetTaxRateList: "GetTaxRateList"
     }),
     createTicket() {
-      this.formDisabled = false;
+      this.showTicket = !this.showTicket;
+      if (this.showTicket) {
+        this.clearAddItem();
+        this.storageInTicket.products=[];
+      }
       let localTime = this.getFullTime();
       this.storageInTicket.date =
         localTime.Y + "-" + localTime.M + "-" + localTime.D;
@@ -306,11 +323,10 @@ export default {
       //   return Y +'-'+ M +'-'+ D +' '+ h +':'+ m +':'+ s;
       return { Y: Y, M: M, D: D, h: h, m: m, s: s };
     },
-    cancel(formName) {
-      this.$refs[formName].resetFields();
-      this.clearAddItem();
-      this.formDisabled = true;
-    },
+    // cancel(formName) {
+    //   this.$refs[formName].resetFields();
+    //   this.clearAddItem();
+    // },
     productChange(value) {
       let p = this.productList.filter(item => {
         return item.id == value;
@@ -403,13 +419,13 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.storageInTicket.storeCode = this.userInfo.storeCode;
+          console.log(this.GetProductList);
           this.SaveTicket(this.storageInTicket)
             .then(res => {
               if (res.resultStatus == 1) {
                 this.$message.success("保存成功");
                 this.$refs["ticketForm"].resetFields();
                 this.clearAddItem();
-                this.formDisabled = true;
               } else {
                 this.$message.error(res.message);
               }
@@ -425,7 +441,6 @@ export default {
     }
   },
   beforeMount: function() {
-    this.formDisabled = true;
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductList(params);
     this.GetSupplyList(params);
@@ -445,12 +460,25 @@ export default {
   font-weight: bold;
   color: #409eff;
 }
-.ticket-form {
-  min-height: 80%;
-  height: auto;
+.mian-content {
+  padding: 10px;
+}
+.create-storage-in {
+  float: left;
+  width: 500px;
+  height: 200px;
+  font-size: 28px;
+  letter-spacing: 10px;
+}
+.form-area {
+  display: flex;
+  justify-content: center;
+}
+.in-ticket-form{
+  min-height: 500px;
+  width: 70vw;
   padding: 30px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
-  margin: 20px 0px;
 }
 .form-title {
   height: 100px;
