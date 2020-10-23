@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="content-header">
-      <span class="header-title">出库记录</span>
+      <div>
+        <span class="title-name">出库记录</span>
+      </div>
       <div>
         <span class="message-info">*时间跨度最多30天</span>
         <el-date-picker
@@ -9,6 +11,7 @@
           class="date-picker"
           type="daterange"
           align="right"
+          size="small" 
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -21,6 +24,7 @@
         <el-button
           :disabled="date ? false : true"
           type="primary"
+          size="small" 
           icon="el-icon-search"
           @click="searchOnClick"
           >查询</el-button
@@ -256,7 +260,7 @@ export default {
 };
 </script>
 <style>
-.content-header {
+/* .content-header {
   height: 80px;
   display: flex;
   flex-direction: row;
@@ -264,9 +268,22 @@ export default {
   justify-content: space-between;
 }
 .header-title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #409eff;
+} */
+.content-header {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.title-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+  margin-left: 20px;
 }
 .date-picker {
   margin: 0px 20px;

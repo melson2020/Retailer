@@ -1,10 +1,13 @@
 <template>
   <div style="height:100%">
     <div class="content-header">
-      <span class="header-title">入库记录</span>
+      <div>
+        <span class="title-name">入库记录</span>
+      </div>
       <div>
         <span class="message-info">*最多查询30天记录</span>
         <el-date-picker
+          size="small"
           v-model="date"
           class="date-picker"
           type="daterange"
@@ -21,6 +24,7 @@
         <el-button
           :disabled="date?false:true"
           type="primary"
+          size="small" 
           icon="el-icon-search"
           @click="searchOnClick"
         >查询</el-button>
@@ -233,25 +237,35 @@ export default {
 </script>
 <style>
 .content-header {
-  height: 80px;
+  height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.header-title {
-  font-size: 30px;
+.title-name {
+  font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
+.content{
+  margin-top: 5px;
+}
+
+/* .header-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+} */
 .date-picker {
   margin: 0px 20px;
 }
-.content {
+/* .content {
   height: 85vh;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin: 20px 0px;
-}
+} */
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
 }
@@ -262,7 +276,7 @@ export default {
 .card-area-title {
   float: left;
   color: #e6a23c;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   padding: 10px;
 }

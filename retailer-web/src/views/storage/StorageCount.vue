@@ -1,7 +1,15 @@
 <template>
   <div>
+<<<<<<< HEAD
     <!-- <el-button
       v-if="!showStorageCountTicket"
+=======
+    <div class="header-div">
+      <span class="title-name">盘点</span>
+    </div>
+    <el-button
+      v-if="!showTicket"
+>>>>>>> a7ade4f0588e9e64047034cfb6449545982a5e1f
       class="button-box"
       type="warning"
       icon="el-icon-plus"
@@ -54,6 +62,17 @@ export default {
 };
 </script>
 <style>
+.header-div {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.title-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+}
 .button-box {
   float: left;
   width: 500px;
