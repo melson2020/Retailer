@@ -7,6 +7,7 @@
           <div>
             <el-input
               class="fliter-input"
+              size="small"
               v-model="searchContent"
               placeholder="搜索名称 / 型号"
               suffix-icon="el-icon-search"
@@ -15,57 +16,61 @@
             <el-button
             plain
             circle
+            size="small"
             type="primary"
             icon="el-icon-plus"
             @click="handleNewProduct('newProduct')"
             />
         </div>
     </div>
+    <div  class="content">
+      <el-table :data="list" border class="producttable" size="small"
+          :header-row-style="{ height: '40px' }"
+          :height="producttableHeight"
+          :row-style="{ height: '40px' }"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white' }">
+        <el-table-column prop="name" label="名字" align="left"></el-table-column>
+        <el-table-column prop="type" label="型号" align="left"></el-table-column>
+        <el-table-column prop="specification" label="规格" align="left"></el-table-column>
+        <el-table-column prop="unit" label="单位" align="left"></el-table-column>
+        <el-table-column prop="categoryName" label="类别" align="left"></el-table-column>
+        <!-- <el-table-column prop="feature" label="特征" align="center"></el-table-column> -->
+        <el-table-column label="特征" align="center" width="auto">
+          <template slot-scope="scope">
+              <el-tag
+                :key="tag"
+                v-for="tag in scope.row.feature"
+                :disable-transitions="false"
+                size="small">
+              {{tag}}
+            </el-tag>
+          </template>
+        </el-table-column>
 
-    <el-table :data="list" border class="product-table" :header-row-style="{ height: '50px' }"
-        :row-style="{ height: '45px' }"
-        :cell-style="{ padding: '2px', color: '#909399' }"
-        :header-cell-style="{ background: '#808080', color: 'white' }">
-      <el-table-column prop="name" label="名字" align="left"></el-table-column>
-      <el-table-column prop="type" label="型号" align="center"></el-table-column>
-      <el-table-column prop="specification" label="规格" align="center"></el-table-column>
-      <el-table-column prop="unit" label="单位" align="center"></el-table-column>
-      <el-table-column prop="categoryName" label="类别" align="center"></el-table-column>
-      <!-- <el-table-column prop="feature" label="特征" align="center"></el-table-column> -->
-      <el-table-column label="特征" align="center" width="auto">
-        <template slot-scope="scope">
-            <el-tag
-              :key="tag"
-              v-for="tag in scope.row.feature"
-              :disable-transitions="false"
-              size="small">
-            {{tag}}
-          </el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index,scope.row)"
-            plain
-            circle
-            type="primary"
-            icon="el-icon-edit"
-          />
-          <el-button
-            size="mini"
-            @click="handleDelete(scope.$index,scope.row)"
-            plain
-            circle
-            type="danger"
-            icon="el-icon-delete"
-          />
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="pagination">
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index,scope.row)"
+              plain
+              circle
+              type="primary"
+              icon="el-icon-edit"
+            />
+            <el-button
+              size="mini"
+              @click="handleDelete(scope.$index,scope.row)"
+              plain
+              circle
+              type="danger"
+              icon="el-icon-delete"
+            />
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="content-footer">
       <el-pagination
         background
         :current-page="listQuery.page"
@@ -268,70 +273,75 @@
       @close="cateClose"
     >
 
-        <div class="title-div">
-          <div class="title-div-left">
-            <el-input
-              class="fliter-input"
-              v-model="searchCategory"
-              placeholder="查询或添加新的分类"
-              @focus="searchCate"
-            ></el-input>
-            <el-button v-if="showCategoryList<1" plain circle type="primary" size="mini" icon="el-icon-plus" @click="addCategory()"/>
-          </div>
-        </div>
-
-      <el-table :data="showCategoryList" border class="category-table">
-              <!-- <el-table-column prop="name" label="名称" align="center"></el-table-column> -->
-        <el-table-column type="index" label="#"></el-table-column>
-          <el-table-column
-            v-for="(v,i) in categroyTableColums"
-            :prop="v.field"
-            :label="v.label"
-            :width="v.width"
-            :align="v.align"
-            :key="i"
-          >
-          <template slot-scope="scope">
-            <span v-if="scope.row.isSet">
-              <el-input size="mini" v-model="scope.row[v.field]"></el-input>
-            </span>
-            <span v-else>{{scope.row[v.field]}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  plain
-                  circle
-                  type="primary"
-                  icon="el-icon-edit"
-                  v-if="!scope.row.isSet"
-                  @click="categroyEdit(scope.$index, scope.row)"
-                ></el-button>
-                <el-button
-                  size="mini"
-                  plain
-                  circle
-                  v-if="scope.row.isSet"
-                  type="success"
-                  icon="el-icon-s-claim"
-                  @click="categroySave(scope.$index, scope.row)"
-                ></el-button>
-                <el-button
-                  size="mini"
-                  plain
-                  circle
-                  v-if="!scope.row.isSet"
-                  type="danger"
-                  icon="el-icon-delete"
-                  @click="categroyDelete(scope.$index, scope.row)"
-                ></el-button>
-              </template>
-            </el-table-column>
-      </el-table>
-
-      <div class="pagination">
+      <div class="title-div-left">
+        <el-input
+          class="fliter-input"
+          size="small"
+          v-model="searchCategory"
+          placeholder="查询或添加新的分类"
+          suffix-icon="el-icon-search"
+          @focus="searchCate"
+        ></el-input>
+        <el-button v-if="showCategoryList<1" plain circle type="primary" size="small" icon="el-icon-plus" @click="addCategory()"/>
+      </div>
+      <div class="content">
+        <el-table :data="showCategoryList" border class="categorytable" 
+          size="small" 
+          :header-row-style="{height:'40px'}"
+          :row-style="{height:'40px'}"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white'}">
+                <!-- <el-table-column prop="name" label="名称" align="center"></el-table-column> -->
+          <el-table-column type="index" label="#" align="center"></el-table-column>
+            <el-table-column
+              v-for="(v,i) in categroyTableColums"
+              :prop="v.field"
+              :label="v.label"
+              :width="v.width"
+              :align="v.align"
+              :key="i"
+            >
+            <template slot-scope="scope">
+              <span v-if="scope.row.isSet">
+                <el-input size="mini" v-model="scope.row[v.field]"></el-input>
+              </span>
+              <span v-else>{{scope.row[v.field]}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    type="primary"
+                    icon="el-icon-edit"
+                    v-if="!scope.row.isSet"
+                    @click="categroyEdit(scope.$index, scope.row)"
+                  ></el-button>
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    v-if="scope.row.isSet"
+                    type="success"
+                    icon="el-icon-s-claim"
+                    @click="categroySave(scope.$index, scope.row)"
+                  ></el-button>
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    v-if="!scope.row.isSet"
+                    type="danger"
+                    icon="el-icon-delete"
+                    @click="categroyDelete(scope.$index, scope.row)"
+                  ></el-button>
+                </template>
+              </el-table-column>
+        </el-table>
+      </div>
+      <div class="content-footer">
         <el-pagination
           background
           :current-page="categoryQuery.page"
@@ -353,6 +363,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      producttableHeight:window.innerHeight  - 150,
       searchContent: "",
       searchCategory:"",
       editProductFormVisible: false,
@@ -371,7 +382,8 @@ export default {
       },
       listQuery: {
         page: 1,
-        limit: 12
+        limit: 12,
+        height:""
       },
       categoryQuery: {
         page: 1,
@@ -672,6 +684,13 @@ console.log("value:_"+value)
     cateClose(){
       this.searchCategory="";
     },
+    setpageSize() {
+      let rect = this.producttableHeight-40;
+      this.listQuery.height=rect+40;
+      let pageSize = Math.floor(rect / 40);
+      this.listQuery.limit=pageSize;
+      console.log(pageSize);
+    },
   },
   computed: {
     ...mapGetters(["userInfo", "productList","categoryList"]),
@@ -717,11 +736,63 @@ console.log("value:_"+value)
     this.GetProductList(params);
     // console.log(this.productList);
     // this.GetCategoryList(params);
-  }
+  },
+  mounted: function() {
+    console.log("A");
+  this.$nextTick(function() {
+    console.log("B");
+    this.setpageSize();
+  })
+  },
 };
 </script>
 <style>
-.title-div {
+.content-header {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.title-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+  margin-left: 20px;
+}
+.fliter-input {
+  width: 400px;
+}
+.content{
+  margin-top: 5px;
+}
+.content-footer{
+  margin-top: 20px;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 45px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 250px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+.title-div-left {
+  display: flex;
+  align-items: center;
+}
+
+/* .title-div {
   height: 80px;
   display: flex;
   flex-direction: row;
@@ -765,5 +836,5 @@ console.log("value:_"+value)
   width: 250px;
   margin-left: 10px;
   vertical-align: bottom;
-}
+} */
 </style>

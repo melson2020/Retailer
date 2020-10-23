@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:100%">
     <div
       class="info-div"
       v-if="
@@ -60,98 +60,97 @@
       </el-card>
     </div>
     <div v-else>
-      <div class="top-area">
-        <span class="title-name">商品库存</span>
-        <el-input
-          class="fliter-input"
-          v-model="searchContent"
-          placeholder="搜索名称 / 型号"
-          suffix-icon="el-icon-search"
-          @focus="searchFocus"
-        ></el-input>
+      <div class="content-header">
+        <div>
+          <span class="title-name">商品库存</span>
+        </div>
+        <div>
+          <el-input
+            class="fliter-input"
+            size="small"
+            v-model="searchContent"
+            placeholder="搜索名称 / 型号"
+            suffix-icon="el-icon-search"
+            @focus="searchFocus"
+          ></el-input>
+        </div>
       </div>
-      <el-table
-        :data="
-          storageListShow.slice(
-            (storageTable.currentPage - 1) * storageTable.pageSize,
-            storageTable.currentPage * storageTable.pageSize
-          )
-        "
-        :height="storageTable.height"
-        border
-        ref="tableStorage"
-        :header-row-style="{ height: '50px' }"
-        :row-style="{ height: '45px' }"
-        :cell-style="{ padding: '2px', color: '#909399' }"
-        class="storage-table"
-        :header-cell-style="{ background: '#606266', color: 'white' }"
-        @expand-change="expandChanged"
-      >
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-table
-              v-if="props.row.batchList.length > 0"
-              :data="props.row.batchList"
-              class="inner-table"
-              border
-              :show-header="false"
-              :header-row-style="{ height: '30px' }"
-              :header-cell-style="{ padding: '2px', background: '#606266' }"
-              :row-style="{ height: '30px' }"
-              :cell-style="{ padding: '2px', color: '#909399' }"
-            >
-              <el-table-column
-                prop="batchNo"
-                label="批次号"
-                width="auto"
-              ></el-table-column>
-              <el-table-column
-                prop="supplyName"
-                label="供应商"
-                width="auto"
-              ></el-table-column>
-              <el-table-column label="税/回点" width="auto">
-                <template slot-scope="scope">
-                  <el-tag v-if="scope.row.vat == 1" size="mini"
-                    >税 ({{ scope.row.taxRate }}%)</el-tag
-                  >
-                  <el-tag
-                    v-if="scope.row.discount > 0"
-                    type="success"
-                    size="mini"
-                    >回点 ({{ scope.row.discount }}%)</el-tag
-                  >
-                </template>
-              </el-table-column>
-              <el-table-column label="单价">
-                <template slot-scope="scope">
-                  <span
-                    >{{ scope.row.price }}{{ scope.row.priceUnit }}￥/{{
-                      scope.row.countUnit
-                    }}</span
-                  >
-                </template>
-              </el-table-column>
-              <el-table-column label="数量">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div v-else class="no-batch-info">
-              <span>无批次信息</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-for="(item, i) in tableColums"
-          :key="i"
-          :prop="item.field"
-          :label="item.label"
-          :width="item.width"
-        ></el-table-column>
-      </el-table>
-      <div class="el-table-pagination-row">
+      <div class="content">
+        <el-table
+          :data="storages" border class="storage-table"  size="small"
+          ref="tableStorage"
+          :height="tableHeight"
+          :header-row-style="{height:'40px'}"
+          :row-style="{height:'40px'}"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white'}"
+          @expand-change="expandChanged">
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-table
+                v-if="props.row.batchList.length > 0"
+                :data="props.row.batchList"
+                class="inner-table"
+                border
+                :show-header="false"
+                :header-row-style="{ height: '30px' }"
+                :header-cell-style="{ padding: '2px', background: '#606266' }"
+                :row-style="{ height: '30px' }"
+                :cell-style="{ padding: '2px', color: '#909399' }"
+              >
+                <el-table-column
+                  prop="batchNo"
+                  label="批次号"
+                  width="auto"
+                ></el-table-column>
+                <el-table-column
+                  prop="supplyName"
+                  label="供应商"
+                  width="auto"
+                ></el-table-column>
+                <el-table-column label="税/回点" width="auto">
+                  <template slot-scope="scope">
+                    <el-tag v-if="scope.row.vat == 1" size="mini"
+                      >税 ({{ scope.row.taxRate }}%)</el-tag
+                    >
+                    <el-tag
+                      v-if="scope.row.discount > 0"
+                      type="success"
+                      size="mini"
+                      >回点 ({{ scope.row.discount }}%)</el-tag
+                    >
+                  </template>
+                </el-table-column>
+                <el-table-column label="单价">
+                  <template slot-scope="scope">
+                    <span
+                      >{{ scope.row.price }}{{ scope.row.priceUnit }}￥/{{
+                        scope.row.countUnit
+                      }}</span
+                    >
+                  </template>
+                </el-table-column>
+                <el-table-column label="数量">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.count }}{{ scope.row.countUnit }}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div v-else class="no-batch-info">
+                <span>无批次信息</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-for="(item, i) in tableColums"
+            :key="i"
+            :prop="item.field"
+            :label="item.label"
+            :width="item.width"
+          ></el-table-column>
+        </el-table>
+      </div>
+      <div class="content-footer">
         <el-pagination
           background
           :current-page="storageTable.currentPage"
@@ -172,6 +171,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      tableHeight: window.innerHeight  - 150,
       storageTable: {
         pageSize: 15,
         currentPage: 1,
@@ -192,8 +192,11 @@ export default {
     storageListShow: function() {
       return this.productStorageList.filter(item => {
         let key = item.productName + item.productType;
-        return key.indexOf(this.searchContent) != -1;
+        return key.toUpperCase().indexOf(this.searchContent.toUpperCase()) != -1;
       });
+    },
+    storages(){
+      return this.storageListShow.slice((this.storageTable.currentPage - 1) * this.storageTable.pageSize,this.storageTable.currentPage * this.storageTable.pageSize)
     }
   },
   methods: {
@@ -228,9 +231,9 @@ export default {
       this.storageTable.currentPage = page;
     },
     setpageSize() {
-      let rect = this.$refs.tableStorage.$el.offsetHeight-50;
-      this.storageTable.height=rect+50;
-      let pageSize = Math.floor(rect / 45);
+      let rect = this.tableHeight-40;
+      this.storageTable.height=rect+40;
+      let pageSize = Math.floor(rect / 40);
       this.storageTable.pageSize=pageSize;
     }
   },
@@ -281,9 +284,10 @@ export default {
   flex-direction: row;
   justify-content: space-around;
 }
-.top-area {
-  height: 80px;
+.content-header {
+  height: 60px;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
@@ -291,20 +295,21 @@ export default {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
 .fliter-input {
   width: 400px;
-  height: 80px;
 }
-.el-table-pagination-row {
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
+.content{
+  margin-top: 5px;
+}
+.content-footer{
   margin-top: 20px;
-  height: 80px;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
 }
+
 .el-table__expanded-cell {
   padding-top: 0px !important;
   padding-right: 0px !important;
@@ -322,7 +327,33 @@ export default {
 .el-tag {
   margin: 0px 10px;
 }
+
+/* .content-header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.title-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+}
+.fliter-input {
+  width: 400px;
+  height: 80px;
+}
+.content-footer {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-top: 20px;
+  height: 80px;
+}
+
 .storage-table {
   height: 80vh;
-}
+} */
 </style>

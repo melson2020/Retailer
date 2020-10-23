@@ -40,184 +40,208 @@
         </div>
       </el-dialog>
     </div>
-    <el-col :span="8">
-      <div class="show-categroy">
-        <div class="title-div">
-          <div class="title-div-left">
-            <span class="title-name">商品类别 ({{excelCategroyList.length}})</span>
-            <el-link
-              type="danger"
-              class="duplicate-link"
-              v-if="categroyDuplicateCount>0||isCategroyDuplicate"
-              @click.prevent.stop="categroyDuplicateSreach"
-            >类别重复:{{categroyDuplicateCount}} 个 {{isCategroyDuplicate?'显示全部':'点击查看'}}</el-link>
-          </div>
-            <el-input
-            class="fliter-input"
-            v-model="categroySearchContent"
-            placeholder="请输入内容"
-            suffix-icon="el-icon-search"
-          ></el-input>
-        </div>
-        <el-table
-          border
-          :row-class-name="tableRowClassName"
-          class="table-top"
-          :data="excelCategroyListShow.slice((productCategroyPage.currentPage-1)*productCategroyPage.pageSize,productCategroyPage.currentPage*productCategroyPage.pageSize)"
-          :header-row-style="{ height: '50px' }"
-          :row-style="{ height: '45px' }"
-          :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white' }">
-          <el-table-column type="index" label="#"></el-table-column>
-          <el-table-column
-            v-for="(v,i) in categroyTableColums"
-            :prop="v.field"
-            :label="v.label"
-            :width="v.width"
-            :key="i"
-          >
-            <template slot-scope="scope">
-              <span v-if="scope.row.isSet">
-                <el-input size="mini" placeholder="请输入内容" v-model="scope.row[v.field]"></el-input>
-              </span>
-              <span v-else>{{scope.row[v.field]}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                plain
-                circle
-                type="primary"
-                icon="el-icon-edit"
-                v-if="!scope.row.isSet"
-                @click="categroyEdit(scope.$index, scope.row)"
-              ></el-button>
-              <el-button
-                size="mini"
-                plain
-                circle
-                v-if="scope.row.isSet"
-                type="success"
-                icon="el-icon-s-claim"
-                @click="categroySave(scope.$index, scope.row)"
-              ></el-button>
-              <el-button
-                size="mini"
-                plain
-                circle
-                v-if="!scope.row.isSet"
+
+    <div>
+      <el-col :span="8">
+        <div class="show-categroy">
+          <div class="content-header">
+            <div>
+              <span class="title-name">商品类别 ({{excelCategroyList.length}})</span>
+              <el-link
                 type="danger"
-                icon="el-icon-delete"
-                @click="categroyDelete(scope.$index, scope.row)"
-              ></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="el-table-pagination-row">
-          <el-pagination
-            background
-            :current-page="productCategroyPage.currentPage"
-            @current-change="categroyPageChanged"
-            layout="prev, pager, next"
-            :page-size="productCategroyPage.pageSize"
-            :total="excelCategroyListShow.length"
-            v-if="excelCategroyListShow.length>=productCategroyPage.pageSize"
-          ></el-pagination>
-        </div>
-      </div>
-    </el-col>
-    <el-col :span="16">
-      <div class="show-dict">
-        <div class="title-div">
-          <div class="title-div-left">
-            <span class="title-name">商品目录 ({{excelProductList.length}})</span>
-            <el-link
-              type="danger"
-              class="duplicate-link"
-              v-if="duplicateCount>0||isSrearchDuplicate"
-              @click.prevent.stop="duplicateSreach"
-            >名称重复:{{duplicateCount}} 个 {{isSrearchDuplicate?'显示全部':'点击查看'}}</el-link>
+                class="duplicate-link"
+                v-if="categroyDuplicateCount>0||isCategroyDuplicate"
+                @click.prevent.stop="categroyDuplicateSreach"
+              >类别重复:{{categroyDuplicateCount}} 个 {{isCategroyDuplicate?'显示全部':'点击查看'}}</el-link>
+            </div>
+            <div>
+              <el-input
+              class="fliter-input"
+              size="small"
+              v-model="categroySearchContent"
+              placeholder="请输入内容"
+              suffix-icon="el-icon-search"
+              @focus="categroySearchFocus"
+              ></el-input>
+            </div>
           </div>
-          <el-input
-            class="fliter-input"
-            v-model="searchContent"
-            placeholder="请输入内容"
-            suffix-icon="el-icon-search"
-          ></el-input>
+
+          <div class="content">
+            <el-table
+              border
+              :row-class-name="tableRowClassName"
+              class="table-top" size="small"
+              :height="tableHeight"
+              :data="categorys"
+              :header-row-style="{height:'40px'}"
+              :row-style="{height:'40px'}"
+              :cell-style="{ padding: '2px', color: '#909399' }"
+              :header-cell-style="{ background: '#808080', color: 'white'}">
+              <el-table-column type="index" label="#" align="center"></el-table-column>
+              <el-table-column
+                v-for="(v,i) in categroyTableColums"
+                :prop="v.field"
+                :label="v.label"
+                :width="v.width"
+                :key="i"
+              >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.isSet">
+                    <el-input size="mini" placeholder="请输入内容" v-model="scope.row[v.field]"></el-input>
+                  </span>
+                  <span v-else>{{scope.row[v.field]}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    type="primary"
+                    icon="el-icon-edit"
+                    v-if="!scope.row.isSet"
+                    @click="categroyEdit(scope.$index, scope.row)"
+                  ></el-button>
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    v-if="scope.row.isSet"
+                    type="success"
+                    icon="el-icon-s-claim"
+                    @click="categroySave(scope.$index, scope.row)"
+                  ></el-button>
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    v-if="!scope.row.isSet"
+                    type="danger"
+                    icon="el-icon-delete"
+                    @click="categroyDelete(scope.$index, scope.row)"
+                  ></el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+          <div class="content-footer">
+            <el-pagination
+              background
+              :current-page="productCategroyPage.currentPage"
+              @current-change="categroyPageChanged"
+              layout="prev, pager, next"
+              :page-size="productCategroyPage.pageSize"
+              :total="excelCategroyListShow.length"
+              v-if="excelCategroyListShow.length>=productCategroyPage.pageSize"
+            ></el-pagination>
+          </div>
+
         </div>
-        <el-table
-          border
-          :row-class-name="tableRowClassName"
-          class="table-top"
-          :data="productListShow.slice((productTablePage.currentPage-1)*productTablePage.pageSize,productTablePage.currentPage*productTablePage.pageSize)"
-          :header-row-style="{ height: '50px' }"
-          :row-style="{ height: '45px' }"
-          :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white' }">
-          <el-table-column type="index" label="#" :index="indexMethod"></el-table-column>
-          <el-table-column
-            v-for="(item,i) in productTableColums"
-            :prop="item.field"
-            :label="item.label"
-            :width="item.width"
-            :key="i"
-          >
-            <template slot-scope="scope">
-              <span v-if="scope.row.isSet">
-                <el-input size="mini" v-model="scope.row[item.field]"></el-input>
-              </span>
-              <span v-else>{{scope.row[item.field]}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="auto">
-            <template slot-scope="scope">
-              <div class="table-operation-template">
-                <el-button
-                  size="mini"
-                  plain
-                  circle
-                  type="primary"
-                  icon="el-icon-edit"
-                  v-if="!scope.row.isSet"
-                  @click="handleEdit(scope.$index, scope.row)"
-                ></el-button>
-                <el-button
-                  size="mini"
-                  plain
-                  circle
-                  v-if="scope.row.isSet"
-                  type="success"
-                  icon="el-icon-s-claim"
-                  @click="handleSave(scope.$index, scope.row)"
-                ></el-button>
-                <el-button
-                  size="mini"
-                  plain
-                  circle
-                  v-if="!scope.row.isSet"
-                  type="danger"
-                  icon="el-icon-delete"
-                  @click="handleDelete(scope.$index, scope.row)"
-                ></el-button>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="el-table-pagination-row">
-          <el-pagination
-            background
-            :current-page="productTablePage.currentPage"
-            layout="prev, pager, next"
-            @current-change="pageChanged"
-            :page-size="productTablePage.pageSize"
-            :total="productListShow.length"
-            v-if="productListShow.length>=productTablePage.pageSize"
-          ></el-pagination>
+      </el-col>
+
+      <el-col :span="16">
+        <div class="show-dict">
+          <div class="content-header">
+            <div>
+              <span class="title-name">商品目录 ({{excelProductList.length}})</span>
+              <el-link
+                type="danger"
+                class="duplicate-link"
+                v-if="duplicateCount>0||isSrearchDuplicate"
+                @click.prevent.stop="duplicateSreach"
+              >名称重复:{{duplicateCount}} 个 {{isSrearchDuplicate?'显示全部':'点击查看'}}</el-link>
+            </div>
+            <div>
+              <el-input
+              class="fliter-input"
+              size="small"
+              v-model="searchContent"
+              placeholder="请输入内容"
+              suffix-icon="el-icon-search"
+              @focus="productSearchFocus"
+              ></el-input>
+            </div>
+          </div>
+
+          <div class="content">
+            <el-table
+              border
+              :row-class-name="tableRowClassName"
+              class="table-top" size="small"
+              :height="tableHeight"
+              :data="products"
+              :header-row-style="{height:'40px'}"
+              :row-style="{height:'40px'}"
+              :cell-style="{ padding: '2px', color: '#909399' }"
+              :header-cell-style="{ background: '#808080', color: 'white'}">
+              <el-table-column type="index" label="#" :index="indexMethod" align="center"></el-table-column>
+              <el-table-column
+                v-for="(item,i) in productTableColums"
+                :prop="item.field"
+                :label="item.label"
+                :width="item.width"
+                :key="i"
+              >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.isSet">
+                    <el-input size="mini" v-model="scope.row[item.field]"></el-input>
+                  </span>
+                  <span v-else>{{scope.row[item.field]}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" width="auto"  align="center">
+                <template slot-scope="scope">
+                  <div class="table-operation-template">
+                    <el-button
+                      size="mini"
+                      plain
+                      circle
+                      type="primary"
+                      icon="el-icon-edit"
+                      v-if="!scope.row.isSet"
+                      @click="handleEdit(scope.$index, scope.row)"
+                    ></el-button>
+                    <el-button
+                      size="mini"
+                      plain
+                      circle
+                      v-if="scope.row.isSet"
+                      type="success"
+                      icon="el-icon-s-claim"
+                      @click="handleSave(scope.$index, scope.row)"
+                    ></el-button>
+                    <el-button
+                      size="mini"
+                      plain
+                      circle
+                      v-if="!scope.row.isSet"
+                      type="danger"
+                      icon="el-icon-delete"
+                      @click="handleDelete(scope.$index, scope.row)"
+                    ></el-button>
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+          <div class="content-footer">
+            <el-pagination
+              background
+              :current-page="productTablePage.currentPage"
+              layout="prev, pager, next"
+              @current-change="pageChanged"
+              :page-size="productTablePage.pageSize"
+              :total="productListShow.length"
+              v-if="productListShow.length>=productTablePage.pageSize"
+            ></el-pagination>
+          </div>
         </div>
-      </div>
-    </el-col>
+      </el-col>
+    </div>
+
   </el-row>
 </template>
 <script>
@@ -227,17 +251,20 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      tableHeight: window.innerHeight  - 210,
       readingFile: false,
       isSrearchDuplicate: false,
       isCategroyDuplicate: false,
       maskloading: false,
       productTablePage: {
         pageSize: 12,
-        currentPage: 1
+        currentPage: 1,
+        height:""
       },
       productCategroyPage: {
         pageSize: 12,
-        currentPage: 1
+        currentPage: 1,
+        height:""
       },
       searchContent: "",
       categroySearchContent:"",
@@ -284,6 +311,9 @@ export default {
         });
       }
     },
+    products(){
+      return this.productListShow.slice((this.productTablePage.currentPage-1)*this.productTablePage.pageSize,this.productTablePage.currentPage*this.productTablePage.pageSize)
+    },
     excelCategroyListShow: function() {
       if (this.isCategroyDuplicate) {
         return this.excelCategroyList.filter(item => {
@@ -296,6 +326,9 @@ export default {
          return index != -1;
       })
     }},
+    categorys(){
+      return this.excelCategroyListShow.slice((this.productCategroyPage.currentPage-1)*this.productCategroyPage.pageSize,this.productCategroyPage.currentPage*this.productCategroyPage.pageSize)
+    },
     categroyDuplicateCount: function() {
       return this.excelCategroyListShow.filter(item => {
         return item.isRepeat;
@@ -450,12 +483,85 @@ export default {
       }
       let params={storeCode:this.userInfo.storeCode,productList:this.excelProductList,categoryList:this.excelCategroyList}
       this.SaveExcelList(params);
-    }
-  }
+    },
+    setpageSize() {
+      let rect = this.tableHeight-40;
+      this.productTablePage.height=rect+40;
+      this.productCategroyPage.height=rect+40;
+      let pageSize = Math.floor(rect / 40);
+      this.productCategroyPage.pageSize=pageSize;
+      this.productTablePage.pageSize=pageSize;
+    },
+    categroySearchFocus(){
+      console.log("Category");
+      this.productCategroyPage.currentPage=1;
+    },
+    productSearchFocus(){
+      console.log("Product");
+      this.productTablePage.currentPage=1;
+    },
+  },
+  mounted: function() {
+  this.$nextTick(function() {
+    this.setpageSize();
+  })
+  },
+
 };
 </script>
 <style>
+.header {
+  height: 60px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.top-button {
+  margin-left: 20px;
+}
+.content-header {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
 .title-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+  margin-left: 20px;
+}
+.fliter-input {
+  width: 400px;
+}
+.content{
+  margin-top: 5px;
+}
+.content-footer{
+  margin-top: 20px;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
+}
+.show-categroy {
+  min-height: 100%;
+  height: auto;
+  padding: 12px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  margin-top: 15px;
+}
+.show-dict {
+  min-height: 100%;
+  height: auto;
+  padding: 12px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  margin-left: 30px;
+  margin-top: 15px;
+}
+
+
+
+/* .title-name {
   float: left;
   font-size: 28px;
   font-weight: bold;
@@ -491,12 +597,7 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-left: 30px;
 }
-.header {
-  height: auto;
-  padding: 12px 0px;
-  display: flex;
-  flex-direction: row-reverse;
-}
+
 .el-row {
   height: 100%;
 }
@@ -512,9 +613,7 @@ export default {
   margin-top: 20px;
   height: 80px;
 }
-.top-button {
-  margin-left: 20px;
-}
+
 .fliter-input {
   width: 400px;
   height: 80px;
@@ -526,5 +625,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 </style>
