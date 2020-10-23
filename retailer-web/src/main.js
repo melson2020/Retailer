@@ -49,7 +49,8 @@ import {
   CheckboxGroup,
   Divider,
   Step,
-  Steps
+  Steps,
+  Switch
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -58,7 +59,7 @@ Message.install = function (Vue) {
   Vue.prototype.$message = Message;
   Vue.prototype.$messageBox = MessageBox;
   // 除数，被除数， 保留的小数点后的位数
-  Vue.prototype.NumberDiv =function (data1, data2) {// 除法
+  Vue.prototype.NumberDiv = function (data1, data2) {// 除法
     let t1 = 0, t2 = 0, r1, r2;
     // 获取每个参数的小数的位数
     try { t1 = data1.toString().split(".")[1].length } catch (e) { }
@@ -68,35 +69,39 @@ Message.install = function (Vue) {
     r2 = Number(data2.toString().replace(".", ""));
     return ((r1 / r2) * Math.pow(10, t2 - t1));
   };
-  Vue.prototype.NumberMul = function (data1,data2) {// 乘法
-    let m=0,s1=data1.toString(),s2=data2.toString();
+  Vue.prototype.NumberMul = function (data1, data2) {// 乘法
+    let m = 0, s1 = data1.toString(), s2 = data2.toString();
     // 获取所有参数小数位长度之和
-    try{m+=s1.split(".")[1].length}catch(e){}
-    try{m+=s2.split(".")[1].length}catch(e){}
+    try { m += s1.split(".")[1].length } catch (e) { }
+    try { m += s2.split(".")[1].length } catch (e) { }
     // 替换掉小数点转为数字相乘再除以10的次幂值
-    return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m);
+    return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
   };
-  Vue.prototype.NumberAdd  = function (data1,data2) {// 加法
-    let r1,r2,m;
+  Vue.prototype.NumberAdd = function (data1, data2) {// 加法
+    let r1, r2, m;
     // 获取每个参数的小数的位数
-    try{r1=data1.toString().split(".")[1].length}catch(e){r1=0}
-    try{r2=data2.toString().split(".")[1].length}catch(e){r2=0}
+    try { r1 = data1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+    try { r2 = data2.toString().split(".")[1].length } catch (e) { r2 = 0 }
     // 计算底数为10以最大小数位数为次幂的值
-    m=Math.pow(10,Math.max(r1,r2));
+    m = Math.pow(10, Math.max(r1, r2));
     // 把所有参数转为整数后相加再除以次幂的值
-    return (data1*m + data2*m)/m;
+    return (data1 * m + data2 * m) / m;
   };
-  Vue.prototype.NumberSub = function (data1,data2) {// 减法
-    let r1,r2,m,n;
+  Vue.prototype.NumberSub = function (data1, data2) {// 减法
+    let r1, r2, m, n;
     // 获取每个参数的小数的位数
-    try{r1=data1.toString().split(".")[1].length}catch(e){r1=0}
-    try{r2=data2.toString().split(".")[1].length}catch(e){r2=0}
+    try { r1 = data1.toString().split(".")[1].length } catch (e) { r1 = 0 }
+    try { r2 = data2.toString().split(".")[1].length } catch (e) { r2 = 0 }
     // 计算底数为10以最大小数位数为次幂的值
-    m=Math.pow(10,Math.max(r1,r2));
+    m = Math.pow(10, Math.max(r1, r2));
     //精度长度以最大小数位数为长度
-    n=(r1>=r2)?r1:r2;
-    return ((data1*m-data2*m)/m).toFixed(n);
+    n = (r1 >= r2) ? r1 : r2;
+    return ((data1 * m - data2 * m) / m).toFixed(n);
   };
+  String.prototype.endWith = function (endStr) {
+    var d = this.length - endStr.length;
+    return (d >= 0 && this.lastIndexOf(endStr) == d);
+  }
 };
 
 Vue.config.productionTip = false;
@@ -142,7 +147,8 @@ Vue.use(Popover);
 Vue.use(CheckboxGroup);
 Vue.use(Divider);
 Vue.use(Step);
-Vue.use(Steps)
+Vue.use(Steps);
+Vue.use(Switch);
 
 new Vue({
   router,

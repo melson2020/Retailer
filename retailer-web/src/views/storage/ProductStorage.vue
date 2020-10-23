@@ -237,7 +237,7 @@ export default {
   beforeMount: function() {
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductAndStorageCount(params);
-    this.GetProductStorageList(params);
+    this.GetProductStorageList({ storeCode: this.userInfo.storeCode,searchType:"normal" });
   },
   mounted: function() {
     this.$nextTick(function() {

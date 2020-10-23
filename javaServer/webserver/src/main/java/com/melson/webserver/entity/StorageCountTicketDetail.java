@@ -5,30 +5,20 @@ import javax.persistence.*;
 /**
  * @Author Nelson
  * @Description
- * @Date 2020/8/27
+ * @Date 2020/10/23
  */
 @Entity
-@Table(name = "product_storage")
-public class ProductStorage {
+@Table(name = "storage_count_ticket_detail")
+public class StorageCountTicketDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String storeCode;
     private Integer productId;
     private String productName;
-    private String productType;
-    private String productSpecification;
+    private String type;
     private Integer count;
-    private String unit;
-    private String searchType;
-
-    public String getSearchType() {
-        return searchType;
-    }
-
-    public void setSearchType(String searchType) {
-        this.searchType = searchType;
-    }
+    private String ticketCode;
 
     public Integer getId() {
         return id;
@@ -62,20 +52,12 @@ public class ProductStorage {
         this.productName = productName;
     }
 
-    public String getProductType() {
-        return productType;
+    public String getType() {
+        return type;
     }
 
-    public void setProductType(String productType) {
-        this.productType = productType;
-    }
-
-    public String getProductSpecification() {
-        return productSpecification;
-    }
-
-    public void setProductSpecification(String productSpecification) {
-        this.productSpecification = productSpecification;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Integer getCount() {
@@ -86,11 +68,11 @@ public class ProductStorage {
         this.count = count;
     }
 
-    public String getUnit() {
-        return unit;
+    public String getTicketCode() {
+        return ticketCode;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setTicketCode(String ticketCode) {
+        this.ticketCode = ticketCode;
     }
 }

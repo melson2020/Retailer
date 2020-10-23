@@ -16,5 +16,6 @@ public interface IProductStorage extends IService<ProductStorage> {
     StorageAndProductCountVo GetProductAndStorageCount(String storeCode);
     List<ProductStorage> GenerateStorage(String storeCode);
     List<ProductStorage> FindAll(String storeCode);
+    List<ProductStorage> FindWithProductType(String storeCode,String productType);
     List<ProductBatch> FindBatchList(String storeCode,Integer productId);
 }

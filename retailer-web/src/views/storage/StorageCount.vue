@@ -1,35 +1,54 @@
 <template>
   <div>
-    <el-button
-      v-if="!showTicket"
+    <!-- <el-button
+      v-if="!showStorageCountTicket"
       class="button-box"
       type="warning"
       icon="el-icon-plus"
       @click="createTicket"
       >新建盘点单</el-button
-    >
-    <div v-else>
-      <el-steps :active="0" finish-status="success" align-center>
+    > -->
+    <div  class="step-box">
+      <el-steps :active="activeStep" finish-status="success">
         <el-step title="创建"></el-step>
         <el-step title="预览"></el-step>
         <el-step title="导出"></el-step>
         <el-step title="导入"></el-step>
         <el-step title="完成"></el-step>
       </el-steps>
-      <router-view/>
+      <div class="step-container">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
-      showTicket: false
+     
     };
   },
+  computed: {
+    ...mapGetters(["activeStep"])
+  },
   methods: {
+    ...mapActions({
+      SetActiveSteps: "SetActiveSteps",
+      SetStorageCountTicket:"SetStorageCountTicket"
+    }),
     createTicket() {
-      this.showTicket = !this.showTicket;
+      this.SetStorageCountTicket(true);
+      this.$router.push({ path: "/main/storageCount/create" });
+    }
+  },
+  beforeMount: function() {
+    let path=this.$route.path;
+    if(path=='/main/storageCount'){
+       this.$router.push({ path: "/main/storageCount/create" });
     }
   }
 };
@@ -41,5 +60,16 @@ export default {
   height: 200px;
   font-size: 30px;
   letter-spacing: 10px;
+}
+.count-steps {
+  margin: 20px;
+  padding: 20px;
+}
+.step-box {
+  padding: 20px;
+  text-align: left;
+}
+.step-container{
+  padding: 50px 0px;
 }
 </style>

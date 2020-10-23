@@ -20,4 +20,6 @@ public interface IProductStorageDao extends JpaRepository<ProductStorage,String>
 
     List<ProductStorage> findByStoreCode(String storeCode);
     List<ProductStorage> findByProductIdIn(Set<Integer> productIds);
+    List<ProductStorage> findByStoreCodeAndSearchType(String storeCode,String searchType);
+    List<ProductStorage> findByStoreCodeAndCountGreaterThan(String storeCode,Integer count);
 }

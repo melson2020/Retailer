@@ -130,6 +130,15 @@ export default {
   GetBatchList(params){
     return service.get("/storage/storageDetail",params)
   },
+  CreateStorageCountTicket(params){
+    return service.post("/storage/createCountTicket",params)
+  },
+  ExportCountTicket(params){
+    return service.post("/storage/exportStorageCountDetail",params)
+  },
+  DownStorageCountTicketExportExcel(params){
+    return service.exportExcel("/storage/downloadCountTicketExport",params)
+  },
 
   /**
    * Storage In

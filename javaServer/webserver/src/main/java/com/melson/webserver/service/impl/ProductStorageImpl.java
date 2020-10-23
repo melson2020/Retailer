@@ -39,9 +39,9 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
 
     @Override
     public StorageAndProductCountVo GetProductAndStorageCount(String storeCode) {
-        StorageAndProductCountVo vo=new StorageAndProductCountVo();
-        Integer productCount=productDao.GetCountWithStore(storeCode);
-        Integer storageCount=productStorageDao.GetCountWithStore(storeCode);
+        StorageAndProductCountVo vo = new StorageAndProductCountVo();
+        Integer productCount = productDao.GetCountWithStore(storeCode);
+        Integer storageCount = productStorageDao.GetCountWithStore(storeCode);
         vo.setProductCount(productCount);
         vo.setStorageCount(storageCount);
         return vo;
@@ -49,10 +49,10 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
 
     @Override
     public List<ProductStorage> GenerateStorage(String storeCode) {
-        List<Product> productList=productDao.findByStoreCode(storeCode);
-        List<ProductStorage> storageList=new ArrayList<>(productList.size());
-        for (Product p:productList){
-            ProductStorage storage=new ProductStorage();
+        List<Product> productList = productDao.findByStoreCode(storeCode);
+        List<ProductStorage> storageList = new ArrayList<>(productList.size());
+        for (Product p : productList) {
+            ProductStorage storage = new ProductStorage();
             storage.setCount(0);
             storage.setProductId(p.getId());
             storage.setStoreCode(storeCode);
@@ -62,9 +62,9 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
             storage.setUnit(p.getUnit());
             storageList.add(storage);
         }
-        if(storageList.size()>0){
-          return productStorageDao.saveAll(storageList);
-        }else {
+        if (storageList.size() > 0) {
+            return productStorageDao.saveAll(storageList);
+        } else {
             return null;
         }
     }
@@ -75,7 +75,19 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
     }
 
     @Override
+    public List<ProductStorage> FindWithProductType(String storeCode, String searchType) {
+        switch (searchType.toUpperCase()) {
+            case "ALL":
+                return productStorageDao.findByStoreCode(storeCode);
+            case "NORMAL":
+                return productStorageDao.findByStoreCodeAndSearchType(storeCode, searchType);
+            default:
+                return productStorageDao.findByStoreCodeAndCountGreaterThan(storeCode, 0);
+        }
+    }
+
+    @Override
     public List<ProductBatch> FindBatchList(String storeCode, Integer productId) {
-        return productBatchDao.findByStoreCodeAndProductIdAndFinished(storeCode,productId,0);
+        return productBatchDao.findByStoreCodeAndProductIdAndFinished(storeCode, productId, 0);
     }
 }

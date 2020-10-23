@@ -12,6 +12,9 @@ const ProductDict=()=> import("../views/dicts/ProductDict.vue");
 const ProductImport=()=> import("../views/dicts/ProductImport.vue")
 const ProductStock=()=>import("../views/storage/ProductStorage.vue")
 const StorageCount=()=>import("../views/storage/StorageCount.vue")
+const CreateCountTicket=()=>import("../views/storage/CreateTicket.vue")
+const Preview=()=>import("../views/storage/Preview.vue")
+const Import=()=>import("../views/storage/Import.vue")
 const StorageIn=()=>import("../views/storageIn/StorageIn.vue")
 const StorageInRecord=()=>import("../views/storageIn/StorageInRecord.vue")
 const StorageOut=()=>import("../views/storageOut/StorageOut.vue")
@@ -94,8 +97,25 @@ const routes = [
       },
       {
         path:"storageCount",
-        name:"StorageCount",
-        component:StorageCount
+        name:"storageCount",
+        component:StorageCount,
+        children:[
+          {
+            path:"create",
+            name:"create",
+            component:CreateCountTicket
+          },
+          {
+            path:"preview",
+            name:"preview",
+            component:Preview
+          },
+          {
+            path:"import",
+            name:"import",
+            component:Import
+          }
+        ]
       },
       {
         path:"storageIn",

@@ -24,7 +24,6 @@
           :auto-upload="false"
           :limit="1"
           :on-exceed="onExceed"
-          :on-change="uploadChange"
           accept=".xls, .xlsx"
         >
           <i class="el-icon-upload"></i>
@@ -358,7 +357,7 @@ export default {
         return;
       }
       excelHelper
-        .fileToExcel(file)
+        .fileToExcel(file,false)
         .then(tabJson => {
           if (tabJson && tabJson.length > 0) {
             this.GenrateCategroyListAndProductList(tabJson);
@@ -368,10 +367,6 @@ export default {
           let mss = err.message ? err.message : err;
           this.$message.warning("解析excel错误：" + mss);
         });
-    },
-    uploadChange(event) {
-      console.log("uploadChange");
-      console.log(event);
     },
     uploadFileDialogOnClose() {
       this.$refs.upload.clearFiles();

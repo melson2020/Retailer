@@ -53,7 +53,7 @@ const actions = {
                 window.URL.revokeObjectURL(link.href)
             }
         }).catch(err => {
-            console.log(err)
+            Message.error(err.message ? err.message : err)
         })
     },
     DeleteOneInImportedList({ commit }, product) {

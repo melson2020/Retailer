@@ -1,10 +1,14 @@
+/* eslint-disable no-empty-pattern */
 import request from "../../utils/request";
 import { Message } from "element-ui";
 
 
 const state = {
     productAndStorageCount: {},
-    productStorageList: []
+    productStorageList: [],
+    previewStorageList:[],
+    activeStep:0,
+    currentStorageCountTicket:{}
 };
 
 const actions = {
@@ -43,6 +47,17 @@ const actions = {
         })
 
     },
+    GetPreviewStorageList({commit},params){
+        request.GetStorageList(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetPreviewStorageList", res.data)
+            }else {
+                Message.error(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
+    },
     GetBatchList({commit},payload){
         request.GetBatchList(payload.params).then(res => {
             if (res.resultStatus == 1) {
@@ -55,12 +70,46 @@ const actions = {
             Message.error(err.message ? err.message : err)
         })
 
+    },
+    ExportCountTicket({},parmas){
+        return request.ExportCountTicket(parmas);
+    },
+    DownStorageCountTicketExportExcel({},params){
+       return request.DownStorageCountTicketExportExcel(params)
+    //    .then(res => {
+    //         let blob = new Blob([res])
+    //         let fileName = Date.parse(new Date()) + '.xls'
+    //         if (window.navigator.msSaveOrOpenBlob) {
+    //             navigator.msSaveBlob(blob, fileName)
+    //         } else {
+    //             var link = document.createElement('a')
+    //             link.href = window.URL.createObjectURL(blob)
+    //             link.download = fileName
+    //             link.click()
+    //             //释放内存
+    //             window.URL.revokeObjectURL(link.href)
+    //         }
+    //     }).catch(err => {
+    //         Message.error(err.message ? err.message : err)
+    //     })
+    },
+    CreateStorageCountTicket({},params){
+       return request.CreateStorageCountTicket(params)
+    },
+    SetActiveSteps({commit},data){
+        commit("SetActiveSteps",data)
+    },
+    SetCurrentStorageCountTicket({commit},data){
+        commit("SetcurrentStorageCountTicket",data)
     }
 };
 
 const getters = {
     productAndStorageCount: state => state.productAndStorageCount,
-    productStorageList: state => state.productStorageList
+    productStorageList: state => state.productStorageList,
+    activeStep:state=>state.activeStep,
+    previewStorageList:state=>state.previewStorageList,
+    currentStorageCountTicket:state=>state.currentStorageCountTicket
 };
 
 const mutations = {
@@ -79,9 +128,18 @@ const mutations = {
         data.map(item=>{item.batchList=[]})
         state.productStorageList=data;
     },
+    SetPreviewStorageList(state, data) {
+        state.previewStorageList=data;
+    },
     SetStorageDetail(state,data){
         let index=state.productStorageList.indexOf(data.row)
         state.productStorageList[index].batchList=data.list
+    },
+    SetActiveSteps(state,data){
+        state.activeStep=data;
+    },
+    SetcurrentStorageCountTicket(state,data){
+        state.currentStorageCountTicket=data
     }
 };
 
