@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="content-header">
+    <div class="storageoutrecord-content-header">
       <div>
-        <span class="title-name">出库记录</span>
+        <span class="storageoutrecord-title-name">出库记录</span>
       </div>
       <div>
         <span class="message-info">*时间跨度最多30天</span>
@@ -272,14 +272,14 @@ export default {
   font-weight: bold;
   color: #409eff;
 } */
-.content-header {
+.storageoutrecord-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.storageoutrecord-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;

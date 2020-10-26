@@ -1,12 +1,12 @@
 <template>
   <div style="height:100%">
-    <div class="content-header">
+    <div class="productdict-content-header">
           <div>
-            <span class="title-name">商品目录</span>
+            <span class="productdict-title-name">商品目录</span>
           </div>
           <div>
             <el-input
-              class="fliter-input"
+              class="productdict-fliter-input"
               size="small"
               v-model="searchContent"
               placeholder="搜索名称 / 型号"
@@ -14,17 +14,15 @@
               @focus="searchFocus"
             ></el-input>
             <el-button
-            plain
-            circle
             size="small"
             type="primary"
             icon="el-icon-plus"
             @click="handleNewProduct('newProduct')"
-            />
+            >添加</el-button>
         </div>
     </div>
-    <div  class="content">
-      <el-table :data="list" border class="producttable" size="small"
+    <div  class="productdict-content">
+      <el-table :data="list" border class="productdict-producttable" size="small"
           :header-row-style="{ height: '40px' }"
           :height="producttableHeight"
           :row-style="{ height: '40px' }"
@@ -39,10 +37,12 @@
         <el-table-column label="特征" align="center" width="auto">
           <template slot-scope="scope">
               <el-tag
+                class="el-tag"
                 :key="tag"
                 v-for="tag in scope.row.feature"
                 :disable-transitions="false"
-                size="small">
+                size="small"
+                type="success">
               {{tag}}
             </el-tag>
           </template>
@@ -70,7 +70,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="content-footer">
+    <div class="productdict-content-footer">
       <el-pagination
         background
         :current-page="listQuery.page"
@@ -148,15 +148,17 @@
         </el-row>
 
         <el-tag
+          class="el-tag"
           :key="tag"
           v-for="tag in editTags"
           closable
           :disable-transitions="false"
           size="small"
+          type="success"
           @close="handleEditTagsClose(tag)"
         >{{tag}}</el-tag>
         <el-input
-          class="input-new-tag"
+          class="productdict-input-new-tag"
           v-if="inputEditVisible"
           v-model="inputEditValue"
           ref="saveEditTagInput"
@@ -164,9 +166,9 @@
           @keyup.enter.native="handleEditInputConfirm"
           @blur="handleEditInputConfirm"
         ></el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
+        <el-button v-else class="productdict-button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="productdict-dialog-footer">
         <el-button @click="editProductFormVisible = false" v-if="!loading">取消</el-button>
         <el-button type="primary" @click="onEditProduct('editProduct')" :loading="loading">确定</el-button>
       </div>
@@ -238,15 +240,17 @@
         </el-row>
 
         <el-tag
+          class="el-tag"
           :key="tag"
           v-for="tag in editTags"
           closable
           :disable-transitions="false"
           size="small"
+          type="success"
           @close="handleEditTagsClose(tag)"
         >{{tag}}</el-tag>
         <el-input
-          class="input-new-tag"
+          class="productdict-input-new-tag"
           v-if="inputEditVisible"
           v-model="inputEditValue"
           ref="saveEditTagInput"
@@ -254,10 +258,10 @@
           @keyup.enter.native="handleEditInputConfirm"
           @blur="handleEditInputConfirm"
         ></el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
+        <el-button v-else class="productdict-button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
 
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer" class="productdict-dialog-footer">
       <el-button @click="newProductFormVisible = false" v-if="!loading">取消</el-button>
       <el-button type="primary" @click="onNewProduct('newProduct')" :loading="loading">确定</el-button>
     </div>
@@ -273,9 +277,9 @@
       @close="cateClose"
     >
 
-      <div class="title-div-left">
+      <div class="productdict-title-div-left">
         <el-input
-          class="fliter-input"
+          class="productdict-fliter-input"
           size="small"
           v-model="searchCategory"
           placeholder="查询或添加新的分类"
@@ -284,8 +288,8 @@
         ></el-input>
         <el-button v-if="showCategoryList<1" plain circle type="primary" size="small" icon="el-icon-plus" @click="addCategory()"/>
       </div>
-      <div class="content">
-        <el-table :data="showCategoryList" border class="categorytable" 
+      <div class="productdict-content">
+        <el-table :data="showCategoryList" border class="productdict-categorytable" 
           size="small" 
           :header-row-style="{height:'40px'}"
           :row-style="{height:'40px'}"
@@ -341,7 +345,7 @@
               </el-table-column>
         </el-table>
       </div>
-      <div class="content-footer">
+      <div class="productdict-content-footer">
         <el-pagination
           background
           :current-page="categoryQuery.page"
@@ -747,47 +751,48 @@ console.log("value:_"+value)
 };
 </script>
 <style>
-.content-header {
+.productdict-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.productdict-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
 }
-.fliter-input {
+.productdict-fliter-input {
   width: 400px;
+  margin: 0px 20px;
 }
-.content{
+.productdict-content{
   margin-top: 5px;
 }
-.content-footer{
+.productdict-content-footer{
   margin-top: 20px;
   height: 60px;
   align-items: center;
   justify-content: space-between;
 }
-.el-tag + .el-tag {
+.el-tag{
   margin-left: 10px;
 }
-.button-new-tag {
+.productdict-button-new-tag {
   margin-left: 10px;
   height: 45px;
   line-height: 30px;
   padding-top: 0;
   padding-bottom: 0;
 }
-.input-new-tag {
+.productdict-input-new-tag {
   width: 250px;
   margin-left: 10px;
   vertical-align: bottom;
 }
-.title-div-left {
+.productdict-title-div-left {
   display: flex;
   align-items: center;
 }

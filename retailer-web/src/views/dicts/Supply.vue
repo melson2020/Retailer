@@ -1,24 +1,24 @@
 <template>
   <div style="height:100%">
-    <div class="content-header">
+    <div class="supply-content-header">
       <div>
-        <span class="title-name">供应商列表</span>
+        <span class="supply-title-name">供应商列表</span>
       </div>
       <div>
         <el-input
-          class="fliter-input"
+          class="supply-fliter-input"
           size="small"
           v-model="searchContent"
           placeholder="请输入内容"
           suffix-icon="el-icon-search"
           @focus="searchFocus"
         ></el-input>
-        <el-button plain circle size="small" type="primary" icon="el-icon-plus" @click="resetForm('addNewSupply')"/>
+        <el-button size="small" type="primary" icon="el-icon-plus" @click="resetForm('addNewSupply')">添加</el-button>
       </div>
     </div>
 
-    <div class="content">
-      <el-table :data="list" border class="supplytable" size="small"
+    <div class="supply-content">
+      <el-table :data="list" border class="supply-supplytable" size="small"
           :height="tableHeight"
           :header-row-style="{height:'40px'}"
           :row-style="{height:'40px'}"
@@ -38,7 +38,7 @@
       </el-table>
     </div>
 
-    <div class="content-footer">
+    <div class="supply-content-footer">
       <el-pagination
         background
         :current-page="listQuery.page"
@@ -94,7 +94,7 @@
           ></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="supply-dialog-footer">
         <el-button @click="newSupplyFormVisible = false" v-if="!loading">取消</el-button>
         <el-button type="primary" @click="onAddNewSupply('addNewSupply')" :loading="loading">确定</el-button>
       </div>
@@ -143,7 +143,7 @@
           ></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="supply-dialog-footer">
         <el-button @click="editSupplyFormVisible = false" v-if="!loading">取消</el-button>
         <el-button type="primary" @click="onEditSupply('editSupply')" :loading="loading">确定</el-button>
       </div>
@@ -372,26 +372,27 @@ export default {
 </script>
 
 <style>
-.content-header {
+.supply-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.supply-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
 }
-.fliter-input {
+.supply-fliter-input {
   width: 400px;
+  margin: 0px 20px;
 }
-.content{
+.supply-content{
   margin-top: 5px;
 }
-.content-footer{
+.supply-content-footer{
   margin-top: 20px;
   height: 60px;
   align-items: center;

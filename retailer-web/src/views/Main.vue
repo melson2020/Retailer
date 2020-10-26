@@ -1,5 +1,5 @@
 <template>
-  <el-container class="container">
+  <el-container class="main-container">
     <el-aside width="auto">
       <el-menu
         default-active="1-1"
@@ -33,10 +33,10 @@
     <el-container>
       <el-header height="auto">
         <div>
-          <i class="icon icon-left" :class="menuArrow" @click="menuCollapseChange"></i>
-          <el-dropdown trigger="click" class="icon-right">
-            <span class="el-dropdown-link user-info">
-              <i class="el-icon-user icon icon-right"></i>
+          <i class="main-icon main-icon-left" :class="menuArrow" @click="menuCollapseChange"></i>
+          <el-dropdown trigger="click" class="main-icon-right">
+            <span class="el-dropdown-link main-user-info">
+              <i class="el-icon-user main-icon main-icon-right"></i>
               {{ userInfo.userName }}
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -228,7 +228,7 @@ export default {
   padding: 12px;
 }
 
-.container {
+.main-container {
   height: 100vh;
 }
 .el-container:nth-child(5) .el-aside,
@@ -240,18 +240,18 @@ export default {
   line-height: 320px;
 }
 
-.icon-left {
+.main-icon-left {
   float: left;
 }
-.icon-right {
+.main-icon-right {
   float: right;
 }
-.icon {
+.main-icon {
   font-size: 50px;
   margin: 20px;
   color: rgb(180, 176, 176);
 }
-.user-info {
+.main-user-info {
   float: right;
   color: #909399;
   height: 100px;

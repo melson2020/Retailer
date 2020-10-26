@@ -1,13 +1,13 @@
 <template>
 
   <div style="height:100%">
-    <div class="content-header">
+    <div class="employee-content-header">
       <div>
-        <span class="title-name">{{ userInfo.store.storeName }}</span>
+        <span class="employee-title-name">{{ userInfo.store.storeName }}</span>
       </div>
       <div>
         <el-input
-          class="fliter-input"
+          class="employee-fliter-input"
           size="small"
           v-model="searchContent"
           placeholder="请输入内容"
@@ -15,17 +15,17 @@
           @focus="searchFocus"
         ></el-input>
         <el-button
-          plain circle type="primary" 
+          type="primary" 
           size="small"
           icon="el-icon-plus"
           :disabled="addEmployeePermission"
           @click="resetForm('createEmployeeForm')"
-        />
+         >添加</el-button>
       </div>
     </div>
 
-    <div class="content">
-      <el-table :data="list" border class="employeetable" size="small"
+    <div class="employee-content">
+      <el-table :data="list" border class="employee-employeetable" size="small"
           :height="tableHeight"
           :header-row-style="{height:'40px'}"
           :row-style="{height:'40px'}"
@@ -63,7 +63,7 @@
       </el-table>
     </div>
 
-    <div class="content-footer">
+    <div class="employee-content-footer">
       <el-pagination
         background
         :current-page="listQuery.page"
@@ -395,26 +395,27 @@ export default {
 };
 </script>
 <style>
-.content-header {
+.employee-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.employee-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
 }
-.fliter-input {
+.employee-fliter-input {
   width: 400px;
+  margin: 0px 20px;
 }
-.content{
+.employee-content{
   margin-top: 5px;
 }
-.content-footer{
+.employee-content-footer{
   margin-top: 20px;
   height: 60px;
   align-items: center;
