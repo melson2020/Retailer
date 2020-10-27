@@ -1,8 +1,8 @@
 <template>
   <div style="height:100%">
-    <div class="content-header">
+    <div class="storageinrecord-content-header">
       <div>
-        <span class="title-name">入库记录</span>
+        <span class="storageinrecord-title-name">入库记录</span>
       </div>
       <div>
         <span class="message-info">*最多查询30天记录</span>
@@ -21,16 +21,17 @@
           :picker-options="pickerOptions"
           @focus="focusOn"
         ></el-date-picker>
-        <el-button
-          :disabled="date?false:true"
-          type="primary"
-          size="small" 
-          icon="el-icon-search"
-          @click="searchOnClick"
-        >查询</el-button>
+
+          <el-button
+            :disabled="date?false:true"
+            type="primary"
+            size="small" 
+            icon="el-icon-search"
+            @click="searchOnClick"
+          >查询</el-button>
       </div>
     </div>
-    <div class="content">
+    <div class="storageinrecord-content">
       <el-scrollbar style="height:100%" class="content-scrollbar">
         <div class="record-display-area">
           <span v-if="recordList.length<=0" class="non-data-info">未查询到数据</span>
@@ -236,20 +237,20 @@ export default {
 };
 </script>
 <style>
-.content-header {
+.storageinrecord-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.storageinrecord-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
 }
-.content{
+.storageinrecord-content{
   margin-top: 5px;
 }
 

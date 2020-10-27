@@ -1,5 +1,6 @@
 <template>
   <div style="height:100%">
+<<<<<<< HEAD
     <div class="content-header">
       <div>
         <span class="title-name">商品目录</span>
@@ -70,6 +71,52 @@
               size="small"
             >
               {{ tag }}
+=======
+    <div class="productdict-content-header">
+          <div>
+            <span class="productdict-title-name">商品目录</span>
+          </div>
+          <div>
+            <el-input
+              class="productdict-fliter-input"
+              size="small"
+              v-model="searchContent"
+              placeholder="搜索名称 / 型号"
+              suffix-icon="el-icon-search"
+              @focus="searchFocus"
+            ></el-input>
+            <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-plus"
+            @click="handleNewProduct('newProduct')"
+            >添加</el-button>
+        </div>
+    </div>
+    <div  class="productdict-content">
+      <el-table :data="list" border class="productdict-producttable" size="small"
+          :header-row-style="{ height: '40px' }"
+          :height="producttableHeight"
+          :row-style="{ height: '40px' }"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white' }">
+        <el-table-column prop="name" label="名字" align="left"></el-table-column>
+        <el-table-column prop="type" label="型号" align="left"></el-table-column>
+        <el-table-column prop="specification" label="规格" align="left"></el-table-column>
+        <el-table-column prop="unit" label="单位" align="left"></el-table-column>
+        <el-table-column prop="categoryName" label="类别" align="left"></el-table-column>
+        <!-- <el-table-column prop="feature" label="特征" align="center"></el-table-column> -->
+        <el-table-column label="特征" align="center" width="auto">
+          <template slot-scope="scope">
+              <el-tag
+                class="el-tag"
+                :key="tag"
+                v-for="tag in scope.row.feature"
+                :disable-transitions="false"
+                size="small"
+                type="success">
+              {{tag}}
+>>>>>>> 5eff58b7f4294d0c020d0854c25dd5ff6a6135f3
             </el-tag>
           </template>
         </el-table-column>
@@ -96,7 +143,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="content-footer">
+    <div class="productdict-content-footer">
       <el-pagination
         background
         :current-page="listQuery.page"
@@ -197,16 +244,18 @@
         </el-row>
 
         <el-tag
+          class="el-tag"
           :key="tag"
           v-for="tag in editTags"
           closable
           :disable-transitions="false"
           size="small"
+          type="success"
           @close="handleEditTagsClose(tag)"
           >{{ tag }}</el-tag
         >
         <el-input
-          class="input-new-tag"
+          class="productdict-input-new-tag"
           v-if="inputEditVisible"
           v-model="inputEditValue"
           ref="saveEditTagInput"
@@ -214,6 +263,7 @@
           @keyup.enter.native="handleEditInputConfirm"
           @blur="handleEditInputConfirm"
         ></el-input>
+<<<<<<< HEAD
         <el-button
           v-else
           class="button-new-tag"
@@ -232,6 +282,13 @@
           :loading="loading"
           >确定</el-button
         >
+=======
+        <el-button v-else class="productdict-button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
+      </el-form>
+      <div slot="footer" class="productdict-dialog-footer">
+        <el-button @click="editProductFormVisible = false" v-if="!loading">取消</el-button>
+        <el-button type="primary" @click="onEditProduct('editProduct')" :loading="loading">确定</el-button>
+>>>>>>> 5eff58b7f4294d0c020d0854c25dd5ff6a6135f3
       </div>
     </el-dialog>
 
@@ -324,16 +381,18 @@
         </el-row>
 
         <el-tag
+          class="el-tag"
           :key="tag"
           v-for="tag in editTags"
           closable
           :disable-transitions="false"
           size="small"
+          type="success"
           @close="handleEditTagsClose(tag)"
           >{{ tag }}</el-tag
         >
         <el-input
-          class="input-new-tag"
+          class="productdict-input-new-tag"
           v-if="inputEditVisible"
           v-model="inputEditValue"
           ref="saveEditTagInput"
@@ -341,6 +400,7 @@
           @keyup.enter.native="handleEditInputConfirm"
           @blur="handleEditInputConfirm"
         ></el-input>
+<<<<<<< HEAD
         <el-button
           v-else
           class="button-new-tag"
@@ -360,6 +420,16 @@
           >确定</el-button
         >
       </div>
+=======
+        <el-button v-else class="productdict-button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
+
+    </el-form>
+    <div slot="footer" class="productdict-dialog-footer">
+      <el-button @click="newProductFormVisible = false" v-if="!loading">取消</el-button>
+      <el-button type="primary" @click="onNewProduct('newProduct')" :loading="loading">确定</el-button>
+    </div>
+
+>>>>>>> 5eff58b7f4294d0c020d0854c25dd5ff6a6135f3
     </el-dialog>
 
     <el-dialog
@@ -369,9 +439,14 @@
       :show-close="true"
       @close="cateClose"
     >
+<<<<<<< HEAD
       <div class="title-div-left">
+=======
+
+      <div class="productdict-title-div-left">
+>>>>>>> 5eff58b7f4294d0c020d0854c25dd5ff6a6135f3
         <el-input
-          class="fliter-input"
+          class="productdict-fliter-input"
           size="small"
           v-model="searchCategory"
           placeholder="查询或添加新的分类"
@@ -388,6 +463,7 @@
           @click="addCategory()"
         />
       </div>
+<<<<<<< HEAD
       <div class="content">
         <el-table
           :data="showCategoryList"
@@ -396,6 +472,13 @@
           size="small"
           :header-row-style="{ height: '40px' }"
           :row-style="{ height: '40px' }"
+=======
+      <div class="productdict-content">
+        <el-table :data="showCategoryList" border class="productdict-categorytable" 
+          size="small" 
+          :header-row-style="{height:'40px'}"
+          :row-style="{height:'40px'}"
+>>>>>>> 5eff58b7f4294d0c020d0854c25dd5ff6a6135f3
           :cell-style="{ padding: '2px', color: '#909399' }"
           :header-cell-style="{ background: '#808080', color: 'white' }"
         >
@@ -453,7 +536,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="content-footer">
+      <div class="productdict-content-footer">
         <el-pagination
           background
           :current-page="categoryQuery.page"
@@ -854,47 +937,55 @@ export default {
 };
 </script>
 <style>
-.content-header {
+.productdict-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.productdict-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
 }
-.fliter-input {
+.productdict-fliter-input {
   width: 400px;
+  margin: 0px 20px;
 }
+<<<<<<< HEAD
 .content {
   margin-top: 5px;
 }
 .content-footer {
+=======
+.productdict-content{
+  margin-top: 5px;
+}
+.productdict-content-footer{
+>>>>>>> 5eff58b7f4294d0c020d0854c25dd5ff6a6135f3
   margin-top: 20px;
   height: 60px;
   align-items: center;
   justify-content: space-between;
 }
-.el-tag + .el-tag {
+.el-tag{
   margin-left: 10px;
 }
-.button-new-tag {
+.productdict-button-new-tag {
   margin-left: 10px;
   height: 45px;
   line-height: 30px;
   padding-top: 0;
   padding-bottom: 0;
 }
-.input-new-tag {
+.productdict-input-new-tag {
   width: 250px;
   margin-left: 10px;
   vertical-align: bottom;
 }
-.title-div-left {
+.productdict-title-div-left {
   display: flex;
   align-items: center;
 }

@@ -1,10 +1,10 @@
 <template>
   <div class="login" :style="loginBackground">
-    <el-card class="box-card" shadow="always">
-      <div slot="header" class="clearfix">
-        <span class="title">欢迎登陆</span>
+    <el-card class="login-box-card" shadow="always">
+      <div slot="header" class="login-clearfix">
+        <span class="login-title">欢迎登陆</span>
       </div>
-      <div class="card-content">
+      <div class="login-card-content">
         <el-form ref="loginForm" label-width="80px" :model="loginUser" :rules="rules">
           <el-form-item label="用户名称" prop="loginName">
             <el-input placeholder="注册手机号" v-model="loginUser.loginName"></el-input>
@@ -96,25 +96,25 @@ export default {
   font-weight: bold;
   letter-spacing: 0.3em;
 }
-.card-content {
+.login-card-content {
   display: flex;
   flex-direction: column;
 }
 
-.title {
+.login-title {
   color: rgb(64, 136, 231);
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
   letter-spacing: 0.5em;
 }
 
-.clearfix:after {
+.login-clearfix:after {
   display: table;
   content: "";
   clear: both;
 }
 
-.box-card {
+.login-box-card {
   width: 850px;
 }
 </style>

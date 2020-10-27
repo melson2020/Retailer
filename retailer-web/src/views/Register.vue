@@ -2,15 +2,20 @@
   <div class="register" :style="loginBackground">
     <el-card class="register-card">
       <div slot="header">
-        <i class="el-icon-back back-icon" @click="backClick"></i>
-        <span class="title">商户注册</span>
+        <el-button
+              style="float: left; padding: 3px 0"
+              type="text"
+              @click="backClick"
+              >返回</el-button>
+        <!-- <i class="el-icon-back back-icon" @click="backClick" font-size="20px"></i> -->
+        <span class="register-title">商户注册</span>
       </div>
       <el-form ref="storeForm" :model="store" label-width="100px" :rules="rules">
         <el-form-item label="商户名称" prop="storeName">
           <el-input v-model="store.storeName"></el-input>
         </el-form-item>
         <el-form-item label="商户地址">
-          <div class="row-between">
+          <div class="register-row-between">
             <el-select placeholder="省" v-model="store.provinceCode" @change="provinceChanged">
               <el-option
                 v-for="item in provinceList"
@@ -252,7 +257,7 @@ export default {
 };
 </script>
 <style>
-.back-icon {
+.register-back-icon {
   float: left;
   font-size: 2em;
   color: rgb(226, 215, 215);
@@ -269,13 +274,13 @@ export default {
 .register-card {
   width: 1500px;
 }
-.title {
+.register-title {
   color: rgb(64, 136, 231);
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
   letter-spacing: 0.5em;
 }
-.row-between {
+.register-row-between {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -287,7 +292,7 @@ export default {
   letter-spacing: 0.5em;
   font-weight: bold;
 }
-.textblock {
+.register-textblock {
   float: left;
   width: 100%;
   border: 0;

@@ -5,10 +5,10 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.6)"
   >
-    <div class="header">
-      <el-button @click.prevent.stop="saveExcelList" class="top-button" type="primary" size="small" :disabled="excelProductList.length<=0||excelCategroyList.length<=0">保存</el-button>
-      <el-button @click.prevent.stop="choseFile" class="top-button" type="primary" size="small">数据导入</el-button>
-      <el-button @click.prevent.stop="download" class="top-button" type="primary" size="small">模板下载</el-button>
+    <div class="productimport-header">
+      <el-button @click.prevent.stop="saveExcelList" class="productimport-top-button" type="primary" icon="el-icon-plus" size="small" :disabled="excelProductList.length<=0||excelCategroyList.length<=0">保存</el-button>
+      <el-button @click.prevent.stop="choseFile" class="productimport-top-button" type="primary" size="small">数据导入</el-button>
+      <el-button @click.prevent.stop="download" class="productimport-top-button" type="primary" size="small">模板下载</el-button>
       <el-dialog
         title="文件加载"
         :visible.sync="uploadFileDialog"
@@ -42,20 +42,20 @@
 
     <div>
       <el-col :span="8">
-        <div class="show-categroy">
-          <div class="content-header">
+        <div class="productimport-show-categroy">
+          <div class="productimport-content-header">
             <div>
-              <span class="title-name">商品类别 ({{excelCategroyList.length}})</span>
+              <span class="productimport-title-name">商品类别 ({{excelCategroyList.length}})</span>
               <el-link
                 type="danger"
-                class="duplicate-link"
+                class="productimport-duplicate-link"
                 v-if="categroyDuplicateCount>0||isCategroyDuplicate"
                 @click.prevent.stop="categroyDuplicateSreach"
               >类别重复:{{categroyDuplicateCount}} 个 {{isCategroyDuplicate?'显示全部':'点击查看'}}</el-link>
             </div>
             <div>
               <el-input
-              class="fliter-input"
+              class="productimport-fliter-input"
               size="small"
               v-model="categroySearchContent"
               placeholder="请输入内容"
@@ -65,11 +65,11 @@
             </div>
           </div>
 
-          <div class="content">
+          <div class="productimport-content">
             <el-table
               border
               :row-class-name="tableRowClassName"
-              class="table-top" size="small"
+              class="productimport-table-top" size="small"
               :height="tableHeight"
               :data="categorys"
               :header-row-style="{height:'40px'}"
@@ -125,7 +125,7 @@
             </el-table>
           </div>
 
-          <div class="content-footer">
+          <div class="productimport-content-footer">
             <el-pagination
               background
               :current-page="productCategroyPage.currentPage"
@@ -141,20 +141,20 @@
       </el-col>
 
       <el-col :span="16">
-        <div class="show-dict">
-          <div class="content-header">
+        <div class="productimport-show-dict">
+          <div class="productimport-content-header">
             <div>
-              <span class="title-name">商品目录 ({{excelProductList.length}})</span>
+              <span class="productimport-title-name">商品目录 ({{excelProductList.length}})</span>
               <el-link
                 type="danger"
-                class="duplicate-link"
+                class="productimport-duplicate-link"
                 v-if="duplicateCount>0||isSrearchDuplicate"
                 @click.prevent.stop="duplicateSreach"
               >名称重复:{{duplicateCount}} 个 {{isSrearchDuplicate?'显示全部':'点击查看'}}</el-link>
             </div>
             <div>
               <el-input
-              class="fliter-input"
+              class="productimport-fliter-input"
               size="small"
               v-model="searchContent"
               placeholder="请输入内容"
@@ -164,11 +164,11 @@
             </div>
           </div>
 
-          <div class="content">
+          <div class="productimport-content">
             <el-table
               border
               :row-class-name="tableRowClassName"
-              class="table-top" size="small"
+              class="productimport-table-top" size="small"
               :height="tableHeight"
               :data="products"
               :header-row-style="{height:'40px'}"
@@ -192,7 +192,7 @@
               </el-table-column>
               <el-table-column label="操作" width="auto"  align="center">
                 <template slot-scope="scope">
-                  <div class="table-operation-template">
+                  <div class="productimport-table-operation-template">
                     <el-button
                       size="mini"
                       plain
@@ -226,7 +226,7 @@
             </el-table>
           </div>
 
-          <div class="content-footer">
+          <div class="productimport-content-footer">
             <el-pagination
               background
               :current-page="productTablePage.currentPage"
@@ -505,47 +505,47 @@ export default {
 };
 </script>
 <style>
-.header {
+.productimport-header {
   height: 60px;
   display: flex;
   flex-direction: row-reverse;
 }
-.top-button {
+.productimport-top-button {
   margin-left: 20px;
 }
-.content-header {
+.productimport-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.productimport-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
 }
-.fliter-input {
+.productimport-fliter-input {
   width: 400px;
 }
-.content{
+.productimport-content{
   margin-top: 5px;
 }
-.content-footer{
+.productimport-content-footer{
   margin-top: 20px;
   height: 60px;
   align-items: center;
   justify-content: space-between;
 }
-.show-categroy {
+.productimport-show-categroy {
   min-height: 100%;
   height: auto;
   padding: 12px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-top: 15px;
 }
-.show-dict {
+.productimport-show-dict {
   min-height: 100%;
   height: auto;
   padding: 12px;

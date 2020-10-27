@@ -1,21 +1,21 @@
 <template>
   <div>
-    <div class="header-div">
-      <span class="title-name">入库单</span>
+    <div class="storagein-header-div">
+      <span class="storagein-title-name">入库单</span>
     </div>
-    <div class="mian-content">
+    <div class="storagein-mian-content">
       <el-button
         v-if="!showTicket"
-        class="create-storage-in"
+        class="storagein-create-storage-in"
         type="primary"
         icon="el-icon-plus"
         @click="createTicket"
       >新建入库单</el-button>
 
-      <div v-else class="form-area">
-        <el-card class="in-ticket-form">
+      <div v-else class="storagein-form-area">
+        <el-card class="storagein-in-ticket-form">
           <div slot="header">
-            <div class="form-title">
+            <div class="storagein-form-title">
               <span>{{userInfo.store.storeName}} 入库单</span>
               <el-button
               style="float: left; padding: 3px 0"
@@ -31,45 +31,45 @@
             label-position="left"
             :rules="rules"
           >
-            <el-col :span="12" class="big-font-size">
+            <el-col :span="12" class="storagein-big-font-size">
               <el-form-item label="日期：" class="item" prop="date">
-                <span class="content-left">{{storageInTicket.date}}</span>
+                <span class="storagein-content-left">{{storageInTicket.date}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="批次号:" class="item" prop="batchNo">
-                <span class="content-left">{{storageInTicket.batchNo}}</span>
+                <span class="storagein-content-left">{{storageInTicket.batchNo}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="入库单号:" class="item" prop="code">
-                <span class="content-left">{{storageInTicket.code}}</span>
+                <span class="storagein-content-left">{{storageInTicket.code}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="操作人员：" class="item" prop="employeeName">
-                <span class="content-left">{{storageInTicket.employeeName}}</span>
+                <span class="storagein-content-left">{{storageInTicket.employeeName}}</span>
               </el-form-item>
             </el-col>
             <el-form-item label="入库类型：" class="item" prop="type">
               <el-select
                 v-model="storageInTicket.type"
                 placeholder="请选择类型"
-                class="content-left width-input"
-                size="small"
+                class="storagein-content-left storagein-width-category"
+                size="mini"
               >
                 <el-option label="正常入库" value="normal"></el-option>
                 <el-option label="临时补货" value="additional"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="入库详细" class="item" prop="products">
-              <div class="detail-action-area">
+              <div class="storagein-detail-action-area">
                 <el-select
                   v-model="addItem.productId"
                   filterable
                   placeholder="请选择商品"
-                  size="small"
-                  class="width-input content-left"
+                  size="mini"
+                  class="storagein-width-input storagein-content-left"
                   @change="productChange"
                 >
                   <el-option
@@ -83,8 +83,8 @@
                   v-model="addItem.supplyId"
                   filterable
                   placeholder="请选择供应商"
-                  size="small"
-                  class="width-input content-left"
+                  size="mini"
+                  class="storagein-width-input storagein-content-left"
                   @change="supplyChange"
                 >
                   <el-option
@@ -100,16 +100,17 @@
                     controls-position="right"
                     :min="0"
                     label="数量"
-                    size="small"
+                    size="mini"
+                    class="storagein-short-input"
                   ></el-input-number>
-                  <span class="add-unit">{{addItem.unit}}</span>
+                  <span class="storagein-add-unit">{{addItem.unit}}</span>
                 </div>
                 <div>
                   <el-input
                     v-model="addItem.totalPrice"
                     placeholder="总价"
-                    size="small"
-                    class="short-input"
+                    size="mini"
+                    class="storagein-short-input"
                   ></el-input>
                   <span>￥</span>
                 </div>
@@ -119,7 +120,8 @@
                   v-model="addItem.taxRate"
                   filterable
                   placeholder="税点"
-                  size="small"
+                  size="mini"
+                  class="storagein-tax-input"
                 >
                   <el-option
                     v-for="taxRate in taxRateList"
@@ -132,18 +134,18 @@
                   <el-button
                     type="primary"
                     icon="el-icon-plus"
-                    size="small"
-                    class="add-button"
+                    size="mini"
+                    class="storagein-add-button"
                     @click="addItemToDetail"
                   >添加</el-button>
                 </div>
               </div>
-              <div class="content-right font-info">
-                <span class="addDetailInfoSpan">单价：{{addItemPrice}}￥/{{addItem.unit}}</span>
-                <span class="addDetailInfoSpan">回点：{{addItem.discount}}</span>
-                <span class="addDetailInfoSpan">成本价：{{addItemCostPrice}}￥/{{addItem.unit}}</span>
+              <div class="storagein-content-right storagein-font-info">
+                <span class="storagein-addDetailInfoSpan">单价：{{addItemPrice}}￥/{{addItem.unit}}</span>
+                <span class="storagein-addDetailInfoSpan">回点：{{addItem.discount}}</span>
+                <span class="storagein-addDetailInfoSpan">成本价：{{addItemCostPrice}}￥/{{addItem.unit}}</span>
                 <span
-                  class="addDetailInfoSpan"
+                  class="storagein-addDetailInfoSpan"
                   v-if="addItem.vat"
                 >税：{{addItemTaxPrice}}￥/{{addItem.unit}}</span>
               </div>
@@ -449,81 +451,82 @@ export default {
 };
 </script>
 <style>
-.header-div {
+.storagein-header-div {
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.storagein-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
 }
-.mian-content {
+.storagein-mian-content {
   padding: 10px;
 }
-.create-storage-in {
+.storagein-create-storage-in {
   float: left;
   width: 500px;
   height: 200px;
   font-size: 28px;
   letter-spacing: 10px;
 }
-.form-area {
+.storagein-form-area {
   display: flex;
   justify-content: center;
 }
-.in-ticket-form{
+.storagein-in-ticket-form{
   min-height: 500px;
   width: 70vw;
   padding: 30px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 }
-.form-title {
+.storagein-form-title {
   height: 100px;
-  color: #303133;
-  font-size: 35px;
+  color: #409eff;
+  font-size: 30px;
   font-weight: bold;
 }
-.content-left {
+.storagein-content-left {
   float: left;
 }
-.big-font-size {
+.storagein-big-font-size {
   font-size: 30px;
 }
 .item /deep/.el-form-item__label {
   font-weight: bold !important;
   font-size: 28px;
 }
-.detail-action-area {
+.storagein-detail-action-area {
   padding: 12px 0px;
   display: flex;
   justify-content: space-between;
 }
-.width-input {
+.storagein-width-input {
   width: 400px;
 }
-.add-unit {
-  margin-left: 30px;
+.storagein-width-category{
+  width: 200px;
+}
+.storagein-add-unit {
+  margin-left: 10px;
   font-size: 25px;
-  font-weight: bold;
 }
-.short-input {
+.storagein-short-input {
   width: 200px;
 }
-.short-select {
-  width: 200px;
-  margin-left: 30px;
+.storagein-tax-input{
+  width: 150px;
 }
-.content-right {
+.storagein-content-right {
   float: right;
 }
-.font-info {
+.storagein-font-info {
   color: #e6a23c;
   font-size: 12px;
 }
-.addDetailInfoSpan {
+.storagein-addDetailInfoSpan {
   margin-left: 40px;
 }
 </style>

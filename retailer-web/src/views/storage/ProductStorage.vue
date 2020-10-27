@@ -1,27 +1,27 @@
 <template>
   <div style="height:100%">
     <div
-      class="info-div"
+      class="productstorage-info-div"
       v-if="
         productAndStorageCount.productCount !=
           productAndStorageCount.storageCount
       "
     >
-      <el-card class="box-card" shadow="always">
+      <el-card class="productstorage-box-card" shadow="always">
         <div slot="header" class="clearfix">
-          <span class="title">提示</span>
+          <span class="productstorage-title">提示</span>
         </div>
-        <div class="message-div">
-          <span class="message"
+        <div class="productstorage-message-div">
+          <span class="productstorage-message"
             >已有商品数量：{{ productAndStorageCount.productCount }}</span
           >
         </div>
-        <div class="message-div">
-          <span class="message"
+        <div class="productstorage-message-div">
+          <span class="productstorage-message"
             >库存数量：{{ productAndStorageCount.storageCount }}</span
           >
         </div>
-        <div class="message-button">
+        <div class="productstorage-message-button">
           <el-button
             type="success"
             v-if="
@@ -60,13 +60,13 @@
       </el-card>
     </div>
     <div v-else>
-      <div class="content-header">
+      <div class="productstorage-content-header">
         <div>
-          <span class="title-name">商品库存</span>
+          <span class="productstorage-title-name">商品库存</span>
         </div>
         <div>
           <el-input
-            class="fliter-input"
+            class="productstorage-fliter-input"
             size="small"
             v-model="searchContent"
             placeholder="搜索名称 / 型号"
@@ -75,9 +75,9 @@
           ></el-input>
         </div>
       </div>
-      <div class="content">
+      <div class="productstorage-content">
         <el-table
-          :data="storages" border class="storage-table"  size="small"
+          :data="storages" border class="productstorage-storage-table"  size="small"
           ref="tableStorage"
           :height="tableHeight"
           :header-row-style="{height:'40px'}"
@@ -90,7 +90,7 @@
               <el-table
                 v-if="props.row.batchList.length > 0"
                 :data="props.row.batchList"
-                class="inner-table"
+                class="productstorage-inner-table"
                 border
                 :show-header="false"
                 :header-row-style="{ height: '30px' }"
@@ -150,7 +150,7 @@
           ></el-table-column>
         </el-table>
       </div>
-      <div class="content-footer">
+      <div class="productstorage-content-footer">
         <el-pagination
           background
           :current-page="storageTable.currentPage"
@@ -250,60 +250,60 @@ export default {
 };
 </script>
 <style>
-.info-div {
+.productstorage-info-div {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 800px;
 }
-.box-card {
+.productstorage-box-card {
   width: 800px;
 }
-.clearfix:after {
+.productstorage-clearfix:after {
   display: table;
   content: "";
   clear: both;
 }
-.title {
+.productstorage-title {
   color: rgb(228, 116, 25);
   font-size: 35px;
   font-weight: bold;
   letter-spacing: 0.5em;
 }
-.message-div {
+.productstorage-message-div {
   padding: 15px;
   font-weight: bold;
 }
-.message {
+.productstorage-message {
   font-size: 30px;
   color: #606266;
 }
-.message-button {
+.productstorage-message-button {
   margin-top: 40px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
-.content-header {
+.productstorage-content-header {
   height: 60px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.productstorage-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
 }
-.fliter-input {
+.productstorage-fliter-input {
   width: 400px;
 }
-.content{
+.productstorage-content{
   margin-top: 5px;
 }
-.content-footer{
+.productstorage-content-footer{
   margin-top: 20px;
   height: 60px;
   align-items: center;
@@ -315,10 +315,10 @@ export default {
   padding-right: 0px !important;
   padding-bottom: 0px !important;
 }
-.inner-table {
+.productstorage-inner-table {
   font-size: 16px;
 }
-.no-batch-info {
+.productstorage-no-batch-info {
   padding: 10px;
   font-size: 20px;
   color: #e6a23c;

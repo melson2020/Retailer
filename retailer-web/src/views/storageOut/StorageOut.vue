@@ -1,21 +1,21 @@
 <template>
   <div>
-    <div class="header-div">
-      <span class="title-name">出库单</span>
+    <div class="storageout-header-div">
+      <span class="storageout-title-name">出库单</span>
     </div>
-    <div class="mian-content">
+    <div class="storageout-mian-content">
       <el-button
         v-if="!showTicket"
-        class="create-storage-out"
+        class="storageout-create-storage-out"
         type="primary"
         icon="el-icon-plus"
         @click="direct"
         >新建出库单</el-button
       >
-      <div v-else class="form-area">
-        <el-card class="out-ticket-form">
+      <div v-else class="storageout-form-area">
+        <el-card class="storageout-out-ticket-form">
           <div slot="header">
-            <span class="form-title"
+            <span class="storageout-form-title"
               >{{ userInfo.store.storeName }} 出库单</span
             >
             <el-button
@@ -44,7 +44,8 @@
                 <el-select
                   v-model="storageOutTicket.type"
                   placeholder="请选择类型"
-                  class="content-left"
+                  class="storageout-width-category"
+                  size="mini"
                 >
                   <el-option label="正常出库" value="normal"></el-option>
                   <el-option label="库存损耗" value="additional"></el-option>
@@ -185,8 +186,10 @@
           width="70%"
         >
           <div>
-            <div class="dialog-header">
+            <div class="storageout-dialog-header">
               <el-select
+                class="storageout-width-input"
+                size=mini
                 v-model="selectPid"
                 placeholder="选择商品"
                 filterable
@@ -646,40 +649,41 @@ export default {
 };
 </script>
 <style>
-.header-div {
+.storageout-header-div {
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.title-name {
+.storageout-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
 }
-.create-storage-out {
+.storageout-create-storage-out {
   float: left;
   width: 500px;
   height: 200px;
   font-size: 28px;
   letter-spacing: 10px;
 }
-.mian-content {
+.storageout-mian-content {
   padding: 10px;
 }
-.out-ticket-form {
+.storageout-out-ticket-form {
   min-height: 500px;
   width: 70vw;
   padding: 30px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 }
-.form-area {
+.storageout-form-area {
   display: flex;
   justify-content: center;
 }
-.form-title {
-  color: #303133;
-  font-size: 35px;
+.storageout-form-title {
+  height: 100px;
+  color: #409eff;
+  font-size: 30px;
   font-weight: bold;
 }
 .item /deep/.el-form-item__label {
@@ -687,6 +691,14 @@ export default {
   font-size: 28px;
   color: #606266;
   height: 80px;
+}
+.storageout-width-category{
+  width: 200px;
+  float: left;
+}
+.storageout-width-input{
+  width: 400px;
+  float: left;
 }
 .content-left {
   float: left;
@@ -746,7 +758,7 @@ export default {
   justify-content: space-between;
   align-content: center;
 }
-.dialog-header {
+.storageout-dialog-header {
   display: flex;
   align-items: center;
 }
