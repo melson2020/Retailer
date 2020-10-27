@@ -48,7 +48,7 @@ const actions = {
 
     },
     GetPreviewStorageList({commit},params){
-        request.GetStorageList(params).then(res => {
+        request.GetStorageCountList(params).then(res => {
             if (res.resultStatus == 1) {
                 commit("SetPreviewStorageList", res.data)
             }else {

@@ -144,7 +144,6 @@ const routes = [
       {
         path: "/",
         name: "root",
-        component: Product
         component: ProductStock
       },
       {

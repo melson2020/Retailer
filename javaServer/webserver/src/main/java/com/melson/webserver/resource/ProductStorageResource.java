@@ -6,6 +6,7 @@ import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
 import com.melson.webserver.Vo.StorageAndProductCountVo;
+import com.melson.webserver.dto.ProductStorageDto;
 import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageCountTicket;
@@ -79,7 +80,20 @@ public class ProductStorageResource extends BaseResource {
         if (StringUtils.isEmpty(storeCode) || StringUtils.isEmpty(searchType))
             return this.GenerateResult(ResultType.ParametersNeeded);
         Result result = new Result();
-        List<ProductStorage> list = productStorageService.FindWithProductType(storeCode, searchType);
+        List<ProductStorage> list = productStorageService.FindStorageListWithType(storeCode, searchType);
+        result.setData(list);
+        return result;
+    }
+
+    @RequestMapping(value = "/storageCountList")
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result GetStorageCountList(HttpServletRequest request) {
+        String storeCode = request.getParameter("storeCode");
+        String searchType = request.getParameter("searchType");
+        if (StringUtils.isEmpty(storeCode) || StringUtils.isEmpty(searchType))
+            return this.GenerateResult(ResultType.ParametersNeeded);
+        Result result = new Result();
+        List<ProductStorageDto> list = productStorageService.FindWithProductType(storeCode, searchType);
         result.setData(list);
         return result;
     }
@@ -116,8 +130,8 @@ public class ProductStorageResource extends BaseResource {
     @RequiredPermission(SecurityLevel.Employee)
     public Result ExportStorageCountDetail(@RequestBody StorageCountTicket tikcet) {
         String basePath = sysConfigService.FindValueFromCache("storageCountTicketExcelBasePath");
-        List<ProductStorage> storageList = productStorageService.FindWithProductType(tikcet.getStoreCode(), tikcet.getProductType());
-        Result result = storageCountTicketService.ExportExcel(storageList,basePath,tikcet);
+        List<ProductStorageDto> storageCountList = productStorageService.FindWithProductType(tikcet.getStoreCode(), tikcet.getProductType());
+        Result result = storageCountTicketService.ExportExcel(storageCountList,basePath,tikcet);
         return result;
     }
 
@@ -150,9 +164,15 @@ public class ProductStorageResource extends BaseResource {
     }
 
     @RequestMapping(value = "/uploadCountedExcel",method = RequestMethod.POST)
-    public Result addImg(@RequestBody MultipartFile file, HttpServletRequest request, HttpServletResponse response)throws Exception{
+    public Result AddExcel(@RequestBody MultipartFile file, HttpServletRequest request, HttpServletResponse response)throws Exception{
         String ticketCode=request.getParameter("ticketCode");
         String basePath = sysConfigService.FindValueFromCache("storageCountTicketExcelBasePath");
         return storageCountTicketService.ImportCountedExcel(ticketCode,file,basePath);
+    }
+    @RequestMapping(value = "/updateSorageAfterCounted",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result UpdateStorage(@RequestBody List<ProductStorageDto> dtoList){
+        Result result=new Result();
+        return result;
     }
 }

@@ -98,7 +98,7 @@
                     >
                     <el-col :span="15" class="card-content-col-content">
                       <el-popover
-                        v-if="ticket.outTicket.description.length > 15"
+                        v-if="ticket.outTicket.description&&ticket.outTicket.description.length > 15"
                         placement="top-start"
                         title="详细描述"
                         width="300"

@@ -1,21 +1,5 @@
 <template>
   <div>
-<<<<<<< HEAD
-    <!-- <el-button
-      v-if="!showStorageCountTicket"
-=======
-    <div class="header-div">
-      <span class="title-name">盘点</span>
-    </div>
-    <el-button
-      v-if="!showTicket"
->>>>>>> a7ade4f0588e9e64047034cfb6449545982a5e1f
-      class="button-box"
-      type="warning"
-      icon="el-icon-plus"
-      @click="createTicket"
-      >新建盘点单</el-button
-    > -->
     <div  class="step-box">
       <el-steps :active="activeStep" finish-status="success">
         <el-step title="创建"></el-step>

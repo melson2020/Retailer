@@ -59,7 +59,7 @@ export default {
                 if (res.data) {
                   localStorage.setItem("userInfo", JSON.stringify(res.data));
                   this.SetLoginStatus(res.data);
-                  this.$router.push({ path: "/main" });
+                  this.$router.push({ path: "/main/productStorage" });
                 } else {
                   this.$message.error("账户密码不正确");
                 }

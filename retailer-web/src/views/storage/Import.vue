@@ -54,6 +54,7 @@
         :cell-style="{ color: '#909399' }"
         class="storage-table"
         :header-cell-style="{ background: '#606266', color: 'white' }"
+        :span-method="objectSpanMethod"
       >
         <el-table-column
           v-for="(item, i) in tableColums"
@@ -62,6 +63,16 @@
           :label="item.label"
           :width="item.width"
         ></el-table-column>
+        <el-table-column prop="totalCounted" label="盘点总数" width="auto">
+          <template slot-scope="scope">
+            <span v-if="scope.row.dataCorrect">{{
+              scope.row.totalCounted
+            }}</span>
+            <div v-else>
+              {{ scope.row.totalCounted }} <span class="red">(*总数不符)</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="结果" width="150px">
           <template slot-scope="scope">
             <i v-if="scope.row.flag > 0" class="el-icon-top yellow"></i>
@@ -82,25 +93,49 @@ export default {
     return {
       uploadDialogVisible: false,
       tableColums: [
-        { field: "id", label: "ID", width: "auto" },
+        { field: "productId", label: "ID", width: "auto" },
         { field: "productName", label: "名称", width: "auto" },
-        { field: "productType", label: "型号", width: "auto" },
-        { field: "productSpecification", label: "规格", width: "auto" },
-        { field: "count", label: "数量", width: "150px" },
-        { field: "unit", label: "单位", width: "150px" },
-        { field: "counted", label: "盘点数量", width: "150px" }
+        { field: "type", label: "型号", width: "auto" },
+        { field: "specification", label: "规格", width: "auto" },
+        { field: "batchNo", label: "批次", width: "auto" },
+        { field: "supplyName", label: "供应商", width: "auto" },
+        { field: "count", label: "现有数量", width: "auto" },
+        { field: "totalCount", label: "现有总数", width: "auto" },
+        { field: "countUnit", label: "单位", width: "auto" },
+        { field: "counted", label: "盘点数量", width: "auto" }
       ],
       countedList: [],
-      uploadData: { ticketCode: "2f841758-69d0-4a5d-a058-3e46dde60d18"}
+      uploadData: { ticketCode: "2f841758-69d0-4a5d-a058-3e46dde60d18" }
     };
   },
   computed: {
-    ...mapGetters(["currentStorageCountTicket", "userInfo"])
+    ...mapGetters(["currentStorageCountTicket", "userInfo"]),
+    spanArr() {
+      let spanRowArr = [];
+      let pos = 0;
+      for (let index = 0; index < this.countedList.length; index++) {
+        if (index == 0) {
+          spanRowArr.push(1);
+          pos = 0;
+        } else {
+          var pre = this.countedList[index - 1];
+          var current = this.countedList[index];
+          if (pre.productId === current.productId) {
+            spanRowArr[pos] += 1;
+            spanRowArr.push(0);
+          } else {
+            spanRowArr.push(1);
+            pos = index;
+          }
+        }
+      }
+      return spanRowArr;
+    }
   },
   methods: {
     ...mapActions({
       SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
-      SetActiveSteps: "SetActiveSteps",
+      SetActiveSteps: "SetActiveSteps"
     }),
     setUploadDialogVisible() {
       this.uploadDialogVisible = !this.uploadDialogVisible;
@@ -138,14 +173,19 @@ export default {
       for (let index = headerRow; index < array.length - 1; index++) {
         var item = array[index];
         var json = {
-          id: item[0],
+          productId: item[0],
           productName: item[1],
-          productType: item[2],
-          productSpecification: item[3],
-          count: item[4],
-          unit: item[5],
-          counted: item[6],
-          flag: 0
+          type: item[2],
+          specification: item[3],
+          batchNo: item[4],
+          supplyName: item[5],
+          count: item[6],
+          totalCount: item[7],
+          countUnit: item[8],
+          counted: item[9],
+          totalCounted: item[10],
+          flag: 0,
+          dataCorrect: true
         };
         if (json.counted - json.count > 0) {
           json.flag = 1;
@@ -155,29 +195,78 @@ export default {
         }
         this.countedList.push(json);
       }
+      this.checkCountedList();
+    },
+    checkCountedList() {
+      if (this.countedList.length <= 0) return;
+      this.countedList.map(item => {
+        var count = 0;
+        this.countedList
+          .filter(c => {
+            return c.productId === item.productId;
+          })
+          .map(s => {
+            var sc = parseInt(s.counted);
+            if (isNaN(sc)) {
+              sc = 0;
+              s.counted = 0;
+            }
+            count += sc;
+          });
+        var tc = parseInt(item.totalCounted);
+        if (isNaN(tc)) {
+          tc = 0;
+          item.totalCounted = 0;
+        }
+        item.dataCorrect = count === tc;
+      });
     },
     submitCountedList() {
-       let file = this.$refs.upload.$children[0].fileList[0];
-       if(!file){
-         this.$message.warning("请添加上传文件")
-         return
-       }
-       if(file.status=='success'){
-         this.$message.info("文件已上传")
-         return
-       }
+      let file = this.$refs.upload.$children[0].fileList[0];
+      if (!file) {
+        this.$message.warning("请添加上传文件");
+        return;
+      }
+      if (file.status === "success") {
+        this.$message.info("文件已上传");
+        return;
+      }
+      if (
+        this.countedList.length > 0 &&
+        this.countedList.filter(item => {
+          return !item.dataCorrect;
+        }).length > 0
+      ) {
+        this.$message.warning("盘点数据不准确，请检查");
+        return;
+      }
       this.$refs.upload.submit();
     },
     uploadOnSuccess(response) {
-     if(response.resultStatus==1){
-       this.$message.success("文件上传成功")
-       this.SetCurrentStorageCountTicket(response.data);
-     }else{
-        this.$message.error(response.messgae)
-     }
+      if (response.resultStatus == 1) {
+        this.$message.success("文件上传成功");
+        this.SetCurrentStorageCountTicket(response.data);
+      } else {
+        this.$message.error(response.messgae);
+      }
     },
-    uploadOnError(err) {     
-      this.$message.error(err.message?err.message:err)
+    uploadOnError(err) {
+      this.$message.error(err.message ? err.message : err);
+    },
+    objectSpanMethod({ rowIndex, columnIndex }) {
+      if (
+        columnIndex <= 3 ||
+        columnIndex === 7 ||
+        columnIndex === 8 ||
+        columnIndex === 10
+      ) {
+        const _row = this.spanArr[rowIndex];
+        const _col = _row > 0 ? 1 : 0;
+        return {
+          rowspan: _row,
+          colspan: _col
+        };
+      }
     }
   }
 };

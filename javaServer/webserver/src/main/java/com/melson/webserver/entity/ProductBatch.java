@@ -21,6 +21,7 @@ public class ProductBatch {
     private BigDecimal price;
     private String priceUnit;
     private Integer vat;
+    //是否库存为0 1 是 0 否
     private Integer finished;
     private Integer productId;
     private Integer count;

@@ -7,6 +7,7 @@ import com.melson.base.entity.Store;
 import com.melson.base.service.IStore;
 import com.melson.webserver.Vo.ExcelExportResultVo;
 import com.melson.webserver.dao.IStorageCountTicketDao;
+import com.melson.webserver.dto.ProductStorageDto;
 import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageCountTicket;
 import com.melson.webserver.service.IStorageCountTicket;
@@ -51,7 +52,7 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
     }
 
     @Override
-    public Result ExportExcel(List<ProductStorage> storageList, String basePath, StorageCountTicket ticket) {
+    public Result ExportExcel(List<ProductStorageDto> storageList, String basePath, StorageCountTicket ticket) {
         Result result = new Result();
         Store store = storeDao.findByCode(ticket.getStoreCode());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -64,7 +65,7 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
             result.setMessage("create export excel folder failed");
             return result;
         }
-        String[] headerNames = new String[]{"ID", "名称", "型号", "规格", "数量", "单位", "盘点数量"};
+        String[] headerNames = new String[]{"ID", "名称", "型号", "规格", "批次", "供应商", "现有数量","现有总数","单位","盘点数量","盘点总数"};
         String title = store.getStoreName() + "盘点单";
         String dateStr = sdf.format(ticket.getCreateTime());
         String subTitile = "出单人员:" + ticket.getEmployeeName() + "  类型:" + ticket.getType() + "  " + dateStr;

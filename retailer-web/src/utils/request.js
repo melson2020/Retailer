@@ -139,6 +139,9 @@ export default {
   DownStorageCountTicketExportExcel(params){
     return service.exportExcel("/storage/downloadCountTicketExport",params)
   },
+  GetStorageCountList(params){
+    return service.get("/storage/storageCountList",params)
+  },
 
   /**
    * Storage In

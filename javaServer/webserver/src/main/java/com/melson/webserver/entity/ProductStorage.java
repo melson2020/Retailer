@@ -1,6 +1,7 @@
 package com.melson.webserver.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @Author Nelson
@@ -21,6 +22,16 @@ public class ProductStorage {
     private Integer count;
     private String unit;
     private String searchType;
+    @Transient
+    private List<ProductBatch> batchList;
+
+    public List<ProductBatch> getBatchList() {
+        return batchList;
+    }
+
+    public void setBatchList(List<ProductBatch> batchList) {
+        this.batchList = batchList;
+    }
 
     public String getSearchType() {
         return searchType;

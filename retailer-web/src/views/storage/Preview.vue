@@ -20,6 +20,7 @@
         :cell-style="{ color: '#909399' }"
         class="storage-table"
         :header-cell-style="{ background: '#606266', color: 'white' }"
+        :span-method="objectSpanMethod"
       >
         <el-table-column
           v-for="(item, i) in tableColums"
@@ -29,9 +30,6 @@
           :width="item.width"
         ></el-table-column>
       </el-table>
-      <div class="el-table-pagination-row">
-        <el-pagination background layout="prev, pager, next"></el-pagination>
-      </div>
     </div>
     <div v-else class="data-empty-info">
       暂无数据，请先创建盘点单
@@ -46,10 +44,13 @@ export default {
     return {
       tableColums: [
         { field: "productName", label: "名称", width: "auto" },
-        { field: "productType", label: "型号", width: "auto" },
-        { field: "productSpecification", label: "规格", width: "auto" },
-        { field: "count", label: "数量", width: "150px" },
-        { field: "unit", label: "单位", width: "150px" }
+        { field: "type", label: "型号", width: "auto" },
+        { field: "specification", label: "规格", width: "auto" },
+        { field: "batchNo", label: "批次", width: "auto" },
+        { field: "supplyName", label: "供应商", width: "auto" },
+        { field: "count", label: "现有数量", width: "auto" },
+        { field: "totalCount", label: "现有总数", width: "auto" },
+        { field: "countUnit", label: "单位", width: "auto" }
       ]
     };
   },
@@ -58,7 +59,28 @@ export default {
       "previewStorageList",
       "currentStorageCountTicket",
       "userInfo"
-    ])
+    ]),
+    spanArr() {
+      let spanRowArr=[];
+      let pos=0;
+      for (let index = 0; index < this.previewStorageList.length; index++) {
+         if(index==0){
+           spanRowArr.push(1);
+           pos=0;
+         }else{
+           var pre=this.previewStorageList[index-1];
+           var current=this.previewStorageList[index];
+           if(pre.productId===current.productId){
+               spanRowArr[pos]+=1;
+               spanRowArr.push(0)
+           }else{
+             spanRowArr.push(1)
+             pos=index;
+           }
+         }      
+      }
+      return spanRowArr;
+    }
   },
   methods: {
     ...mapActions({
@@ -117,21 +139,32 @@ export default {
             : date.getMonth() + 1,
         D = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
       return Y + "-" + M + "-" + D;
+    },
+    objectSpanMethod({rowIndex, columnIndex }) {
+       if (columnIndex <= 2||columnIndex>=6) {
+            const _row = this.spanArr[rowIndex];
+            const _col = _row > 0 ? 1 : 0;
+            return {
+                  rowspan: _row,
+                  colspan: _col
+            }
+      }
+
     }
   },
   mounted: function() {
-    if (this.currentStorageCountTicket.productType) {
-      let params = {
-        storeCode: this.userInfo.storeCode,
-        searchType: this.currentStorageCountTicket.productType
-      };
-      this.GetPreviewStorageList(params);
-    }
-    // let params = {
-    //   storeCode: this.userInfo.storeCode,
-    //   searchType: "normal"
-    // };
-    // this.GetPreviewStorageList(params);
+    // if (this.currentStorageCountTicket.productType) {
+    //   let params = {
+    //     storeCode: this.userInfo.storeCode,
+    //     searchType: this.currentStorageCountTicket.productType
+    //   };
+    //   this.GetPreviewStorageList(params);
+    // }
+    let params = {
+      storeCode: this.userInfo.storeCode,
+      searchType: "morethanzero"
+    };
+    this.GetPreviewStorageList(params);
   }
 };
 </script>
@@ -156,5 +189,13 @@ export default {
 }
 .table-div {
   padding-top: 30px;
+}
+.el-table__expanded-cell {
+  padding-top: 0px !important;
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
+}
+.preview-inner-table {
+  font-size: 16px;
 }
 </style>
