@@ -41,6 +41,14 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
 
     @Override
     @Transactional
+    public boolean SaveImportedListNew(ProductImportDto dto) {
+        List<Product> productList = dto.getProductList();
+        List<Product> saved= productDao.saveAll(productList);
+        return saved.size()>0;
+    }
+
+    @Override
+    @Transactional
     public boolean SaveImportedList(ProductImportDto dto) {
         Map<String, List<Product>> categoryProductMap = new HashMap<>(dto.getCategoryList().size());
         List<ProductCategory> categoryList = dto.getCategoryList();
@@ -77,9 +85,29 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
 //        return productDao.findByStoreCode(storeCode);
 //    }
 
+//    @Override
+//    public List<ProductDto> FindProductList(String storeCode) {
+//        String sql="SELECT pro.id,pro.name,pro.type,pro.specification,pro.unit,pro.feature,prc.categoryId as categoryId,prc.name as category from product pro left JOIN product_category prc on pro.categoryId=prc.categoryId WHERE pro.storeCode='"+storeCode+"'order by pro.id DESC";
+//        List<Object[]> objList=entityManagerUtil.ExcuteSql(sql);
+//        List<ProductDto> dtoList=new ArrayList<>(objList.size());
+//        for (Object[] obj:objList){
+//            ProductDto dto=new ProductDto();
+//            dto.setId(Integer.parseInt(obj[0].toString()));
+//            dto.setName(obj[1]==null?null:obj[1].toString());
+//            dto.setType(obj[2]==null?null:obj[2].toString());
+//            dto.setSpecification(obj[3]==null?null:obj[3].toString());
+//            dto.setUnit(obj[4]==null?null:obj[4].toString());
+//            dto.setFeature(obj[5]==null?null:obj[5].toString());
+//            dto.setCategoryId(obj[6]==null?null:obj[6].toString());
+//            dto.setCategoryName(obj[7]==null?null:obj[7].toString());
+//            dtoList.add(dto);
+//        }
+//        return dtoList;
+//    }
+
     @Override
     public List<ProductDto> FindProductList(String storeCode) {
-        String sql="SELECT pro.id,pro.name,pro.type,pro.specification,pro.unit,pro.feature,prc.categoryId as categoryId,prc.name as category from product pro left JOIN product_category prc on pro.categoryId=prc.categoryId WHERE pro.storeCode='"+storeCode+"'order by pro.id DESC";
+        String sql="SELECT id,name,type,specification,unit,feature,categoryName as category from product WHERE storeCode='"+storeCode+"'order by id DESC";
         List<Object[]> objList=entityManagerUtil.ExcuteSql(sql);
         List<ProductDto> dtoList=new ArrayList<>(objList.size());
         for (Object[] obj:objList){
@@ -90,8 +118,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
             dto.setSpecification(obj[3]==null?null:obj[3].toString());
             dto.setUnit(obj[4]==null?null:obj[4].toString());
             dto.setFeature(obj[5]==null?null:obj[5].toString());
-            dto.setCategoryId(obj[6]==null?null:obj[6].toString());
-            dto.setCategoryName(obj[7]==null?null:obj[7].toString());
+            dto.setCategoryName(obj[6]==null?null:obj[6].toString());
             dtoList.add(dto);
         }
         return dtoList;
@@ -138,26 +165,45 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         return productCategoryDao.deleteByCategoryId(productCategory.getId());
     }
 
+
+
     @Override
     public ProductDto Query(ProductDto product) {
         Product prod=productDao.findById(product.getId());
-        ProductCategory productCategory=productCategoryDao.findByCategoryId(prod.getCategoryId());
+//        ProductCategory productCategory=productCategoryDao.findByCategoryId(prod.getCategoryId());
         ProductDto prodDto=new ProductDto();
         prodDto.setId(prod.getId());
-        prodDto.setCategoryName(productCategory.getName());
+        prodDto.setCategoryName(prod.getCategoryName());
         prodDto.setCategoryId(prod.getCategoryId());
         prodDto.setFeature(prod.getFeature());
         prodDto.setUnit(prod.getUnit());
         prodDto.setType(prod.getType());
         prodDto.setSpecification(prod.getSpecification());
         prodDto.setStoreCode(prod.getStoreCode());
-        prodDto.setCategoryComment(productCategory.getComment());
+//        prodDto.setCategoryComment(productCategory.getComment());
         prodDto.setName(prod.getName());
-        prodDto.setCategoryKeyId(productCategory.getId());
-//        List<ProductCategoryDto> productCategoryDtos=ListAllByStoreCode(prod.getStoreCode());
-//        prodDto.setCategoryList(productCategoryDtos);
+//        prodDto.setCategoryKeyId(productCategory.getId());
         return prodDto;
     }
+
+//    @Override
+//    public ProductDto Query(ProductDto product) {
+//        Product prod=productDao.findById(product.getId());
+//        ProductCategory productCategory=productCategoryDao.findByCategoryId(prod.getCategoryId());
+//        ProductDto prodDto=new ProductDto();
+//        prodDto.setId(prod.getId());
+//        prodDto.setCategoryName(productCategory.getName());
+//        prodDto.setCategoryId(prod.getCategoryId());
+//        prodDto.setFeature(prod.getFeature());
+//        prodDto.setUnit(prod.getUnit());
+//        prodDto.setType(prod.getType());
+//        prodDto.setSpecification(prod.getSpecification());
+//        prodDto.setStoreCode(prod.getStoreCode());
+//        prodDto.setCategoryComment(productCategory.getComment());
+//        prodDto.setName(prod.getName());
+//        prodDto.setCategoryKeyId(productCategory.getId());
+//        return prodDto;
+//    }
 
 
     @Override
@@ -180,7 +226,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         }
         prod.setStoreCode(productDto.getStoreCode());
         prod.setName(productDto.getName());
-        prod.setCategoryId(productDto.getCategoryId());
+        prod.setCategoryName(productDto.getCategoryName());
         prod.setType(productDto.getType());
         prod.setSpecification(productDto.getSpecification());
         prod.setUnit(productDto.getUnit());
@@ -189,7 +235,22 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         return productDto;
     }
 
-
+//    @Override
+//    public ProductDto SaveProduct(ProductDto productDto) {
+//        Product prod=new Product();
+//        if(productDto.getId()!=null){
+//            prod.setId(productDto.getId());
+//        }
+//        prod.setStoreCode(productDto.getStoreCode());
+//        prod.setName(productDto.getName());
+//        prod.setCategoryId(productDto.getCategoryId());
+//        prod.setType(productDto.getType());
+//        prod.setSpecification(productDto.getSpecification());
+//        prod.setUnit(productDto.getUnit());
+//        prod.setFeature(productDto.getFeature());
+//        productDao.save(prod);
+//        return productDto;
+//    }
 
 
 }

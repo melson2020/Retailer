@@ -620,6 +620,7 @@ export default {
             outTicket: this.storageOutTicket,
             billDetailList: this.outTicketProfitList
           };
+                                          console.log(this.outTicketProfitList);
           this.SaveStorageOutTicket(params)
             .then(res => {
               console.log(res)

@@ -20,6 +20,7 @@ public class Product {
     private String specification;
     private String unit;
     private String feature;
+    private String categoryName;
 
     public Integer getId() {
         return id;
@@ -83,5 +84,13 @@ public class Product {
 
     public void setFeature(String feature) {
         this.feature = feature;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

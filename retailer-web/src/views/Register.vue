@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="商户地址">
           <div class="register-row-between">
-            <el-select placeholder="省" v-model="store.provinceCode" @change="provinceChanged">
+            <el-select filterable placeholder="省" v-model="store.provinceCode" @change="provinceChanged">
               <el-option
                 v-for="item in provinceList"
                 :key="item.id"
@@ -25,6 +25,7 @@
               ></el-option>
             </el-select>
             <el-select
+              filterable
               placeholder="市"
               :disabled="showCity"
               v-model="store.cityCode"
@@ -38,6 +39,7 @@
               ></el-option>
             </el-select>
             <el-select
+              filterable
               placeholder="区"
               :disabled="showArea"
               v-model="store.areaCode"

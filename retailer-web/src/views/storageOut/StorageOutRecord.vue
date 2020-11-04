@@ -11,7 +11,7 @@
           class="date-picker"
           type="daterange"
           align="right"
-          size="small" 
+          size="small"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -24,7 +24,7 @@
         <el-button
           :disabled="date ? false : true"
           type="primary"
-          size="small" 
+          size="small"
           icon="el-icon-search"
           @click="searchOnClick"
           >查询</el-button
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="content-no-shadow">
-      <el-scrollbar  class="content-scrollbar">
+      <el-scrollbar class="content-scrollbar">
         <div
           v-for="(item, index) in storageOutRecordList"
           :key="index"
@@ -98,7 +98,10 @@
                     >
                     <el-col :span="15" class="card-content-col-content">
                       <el-popover
-                        v-if="ticket.outTicket.description.length > 15"
+                        v-if="
+                          ticket.outTicket.description &&
+                            ticket.outTicket.description.length > 15
+                        "
                         placement="top-start"
                         title="详细描述"
                         width="300"
@@ -218,7 +221,7 @@ export default {
   methods: {
     ...mapActions({
       GetStorageOutRecordList: "GetStorageOutRecordList",
-      GetStorageOutRecordDetails:"GetStorageOutRecordDetails"
+      GetStorageOutRecordDetails: "GetStorageOutRecordDetails"
     }),
     searchOnClick() {
       let params = {
@@ -248,10 +251,10 @@ export default {
     },
     detailOnClick: function(e) {
       let ticketCode = e.currentTarget.id;
-      let billCode=e.currentTarget.name;
-      let params={ticketCode:ticketCode,billCode:billCode}
+      let billCode = e.currentTarget.name;
+      let params = { ticketCode: ticketCode, billCode: billCode };
       this.$router.replace({ path: "storageOutRecord/detail" });
-      this.GetStorageOutRecordDetails(params)
+      this.GetStorageOutRecordDetails(params);
     }
   },
   beforeMount: function() {
@@ -297,7 +300,7 @@ export default {
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
 }
-.content-scrollbar{
+.content-scrollbar {
   height: 85vh;
 }
 .message-info {

@@ -49,6 +49,7 @@ public class ProductResource extends BaseResource {
         try {
             // path是指欲下载的文件的路径。
             File file = new File(path);
+            System.out.println(file+"_________________________________________");
             // 取得文件名。
             String filename = file.getName();
             // 取得文件的后缀名。
@@ -82,6 +83,16 @@ public class ProductResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/importProductListNew",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result importProductListNew(@RequestBody ProductImportDto dto, HttpServletRequest request){
+        Result result=new Result();
+        boolean saved=productService.SaveImportedListNew(dto);
+        result.setResultStatus(saved?1:-1);
+        return result;
+    }
+
+
 //    @RequestMapping(value = "/productList")
 //    @RequiredPermission(SecurityLevel.Employee)
 //    public Result FindUseProductList(HttpServletRequest request){
@@ -92,6 +103,21 @@ public class ProductResource extends BaseResource {
 //        result.setData(productList);
 //        return  result;
 //    }
+
+//    @RequestMapping(value = "/productList")
+//    @RequiredPermission(SecurityLevel.Employee)
+//    public Result FindUseProductList(HttpServletRequest request){
+//        long t1 = new Date().getTime();
+//        String storeCode=request.getParameter("storeCode");
+//        if(StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+//        List<ProductDto> productList=productService.FindProductList(storeCode);
+//        Result result=new Result();
+//        result.setData(productList);
+//        long t2 = new Date().getTime();
+//        System.out.println("GET Rest Call: /product/productList ..."+(t2-t1));
+//        return  result;
+//    }
+
 
     @RequestMapping(value = "/productList")
     @RequiredPermission(SecurityLevel.Employee)
@@ -106,6 +132,7 @@ public class ProductResource extends BaseResource {
         System.out.println("GET Rest Call: /product/productList ..."+(t2-t1));
         return  result;
     }
+
 
     @RequestMapping(value = "/categoryList")
     @RequiredPermission(SecurityLevel.Employee)

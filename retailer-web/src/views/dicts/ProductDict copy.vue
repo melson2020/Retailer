@@ -119,8 +119,8 @@
 
           <el-col :span="8" prop="categoryName">
             <el-form-item label="类别" prop="categoryName">
-              <el-input v-model="editProduct.categoryName" autocomplete="off" style="width: 100%;"></el-input>
-              <!-- <template>
+              <!-- <el-input v-model="editProduct.categoryName" autocomplete="off" style="width: 100%;"></el-input> -->
+              <template>
                 <el-select v-model="editProduct.categoryId" filterable placeholder="请选择" @change="CategoryChange">
                   <el-option
                     v-for="item in calCategoryList"
@@ -129,12 +129,12 @@
                     :value="item.categoryId">
                   </el-option>
                 </el-select>
-              </template> -->
+              </template>
 
             </el-form-item>
           </el-col>
 
-          <!-- <el-col :span="2">
+          <el-col :span="2">
             <el-button
               plain
               circle
@@ -143,7 +143,7 @@
               icon="el-icon-edit"
               @click="handleEditCategory()"
             />
-          </el-col> -->
+          </el-col>
 
         </el-row>
 
@@ -209,10 +209,10 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="8" prop="categoryName">
-            <el-form-item label="类别" prop="categoryName">
-              <el-input v-model="newProduct.categoryName" autocomplete="off" style="width: 100%;"></el-input>
-              <!-- <template>
+          <el-col :span="8" prop="categoryId">
+            <el-form-item label="类别" prop="categoryId">
+              <!-- <el-input v-model="editProduct.categoryName" autocomplete="off" style="width: 100%;"></el-input> -->
+              <template>
                 <el-select v-model="newProduct.categoryId" filterable placeholder="请选择" @change="CategoryChange">
                   <el-option
                     v-for="item in calCategoryList"
@@ -221,12 +221,12 @@
                     :value="item.categoryId">
                   </el-option>
                 </el-select>
-              </template> -->
+              </template>
 
             </el-form-item>
           </el-col>
 
-          <!-- <el-col :span="2">
+          <el-col :span="2">
             <el-button
               plain
               circle
@@ -235,7 +235,7 @@
               icon="el-icon-edit"
               @click="handleEditCategory()"
             />
-          </el-col> -->
+          </el-col>
 
         </el-row>
 
@@ -269,7 +269,7 @@
     </el-dialog>
 
 
-    <!-- <el-dialog
+    <el-dialog
       title="编辑分类"
       :visible.sync="editCategoryVisible"
       :close-on-click-modal="false"
@@ -295,6 +295,7 @@
           :row-style="{height:'40px'}"
           :cell-style="{ padding: '2px', color: '#909399' }"
           :header-cell-style="{ background: '#808080', color: 'white'}">
+                <!-- <el-table-column prop="name" label="名称" align="center"></el-table-column> -->
           <el-table-column type="index" label="#" align="center"></el-table-column>
             <el-table-column
               v-for="(v,i) in categroyTableColums"
@@ -357,7 +358,7 @@
 
       </div>
 
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -371,7 +372,7 @@ export default {
       searchCategory:"",
       editProductFormVisible: false,
       newProductFormVisible: false,
-      // editCategoryVisible:false,
+      editCategoryVisible:false,
       loading: false,
       newProduct: {
         id: "",
@@ -462,8 +463,8 @@ export default {
       this.QueryProductObj(prod)
         .then(res => {
           if (res.resultStatus == 1) {
-            // let params = { storeCode: this.userInfo.storeCode };
-            // this.GetCategoryList(params);
+            let params = { storeCode: this.userInfo.storeCode };
+            this.GetCategoryList(params);
             this.editProduct = res.data;
             this.editProductFormVisible = true;
             this.editTags = row.feature;
@@ -551,9 +552,9 @@ export default {
       }
       });
     },
-    // handleEditCategory(){
-    //   this.editCategoryVisible=true;
-    // },
+    handleEditCategory(){
+      this.editCategoryVisible=true;
+    },
     addCategory(){
       this.category.storeCode=this.userInfo.storeCode;
       this.category.name=this.searchCategory.toUpperCase();
@@ -653,10 +654,10 @@ export default {
             this.DeleteCategory(row);
           })
     },
-//     CategoryChange(value){
-// console.log("value:_"+value)
-//       this.editProduct.categoryId=value;
-//     },
+    CategoryChange(value){
+console.log("value:_"+value)
+      this.editProduct.categoryId=value;
+    },
     handleEditTagsClose(tag) {
       this.editTags.splice(this.editTags.indexOf(tag), 1);
     },

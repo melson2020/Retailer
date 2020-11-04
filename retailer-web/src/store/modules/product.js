@@ -17,12 +17,12 @@ const actions = {
         let productions = []
         for (let index = 0; index < xlsJson.length; index++) {
             let element = xlsJson[index];
-            let categroy = { id: index, categoryId: index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
+            let categroy = {categoryId: index, name: element.sheetName.toUpperCase(), comment: "", isSet: false, isRepeat: false }
             categroys.push(categroy)
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {
                 let p = products[j];
-                let product = { categoryId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"], isRepeat: false, isSet: false }
+                let product = { categoryId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"], isRepeat: false, isSet: false, categoryName: element.sheetName.toUpperCase(), comment: "" }
                 productions.push(product)
             }
         }
@@ -71,6 +71,19 @@ const actions = {
     SaveExcelList({ commit }, list) {
         request.SaveImportedList(list).then(res => {
             if (res.resultStatus == 1) {
+                Message.success("导入成功")
+            } else {
+                Message.warning("导入失败")
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
+    },
+    // eslint-disable-next-line no-unused-vars
+    SaveExcelListNew({ commit }, list) {
+        request.SaveImportedListNew(list).then(res => {
+            if (res.resultStatus == 1) {
+                commit("ClearProductionList", [])
                 Message.success("导入成功")
             } else {
                 Message.warning("导入失败")
@@ -177,6 +190,9 @@ const mutations = {
         state.uploadFileDialog = data;
     },
     SetProductionList(state, data) {
+        state.excelProductList = data
+    },
+    ClearProductionList(state,data){
         state.excelProductList = data
     },
     DeleteOne(state, data) {

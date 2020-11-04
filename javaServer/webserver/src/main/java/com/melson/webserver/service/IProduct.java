@@ -35,4 +35,6 @@ public interface IProduct extends IService<Product> {
     List<ProductCategory> FindCategoryList(String storeCode);
 
     Integer DeleteCategory(ProductCategory productCategory);
+
+    boolean SaveImportedListNew(ProductImportDto dto);
 }

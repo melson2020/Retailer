@@ -5,8 +5,8 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.6)"
   >
-    <!-- <div class="productimport-header">
-      <el-button @click.prevent.stop="saveExcelList" class="productimport-top-button" type="primary" icon="el-icon-plus" size="small" :disabled="compareExistingProduct.length<=0||excelCategroyList.length<=0">保存</el-button>
+    <div class="productimport-header">
+      <el-button @click.prevent.stop="saveExcelList" class="productimport-top-button" type="primary" icon="el-icon-plus" size="small" :disabled="excelProductList.length<=0||excelCategroyList.length<=0">保存</el-button>
       <el-button @click.prevent.stop="choseFile" class="productimport-top-button" type="primary" size="small">数据导入</el-button>
       <el-button @click.prevent.stop="download" class="productimport-top-button" type="primary" size="small">模板下载</el-button>
       <el-dialog
@@ -38,7 +38,7 @@
           <el-button type="primary" :loading="readingFile" @click="submitFile">确 定</el-button>
         </div>
       </el-dialog>
-    </div> -->
+    </div>
 
     <div>
       <!-- <el-col :span="8">
@@ -141,10 +141,10 @@
       </el-col> -->
 
       <!-- <el-col :span="16"> -->
-        <!-- <div class="productimport-show-dict"> -->
+        <div class="productimport-show-dict">
           <div class="productimport-content-header">
             <div>
-              <span class="productimport-title-name">导入目录 ({{excelProductList.length}})</span>
+              <span class="productimport-title-name">商品目录 ({{excelProductList.length}})</span>
               <el-link
                 type="danger"
                 class="productimport-duplicate-link"
@@ -161,41 +161,6 @@
               suffix-icon="el-icon-search"
               @focus="productSearchFocus"
               ></el-input>
-                  <el-button @click.prevent.stop="download" class="productimport-top-button" type="primary" size="small">模板下载</el-button>
-                  <el-button @click.prevent.stop="choseFile" class="productimport-top-button" type="primary" size="small">数据导入</el-button>
-                  <el-button @click.prevent.stop="saveExcelList" class="productimport-top-button" type="primary" icon="el-icon-plus" size="small" :disabled="compareExistingProduct.length<=0||excelCategroyList.length<=0">保存</el-button>
-
-
-                  <el-dialog
-                    title="文件加载"
-                    :visible.sync="uploadFileDialog"
-                    :close-on-click-modal="false"
-                    :show-close="false"
-                    @close="uploadFileDialogOnClose"
-                  >
-                    <el-upload
-                      ref="upload"
-                      class="upload-demo"
-                      drag
-                      action
-                      :auto-upload="false"
-                      :limit="1"
-                      :on-exceed="onExceed"
-                      accept=".xls, .xlsx"
-                    >
-                      <i class="el-icon-upload"></i>
-                      <div class="el-upload__text">
-                        将文件拖到此处，或
-                        <em>点击上传</em>
-                      </div>
-                      <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
-                    </el-upload>
-                    <div slot="footer" class="dialog-footer">
-                      <el-button @click="closeDialog" v-if="!readingFile">取 消</el-button>
-                      <el-button type="primary" :loading="readingFile" @click="submitFile">确 定</el-button>
-                    </div>
-                  </el-dialog>
-
             </div>
           </div>
 
@@ -228,7 +193,7 @@
               <el-table-column label="操作" width="auto"  align="center">
                 <template slot-scope="scope">
                   <div class="productimport-table-operation-template">
-                    <!-- <el-button
+                    <el-button
                       size="mini"
                       plain
                       circle
@@ -236,8 +201,8 @@
                       icon="el-icon-edit"
                       v-if="!scope.row.isSet"
                       @click="handleEdit(scope.$index, scope.row)"
-                    ></el-button> -->
-                    <!-- <el-button
+                    ></el-button>
+                    <el-button
                       size="mini"
                       plain
                       circle
@@ -245,7 +210,7 @@
                       type="success"
                       icon="el-icon-s-claim"
                       @click="handleSave(scope.$index, scope.row)"
-                    ></el-button> -->
+                    ></el-button>
                     <el-button
                       size="mini"
                       plain
@@ -272,7 +237,7 @@
               v-if="productListShow.length>=productTablePage.pageSize"
             ></el-pagination>
           </div>
-        <!-- </div> -->
+        </div>
       <!-- </el-col> -->
     </div>
 
@@ -349,9 +314,7 @@ export default {
 // console.log(this.excelProductList[i].name);
 // console.log(mapExistingCategoryId.get(this.excelProductList[i].categoryName));
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          // this.excelProductList[i].categoryId = mapExistingCategoryId.get(this.excelProductList[i].categoryName);
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.excelProductList[i].storeCode = this.userInfo.storeCode;
+          this.excelProductList[i].categoryId = mapExistingCategoryId.get(this.excelProductList[i].categoryName);
 // console.log(this.excelProductList[i].categoryId);
           result.push(this.excelProductList[i]);
         }
@@ -374,8 +337,12 @@ export default {
             item.name +
             item.type +
             item.specification +
-            item.unit+
-            item.categoryName;
+            item.unit;
+          if(item.feature){
+            key=key+item.feature;
+          }else{
+            key=key+"";
+          }
           let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
           return index != -1;
         });
@@ -437,8 +404,7 @@ export default {
       DownloadProductDictTem: "DownloadProductDictTem",
       DeleteOneInImportedList: "DeleteOneInImportedList",
       CheckDuplicateList: "CheckDuplicateList",
-      // SaveExcelList: "SaveExcelList",
-      SaveExcelListNew: "SaveExcelListNew",
+      SaveExcelList: "SaveExcelList",
       DeleteOneInCategroyList: "DeleteOneInCategroyList",
       GetProductList: "GetProductList",
     }),
@@ -493,7 +459,7 @@ export default {
         .then(tabJson => {
           if (tabJson && tabJson.length > 0) {
             this.GenrateCategroyListAndProductList(tabJson);
-            this.$message.warning("系统已为你过滤掉已存在商品！")
+            this.$message.warning("系统已为你过滤掉已存在商品和类别！")
           }
         })
         .catch(err => {
@@ -538,17 +504,17 @@ export default {
     handleDelete(index, row) {
       this.DeleteOneInImportedList(row);
     },
-    // handleEdit(index, row) {
-    //   if (this.CheckHaveUnSaveItem()) {
-    //     this.$message.warning("有未保存项，请先保存");
-    //     return;
-    //   }
-    //   row.isSet = !row.isSet;
-    // },
-    // handleSave(index, row) {
-    //   row.isSet = !row.isSet;
-    //   this.CheckDuplicateList();
-    // },
+    handleEdit(index, row) {
+      if (this.CheckHaveUnSaveItem()) {
+        this.$message.warning("有未保存项，请先保存");
+        return;
+      }
+      row.isSet = !row.isSet;
+    },
+    handleSave(index, row) {
+      row.isSet = !row.isSet;
+      this.CheckDuplicateList();
+    },
     // categroyDelete(index, row) {
     //   this.DeleteOneInCategroyList(row);
     // },
@@ -568,14 +534,15 @@ export default {
         item.isSet = false;
       });
       this.CheckDuplicateList();
-      if (this.duplicateCount > 0) {
+      if (this.duplicateCount > 0 || this.categroyDuplicateCount > 0) {
         this.$message.warning("存在重复名称，请修改");
         return;
       }
+      // console.log(this.excelCategroyListShow);
+      console.log(this.productListShow);
       // let params={storeCode:this.userInfo.storeCode,productList:this.excelProductList,categoryList:this.excelCategroyList}
-      // let params={storeCode:this.userInfo.storeCode,productList:this.productListShow,categoryList:this.excelCategroyListShow}
-      let params={storeCode:this.userInfo.storeCode,productList:this.productListShow}
-      this.SaveExcelListNew(params);
+      let params={storeCode:this.userInfo.storeCode,productList:this.productListShow,categoryList:this.excelCategroyListShow}
+      this.SaveExcelList(params);
     },
     setpageSize() {
       let rect = this.tableHeight-40;
