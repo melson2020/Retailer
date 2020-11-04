@@ -371,6 +371,7 @@ export default {
       searchCategory:"",
       editProductFormVisible: false,
       newProductFormVisible: false,
+      oldEditName:"",
       // editCategoryVisible:false,
       loading: false,
       newProduct: {
@@ -459,6 +460,7 @@ export default {
     },
     handleEdit(index, row) {
       let prod = { id: row.id, index: index };
+      this.oldEditName=row.name;
       this.QueryProductObj(prod)
         .then(res => {
           if (res.resultStatus == 1) {
@@ -492,6 +494,12 @@ export default {
           let fe = JSON.stringify(this.editTags);
           this.editProduct.feature = fe;
           this.editTags=[];
+          if(this.compareExistingProduct(this.editProduct.name)&&(this.editProduct.name.trim()!==this.oldEditName.trim()))
+          {
+            console.log(this.oldEditName);
+            this.$message.warning("商品已存在！");
+            return false
+          }
           this.SaveProduct(this.editProduct)
             .then(res => {
               if (res.resultStatus == 1) {
@@ -518,6 +526,24 @@ export default {
         }
       });
     },
+    compareExistingProduct(value){
+        let mapExisting = new Map();
+        let result=Boolean;
+        for(let i=0;i<this.productList.length;i++){
+          if(!mapExisting.has(this.productList[i].name))
+          {
+            mapExisting.set(this.productList[i].name,this.productList[i]);
+          }
+        }
+        if(mapExisting.has(value))
+        {
+          result=true;
+        }
+        else{
+          result=false;
+        }
+        return result;
+    },
     onNewProduct(newForm){
       this.$refs[newForm].validate(valid => {
       if (valid) {
@@ -525,6 +551,11 @@ export default {
           this.newProduct.feature = fe;
           this.newProduct.storeCode=this.userInfo.storeCode;
           this.editTags=[];
+          if(this.compareExistingProduct(this.newProduct.name))
+          {
+            this.$message.warning("商品已存在！");
+            return false
+          }
           this.SaveProduct(this.newProduct)
             .then(res => {
               if (res.resultStatus == 1) {
