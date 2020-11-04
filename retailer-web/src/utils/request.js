@@ -76,6 +76,9 @@ export default {
   SaveImportedList(params){
     return service.post("/product/importProductList",params)
   },
+  SaveImportedListNew(params){
+    return service.post("/product/importProductListNew",params)
+  },
   GetProductListReq(params){
     return service.get("/product/productList",params)
   },
