@@ -31,6 +31,7 @@ const actions = {
     GetStorageOutRecordList({ commit }, params) {
         return request.GetStorageOutRecordList(params).then(res => {
             if (res.resultStatus == 1) {
+                console.log("查询记录", res.data)
                 commit("SetStorageOutRecordList", res.data)
             } else {
                 Message.error(res.message)

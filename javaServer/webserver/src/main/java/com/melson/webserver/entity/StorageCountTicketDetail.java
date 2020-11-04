@@ -19,6 +19,25 @@ public class StorageCountTicketDetail {
     private String type;
     private Integer count;
     private String ticketCode;
+    private String batchNo;
+    //1 总数变化 批次数量未变 0 批次数量变化
+    private Integer totalCountChange;
+
+    public Integer getTotalCountChange() {
+        return totalCountChange;
+    }
+
+    public void setTotalCountChange(Integer totalCountChange) {
+        this.totalCountChange = totalCountChange;
+    }
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
 
     public Integer getId() {
         return id;

@@ -16,4 +16,6 @@ import java.util.Set;
 public interface IProductBatchDao extends JpaRepository<ProductBatch,String> {
     List<ProductBatch> findByStoreCodeAndProductIdAndFinished(String storeCode,Integer productId,Integer finished);
     List<ProductBatch> findByBatchNoIn(Set<String> batchNos);
+    List<ProductBatch> findByStoreCodeAndFinished(String storeCode,Integer finished);
+    List<ProductBatch> findByStoreCodeAndBatchTypeAndStorageInCodeAndSupplyIdIsNull(String storeCode,String batchType,String ticketCode);
 }

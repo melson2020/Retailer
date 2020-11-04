@@ -6,9 +6,10 @@ import { Message } from "element-ui";
 const state = {
     productAndStorageCount: {},
     productStorageList: [],
-    previewStorageList:[],
-    activeStep:0,
-    currentStorageCountTicket:{}
+    previewStorageList: [],
+    activeStep: 0,
+    currentStorageCountTicket: {},
+    updateBatchList: []
 };
 
 const actions = {
@@ -39,7 +40,7 @@ const actions = {
         request.GetStorageList(params).then(res => {
             if (res.resultStatus == 1) {
                 commit("SetStorageList", res.data)
-            }else {
+            } else {
                 Message.error(res.message)
             }
         }).catch(err => {
@@ -47,23 +48,23 @@ const actions = {
         })
 
     },
-    GetPreviewStorageList({commit},params){
-        request.GetStorageList(params).then(res => {
+    GetPreviewStorageList({ commit }, params) {
+        request.GetStorageCountList(params).then(res => {
             if (res.resultStatus == 1) {
                 commit("SetPreviewStorageList", res.data)
-            }else {
+            } else {
                 Message.error(res.message)
             }
         }).catch(err => {
             Message.error(err.message ? err.message : err)
         })
     },
-    GetBatchList({commit},payload){
+    GetBatchList({ commit }, payload) {
         request.GetBatchList(payload.params).then(res => {
             if (res.resultStatus == 1) {
-              let data={row:payload.row,list:res.data}
-              commit("SetStorageDetail",data)
-            }else {
+                let data = { row: payload.row, list: res.data }
+                commit("SetStorageDetail", data)
+            } else {
                 Message.error(res.message)
             }
         }).catch(err => {
@@ -71,45 +72,56 @@ const actions = {
         })
 
     },
-    ExportCountTicket({},parmas){
+    GetBatchListForUpdate({ commit }, params) {
+        request.GetBatchListForUpdate(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetUpdateBatchList", res.data)
+            } else {
+                Message.error(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
+    },
+    ExportCountTicket({ }, parmas) {
         return request.ExportCountTicket(parmas);
     },
-    DownStorageCountTicketExportExcel({},params){
-       return request.DownStorageCountTicketExportExcel(params)
-    //    .then(res => {
-    //         let blob = new Blob([res])
-    //         let fileName = Date.parse(new Date()) + '.xls'
-    //         if (window.navigator.msSaveOrOpenBlob) {
-    //             navigator.msSaveBlob(blob, fileName)
-    //         } else {
-    //             var link = document.createElement('a')
-    //             link.href = window.URL.createObjectURL(blob)
-    //             link.download = fileName
-    //             link.click()
-    //             //释放内存
-    //             window.URL.revokeObjectURL(link.href)
-    //         }
-    //     }).catch(err => {
-    //         Message.error(err.message ? err.message : err)
-    //     })
+    DownStorageCountTicketExportExcel({ }, params) {
+        return request.DownStorageCountTicketExportExcel(params)
     },
-    CreateStorageCountTicket({},params){
-       return request.CreateStorageCountTicket(params)
+    CreateStorageCountTicket({ }, params) {
+        return request.CreateStorageCountTicket(params)
     },
-    SetActiveSteps({commit},data){
-        commit("SetActiveSteps",data)
+    SetActiveSteps({ commit }, data) {
+        commit("SetActiveSteps", data)
     },
-    SetCurrentStorageCountTicket({commit},data){
-        commit("SetcurrentStorageCountTicket",data)
+    SetCurrentStorageCountTicket({ commit }, data) {
+        commit("SetcurrentStorageCountTicket", data)
+    },
+    UpdateStorageAfterCount({ }, params) {
+        return request.UpdateStorageAfterCounted(params)
+    },
+    SetUpdateBatchList({ commit }, data) {
+        commit("SetUpdateBatchList", data)
+    },
+    SetTicketStatus({ commit }, data) {
+        commit("SetTicketStatus", data)
+    },
+    UpdateProductBatchList({ }, params) {
+        return request.UpdateProductBatchList(params);
+    },
+    UpdateCountTicket({}, params) {
+      return  request.UpdateCountTicket(params)
     }
 };
 
 const getters = {
     productAndStorageCount: state => state.productAndStorageCount,
     productStorageList: state => state.productStorageList,
-    activeStep:state=>state.activeStep,
-    previewStorageList:state=>state.previewStorageList,
-    currentStorageCountTicket:state=>state.currentStorageCountTicket
+    activeStep: state => state.activeStep,
+    previewStorageList: state => state.previewStorageList,
+    currentStorageCountTicket: state => state.currentStorageCountTicket,
+    updateBatchList: state => state.updateBatchList
 };
 
 const mutations = {
@@ -125,21 +137,27 @@ const mutations = {
         state.productAndStorageCount.storageCount = data;
     },
     SetStorageList(state, data) {
-        data.map(item=>{item.batchList=[]})
-        state.productStorageList=data;
+        data.map(item => { item.batchList = [] })
+        state.productStorageList = data;
     },
     SetPreviewStorageList(state, data) {
-        state.previewStorageList=data;
+        state.previewStorageList = data;
     },
-    SetStorageDetail(state,data){
-        let index=state.productStorageList.indexOf(data.row)
-        state.productStorageList[index].batchList=data.list
+    SetStorageDetail(state, data) {
+        let index = state.productStorageList.indexOf(data.row)
+        state.productStorageList[index].batchList = data.list
     },
-    SetActiveSteps(state,data){
-        state.activeStep=data;
+    SetActiveSteps(state, data) {
+        state.activeStep = data;
     },
-    SetcurrentStorageCountTicket(state,data){
-        state.currentStorageCountTicket=data
+    SetcurrentStorageCountTicket(state, data) {
+        state.currentStorageCountTicket = data
+    },
+    SetUpdateBatchList(state, data) {
+        state.updateBatchList = data
+    },
+    SetTicketStatus(state, data) {
+        state.currentStorageCountTicket.status = data;
     }
 };
 

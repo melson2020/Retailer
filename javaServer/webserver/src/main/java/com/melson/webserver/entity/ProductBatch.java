@@ -21,14 +21,35 @@ public class ProductBatch {
     private BigDecimal price;
     private String priceUnit;
     private Integer vat;
+    //是否库存为0 1 是 0 否
     private Integer finished;
     private Integer productId;
+    private String productName;
     private Integer count;
     private String countUnit;
+    //batchType 为IN时 入库单号  C时 盘点单号
     private String storageInCode;
     private Integer discount;
     private String taxRate;
     private BigDecimal totalPrice;
+    //批次类型  IN 入库生成  C 盘点生成
+    private String batchType;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getBatchType() {
+        return batchType;
+    }
+
+    public void setBatchType(String batchType) {
+        this.batchType = batchType;
+    }
 
     public Integer getId() {
         return id;

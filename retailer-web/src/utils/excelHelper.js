@@ -200,53 +200,5 @@ function changeData(s) {
 	}
 }
 
-export function Test() {
-	const aoa = [
-		['主要信息', null, null, '其它信息'], // 特别注意合并的地方后面预留2个null
-		['姓名', '性别', '年龄', '注册时间'],
-		['张三', '男', 18, new Date()],
-		['李四', '女', 22, new Date()]
-	];
-	const ws_name = 'Sheet1'
-	const wb = XLSX.utils.book_new()
-	const ws = XLSX.utils.aoa_to_sheet(aoa)
-	ws['!merges'] = [
-		// 设置A1-C1的单元格合并
-		{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }
-	];
-	//这个就是修改格式的代码
-	// ws["A5"].s = {
-	// 			font: {
-	// 				sz: 13,
-	// 				bold: true,
-	// 				color: {
-	// 					rgb: "FFFFAA00"
-	// 				}
-	// 			},
-	// 			alignment: {
-	// 				horizontal: "center",
-	// 				vertical: "center",
-	// 				wrap_text: true
-	// 			}
-	// 		};
-	//控制单元格宽度
-	ws["!cols"] = [{
-		wpx: 70
-	}, {
-		wpx: 70
-	}, {
-		wpx: 70
-	}, {
-		wpx: 70
-	}, {
-		wpx: 150
-	}, {
-		wpx: 120
-	}]; //单元格列宽
-	const filename = '导出单元格带样式的表格.xlsx'
-	// Excel第一个sheet的名称
-	// ws['!merges'] = mergeArr
-	XLSX.utils.book_append_sheet(wb, ws, ws_name) // 将数据添加到工作薄
-	XLSX.writeFile(wb, filename) // 导出Excel
-}
+
 
