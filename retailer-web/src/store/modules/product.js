@@ -17,7 +17,7 @@ const actions = {
         let productions = []
         for (let index = 0; index < xlsJson.length; index++) {
             let element = xlsJson[index];
-            let categroy = { id: index, categoryId: index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
+            let categroy = { categoryId: index, name: element.sheetName, comment: "", isSet: false, isRepeat: false }
             categroys.push(categroy)
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {

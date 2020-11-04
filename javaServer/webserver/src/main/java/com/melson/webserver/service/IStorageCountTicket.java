@@ -16,6 +16,8 @@ import java.util.List;
  */
 public interface IStorageCountTicket extends IService<StorageCountTicket> {
     StorageCountTicket CreateTicekt(StorageCountTicket ticket);
+    StorageCountTicket SaveTicket(StorageCountTicket ticket);
+    StorageCountTicket FindByCode(String code);
     Result ExportExcel(List<ProductStorageDto> storageList, String basePath, StorageCountTicket ticket);
     Result ImportCountedExcel(String ticketCode, MultipartFile file,String basePtah);
 }

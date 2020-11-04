@@ -421,7 +421,6 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.storageInTicket.storeCode = this.userInfo.storeCode;
-          console.log(this.GetProductList);
           this.SaveTicket(this.storageInTicket)
             .then(res => {
               if (res.resultStatus == 1) {

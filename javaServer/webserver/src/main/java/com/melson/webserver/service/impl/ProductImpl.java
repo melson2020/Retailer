@@ -72,11 +72,6 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         return saved.size()>0&categorySaved.size()>0;
     }
 
-//    @Override
-//    public List<Product> FindUsingList(String storeCode) {
-//        return productDao.findByStoreCode(storeCode);
-//    }
-
     @Override
     public List<ProductDto> FindProductList(String storeCode) {
         String sql="SELECT pro.id,pro.name,pro.type,pro.specification,pro.unit,pro.feature,prc.categoryId as categoryId,prc.name as category from product pro left JOIN product_category prc on pro.categoryId=prc.categoryId WHERE pro.storeCode='"+storeCode+"'order by pro.id DESC";

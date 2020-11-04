@@ -327,33 +327,4 @@ export default {
 .el-tag {
   margin: 0px 10px;
 }
-
-/* .content-header {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.title-name {
-  font-size: 28px;
-  font-weight: bold;
-  color: #409eff;
-}
-.fliter-input {
-  width: 400px;
-  height: 80px;
-}
-.content-footer {
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  margin-top: 20px;
-  height: 80px;
-}
-
-.storage-table {
-  height: 80vh;
-} */
 </style>

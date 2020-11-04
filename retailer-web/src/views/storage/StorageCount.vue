@@ -6,6 +6,7 @@
         <el-step title="预览"></el-step>
         <el-step title="导出"></el-step>
         <el-step title="导入"></el-step>
+        <el-step title="批次"></el-step>
         <el-step title="完成"></el-step>
       </el-steps>
       <div class="step-container">
@@ -32,14 +33,10 @@ export default {
       SetActiveSteps: "SetActiveSteps",
       SetStorageCountTicket:"SetStorageCountTicket"
     }),
-    createTicket() {
-      this.SetStorageCountTicket(true);
-      this.$router.push({ path: "/main/storageCount/create" });
-    }
   },
   beforeMount: function() {
     let path=this.$route.path;
-    if(path=='/main/storageCount'){
+    if(path==='/main/storageCount'){
        this.$router.push({ path: "/main/storageCount/create" });
     }
   }

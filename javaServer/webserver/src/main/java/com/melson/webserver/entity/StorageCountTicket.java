@@ -21,7 +21,7 @@ public class StorageCountTicket {
     private String storeCode;
     private String date;
     private Date createTime;
-    //盘点单状态标识  1 已创建 2已导出 3已导入 4 完成
+    //盘点单状态标识  1 已创建 2已导出 3已导入 4 批次信息未填写 5完成
     private Integer status;
     private String description;
     private String productType;
@@ -29,6 +29,8 @@ public class StorageCountTicket {
     private String excelImportPath;
     private String excelExportFileName;
     private String excelImportFileName;
+    //盘点结果 unComplete 未完成  changed 有变动 correct 完全一致
+    private String result;
 
     public String getExcelExportFileName() {
         return excelExportFileName;
@@ -148,5 +150,13 @@ public class StorageCountTicket {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }

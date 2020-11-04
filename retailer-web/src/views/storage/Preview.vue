@@ -153,18 +153,13 @@ export default {
     }
   },
   mounted: function() {
-    // if (this.currentStorageCountTicket.productType) {
-    //   let params = {
-    //     storeCode: this.userInfo.storeCode,
-    //     searchType: this.currentStorageCountTicket.productType
-    //   };
-    //   this.GetPreviewStorageList(params);
-    // }
-    let params = {
-      storeCode: this.userInfo.storeCode,
-      searchType: "morethanzero"
-    };
-    this.GetPreviewStorageList(params);
+    if (this.currentStorageCountTicket.productType) {
+      let params = {
+        storeCode: this.userInfo.storeCode,
+        searchType: this.currentStorageCountTicket.productType
+      };
+      this.GetPreviewStorageList(params);
+    }
   }
 };
 </script>

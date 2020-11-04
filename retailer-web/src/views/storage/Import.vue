@@ -105,7 +105,7 @@ export default {
         { field: "counted", label: "盘点数量", width: "auto" }
       ],
       countedList: [],
-      uploadData: { ticketCode: "2f841758-69d0-4a5d-a058-3e46dde60d18" }
+      uploadData: { ticketCode: "" }
     };
   },
   computed: {
@@ -135,7 +135,10 @@ export default {
   methods: {
     ...mapActions({
       SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
-      SetActiveSteps: "SetActiveSteps"
+      SetActiveSteps: "SetActiveSteps",
+      UpdateStorageAfterCount: "UpdateStorageAfterCount",
+      SetUpdateBatchList: "SetUpdateBatchList",
+      SetTicketStatus: "SetTicketStatus"
     }),
     setUploadDialogVisible() {
       this.uploadDialogVisible = !this.uploadDialogVisible;
@@ -187,6 +190,7 @@ export default {
           flag: 0,
           dataCorrect: true
         };
+        //检查批次数量是否匹配
         if (json.counted - json.count > 0) {
           json.flag = 1;
         }
@@ -199,7 +203,7 @@ export default {
     },
     checkCountedList() {
       if (this.countedList.length <= 0) return;
-      this.countedList.map(item => {
+      this.countedList.map((item, index) => {
         var count = 0;
         this.countedList
           .filter(c => {
@@ -214,21 +218,39 @@ export default {
             count += sc;
           });
         var tc = parseInt(item.totalCounted);
+        var c = parseInt(item.totalCount);
+        var preItem = this.countedList[index - 1];
         if (isNaN(tc)) {
-          tc = 0;
-          item.totalCounted = 0;
+          if (preItem && preItem.productId === item.productId) {
+            item.totalCounted = preItem.totalCounted;
+            tc = preItem.totalCounted;
+          } else {
+            item.totalCounted = 0;
+            tc = 0;
+          }
+        }
+        if (isNaN(c)) {
+          if (preItem && preItem.productId === item.productId) {
+            item.totalCount = preItem.totalCount;
+          } else {
+            item.totalCount = 0;
+          }
         }
         item.dataCorrect = count === tc;
+        //检查总数是否匹配
+        if (item.totalCounted - item.totalCount > 0) {
+          item.flag = 1;
+        }
+        if (item.totalCounted - item.totalCount < 0) {
+          item.flag = -1;
+        }
       });
+      console.log(this.countedList);
     },
     submitCountedList() {
       let file = this.$refs.upload.$children[0].fileList[0];
       if (!file) {
         this.$message.warning("请添加上传文件");
-        return;
-      }
-      if (file.status === "success") {
-        this.$message.info("文件已上传");
         return;
       }
       if (
@@ -240,15 +262,58 @@ export default {
         this.$message.warning("盘点数据不准确，请检查");
         return;
       }
-      this.$refs.upload.submit();
+      if (!this.currentStorageCountTicket.code) {
+        this.$message.warning("暂无盘点单");
+        return;
+      }
+      if (
+        file.status === "success" ||
+        this.currentStorageCountTicket.status >= 3
+      ) {
+        this.updaetStorage();
+      } else {
+        this.uploadData.ticketCode = this.currentStorageCountTicket.code;
+        this.$refs.upload.submit();
+      }
     },
     uploadOnSuccess(response) {
       if (response.resultStatus == 1) {
         this.$message.success("文件上传成功");
         this.SetCurrentStorageCountTicket(response.data);
+        this.updaetStorage();
       } else {
         this.$message.error(response.messgae);
       }
+    },
+    updaetStorage() {
+      var updateList = this.countedList.filter(item => {
+        return item.flag != 0;
+      });
+      var params = {
+        ticket: this.currentStorageCountTicket,
+        dtoList: updateList
+      };
+      this.UpdateStorageAfterCount(params)
+        .then(res => {
+          if (res.resultStatus == 1) {
+            //盘点完成
+            this.SetActiveSteps(5);
+            this.SetTicketStatus(5);
+            this.$message.success("盘点成功");
+            this.$router.push({ path: "/main/storageCount/complete" });
+          } else if (res.resultStatus == 2) {
+            //有批次信息
+            this.SetActiveSteps(4);
+            this.SetTicketStatus(4);
+            this.SetUpdateBatchList(res.data);
+            this.$router.push({ path: "/main/storageCount/updateBatch" });
+          } else {
+            this.$message.error(res.message);
+          }
+        })
+        .catch(err => {
+          this.$message.error(err.messgae ? err.message : err);
+        });
     },
     uploadOnError(err) {
       this.$message.error(err.message ? err.message : err);

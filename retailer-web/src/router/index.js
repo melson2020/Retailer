@@ -11,9 +11,12 @@ const ProductDict=()=> import("../views/dicts/ProductDict.vue");
 const ProductImport=()=> import("../views/dicts/ProductImport.vue")
 const ProductStock=()=>import("../views/storage/ProductStorage.vue")
 const StorageCount=()=>import("../views/storage/StorageCount.vue")
+const StorageCountRecord=()=>import("../views/storage/StorageCountRecord.vue")
 const CreateCountTicket=()=>import("../views/storage/CreateTicket.vue")
 const Preview=()=>import("../views/storage/Preview.vue")
 const Import=()=>import("../views/storage/Import.vue")
+const UpdateBatch=()=>import("../views/storage/BatchUpdate.vue")
+const Complete=()=>import("../views/storage/Complete.vue")
 const StorageIn=()=>import("../views/storageIn/StorageIn.vue")
 const StorageInRecord=()=>import("../views/storageIn/StorageInRecord.vue")
 const StorageOut=()=>import("../views/storageOut/StorageOut.vue")
@@ -113,8 +116,28 @@ const routes = [
             path:"import",
             name:"import",
             component:Import
-          }
+          },
+          {
+            path:"updateBatch",
+            name:"updateBatch",
+            component:UpdateBatch
+          },
+          {
+            path:"complete",
+            name:"complete",
+            component:Complete
+          },
+          {
+            path: "/",
+            name: "storageCountRoot",
+            component: CreateCountTicket
+          },
         ]
+      },
+      {
+        path:'storageCountRecord',
+        name:"storageCountRecord",
+        component:StorageCountRecord
       },
       {
         path:"storageIn",

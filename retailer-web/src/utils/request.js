@@ -142,6 +142,18 @@ export default {
   GetStorageCountList(params){
     return service.get("/storage/storageCountList",params)
   },
+  UpdateStorageAfterCounted(params){
+    return service.post("/storage/updateStorageAfterCounted",params)
+  },
+  GetBatchListForUpdate(params){
+    return service.get("/storage/needToUpdateBatchList",params)
+  },
+  UpdateProductBatchList(params){
+    return service.post("/storage/updateBatchList",params)
+  },
+  UpdateCountTicket(params){
+    return service.post("/storage/updateCountTicket",params)
+  },
 
   /**
    * Storage In

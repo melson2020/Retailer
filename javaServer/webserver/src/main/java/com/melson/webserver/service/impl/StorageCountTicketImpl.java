@@ -43,13 +43,24 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
         return storageCountTicketDao;
     }
 
+
     @Override
     public StorageCountTicket CreateTicekt(StorageCountTicket ticket) {
         ticket.setCode(UUID.randomUUID().toString());
         ticket.setCreateTime(new Date());
         ticket.setStatus(1);
+        ticket.setResult("unComplete");
         return storageCountTicketDao.save(ticket);
     }
+
+    @Override
+    public StorageCountTicket SaveTicket(StorageCountTicket ticket) {
+        return storageCountTicketDao.save(ticket);
+    }
+
+   public StorageCountTicket FindByCode(String code){
+        return storageCountTicketDao.findByCode(code);
+   }
 
     @Override
     public Result ExportExcel(List<ProductStorageDto> storageList, String basePath, StorageCountTicket ticket) {

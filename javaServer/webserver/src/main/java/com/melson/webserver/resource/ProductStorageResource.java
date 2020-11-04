@@ -6,14 +6,14 @@ import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
 import com.melson.webserver.Vo.StorageAndProductCountVo;
+import com.melson.webserver.Vo.StorageCountedVo;
 import com.melson.webserver.dto.ProductStorageDto;
 import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageCountTicket;
-import com.melson.webserver.service.IProductStorage;
-import com.melson.webserver.service.IStorageCountTicket;
-import com.melson.webserver.service.ISysConfig;
+import com.melson.webserver.service.*;
 import com.melson.webserver.utils.PoiUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +39,15 @@ public class ProductStorageResource extends BaseResource {
     private final IProductStorage productStorageService;
     private final IStorageCountTicket storageCountTicketService;
     private final ISysConfig sysConfigService;
+    private final IStorageCountTicketDetail storageCountTicketDetailService;
+    private final IProductBatch productBatchService;
 
-    public ProductStorageResource(IProductStorage productStorageService, IStorageCountTicket storageCountTicketService, ISysConfig sysConfigService) {
+    public ProductStorageResource(IProductStorage productStorageService, IStorageCountTicket storageCountTicketService, ISysConfig sysConfigService, IStorageCountTicketDetail storageCountTicketDetailService, IProductBatch productBatchService) {
         this.productStorageService = productStorageService;
         this.storageCountTicketService = storageCountTicketService;
         this.sysConfigService = sysConfigService;
+        this.storageCountTicketDetailService = storageCountTicketDetailService;
+        this.productBatchService = productBatchService;
     }
 
     @RequestMapping(value = "/storageAndProductCount")
@@ -112,6 +117,47 @@ public class ProductStorageResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/needToUpdateBatchList")
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result FindBatchListForUpdate(HttpServletRequest request) {
+        String storeCode = request.getParameter("storeCode");
+        String ticketCode=request.getParameter("ticketCode");
+        if (StringUtils.isEmpty(storeCode)||StringUtils.isEmpty(ticketCode))
+            return this.GenerateResult(ResultType.ParametersNeeded);
+        Result result = new Result();
+        List<ProductBatch> list = productBatchService.FindBatchListForUpdate(storeCode,ticketCode);
+        result.setData(list);
+        return result;
+    }
+
+    @RequestMapping(value = "/updateBatchList",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result UpdateBatchList(@RequestBody List<ProductBatch> batchList) {
+        Result result=new Result();
+      if(batchList==null||batchList.size()<=0) return this.GenerateResult(ResultType.ParametersNeeded);
+      List<ProductBatch> savedList= productBatchService.SaveAll(batchList);
+      if(savedList==null){
+          result.setResultStatus(-1);
+          result.setMessage("update failed");
+      }
+      return result;
+    }
+
+    @RequestMapping(value = "/updateCountTicket",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result UpdateCountTicket(@RequestBody StorageCountTicket ticket) {
+        Result result=new Result();
+        if(ticket==null||ticket.getId()==null) return this.GenerateResult(ResultType.ParametersNeeded);
+        StorageCountTicket savedTicket= storageCountTicketService.SaveTicket(ticket);
+        if(savedTicket==null){
+            result.setResultStatus(-1);
+            result.setMessage("update failed");
+        }else {
+            result.setData(ticket);
+        }
+        return result;
+    }
+
     @RequestMapping(value = "/createCountTicket", method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
     public Result CreateStorageCountTicket(@RequestBody StorageCountTicket ticket, HttpServletRequest request) {
@@ -131,20 +177,20 @@ public class ProductStorageResource extends BaseResource {
     public Result ExportStorageCountDetail(@RequestBody StorageCountTicket tikcet) {
         String basePath = sysConfigService.FindValueFromCache("storageCountTicketExcelBasePath");
         List<ProductStorageDto> storageCountList = productStorageService.FindWithProductType(tikcet.getStoreCode(), tikcet.getProductType());
-        Result result = storageCountTicketService.ExportExcel(storageCountList,basePath,tikcet);
+        Result result = storageCountTicketService.ExportExcel(storageCountList, basePath, tikcet);
         return result;
     }
 
-    @RequestMapping(value = "/downloadCountTicketExport",method = RequestMethod.POST)
-    public void DownloadTemplate(@RequestBody StorageCountTicket tikcet, HttpServletResponse response){
-        String path=tikcet.getExcelExportPath();
+    @RequestMapping(value = "/downloadCountTicketExport", method = RequestMethod.POST)
+    public void DownloadTemplate(@RequestBody StorageCountTicket tikcet, HttpServletResponse response) {
+        String path = tikcet.getExcelExportPath();
         try {
             // path是指欲下载的文件的路径。
             File file = new File(path);
             // 取得文件名。
             String filename = file.getName();
             // 以流的形式下载文件。
-            InputStream fis= new BufferedInputStream(new FileInputStream(path));
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
             fis.close();
@@ -163,16 +209,33 @@ public class ProductStorageResource extends BaseResource {
         }
     }
 
-    @RequestMapping(value = "/uploadCountedExcel",method = RequestMethod.POST)
-    public Result AddExcel(@RequestBody MultipartFile file, HttpServletRequest request, HttpServletResponse response)throws Exception{
-        String ticketCode=request.getParameter("ticketCode");
+    @RequestMapping(value = "/uploadCountedExcel", method = RequestMethod.POST)
+    public Result AddExcel(@RequestBody MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String ticketCode = request.getParameter("ticketCode");
         String basePath = sysConfigService.FindValueFromCache("storageCountTicketExcelBasePath");
-        return storageCountTicketService.ImportCountedExcel(ticketCode,file,basePath);
+        return storageCountTicketService.ImportCountedExcel(ticketCode, file, basePath);
     }
-    @RequestMapping(value = "/updateSorageAfterCounted",method = RequestMethod.POST)
+
+    @RequestMapping(value = "/updateStorageAfterCounted", method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
-    public Result UpdateStorage(@RequestBody List<ProductStorageDto> dtoList){
-        Result result=new Result();
-        return result;
+    @Transactional
+    public Result UpdateStorage(@RequestBody StorageCountedVo vo) {
+        List<ProductStorageDto> dtoList = vo.getDtoList();
+        StorageCountTicket ticket = vo.getTicket();
+        StorageCountTicket existTicket=storageCountTicketService.FindByCode(ticket.getCode());
+        if(existTicket==null){
+            return this.GenerateResult(ResultType.ExceptionCatched,"wrong ticket");
+        }
+        if(!existTicket.getResult().equals("unComplete")){
+            return this.GenerateResult(ResultType.ExceptionCatched,"this ticket has been completed");
+        }
+        if (dtoList == null || ticket == null)
+            return this.GenerateResult(ResultType.ParametersNeeded);
+        if(dtoList.size()<=0){
+            ticket.setResult("correct");
+            storageCountTicketService.SaveTicket(ticket);
+            return new Result();
+        }
+        return storageCountTicketDetailService.SaveDetailWithCountedList(dtoList, ticket);
     }
 }
