@@ -166,4 +166,10 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
     public List<ProductBatch> FindBatchList(String storeCode, Integer productId) {
         return productBatchDao.findByStoreCodeAndProductIdAndFinished(storeCode, productId, 0);
     }
+
+    @Override
+    public ProductStorage FindByProductIdAndStoreCode(Integer id, String storeCode) {
+        ProductStorage storage= productStorageDao.findByProductIdAndStoreCode(id,storeCode);
+        return storage;
+    }
 }

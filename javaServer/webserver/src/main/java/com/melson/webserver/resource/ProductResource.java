@@ -5,13 +5,12 @@ import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
-import com.melson.webserver.dto.ProductCategoryDto;
 import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
-import com.melson.webserver.entity.Product;
 import com.melson.webserver.entity.ProductCategory;
-import com.melson.webserver.entity.Supply;
+import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.service.IProduct;
+import com.melson.webserver.service.IProductStorage;
 import com.melson.webserver.service.ISysConfig;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @Author Nelson
@@ -36,11 +34,13 @@ import java.util.Locale;
 public class ProductResource extends BaseResource {
     private final IProduct productService;
     private final ISysConfig sysConfigService;
+    private final IProductStorage productStorageService;
 
 
-    public ProductResource(IProduct productService,ISysConfig sysConfigService) {
+    public ProductResource(IProduct productService, ISysConfig sysConfigService, IProductStorage productStorageService) {
         this.productService = productService;
         this.sysConfigService=sysConfigService;
+        this.productStorageService = productStorageService;
     }
 
     @RequestMapping(value = "/downloadProductDictTemplate",method = RequestMethod.POST)
@@ -150,9 +150,18 @@ public class ProductResource extends BaseResource {
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public Result DeleteProduct(@RequestBody ProductDto productDto){
         Result result=new Result();
-        Integer deleteCount=productService.DeleteProduct(productDto);
-        result.setResultStatus(deleteCount>0?1:-1);
-        result.setData(deleteCount);
+        ProductStorage storage = productStorageService.FindByProductIdAndStoreCode(productDto.getId(),productDto.getStoreCode());
+        if(storage.getCount()>0)
+        {
+            result.setResultStatus(-1);
+            result.setMessage("库存中存在的货品不能删除！");
+        }
+        else
+        {
+            Integer deleteCount=productService.DeleteProduct(productDto);
+            result.setResultStatus(deleteCount>0?1:-1);
+            result.setData(deleteCount);
+        }
         return result;
     }
 

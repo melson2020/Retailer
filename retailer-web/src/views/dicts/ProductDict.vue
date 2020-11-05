@@ -447,7 +447,7 @@ export default {
       this.listQuery.page = page;
     },
     handleDelete(index, row) {
-      let prod = { id: row.id, index: index };
+      let prod = { id: row.id, index: index,storeCode:this.userInfo.storeCode };
       this.$messageBox
         .confirm("确认删除？", "提示", {
           confirmButtonText: "确定",

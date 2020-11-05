@@ -21,7 +21,7 @@ public class ProductStorage {
     private String productSpecification;
     private Integer count;
     private String unit;
-    private String searchType;
+    private String searchType;    //1,normall; 2,all
     @Transient
     private List<ProductBatch> batchList;
 

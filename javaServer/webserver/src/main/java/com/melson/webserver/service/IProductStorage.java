@@ -20,4 +20,6 @@ public interface IProductStorage extends IService<ProductStorage> {
     List<ProductStorage> FindStorageListWithType(String store,String productType);
     List<ProductStorageDto> FindWithProductType(String storeCode, String productType);
     List<ProductBatch> FindBatchList(String storeCode,Integer productId);
+
+    ProductStorage FindByProductIdAndStoreCode(Integer id, String storeCode);
 }
