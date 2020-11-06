@@ -131,7 +131,7 @@ const actions = {
                 Message.info("删除成功")
             }
             else{
-                Message.warning("删除失败",res.message)
+                Message.warning("删除失败:"+ res.message)
             }
         })
         .catch(error=>{
@@ -148,7 +148,7 @@ const actions = {
                     Message.info("删除成功")
                 }
                 else {
-                    Message.info("删除失败")
+                    Message.info("删除失败:"+res.message);
                 }
             })
             .catch(error => {

@@ -62,7 +62,7 @@
     <div v-else>
       <div class="productstorage-content-header">
         <div>
-          <span class="productstorage-title-name">商品库存</span>
+          <span class="productstorage-title-name">库存信息</span>
         </div>
         <div>
           <el-input

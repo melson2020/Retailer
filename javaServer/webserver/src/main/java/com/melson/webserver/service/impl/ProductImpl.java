@@ -4,12 +4,13 @@ import com.melson.base.AbstractService;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.dao.IProductCategoryDao;
 import com.melson.webserver.dao.IProductDao;
+import com.melson.webserver.dao.IProductStorageDao;
 import com.melson.webserver.dto.ProductCategoryDto;
 import com.melson.webserver.dto.ProductDto;
 import com.melson.webserver.dto.ProductImportDto;
 import com.melson.webserver.entity.Product;
 import com.melson.webserver.entity.ProductCategory;
-import com.melson.webserver.entity.Supply;
+import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.service.IProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,13 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
     private final IProductDao productDao;
     private final IProductCategoryDao productCategoryDao;
     private final EntityManagerUtil entityManagerUtil;
+    private final IProductStorageDao productStorageDao;
 
-    public ProductImpl(IProductDao productDao,IProductCategoryDao productCategoryDao ,EntityManagerUtil entityManagerUtil) {
+    public ProductImpl(IProductDao productDao, IProductCategoryDao productCategoryDao, EntityManagerUtil entityManagerUtil, IProductStorageDao productStorageDao) {
         this.productDao = productDao;
         this.productCategoryDao=productCategoryDao;
         this.entityManagerUtil=entityManagerUtil;
+        this.productStorageDao = productStorageDao;
     }
 
     @Override
@@ -44,6 +47,20 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
     public boolean SaveImportedListNew(ProductImportDto dto) {
         List<Product> productList = dto.getProductList();
         List<Product> saved= productDao.saveAll(productList);
+
+        List<ProductStorage> storageList = new ArrayList<>(productList.size());
+        for (Product p : productList) {
+            ProductStorage storage = new ProductStorage();
+            storage.setCount(0);
+            storage.setProductId(p.getId());
+            storage.setStoreCode(p.getStoreCode());
+            storage.setProductName(p.getName());
+            storage.setProductType(p.getType());
+            storage.setProductSpecification(p.getSpecification());
+            storage.setUnit(p.getUnit());
+            storageList.add(storage);
+        }
+        productStorageDao.saveAll(storageList);
         return saved.size()>0;
     }
 
@@ -156,6 +173,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
     @Override
     @Transactional
     public Integer DeleteProduct(ProductDto productDto) {
+        productStorageDao.deleteByProductId(productDto.getId());
         return productDao.deleteByProductDtoId(productDto.getId());
     }
 
@@ -219,7 +237,10 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
 
 
     @Override
+    @Transactional
     public ProductDto SaveProduct(ProductDto productDto) {
+        List<ProductStorage> storageList =productStorageDao.findByStoreCode(productDto.getStoreCode());
+
         Product prod=new Product();
         if(productDto.getId()!=null){
             prod.setId(productDto.getId());
@@ -231,8 +252,40 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         prod.setSpecification(productDto.getSpecification());
         prod.setUnit(productDto.getUnit());
         prod.setFeature(productDto.getFeature());
-        productDao.save(prod);
+        Product saved = productDao.save(prod);
+
+        if(storageList.size()>0) {
+            Map<Integer,String> storageMap = new HashMap<Integer,String>();
+            for (ProductStorage p : storageList) {
+                storageMap.put(p.getProductId(),p.getProductName());
+            }
+            if (storageMap.get(saved.getId()) == null) {
+                ProductStorage storage = getStorage(saved);
+                productStorageDao.save(storage);
+            }
+            else
+            {
+                productStorageDao.updateStorage(saved.getId(),saved.getName(),saved.getType(),saved.getSpecification(),saved.getUnit());
+            }
+        }
+        else
+        {
+            ProductStorage storage = getStorage(saved);
+            productStorageDao.save(storage);
+        }
         return productDto;
+    }
+
+    private ProductStorage getStorage(Product saved) {
+        ProductStorage storage = new ProductStorage();
+        storage.setCount(0);
+        storage.setProductId(saved.getId());
+        storage.setStoreCode(saved.getStoreCode());
+        storage.setProductName(saved.getName());
+        storage.setProductType(saved.getType());
+        storage.setProductSpecification(saved.getSpecification());
+        storage.setUnit(saved.getUnit());
+        return storage;
     }
 
 //    @Override
