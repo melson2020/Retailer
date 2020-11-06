@@ -109,7 +109,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["currentStorageCountTicket", "userInfo"]),
+    ...mapGetters([
+      "currentStorageCountTicket",
+      "userInfo",
+      "previewStorageList"
+    ]),
     spanArr() {
       let spanRowArr = [];
       let pos = 0;
@@ -245,12 +249,34 @@ export default {
           item.flag = -1;
         }
       });
-      console.log(this.countedList);
+    },
+    checkfileContent() {
+      var matched = this.previewStorageList.length === this.countedList.length;
+      if (matched) {
+        for (let index = 0; index < this.countedList.length; index++) {
+          let item = this.countedList[index];
+          var key = item.productId + "" + item.batchNo;
+          var exist = this.previewStorageList.filter(p => {
+            var batchNo=p.batchNo?p.batchNo:'';
+            var pKey = p.productId + "" + batchNo;
+            return pKey === key;
+          }).length;
+          if (exist <= 0) {
+            matched = false;
+            break;
+          }
+        }
+      }
+      return matched;
     },
     submitCountedList() {
       let file = this.$refs.upload.$children[0].fileList[0];
       if (!file) {
         this.$message.warning("请添加上传文件");
+        return;
+      }
+      if (!this.checkfileContent()) {
+        this.$message.warning("导入文件与盘点单不匹配");
         return;
       }
       if (

@@ -161,6 +161,7 @@ export default {
           if (res.resultStatus === 1) {
             if (updateList.length === this.updateBatchListShow.length) {
               this.SetTicketStatus(5);
+              this.currentStorageCountTicket.result='changed'
               this.UpdateCountTicket(this.currentStorageCountTicket)
                 .then(r => {
                   if (r.resultStatus == 1) {
