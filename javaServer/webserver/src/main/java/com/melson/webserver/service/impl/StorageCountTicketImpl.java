@@ -141,4 +141,9 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
             return result;
         }
     }
+
+    @Override
+    public List<StorageCountTicket> GetStorageCountRecord(Date startDate, Date endDate, String storeCode) {
+       return storageCountTicketDao.findByCreateTimeBetweenAndStoreCode(startDate,endDate,storeCode);
+    }
 }

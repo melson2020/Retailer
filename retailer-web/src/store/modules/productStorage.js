@@ -9,7 +9,8 @@ const state = {
     previewStorageList: [],
     activeStep: 0,
     currentStorageCountTicket: {},
-    updateBatchList: []
+    updateBatchList: [],
+    storageCountTickets: []
 };
 
 const actions = {
@@ -83,6 +84,17 @@ const actions = {
             Message.error(err.message ? err.message : err)
         })
     },
+    GetStorageCountTickets({ commit }, params) {
+        request.GetStorageCountRecord(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetStorageCountRec", res.data)
+            } else {
+                Message.error(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
+    },
     ExportCountTicket({ }, parmas) {
         return request.ExportCountTicket(parmas);
     },
@@ -110,8 +122,11 @@ const actions = {
     UpdateProductBatchList({ }, params) {
         return request.UpdateProductBatchList(params);
     },
-    UpdateCountTicket({}, params) {
-      return  request.UpdateCountTicket(params)
+    UpdateCountTicket({ }, params) {
+        return request.UpdateCountTicket(params)
+    },
+    DownLoadFile({},params){
+        return request.DownLoadFile(params)
     }
 };
 
@@ -121,7 +136,8 @@ const getters = {
     activeStep: state => state.activeStep,
     previewStorageList: state => state.previewStorageList,
     currentStorageCountTicket: state => state.currentStorageCountTicket,
-    updateBatchList: state => state.updateBatchList
+    updateBatchList: state => state.updateBatchList,
+    storageCountTickets:state=>state.storageCountTickets
 };
 
 const mutations = {
@@ -158,6 +174,9 @@ const mutations = {
     },
     SetTicketStatus(state, data) {
         state.currentStorageCountTicket.status = data;
+    },
+    SetStorageCountRec(state, data) {
+        state.storageCountTickets = data;
     }
 };
 

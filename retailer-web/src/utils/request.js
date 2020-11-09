@@ -157,6 +157,12 @@ export default {
   UpdateCountTicket(params){
     return service.post("/storage/updateCountTicket",params)
   },
+  GetStorageCountRecord(params){
+    return service.get("/storage/storageCountRecord",params)
+  },
+  DownLoadFile(params){
+    return service.exportExcel("/storage/downloadFile",params)
+  },
 
   /**
    * Storage In

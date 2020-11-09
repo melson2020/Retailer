@@ -7,6 +7,7 @@ import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageCountTicket;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,4 +21,5 @@ public interface IStorageCountTicket extends IService<StorageCountTicket> {
     StorageCountTicket FindByCode(String code);
     Result ExportExcel(List<ProductStorageDto> storageList, String basePath, StorageCountTicket ticket);
     Result ImportCountedExcel(String ticketCode, MultipartFile file,String basePtah);
+    List<StorageCountTicket> GetStorageCountRecord(Date startDate,Date endDate,String storeCode);
 }
