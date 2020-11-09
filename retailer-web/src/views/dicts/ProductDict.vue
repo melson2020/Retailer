@@ -383,6 +383,7 @@ export default {
         feature: "",
         categoryId: "",
         categoryName: "",
+        searchType:"normal"
       },
       listQuery: {
         page: 1,
@@ -402,7 +403,7 @@ export default {
         feature: "",
         categoryId: "",
         categoryName: "",
-
+        searchType:""
       },
       editTags: [],
       inputEditVisible: false,

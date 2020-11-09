@@ -62,6 +62,7 @@ public class StorageInTicketImpl extends AbstractService<StorageInTicket> implem
                 sqlMap.put(detail.getProductId(), detail.getCount());
             } else {
                 addCount += detail.getCount();
+                sqlMap.put(detail.getProductId(),addCount);
             }
         }
         List<String> sqls = new ArrayList<>(sqlMap.size());

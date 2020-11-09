@@ -58,6 +58,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
             storage.setProductType(p.getType());
             storage.setProductSpecification(p.getSpecification());
             storage.setUnit(p.getUnit());
+            storage.setSearchType(p.getSearchType());
             storageList.add(storage);
         }
         productStorageDao.saveAll(storageList);

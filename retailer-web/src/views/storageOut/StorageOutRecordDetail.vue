@@ -5,7 +5,7 @@
       <el-button type="text" @click="direct">返回</el-button>
     </div>
     <el-scrollbar  class="content-scrollbar scrollbar-height">
-      <el-table
+      <!-- <el-table
         :data="storageOutDetails.ticketDetails"
         style="width: 100%"
         border
@@ -14,6 +14,17 @@
           padding: '0px',
           background: '#C0C4CC',
           color: 'white'
+        }"
+      > -->
+      <el-table
+        :data="storageOutDetails.ticketDetails"
+        style="width: 100%"
+        border
+        :header-row-style="{ height: '40px' }"
+        :height="producttableHeight"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' 
         }"
       >
         <el-table-column prop="productName" label="商品名称"> </el-table-column>
@@ -46,11 +57,11 @@
         border
         show-summary
         :summary-method="getSummaries"
-        :header-row-style="{ height: '30px' }"
-        :header-cell-style="{
-          padding: '0px',
-          background: '#C0C4CC',
-          color: 'white'
+        :header-row-style="{ height: '40px' }"
+          :height="producttableHeight"
+          :row-style="{ height: '40px' }"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white' }">
         }"
       >
         <el-table-column prop="productName" label="商品名称"> </el-table-column>

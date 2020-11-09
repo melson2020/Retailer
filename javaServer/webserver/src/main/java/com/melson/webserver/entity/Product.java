@@ -21,6 +21,7 @@ public class Product {
     private String unit;
     private String feature;
     private String categoryName;
+    private String searchType;    //1,normall; 2,all
 
     public Integer getId() {
         return id;
@@ -92,5 +93,13 @@ public class Product {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
     }
 }

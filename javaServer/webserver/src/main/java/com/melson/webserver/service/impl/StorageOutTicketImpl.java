@@ -7,6 +7,7 @@ import com.melson.webserver.Vo.StorageOutTicketVo;
 import com.melson.webserver.dao.*;
 import com.melson.webserver.entity.*;
 import com.melson.webserver.service.IStorageOutTicket;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,6 +82,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
                 productMap.put(detail.getProductId(), detail.getOutCount());
             } else {
                 productCount += detail.getOutCount();
+                productMap.put(detail.getProductId(), productCount);
             }
         }
         List<ProductBatch> productBatchList = productBatchDao.findByBatchNoIn(batchMap.keySet());
@@ -130,11 +132,25 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         for (StorageOutBillDetail detail : billDetails) {
             BigDecimal count = new BigDecimal(detail.getOutCount());
             totalPriceIn = totalPriceIn.add(detail.getUnitPriceIn().multiply(count));
-            BigDecimal discountRate = (new BigDecimal(100).subtract(new BigDecimal(detail.getDiscount()))).divide(new BigDecimal(100));
+            BigDecimal discountRate;
+            if(detail.getDiscount()!=null) {
+                discountRate = (new BigDecimal(100).subtract(new BigDecimal(detail.getDiscount()))).divide(new BigDecimal(100));
+            }
+            else
+            {
+                discountRate=(new BigDecimal(100).subtract(new BigDecimal(0))).divide(new BigDecimal(100));
+            }
             BigDecimal singleCost = detail.getUnitPriceIn().multiply(discountRate);
             cost = cost.add(singleCost.multiply(count));
             totalPriceOut = totalPriceOut.add(detail.getUnitPriceOut().multiply(count));
-            BigDecimal taxRateValue = (new BigDecimal(100).subtract(new BigDecimal(detail.getTaxRateOut()))).divide(new BigDecimal(100));
+            BigDecimal taxRateValue;
+            if(!StringUtils.isNullOrEmpty(detail.getTaxRateOut())) {
+                taxRateValue = (new BigDecimal(100).subtract(new BigDecimal(detail.getTaxRateOut()))).divide(new BigDecimal(100));
+            }
+            else
+            {
+                taxRateValue = (new BigDecimal(100).subtract(new BigDecimal(0))).divide(new BigDecimal(100));
+            }
             BigDecimal singleSale = detail.getUnitPriceOut().multiply(taxRateValue);
             sales = sales.add(count.multiply(singleSale));
             profit = profit.add(detail.getProfit());
