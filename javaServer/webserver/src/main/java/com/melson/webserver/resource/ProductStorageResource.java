@@ -51,18 +51,19 @@ public class ProductStorageResource extends BaseResource {
     }
 
     @RequestMapping(value = "/storageAndProductCount")
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result GetStrogaeInfo(HttpServletRequest request) {
         String storeCode = request.getParameter("storeCode");
         if (StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
         Result result = new Result();
         StorageAndProductCountVo vo = productStorageService.GetProductAndStorageCount(storeCode);
         result.setData(vo);
+        System.out.println("Rest Call: /storage/storageAndProductCount ...");
         return result;
     }
 
     @RequestMapping(value = "/generateStorage")
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result GenerateStorage(HttpServletRequest request) {
         String storeCode = request.getParameter("storeCode");
         if (StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
@@ -74,11 +75,12 @@ public class ProductStorageResource extends BaseResource {
             result.setResultStatus(-1);
             result.setMessage("Generate failed");
         }
+        System.out.println("Rest Call: /storage/generateStorage ...");
         return result;
     }
 
     @RequestMapping(value = "/storageList")
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result GetStorageList(HttpServletRequest request) {
         String storeCode = request.getParameter("storeCode");
         String searchType = request.getParameter("searchType");
@@ -87,6 +89,7 @@ public class ProductStorageResource extends BaseResource {
         Result result = new Result();
         List<ProductStorage> list = productStorageService.FindStorageListWithType(storeCode, searchType);
         result.setData(list);
+        System.out.println("Rest Call: /storage/storageList ...");
         return result;
     }
 
@@ -100,11 +103,12 @@ public class ProductStorageResource extends BaseResource {
         Result result = new Result();
         List<ProductStorageDto> list = productStorageService.FindWithProductType(storeCode, searchType);
         result.setData(list);
+        System.out.println("Rest Call: /storage/storageCountList ...");
         return result;
     }
 
     @RequestMapping(value = "/storageDetail")
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result GetStorageDetail(HttpServletRequest request) {
         String storeCode = request.getParameter("storeCode");
         String productId = request.getParameter("productId");
@@ -114,6 +118,7 @@ public class ProductStorageResource extends BaseResource {
         Result result = new Result();
         List<ProductBatch> list = productStorageService.FindBatchList(storeCode, pid);
         result.setData(list);
+        System.out.println("Rest Call: /storage/storageDetail ...");
         return result;
     }
 
@@ -127,6 +132,7 @@ public class ProductStorageResource extends BaseResource {
         Result result = new Result();
         List<ProductBatch> list = productBatchService.FindBatchListForUpdate(storeCode,ticketCode);
         result.setData(list);
+        System.out.println("Rest Call: /storage/needToUpdateBatchList ...");
         return result;
     }
 
@@ -140,6 +146,7 @@ public class ProductStorageResource extends BaseResource {
           result.setResultStatus(-1);
           result.setMessage("update failed");
       }
+      System.out.println("Rest Call: /storage/updateBatchList ...");
       return result;
     }
 
@@ -155,6 +162,7 @@ public class ProductStorageResource extends BaseResource {
         }else {
             result.setData(ticket);
         }
+        System.out.println("Rest Call: /storage/updateCountTicket ...");
         return result;
     }
 
@@ -169,6 +177,7 @@ public class ProductStorageResource extends BaseResource {
             result.setResultStatus(-1);
             result.setMessage("create ticket fail");
         }
+        System.out.println("Rest Call: /storage/createCountTicket ...");
         return result;
     }
 
@@ -178,6 +187,7 @@ public class ProductStorageResource extends BaseResource {
         String basePath = sysConfigService.FindValueFromCache("storageCountTicketExcelBasePath");
         List<ProductStorageDto> storageCountList = productStorageService.FindWithProductType(tikcet.getStoreCode(), tikcet.getProductType());
         Result result = storageCountTicketService.ExportExcel(storageCountList, basePath, tikcet);
+        System.out.println("Rest Call: /storage/exportStorageCountDetail ...");
         return result;
     }
 
@@ -207,6 +217,7 @@ public class ProductStorageResource extends BaseResource {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
     }
 
     @RequestMapping(value = "/downloadFile", method = RequestMethod.POST)
@@ -290,6 +301,7 @@ public class ProductStorageResource extends BaseResource {
           result.setResultStatus(-1);
           result.setMessage("date parse false, wrong date formate");
         }
+        System.out.println("Rest Call: /storage/storageCountRecord ...");
         return result;
     }
 }

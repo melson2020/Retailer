@@ -1,0 +1,207 @@
+<template>
+  <div>
+    <div class="OutboundDelivery-content-header">
+      <div>
+        <span class="OutboundDelivery-title-name">出库核算</span>
+      </div>
+      <div>
+        <span class="message-info">*时间跨度最多30天</span>
+        <el-date-picker
+          v-model="date"
+          class="date-picker"
+          type="daterange"
+          align="right"
+          size="small" 
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+          :default-value="timeDefaultShow"
+          format="yyyy 年 MM 月 dd 日"
+          :picker-options="pickerOptions"
+          @focus="focusOn"
+        ></el-date-picker>
+        <el-button
+          :disabled="date ? false : true"
+          type="primary"
+          size="small" 
+          icon="el-icon-search"
+          @click="searchOnClick"
+          >查询</el-button
+        >
+      </div>
+    </div>
+
+    <div  class="OutboundDelivery-content">
+        <el-table
+          :data="storageOutDetails.billDetails"
+          border
+          size="small"
+          show-summary
+          :summary-method="getSummaries"
+          :header-row-style="{ height: '40px' }"
+            :height="producttableHeight"
+            :row-style="{ height: '40px' }"
+            :cell-style="{ padding: '2px', color: '#909399' }"
+            :header-cell-style="{ background: '#808080', color: 'white' }">
+          }"
+        >
+          <el-table-column prop="productName" label="商品名称"> </el-table-column>
+          <el-table-column prop="batchNo" label="入库批次号"></el-table-column>
+          <el-table-column label="入库税">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.vatIn == 1" size="mini">
+                税 ({{ scope.row.taxRateIn }}%)
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unitPriceIn" label="入库单价"> </el-table-column>
+          <el-table-column prop="discount" label="入库回点"> </el-table-column>
+          <el-table-column prop="unitPriceOut" label="出库单价">
+          </el-table-column>
+          <el-table-column label="出库税">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.vatOut == 1" size="mini">
+                税 ({{ scope.row.taxRateOut }}%)
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="出库数量">
+            <template slot-scope="scope">
+              {{ scope.row.outCount }}{{ scope.row.countUnit }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="profit" label="总利润">
+            <template slot-scope="scope">
+              <span class="color-orange"> {{ scope.row.profit }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+    </div>
+  </div>
+</template>
+<script>
+import { mapGetters } from "vuex";
+export default {
+  data() {
+    return {
+      date: "",
+      timeDefaultShow: "",
+      startDateMin: null,
+      pickerOptions: {
+        onPick: obj => {
+          this.startDateMin = new Date(obj.minDate).getTime();
+        },
+        disabledDate: time => {
+          if (this.startDateMin) {
+            let maxDate = this.startDateMin + 3600 * 1000 * 24 * 31;
+            let minDate = this.startDateMin - 3600 * 1000 * 24 * 31;
+            return (
+              time.getTime() > maxDate ||
+              time.getTime() > Date.now() ||
+              time.getTime() < minDate
+            );
+          } else {
+            return time.getTime() > Date.now();
+          }
+        },
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三天",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      }
+    };
+  },
+  methods: {
+    getSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "总价";
+          return;
+        }
+        if (column.property == "profit") {
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return this.NumberAdd(prev, curr).toFixed(2);
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = "N/A";
+          }
+        }
+      });
+      return sums;
+    },
+    searchOnClick() {
+      let params = {
+        storeCode: this.userInfo.storeCode,
+        startDate: this.date[0],
+        endDate: this.date[1]
+      };
+      console.log(params);
+      // this.GetStorageOutRecordList(params);
+    },
+    focusOn() {
+      this.startDateMin = null;
+    },
+  },
+  computed: {
+    ...mapGetters(["userInfo", "storageOutDetails"])
+  }
+};
+</script>
+<style>
+.color-orange {
+  color: orange;
+  font-weight: bold;
+}
+.OutboundDelivery-content-header {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.OutboundDelivery-title-name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+}
+.OutboundDelivery-content{
+  margin-top: 5px;
+}
+.content-scrollbar /deep/.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+</style>

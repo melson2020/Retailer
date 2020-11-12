@@ -41,7 +41,7 @@ public class EmployeeResource extends BaseResource {
     }
 
     @RequestMapping(value = "/employeeList")
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Admin)
     public Result GetEmployeeList(HttpServletRequest request){
         String storeCode=request.getParameter("storeCode");
         if(StringUtils.isEmpty(storeCode)){
@@ -50,11 +50,12 @@ public class EmployeeResource extends BaseResource {
         List<StoreEmployee> employeeList=employeeService.findByStoreCode(storeCode);
         Result result=new Result();
         result.setData(employeeList);
+        System.out.println("Rest Call: /employee/employeeList ...");
         return result;
     }
 
     @RequestMapping(value = "/createEmployee",method = RequestMethod.POST)
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Admin)
     public Result CreateEmployee(@RequestBody StoreEmployee employee){
         Result result=new Result();
         StoreEmployee saved=employeeService.CreateEmployee(employee);
@@ -64,6 +65,9 @@ public class EmployeeResource extends BaseResource {
         }else {
             result.setData(saved);
         }
+        Map<String, StoreEmployee> map = cacheUtil.GetObjectValue(CacheKey.StoreEmployee, Map.class);
+        map.put(saved.getUserId(),saved);
+        System.out.println("Rest Call: /employee/createEmployee ...");
         return result;
     }
 
@@ -75,20 +79,22 @@ public class EmployeeResource extends BaseResource {
         StoreEmployee exist=employeeService.findByLoginName(loginName);
         Result result=new Result();
         result.setData(exist==null);
+        System.out.println("Rest Call: /employee/checkLoginName ...");
         return result;
     }
 
     @RequestMapping(value = "/permissionList",method = RequestMethod.GET)
-    @RequiredPermission(SecurityLevel.Employee)
+    @RequiredPermission(SecurityLevel.Admin)
     public Result GetPermissionList(HttpServletRequest request){
         Result result=new Result();
         List<Permission> permissionList=permissionService.findAll();
         result.setData(permissionList);
+        System.out.println("Rest Call: /employee/permissionList ...");
         return result;
     }
 
     @RequestMapping(value = "/updateEmployee",method = RequestMethod.POST)
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Admin)
     public Result UpdateEmployee(@RequestBody StoreEmployee storeEmployee,HttpServletRequest request){
          if(StringUtils.isEmpty(storeEmployee.getUserId())|| storeEmployee.getPermission()==null||storeEmployee.getGender()==null|| StringUtils.isEmpty(storeEmployee.getPhone())
                  || StringUtils.isEmpty(storeEmployee.getUserName())){
@@ -102,6 +108,7 @@ public class EmployeeResource extends BaseResource {
              Map<String, StoreEmployee> map = cacheUtil.GetObjectValue(CacheKey.StoreEmployee, Map.class);
              StoreEmployee emp=map.get(storeEmployee.getUserId());
              emp.setPermission(storeEmployee.getPermission());
+//             map.put(storeEmployee.getUserId(),storeEmployee);
          }
          else
          {
@@ -109,11 +116,12 @@ public class EmployeeResource extends BaseResource {
          }
 //         result.setResultStatus(savedCount>0?1:-1);
          result.setData(savedCount);
+         System.out.println("Rest Call: /employee/updateEmployee ...");
          return result;
     }
 
     @RequestMapping(value = "/deleteEmployee",method = RequestMethod.POST)
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Admin)
     public Result DeleteEmployee(@RequestBody StoreEmployee storeEmployee,HttpServletRequest request){
         if(StringUtils.isEmpty(storeEmployee.getUserId())){
             return GenerateResult(ResultType.ParametersNeeded);
@@ -131,6 +139,7 @@ public class EmployeeResource extends BaseResource {
         }
 //        result.setResultStatus(deleteCount>0?1:-1);
         result.setData(deleteCount);
+        System.out.println("Rest Call: /employee/deleteEmployee ...");
         return result;
     }
 
@@ -143,6 +152,7 @@ public class EmployeeResource extends BaseResource {
             result.setResultStatus(-1);
             result.setMessage("reset count: 0");
         }
+        System.out.println("Rest Call: /employee/restPassword ...");
         return result;
     }
 

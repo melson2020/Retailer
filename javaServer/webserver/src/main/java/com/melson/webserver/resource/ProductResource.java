@@ -75,7 +75,7 @@ public class ProductResource extends BaseResource {
     }
 
     @RequestMapping(value = "/importProductList",method = RequestMethod.POST)
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result ImportProductList(@RequestBody ProductImportDto dto, HttpServletRequest request){
         Result result=new Result();
         boolean saved=productService.SaveImportedList(dto);
@@ -84,7 +84,7 @@ public class ProductResource extends BaseResource {
     }
 
     @RequestMapping(value = "/importProductListNew",method = RequestMethod.POST)
-    @RequiredPermission(SecurityLevel.Manager)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result importProductListNew(@RequestBody ProductImportDto dto, HttpServletRequest request){
         Result result=new Result();
         boolean saved=productService.SaveImportedListNew(dto);

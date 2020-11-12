@@ -223,6 +223,7 @@ export default {
         userId: ""
       },
       editEmployee: {
+        id:"",
         userId: "",
         userName: "",
         phone: "",
@@ -333,6 +334,7 @@ export default {
     handleEdit(index, row) {
       this.editFormVisible = true;
       let employee = {
+        id:row.id,
         userId: row.userId,
         userName: row.userName,
         phone: row.phone,
