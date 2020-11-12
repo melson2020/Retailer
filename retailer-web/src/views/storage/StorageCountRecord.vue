@@ -86,9 +86,11 @@
           width="200px"
         >
           <template slot-scope="scope">
-            <el-link type="primary" @click="downLoadOnClick(scope.row)">{{
-              scope.row.excelExportFileName
-            }}</el-link>
+            <el-link
+              type="primary"
+              @click="downLoadOnClick(scope.row, 'exprot')"
+              >{{ scope.row.excelExportFileName }}</el-link
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -97,17 +99,63 @@
           width="200px"
         >
           <template slot-scope="scope">
-            <el-link type="primary" @click="downLoadOnClick(scope.row)">{{
-              scope.row.excelImportFileName
-            }}</el-link>
+            <el-link
+              type="primary"
+              @click="downLoadOnClick(scope.row, 'import')"
+              >{{ scope.row.excelImportFileName }}</el-link
+            >
           </template></el-table-column
         >
+        <el-table-column label="操作" width="150px">
+          <template slot-scope="scope">
+            <el-button
+              v-if="scope.row.status == 5"
+              type="primary"
+              icon="el-icon-tickets"
+              plain
+              size="mini"
+              @click="detailOnClick(scope.row.code)"
+              >详细</el-button
+            >
+            <el-button
+              v-else
+              type="warning"
+              icon="el-icon-link"
+              plain
+              size="mini"
+              @click="loadTicketOnClick(scope.row)"
+              >加载</el-button
+            >
+          </template>
+        </el-table-column>
         <el-table-column
           prop="description"
           label="描述"
           width="auto"
         ></el-table-column>
       </el-table>
+      <el-dialog title="盘点详细(变动项)" :visible.sync="dialogTableVisible">
+        <el-table :data="countTicketDetails">
+          <el-table-column
+            property="productName"
+            label="商品名称"
+          ></el-table-column>
+          <el-table-column property="batchNo" label="批次号"></el-table-column>
+          <el-table-column property="totalCountChange" label="只修改总数">
+            <template slot-scope="scope">
+              <span v-if="scope.row.totalCountChange == 1" class="yellow">是</span>
+              <span v-else class="green">否</span>
+            </template>
+          </el-table-column>
+          <el-table-column property="type" label="+/-">
+            <template slot-scope="scope">
+             <i v-if="scope.row.type=='plus'" class="el-icon-plus"></i>
+             <i v-else class="el-icon-minus"></i>
+            </template>
+          </el-table-column>
+          <el-table-column property="count" label="数量"></el-table-column>
+        </el-table>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -120,6 +168,8 @@ export default {
       date: "",
       timeDefaultShow: "",
       startDateMin: null,
+      countTicketDetails: [],
+      dialogTableVisible: false,
       pickerOptions: {
         onPick: obj => {
           this.startDateMin = new Date(obj.minDate).getTime();
@@ -185,7 +235,9 @@ export default {
   methods: {
     ...mapActions({
       GetStorageCountTickets: "GetStorageCountTickets",
-      DownLoadFile: "DownLoadFile"
+      DownLoadFile: "DownLoadFile",
+      GetStorageCountTiketDetails: "GetStorageCountTiketDetails",
+      SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
     }),
     focusOn() {
       this.startDateMin = null;
@@ -198,12 +250,14 @@ export default {
       };
       this.GetStorageCountTickets(params);
     },
-    downLoadOnClick(row) {
-      let params = { path: row.excelExportPath };
+    downLoadOnClick(row, type) {
+      let fileName =
+        type === "exprot" ? row.excelExportFileName : row.excelImportFileName;
+      let path = type === "exprot" ? row.excelExportPath : row.excelImportPath;
+      let params = { path: path };
       this.DownLoadFile(params)
         .then(response => {
           let blob = new Blob([response]);
-          let fileName = row.excelExportFileName;
           if (window.navigator.msSaveOrOpenBlob) {
             navigator.msSaveBlob(blob, fileName);
           } else {
@@ -218,6 +272,25 @@ export default {
         .catch(error => {
           this.$message.error(error.message ? error.message : error);
         });
+    },
+    detailOnClick(value) {
+      let params = { ticketCode: value };
+      this.GetStorageCountTiketDetails(params)
+        .then(res => {
+          if (res.resultStatus == 1) {
+            this.countTicketDetails = res.data;
+            this.dialogTableVisible = true;
+          } else {
+            this.$message.error(res.message);
+          }
+        })
+        .catch(err => {
+          this.$message.error(err.message);
+        });
+    },
+    loadTicketOnClick(ticket){
+      this.SetCurrentStorageCountTicket(ticket)
+      this.$router.push({ path: "/main/storageCount" });
     }
   },
   beforeMount: function() {

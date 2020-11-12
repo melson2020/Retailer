@@ -12,6 +12,7 @@ import com.melson.webserver.dto.ProductStorageDto;
 import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageCountTicket;
+import com.melson.webserver.entity.StorageCountTicketDetail;
 import com.melson.webserver.service.*;
 import com.melson.webserver.utils.PoiUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -290,6 +291,17 @@ public class ProductStorageResource extends BaseResource {
           result.setResultStatus(-1);
           result.setMessage("date parse false, wrong date formate");
         }
+        return result;
+    }
+
+    @RequestMapping(value = "/countTicketDetail",method = RequestMethod.GET)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result GetStorageCountTicketDetail(HttpServletRequest request){
+        String ticketCode=request.getParameter("ticketCode");
+        if(StringUtils.isEmpty(ticketCode))return  this.GenerateResult(ResultType.ParametersNeeded);
+        Result result=new Result();
+        List<StorageCountTicketDetail> detailList=storageCountTicketDetailService.FindCountTicketDetails(ticketCode);
+        result.setData(detailList);
         return result;
     }
 }

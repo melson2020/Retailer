@@ -15,4 +15,5 @@ import java.util.List;
  */
 public interface IStorageCountTicketDetail extends IService<StorageCountTicketDetail> {
     Result SaveDetailWithCountedList(List<ProductStorageDto> dtoList, StorageCountTicket ticket);
+    List<StorageCountTicketDetail> FindCountTicketDetails(String ticketCode);
 }

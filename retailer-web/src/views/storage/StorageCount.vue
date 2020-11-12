@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div  class="step-box">
+    <div class="step-box">
       <el-steps :active="activeStep" finish-status="success">
         <el-step title="创建"></el-step>
         <el-step title="预览"></el-step>
@@ -21,25 +21,39 @@ import { mapActions } from "vuex";
 
 export default {
   data() {
-    return {
-     
-    };
+    return {};
   },
   computed: {
-    ...mapGetters(["activeStep"])
+    ...mapGetters(["activeStep", "currentStorageCountTicket"]),
   },
   methods: {
     ...mapActions({
       SetActiveSteps: "SetActiveSteps",
-      SetStorageCountTicket:"SetStorageCountTicket"
     }),
   },
-  beforeMount: function() {
-    let path=this.$route.path;
-    if(path==='/main/storageCount'){
-       this.$router.push({ path: "/main/storageCount/create" });
+  beforeMount: function () {
+    // let path=this.$route.path;
+    // if(path==='/main/storageCount'){
+    //    this.$router.push({ path: "/main/storageCount/create" });
+    // }
+    if (this.currentStorageCountTicket.status) {
+      let status = this.currentStorageCountTicket.status;
+      switch (status) {
+        case 1:this.$router.push({ path: "/main/storageCount/preview" });
+          break;
+        case 2:this.$router.push({ path: "/main/storageCount/import" });
+          break;
+        case 3:this.$router.push({ path: "/main/storageCount/import" });
+          break;
+        case 4:this.$router.push({ path: "/main/storageCount/updateBatch" });
+          break;
+        case 5:this.$router.push({ path: "/main/storageCount/complete" });
+          break;
+        default:this.$router.push({ path: "/main/storageCount/create" });
+          break;
+      }
     }
-  }
+  },
 };
 </script>
 <style>
@@ -69,7 +83,7 @@ export default {
   padding: 20px;
   text-align: left;
 }
-.step-container{
+.step-container {
   padding: 50px 0px;
 }
 </style>
