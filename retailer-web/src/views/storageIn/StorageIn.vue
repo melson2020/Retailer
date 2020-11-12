@@ -424,6 +424,7 @@ export default {
           this.SaveTicket(this.storageInTicket)
             .then(res => {
               if (res.resultStatus == 1) {
+                this.showTicket = !this.showTicket;
                 this.$message.success("保存成功");
                 this.$refs["ticketForm"].resetFields();
                 this.clearAddItem();

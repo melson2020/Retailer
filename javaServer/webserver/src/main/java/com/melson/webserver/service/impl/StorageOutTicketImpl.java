@@ -66,14 +66,17 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         return saveTicket != null & saveDetailList != null & saveBill != null & billDetails != null & success;
     }
 
+
     //更新总库存和批次库存
     private boolean UpdateStorage(List<StorageOutDetail> outDetails) {
         Map<String, Integer> batchMap = new HashMap<>();
         Map<Integer, Integer> productMap = new HashMap<>();
+        Set<String> batchNos=new HashSet<>();
         for (StorageOutDetail detail : outDetails) {
+            batchNos.add(detail.getStorageInBatchNo());
             Integer batchCount = batchMap.get(detail.getStorageInBatchNo());
             if (batchCount == null) {
-                batchMap.put(detail.getStorageInBatchNo(), detail.getOutCount());
+                batchMap.put(detail.getStorageInBatchNo()+detail.getSupplyId()+detail.getProductId()+detail.getStoreCode(), detail.getOutCount());
             } else {
                 batchCount += detail.getOutCount();
             }
@@ -85,10 +88,10 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
                 productMap.put(detail.getProductId(), productCount);
             }
         }
-        List<ProductBatch> productBatchList = productBatchDao.findByBatchNoIn(batchMap.keySet());
+        List<ProductBatch> productBatchList = productBatchDao.findByBatchNoIn(batchNos);
         List<ProductStorage> productStorageList = productStorageDao.findByProductIdIn(productMap.keySet());
         for (ProductBatch batch : productBatchList) {
-            Integer mins = batchMap.get(batch.getBatchNo());
+            Integer mins = batchMap.get(batch.getBatchNo()+batch.getSupplyId()+batch.getProductId()+batch.getStoreCode());
             if (mins != null) {
                 batch.setCount(batch.getCount() - mins);
                 if (batch.getCount() <= 0) {

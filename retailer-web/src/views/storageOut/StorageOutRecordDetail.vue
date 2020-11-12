@@ -20,6 +20,7 @@
         :data="storageOutDetails.ticketDetails"
         style="width: 100%"
         border
+        size="small"
         :header-row-style="{ height: '40px' }"
         :height="producttableHeight"
         :row-style="{ height: '40px' }"
@@ -55,6 +56,7 @@
       <el-table
         :data="storageOutDetails.billDetails"
         border
+        size="small"
         show-summary
         :summary-method="getSummaries"
         :header-row-style="{ height: '40px' }"

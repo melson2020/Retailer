@@ -41,18 +41,22 @@ public class SupplyResource extends BaseResource {
         List<Supply> supplies = supplyService.findSupplyByStoreCode(storeCode);
         Result result=new Result();
         result.setData(supplies);
+        System.out.println("Rest Call: /supply/list ...");
         return  result;
     }
 
     @RequestMapping(value = "/all",method = RequestMethod.GET)
+    @RequiredPermission(SecurityLevel.Employee)
     public Result GetSupplyListAll(HttpServletRequest request){
         Result result=new Result();
         List<Supply> supplies = supplyService.findAll();
         result.setData(supplies);
+        System.out.println("Rest Call: /supply/all ...");
         return  result;
     }
 
     @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
     public Result CreateSupply(@RequestBody Supply supply){
         Result result=new Result();
         Supply saved=supplyService.SaveSupply(supply);
@@ -62,23 +66,28 @@ public class SupplyResource extends BaseResource {
         }else {
             result.setData(saved);
         }
+        System.out.println("Rest Call: /supply/save ...");
         return result;
     }
 
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
     public Result DeleteSupply(@RequestBody Supply supply){
         Result result=new Result();
         Integer deleteCount=supplyService.DeleteSupply(supply);
         result.setResultStatus(deleteCount>0?1:-1);
         result.setData(deleteCount);
+        System.out.println("Rest Call: /supply/delete ...");
         return result;
     }
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
     public Result QuerySupply(@RequestBody Supply supply){
         Supply sup=supplyService.Query(supply);
         Result result=new Result();
         result.setData(sup);
+        System.out.println("Rest Call: /supply/query ...");
         return result;
     }
 

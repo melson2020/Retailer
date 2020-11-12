@@ -22,6 +22,7 @@ const StorageInRecord=()=>import("../views/storageIn/StorageInRecord.vue")
 const StorageOut=()=>import("../views/storageOut/StorageOut.vue")
 const StorageOutRecord=()=>import("../views/storageOut/StorageOutRecord.vue")
 const StorageOutRecordDetail=()=>import("../views/storageOut/StorageOutRecordDetail.vue")
+const OutboundDelivery=()=>import("../views/report/OutboundDelivery.vue")
 
 Vue.use(VueRouter);
 
@@ -163,6 +164,11 @@ const routes = [
         path:"storageOutRecord/detail",
         name:"storageOutRecordDetail",
         component:StorageOutRecordDetail,
+      },
+      {
+        path:"OutboundDelivery",
+        name:"OutboundDelivery",
+        component:OutboundDelivery,
       },
       {
         path: "/",

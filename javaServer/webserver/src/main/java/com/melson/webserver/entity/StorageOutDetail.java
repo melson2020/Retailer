@@ -25,6 +25,8 @@ public class StorageOutDetail {
     private String storeCode;
     private String outTicketCode;
     private BigDecimal totalPrice;
+    private Integer supplyId;
+    private String supplyName;
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
@@ -120,6 +122,22 @@ public class StorageOutDetail {
 
     public void setCountUnit(String countUnit) {
         this.countUnit = countUnit;
+    }
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
+    }
+
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
     }
 }
 

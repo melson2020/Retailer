@@ -517,6 +517,7 @@ export default {
       return profit.toFixed(2);
     },
     addOutDetails() {
+      console.log(this.selectPid);
       if (!this.validateOutDetails()) return;
       let pName = this.productList.filter(p => {
         return p.id == this.selectPid;
@@ -624,6 +625,7 @@ export default {
             .then(res => {
               console.log(res)
               if (res.resultStatus == 1) {
+                this.showTicket = !this.showTicket;
                 this.$message.success("保存成功");
                 this.clearOutTicket();
                 this.showTicket = false;

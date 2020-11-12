@@ -31,6 +31,7 @@ public class StorageOutBillDetail {
     private BigDecimal profit;
     private String countUnit;
 
+
     public String getCountUnit() {
         return countUnit;
     }
@@ -166,4 +167,5 @@ public class StorageOutBillDetail {
     public void setProfit(BigDecimal profit) {
         this.profit = profit;
     }
+
 }

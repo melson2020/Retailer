@@ -74,6 +74,7 @@ public class PublicResource extends BaseResource {
         Result result=new Result();
         List<TaxRate> taxRateList=taxRateService.FindTaxRateList();
         result.setData(taxRateList);
+        System.out.println("GET Rest Call: /public/taxRate ...");
         return  result;
     }
 }

@@ -17,9 +17,11 @@
         border
         :data="previewStorageList"
         ref="storagePreviewTable"
-        :cell-style="{ color: '#909399' }"
-        class="storage-table"
-        :header-cell-style="{ background: '#606266', color: 'white' }"
+        size="small"
+        :header-row-style="{height:'40px'}"
+          :row-style="{height:'40px'}"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white'}"
         :span-method="objectSpanMethod"
       >
         <el-table-column

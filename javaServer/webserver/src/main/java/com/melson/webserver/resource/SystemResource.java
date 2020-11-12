@@ -56,7 +56,7 @@ public class SystemResource extends BaseResource {
         boolean successed = storeService.RegisterStore(store, storeDto.getPassword());
         int res = successed ? 1 : 2;
         result.setResultStatus(res);
-        System.out.println("POST Rest Call: /public/registerStore ...");
+        System.out.println("Rest Call: /public/registerStore ...");
         return result;
     }
 
@@ -98,6 +98,7 @@ public class SystemResource extends BaseResource {
             loginLogsService.Records(employee);
         }
         result.setData(exist);
+        System.out.println("Rest Call: /system/login ...");
         return result;
     }
 }

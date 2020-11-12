@@ -41,6 +41,7 @@ public class StorageOutResource extends BaseResource {
             result.setResultStatus(-1);
             result.setMessage("save failure");
         }
+        System.out.println("Rest Call: /storageOut/saveOutTicket ...");
         return result;
     }
 
@@ -54,6 +55,7 @@ public class StorageOutResource extends BaseResource {
         List<StorageOutRecordVo> voList=outTicketService.FindRecordList(storeCode,startDate,endDate);
         Result result=new Result();
         result.setData(voList);
+        System.out.println("Rest Call: /storageOut/ticketRecord ...");
         return result;
     }
 
@@ -66,6 +68,7 @@ public class StorageOutResource extends BaseResource {
         StorageOutTicketDetailVo vo=outTicketService.FindRecordDetail(ticketCode,billCode);
         Result result=new Result();
         result.setData(vo);
+        System.out.println("Rest Call: /storageOut/recordDetail ...");
         return result;
     }
 
