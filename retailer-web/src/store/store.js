@@ -13,6 +13,11 @@ import storageOut from "./modules/storageOut"
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  mutations: {
+    resetAllState (state, payload) {
+     Object.assign(state,payload)
+    }
+  },
   modules: {
     login,
     employee,
@@ -22,5 +27,5 @@ export default new Vuex.Store({
     storage,
     storageIn,
     storageOut
-  }
+  },
 });

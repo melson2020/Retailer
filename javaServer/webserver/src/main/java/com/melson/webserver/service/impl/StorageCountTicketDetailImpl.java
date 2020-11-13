@@ -2,7 +2,6 @@ package com.melson.webserver.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.base.Result;
-import com.melson.webserver.dao.IProductBatchDao;
 import com.melson.webserver.dao.IProductStorageDao;
 import com.melson.webserver.dao.IStorageCountTicketDetailDao;
 import com.melson.webserver.dto.ProductStorageDto;
@@ -11,12 +10,10 @@ import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageCountTicket;
 import com.melson.webserver.entity.StorageCountTicketDetail;
 import com.melson.webserver.service.IProductBatch;
-import com.melson.webserver.service.IProductStorage;
 import com.melson.webserver.service.IStorageCountTicket;
 import com.melson.webserver.service.IStorageCountTicketDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -179,7 +176,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
                 }
             }
             if (onlyChangedTotal) {
-                //只有总数变化时 值生成一条记录
+                //只有总数变化时 生成一条记录
                 StorageCountTicketDetail detail = CreateOnlyTotalChangedDeatil(dtoList.get(0), ticket, detailMap.get(productId));
                 saveDetails.add(detail);
             } else {
