@@ -517,7 +517,6 @@ export default {
       return profit.toFixed(2);
     },
     addOutDetails() {
-      console.log(this.selectPid);
       if (!this.validateOutDetails()) return;
       let pName = this.productList.filter(p => {
         return p.id == this.selectPid;
@@ -565,10 +564,11 @@ export default {
      * 添加批次数据至出库详细，校验是否重复
      */
     addToDetailCheck(value) {
-      let vKey = value.batchNo + value.taxRate + value.outPrice;
+      let vKey = value.storageInBatchNo + value.taxRate + value.outPrice+value.supplyId;
       let existProduct = this.storageOutTicket.details.filter(p => {
-        let key = p.batchNo + p.taxRate + p.outPrice;
+        let key = p.storageInBatchNo + p.taxRate + p.outPrice+p.supplyId;
         return vKey == key;
+       
       })[0];
       if (existProduct) {
         existProduct.outCount = this.NumberAdd(
