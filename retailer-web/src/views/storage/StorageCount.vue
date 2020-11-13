@@ -39,17 +39,28 @@ export default {
     if (this.currentStorageCountTicket.status) {
       let status = this.currentStorageCountTicket.status;
       switch (status) {
-        case 1:this.$router.push({ path: "/main/storageCount/preview" });
+        case 1:
+          this.$router.push({ path: "/main/storageCount/preview" });
+          this.SetActiveSteps(2);
           break;
-        case 2:this.$router.push({ path: "/main/storageCount/import" });
+        case 2:
+          this.$router.push({ path: "/main/storageCount/import" });
+          this.SetActiveSteps(3);
           break;
-        case 3:this.$router.push({ path: "/main/storageCount/import" });
+        case 3:
+          this.$router.push({ path: "/main/storageCount/import" });
+          this.SetActiveSteps(3);
           break;
-        case 4:this.$router.push({ path: "/main/storageCount/updateBatch" });
+        case 4:
+          this.$router.push({ path: "/main/storageCount/updateBatch" });
+          this.SetActiveSteps(4);
           break;
-        case 5:this.$router.push({ path: "/main/storageCount/complete" });
+        case 5:
+          this.$router.push({ path: "/main/storageCount/complete" });
+          this.SetActiveSteps(5);
           break;
-        default:this.$router.push({ path: "/main/storageCount/create" });
+        default:
+          this.$router.push({ path: "/main/storageCount/create" });
           break;
       }
     }

@@ -9,6 +9,9 @@ const actions = {
     // LoadingShow({ commit }) {
     //     commit("UpdateEmployee");
     // }
+    ReSetAllStates({commit},payload){
+       commit("resetAllState",payload)
+    }
 };
 
 const getters = {

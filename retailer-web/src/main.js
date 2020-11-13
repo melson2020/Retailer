@@ -150,6 +150,9 @@ Vue.use(Step);
 Vue.use(Steps);
 Vue.use(Switch);
 
+localStorage.setItem("initState", JSON.stringify(store.state));
+console.log('main.js')
+
 new Vue({
   router,
   store,

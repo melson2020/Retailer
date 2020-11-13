@@ -316,4 +316,5 @@ public class ProductStorageResource extends BaseResource {
         result.setData(detailList);
         return result;
     }
+    
 }

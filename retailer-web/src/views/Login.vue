@@ -5,15 +5,32 @@
         <span class="login-title">欢迎登陆</span>
       </div>
       <div class="login-card-content">
-        <el-form ref="loginForm" label-width="80px" :model="loginUser" :rules="rules">
+        <el-form
+          ref="loginForm"
+          label-width="80px"
+          :model="loginUser"
+          :rules="rules"
+        >
           <el-form-item label="用户名称" prop="loginName">
-            <el-input placeholder="注册手机号" v-model="loginUser.loginName"></el-input>
+            <el-input
+              placeholder="注册手机号"
+              v-model="loginUser.loginName"
+            ></el-input>
           </el-form-item>
           <el-form-item label="用户密码" prop="password">
-            <el-input type="password" placeholder="用户密码" v-model="loginUser.password"></el-input>
+            <el-input
+              type="password"
+              placeholder="用户密码"
+              v-model="loginUser.password"
+            ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button class="login-button" type="primary" @click="userLogin('loginForm')">登陆</el-button>
+            <el-button
+              class="login-button"
+              type="primary"
+              @click="userLogin('loginForm')"
+              >登陆</el-button
+            >
           </el-form-item>
         </el-form>
         <router-link to="/register">注册商户</router-link>
@@ -30,55 +47,70 @@ export default {
       loginUser: {
         loginName: "",
         password: "",
-        loginFrom:""
+        loginFrom: "",
       },
       loginBackground: {
         backgroundImage:
           "url(" + require("../assets/login-background.png") + ")",
-        backgroundRepeat: "no-repeat"
+        backgroundRepeat: "no-repeat",
       },
       rules: {
         loginName: [{ required: true, message: "请输入账户", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
-      }
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+      },
     };
   },
   methods: {
     ...mapActions({
       UserLogin: "UserLogin",
-      SetLoginStatus: "SetLoginStatus"
+      SetLoginStatus: "SetLoginStatus",
+      ReSetAllStates: "ReSetAllStates",
     }),
     userLogin(formName) {
       // eslint-disable-next-line no-undef
-      this.loginUser.loginFrom=JSON.stringify({user:this.loginUser.loginName,ip:returnCitySN["cip"],city:returnCitySN["cname"]});
-      this.$refs[formName].validate(valid => {
+      this.loginUser.loginFrom = JSON.stringify({
+        user: this.loginUser.loginName,
+        ip: returnCitySN["cip"],
+        city: returnCitySN["cname"],
+      });
+      this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.UserLogin(this.loginUser)
-            .then(res => {
-              if (res.resultStatus == 1) {
-                if (res.data) {
-                  localStorage.setItem("userInfo", JSON.stringify(res.data));
-                  this.SetLoginStatus(res.data);
-                  this.$router.push({ path: "/main/productStorage" });
+          var initState = JSON.parse(localStorage.getItem("initState"));
+          if (initState) {
+            this.UserLogin(this.loginUser)
+              .then((res) => {
+                if (res.resultStatus == 1) {
+                  if (res.data) {
+                    localStorage.setItem("userInfo", JSON.stringify(res.data));
+
+                    this.SetLoginStatus(res.data);
+                    this.ReSetAllStates(initState);
+                    this.$router.push({ path: "/main/productStorage" });
+                  } else {
+                    this.$message.error("账户密码不正确");
+                  }
                 } else {
-                  this.$message.error("账户密码不正确");
+                  this.$message.error(res.message);
                 }
-                }
-              else{
-                this.$message.error(res.message);
-              }
-            })
-            .catch(error => {
-              let messageStr =typeof error=='undefined'||error==null? error : error.message;
-              this.$message.error(messageStr);
-            });
+              })
+              .catch((error) => {
+                let messageStr =
+                  typeof error == "undefined" || error == null
+                    ? error
+                    : error.message;
+                this.$message.error(messageStr);
+              });
+          } else {
+             this.$message.error("缺少必要cookie,页面即将刷新");
+             location.reload()
+          }
         } else {
           this.$message.warning("请填写准确信息");
           return false;
         }
       });
     },
-  }
+  },
 };
 </script>
 <style>
