@@ -95,6 +95,9 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
                 //添加需要更新的库存批次
                 ProductBatch needToUpdateBatch = productBatchMap.get(dto.getProductId() + dto.getBatchNo());
                 needToUpdateBatch.setCount(dto.getCounted());
+                if(dto.getCounted()<=0){
+                  needToUpdateBatch.setFinished(1);
+                }
                 saveBatchList.add(needToUpdateBatch);
             } else {
                 emptyBatchNoList.add(dto);
@@ -127,7 +130,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
         List<StorageCountTicketDetail> eixtDetails = storageCountTicketDetailDao.findByTicketCode(ticket.getCode());
         List<ProductStorage> savedP = productStorageDao.saveAll(saveStorageList);
         List<ProductBatch> savedB = productBatchService.SaveAll(saveBatchList);
-        //以DTO 分组创建盘点详细 去重反制重复插入盘点详细详细
+        //以DTO 分组创建盘点详细 去重防止重复插入盘点详细详细
         List<StorageCountTicketDetail> saveDetails = CreateDetailsWithMap(dtoMap, ticket, createdProductBatchNoMap, eixtDetails);
         List<StorageCountTicketDetail> savedS = storageCountTicketDetailDao.saveAll(saveDetails);
         if (savedP == null || savedB == null || saveDetails == null || savedS == null) {
@@ -139,10 +142,16 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
                 ticket.setStatus(4);
             } else {
                 ticket.setStatus(5);
+                ticket.setResult("complete");
             }
         }
         storageCountTicketService.SaveTicket(ticket);
         return result;
+    }
+
+    @Override
+    public List<StorageCountTicketDetail> FindCountTicketDetails(String ticketCode) {
+      return storageCountTicketDetailDao.findByTicketCode(ticketCode);
     }
 
     /**

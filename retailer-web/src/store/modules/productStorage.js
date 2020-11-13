@@ -95,6 +95,9 @@ const actions = {
             Message.error(err.message ? err.message : err)
         })
     },
+    GetStorageCountTiketDetails({},params){
+        return request.GetStorageCountTiketDetails(params);
+    },
     ExportCountTicket({ }, parmas) {
         return request.ExportCountTicket(parmas);
     },

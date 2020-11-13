@@ -163,7 +163,9 @@ export default {
   DownLoadFile(params){
     return service.exportExcel("/storage/downloadFile",params)
   },
-
+  GetStorageCountTiketDetails(params){
+    return service.get("/storage/countTicketDetail",params)
+  },
   /**
    * Storage In
    */
