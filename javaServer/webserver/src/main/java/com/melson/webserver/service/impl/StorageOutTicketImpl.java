@@ -1,6 +1,7 @@
 package com.melson.webserver.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.webserver.Vo.OutBoundVo;
 import com.melson.webserver.Vo.StorageOutRecordVo;
 import com.melson.webserver.Vo.StorageOutTicketDetailVo;
 import com.melson.webserver.Vo.StorageOutTicketVo;
@@ -181,6 +182,69 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             return null;
         }
     }
+
+    @Override
+    public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            List<OutBoundVo> voList;
+            Date dateBegin = sdf.parse(startDate);
+            Date dateEnd = sdf.parse(endDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateEnd);
+            calendar.add(Calendar.DATE, 1);
+            Date newEnd = calendar.getTime();
+            switch (permission) {
+                case "1":
+                    voList= GenerateDataByUserId(dateBegin, newEnd, userId);
+                    return voList;
+                case "2":
+                    voList=GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
+                    return voList;
+                case "3":
+                    voList=GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
+                    return voList;
+                default:
+                    voList= GenerateDataByUserId(dateBegin, newEnd, userId);
+                    return voList;
+            }
+        }
+        catch (Exception ex){
+            return null;
+        }
+    }
+
+    private List<OutBoundVo> GenerateDataByStoreCode(Date dateBegin, Date newEnd, String storeCode) {
+        List<Object[]> VoObjs = productStorageDao.findVoByStoreCode(dateBegin, newEnd, storeCode);
+        List<OutBoundVo> voList= GenerateVoList(VoObjs);
+        return voList;
+    }
+
+    private List<OutBoundVo> GenerateDataByUserId(Date dateBegin, Date newEnd, String userId) {
+        List<Object[]> VoObjs = productStorageDao.findVoByUserId(dateBegin, newEnd, userId);
+        List<OutBoundVo> voList= GenerateVoList(VoObjs);
+        return voList;
+    }
+
+    private List<OutBoundVo> GenerateVoList(List<Object[]> VoObjs) {
+        List<OutBoundVo> voList =new ArrayList<>();
+        for(Object[] obj:VoObjs){
+            OutBoundVo r =new OutBoundVo();
+            r.setDate(obj[0]==null?null:obj[0].toString());
+            r.setOutBoundNo(obj[1]==null?null:obj[1].toString());
+            r.setSalesName(obj[2]==null?null:obj[2].toString());
+            r.setProduct(obj[3]==null?null:obj[3].toString());
+            r.setSupply(obj[4]==null?null:obj[4].toString());
+            r.setBatchNo(obj[5]==null?null:obj[5].toString());
+            r.setPriceIn(obj[6]==null?new BigDecimal(0):new BigDecimal(obj[6].toString()));
+            r.setPriceOut(obj[7]==null?new BigDecimal(0):new BigDecimal(obj[7].toString()));
+            r.setOutCount(obj[8]==null?0:Integer.parseInt(obj[8].toString()));
+            r.setProfit(obj[9]==null?new BigDecimal(0):new BigDecimal(obj[9].toString()));
+            voList.add(r);
+        }
+        return voList;
+    }
+
 
     @Override
     public StorageOutTicketDetailVo FindRecordDetail(String ticketCode, String billCode) {

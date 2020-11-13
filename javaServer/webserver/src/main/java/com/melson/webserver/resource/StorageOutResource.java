@@ -5,6 +5,7 @@ import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
+import com.melson.webserver.Vo.OutBoundVo;
 import com.melson.webserver.Vo.StorageOutRecordVo;
 import com.melson.webserver.Vo.StorageOutTicketDetailVo;
 import com.melson.webserver.dto.StorageOutTiketDto;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,6 +58,22 @@ public class StorageOutResource extends BaseResource {
         Result result=new Result();
         result.setData(voList);
         System.out.println("Rest Call: /storageOut/ticketRecord ...");
+        return result;
+    }
+
+    @RequestMapping(value = "/outboundList",method = RequestMethod.GET)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result GetOutboundList(HttpServletRequest request){
+        String storeCode = request.getParameter("storeCode");
+        String permission = request.getParameter("permission");
+        String userId = request.getParameter("userId");
+        if (StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        Result result=new Result();
+        List<OutBoundVo> voList=outTicketService.FindOutBoundList(startDate,endDate,storeCode,permission,userId);
+        result.setData(voList);
+        System.out.println("Rest Call: /storageOut/outboundList ...");
         return result;
     }
 

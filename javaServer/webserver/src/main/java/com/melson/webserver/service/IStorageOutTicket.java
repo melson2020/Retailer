@@ -1,6 +1,7 @@
 package com.melson.webserver.service;
 
 import com.melson.base.IService;
+import com.melson.webserver.Vo.OutBoundVo;
 import com.melson.webserver.Vo.StorageOutRecordVo;
 import com.melson.webserver.Vo.StorageOutTicketDetailVo;
 import com.melson.webserver.Vo.StorageOutTicketVo;
@@ -20,4 +21,5 @@ public interface IStorageOutTicket extends IService<StorageOutTicket> {
     List<StorageOutRecordVo> FindRecordList(String storeCode,String startDate,String endDate);
     StorageOutTicketDetailVo FindRecordDetail(String ticketCode,String billCode);
 
+    List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId);
 }

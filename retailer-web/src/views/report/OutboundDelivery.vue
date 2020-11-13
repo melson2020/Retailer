@@ -34,44 +34,54 @@
 
     <div  class="OutboundDelivery-content">
         <el-table
-          :data="storageOutDetails.billDetails"
+          :data="outBoundList"
           border
           size="small"
           show-summary
           :summary-method="getSummaries"
           :header-row-style="{ height: '40px' }"
-            :height="producttableHeight"
             :row-style="{ height: '40px' }"
             :cell-style="{ padding: '2px', color: '#909399' }"
             :header-cell-style="{ background: '#808080', color: 'white' }">
           }"
         >
-          <el-table-column prop="productName" label="商品名称"> </el-table-column>
-          <el-table-column prop="batchNo" label="入库批次号"></el-table-column>
-          <el-table-column label="入库税">
+          <el-table-column prop="date" label="销售日期" width="90%"> </el-table-column>
+          <el-table-column prop="outBoundNo" label="出库单号" width="130%"></el-table-column>
+          <!-- <el-table-column label="入库税">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.vatIn == 1" size="mini">
                 税 ({{ scope.row.taxRateIn }}%)
               </el-tag>
             </template>
-          </el-table-column>
-          <el-table-column prop="unitPriceIn" label="入库单价"> </el-table-column>
-          <el-table-column prop="discount" label="入库回点"> </el-table-column>
-          <el-table-column prop="unitPriceOut" label="出库单价">
-          </el-table-column>
-          <el-table-column label="出库税">
+          </el-table-column> -->
+          <el-table-column prop="salesName" label="销售人员"> </el-table-column>
+          <el-table-column prop="product" label="产品名称"> </el-table-column>
+          <el-table-column prop="supply" label="供应商"></el-table-column>
+          <el-table-column prop="batchNo" label="入库批次" width="130%"></el-table-column>
+          <!-- <el-table-column label="出库税">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.vatOut == 1" size="mini">
                 税 ({{ scope.row.taxRateOut }}%)
               </el-tag>
             </template>
+          </el-table-column> -->
+          <el-table-column label="入库价格" width="80%">
+            <template slot-scope="scope">
+              {{ scope.row.priceIn }}{{ scope.row.countUnit }}
+            </template>
           </el-table-column>
-          <el-table-column label="出库数量">
+          <el-table-column label="出库价格" width="80%">
+            <template slot-scope="scope">
+              {{ scope.row.priceOut }}{{ scope.row.countUnit }}
+            </template>
+          </el-table-column>
+
+          <el-table-column label="出库数量" width="80%">
             <template slot-scope="scope">
               {{ scope.row.outCount }}{{ scope.row.countUnit }}
             </template>
           </el-table-column>
-          <el-table-column prop="profit" label="总利润">
+          <el-table-column prop="profit" label="总利润" width="100%">
             <template slot-scope="scope">
               <span class="color-orange"> {{ scope.row.profit }}</span>
             </template>
@@ -82,6 +92,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -137,6 +148,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      GetOutBoundList: "GetOutBoundList"
+    }),
     getSummaries(param) {
       const { columns, data } = param;
       const sums = [];
@@ -166,18 +180,19 @@ export default {
     searchOnClick() {
       let params = {
         storeCode: this.userInfo.storeCode,
+        permission:this.userInfo.permission,
+        userId:this.userInfo.userId,
         startDate: this.date[0],
         endDate: this.date[1]
       };
-      console.log(params);
-      // this.GetStorageOutRecordList(params);
+      this.GetOutBoundList(params);
     },
     focusOn() {
       this.startDateMin = null;
     },
   },
   computed: {
-    ...mapGetters(["userInfo", "storageOutDetails"])
+    ...mapGetters(["userInfo", "outBoundList"])
   }
 };
 </script>
@@ -203,5 +218,9 @@ export default {
 }
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
+}
+.message-info {
+  color: #79bbff;
+  font-size: 20px;
 }
 </style>

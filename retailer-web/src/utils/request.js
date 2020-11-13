@@ -190,6 +190,9 @@ export default {
   GetStorageOutRecordList(params){
     return service.get("/storageOut/ticketRecord",params)
   },
+  GetOutBoundListReq(params){
+    return service.get("/storageOut/outboundList",params)
+  },
   GetStorageOutRecordDetails(params){
     return service.get("/storageOut/recordDetail",params)
   }

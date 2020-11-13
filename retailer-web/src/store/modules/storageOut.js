@@ -6,7 +6,8 @@ import { Message } from "element-ui";
 const state = {
     productBatchList: [],
     storageOutRecordList: [],
-    storageOutDetails: { }
+    storageOutDetails: { },
+    outBoundList:[]
 };
 
 const actions = {
@@ -31,7 +32,6 @@ const actions = {
     GetStorageOutRecordList({ commit }, params) {
         return request.GetStorageOutRecordList(params).then(res => {
             if (res.resultStatus == 1) {
-                console.log("查询记录", res.data)
                 commit("SetStorageOutRecordList", res.data)
             } else {
                 Message.error(res.message)
@@ -43,7 +43,6 @@ const actions = {
     GetStorageOutRecordDetails({ commit }, params) {
         return request.GetStorageOutRecordDetails(params).then(res => {
             if (res.resultStatus == 1) {
-                console.log('详细记录', res.data)
                 commit("SetStorageOutRecordDetails", res.data)
             } else {
                 Message.error(res.message)
@@ -51,13 +50,26 @@ const actions = {
         }).catch(error => {
 
         })
-    }
+    },
+    GetOutBoundList({ commit }, params) {
+        console.log(params);
+        return request.GetOutBoundListReq(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetOutBoundList", res.data)
+            } else {
+                Message.error(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
+    },
 };
 
 const getters = {
     productBatchList: state => state.productBatchList,
     storageOutRecordList: state => state.storageOutRecordList,
-    storageOutDetails:state=>state.storageOutDetails
+    storageOutDetails:state=>state.storageOutDetails,
+    outBoundList:state=>state.outBoundList
 };
 
 const mutations = {
@@ -76,6 +88,9 @@ const mutations = {
     },
     SetStorageOutRecordList(state, data) {
         state.storageOutRecordList = data
+    },
+    SetOutBoundList(state, data) {
+        state.outBoundList = data
     },
     SetStorageOutRecordDetails(state, data) {
         state.storageOutDetails = data
