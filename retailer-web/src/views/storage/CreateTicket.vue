@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="header">
-      盘点单
-    </div>
+    <div class="header">盘点单</div>
     <el-form ref="form" label-width="120px" class="create-ticket-form">
       <el-form-item label="商户名称">
         <el-input v-model="ticket.storeName"></el-input>
@@ -36,9 +34,26 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="createOnClick">立即创建</el-button>
-        <el-button @click="nextStep" :disabled="!this.currentStorageCountTicket.type">下一页</el-button>
+        <el-button
+          @click="nextStep"
+          :disabled="!this.currentStorageCountTicket.type"
+          >下一页</el-button
+        >
       </el-form-item>
     </el-form>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :show-close="false"
+    >
+      <span>{{ unfinishedTickets.length }}个盘点单未完成</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="loadExistTicket"
+          >加载至工作区</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -53,24 +68,24 @@ export default {
         employeeName: "",
         date: "",
         type: "",
-        productType:"",
-        description: ""
-      }
+        productType: "",
+        description: "",
+      },
+      dialogVisible: false,
+      unfinishedTickets: [],
     };
   },
-   computed: {
-    ...mapGetters([
-      "userInfo",
-      "currentStorageCountTicket",
-    ]),
+  computed: {
+    ...mapGetters(["userInfo", "currentStorageCountTicket"]),
   },
-  methods:{
-      ...mapActions({
-      CreateStorageCountTicket:"CreateStorageCountTicket",
-      SetCurrentStorageCountTicket:"SetCurrentStorageCountTicket",
-      SetActiveSteps:"SetActiveSteps"
+  methods: {
+    ...mapActions({
+      CreateStorageCountTicket: "CreateStorageCountTicket",
+      SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
+      SetActiveSteps: "SetActiveSteps",
+      GetUnFinishedCountTickets: "GetUnFinishedCountTickets",
     }),
-      getFullTime() {
+    getFullTime() {
       let date = new Date(), //时间戳为10位需*1000，时间戳为13位的话不需乘1000
         Y = date.getFullYear() + "",
         M =
@@ -85,31 +100,106 @@ export default {
           date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
       return { Y: Y, M: M, D: D, h: h, m: m, s: s };
     },
-    nextStep(){
-       this.$router.push({ path: "/main/storageCount/preview" });
+    nextStep() {
+      this.$router.push({ path: "/main/storageCount/preview" });
     },
-    createOnClick(){
-      this.CreateStorageCountTicket(this.ticket).then(res=>{
-            if(res.resultStatus==1){
-              this.SetCurrentStorageCountTicket(res.data)
-              this.SetActiveSteps(1)
-              this.$router.replace({path:"/main/storageCount/preview"})
-            }else{
-              this.$message.error(res.message)
+    createOnClick() {
+      this.CreateStorageCountTicket(this.ticket)
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.SetCurrentStorageCountTicket(res.data);
+            this.SetActiveSteps(1);
+            this.$router.replace({ path: "/main/storageCount/preview" });
+          } else {
+            this.$message.error(res.message);
+          }
+        })
+        .catch((error) => {
+          this.$message.error(error.message ? error.message : error);
+        });
+    },
+    routerTo(status, type) {
+      switch (status) {
+        case 1:
+          this.$router.push({ path: "/main/storageCount/preview" });
+          this.SetActiveSteps(2);
+          break;
+        case 2:
+          if (type) {
+            this.$message.warning("为确保库存正确，请重新导入导出");
+            this.$router.push({ path: "/main/storageCount/preview" });
+            this.SetActiveSteps(2);
+          } else {
+            this.$router.push({ path: "/main/storageCount/import" });
+            this.SetActiveSteps(3);
+          }
+          break;
+        case 3:
+          if (type) {
+            this.$message.warning("为确保库存正确，请重新导入导出");
+            this.$router.push({ path: "/main/storageCount/preview" });
+            this.SetActiveSteps(2);
+          } else {
+            this.$router.push({ path: "/main/storageCount/import" });
+            this.SetActiveSteps(3);
+          }
+          break;
+        case 4:
+          this.$router.push({ path: "/main/storageCount/updateBatch" });
+          this.SetActiveSteps(4);
+          break;
+        case 5:
+          this.$router.push({ path: "/main/storageCount/complete" });
+          this.SetActiveSteps(5);
+          break;
+        default:
+          this.$router.push({ path: "/main/storageCount/create" });
+          break;
+      }
+    },
+    loadExistTicket() {
+      this.SetCurrentStorageCountTicket(this.unfinishedTickets[0]);
+      this.dialogVisible = false;
+      this.routerTo(this.unfinishedTickets[0].status,'fromLoad');
+    },
+  },
+  mounted: function () {
+    let dateTime = this.getFullTime();
+    this.ticket.date = dateTime.Y + "-" + dateTime.M + "-" + dateTime.D;
+    this.ticket.storeName = this.userInfo.store.storeName;
+    this.ticket.employeeId = this.userInfo.userId;
+    this.ticket.employeeName = this.userInfo.userName;
+    this.ticket.storeCode = this.userInfo.storeCode;
+  },
+  beforeMount: function () {
+    //防止多次点击menu 跳过检测
+    var type = this.$route.query.type;
+    //从盘点记录转跳过来或者本身有未完成的ticket
+    if (this.currentStorageCountTicket.status || type) {
+      let status = this.currentStorageCountTicket.status;
+      this.routerTo(status, type);
+    } else {
+      //查询数据库查询是否有未完成单子
+      let params = {
+        storeCode: this.userInfo.storeCode,
+      };
+      this.GetUnFinishedCountTickets(params)
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            var existList = res.data;
+            if (existList.length > 0) {
+              this.dialogVisible = true;
+              this.unfinishedTickets = existList;
             }
-      }).catch(error=>{
-             this.$message.error(error.message ? error.message : error) 
-      })
+          } else {
+            this.$message.error(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
     }
   },
-  mounted:function(){
-    let dateTime=this.getFullTime();
-    this.ticket.date=dateTime.Y+'-'+dateTime.M+'-'+dateTime.D
-    this.ticket.storeName=this.userInfo.store.storeName
-    this.ticket.employeeId=this.userInfo.userId;
-    this.ticket.employeeName=this.userInfo.userName;
-    this.ticket.storeCode=this.userInfo.storeCode
-  }
 };
 </script>
 <style>

@@ -166,6 +166,9 @@ export default {
   GetStorageCountTiketDetails(params){
     return service.get("/storage/countTicketDetail",params)
   },
+  GetUnFinishedCountTickets(params){
+    return service.get('/storage/unfinishedTicket',params)
+  },
   /**
    * Storage In
    */

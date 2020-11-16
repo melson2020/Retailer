@@ -18,9 +18,13 @@ public class StorageOutBill {
     private String employeeId;
     private String employeeName;
     private BigDecimal cost;
+    //入库总价
     private BigDecimal totalPriceIn;
+    //出库总价
     private BigDecimal totalPriceOut;
+    //去税价格
     private BigDecimal sales;
+    //总利润
     private BigDecimal profit;
     private Date createTime;
     private String date;

@@ -21,49 +21,16 @@ import { mapActions } from "vuex";
 
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   computed: {
-    ...mapGetters(["activeStep", "currentStorageCountTicket"]),
+    ...mapGetters(["activeStep", "userInfo", "currentStorageCountTicket"]),
   },
   methods: {
     ...mapActions({
-      SetActiveSteps: "SetActiveSteps",
+      SetActiveSteps: "SetActiveSteps"
     }),
-  },
-  beforeMount: function () {
-    // let path=this.$route.path;
-    // if(path==='/main/storageCount'){
-    //    this.$router.push({ path: "/main/storageCount/create" });
-    // }
-    if (this.currentStorageCountTicket.status) {
-      let status = this.currentStorageCountTicket.status;
-      switch (status) {
-        case 1:
-          this.$router.push({ path: "/main/storageCount/preview" });
-          this.SetActiveSteps(2);
-          break;
-        case 2:
-          this.$router.push({ path: "/main/storageCount/import" });
-          this.SetActiveSteps(3);
-          break;
-        case 3:
-          this.$router.push({ path: "/main/storageCount/import" });
-          this.SetActiveSteps(3);
-          break;
-        case 4:
-          this.$router.push({ path: "/main/storageCount/updateBatch" });
-          this.SetActiveSteps(4);
-          break;
-        case 5:
-          this.$router.push({ path: "/main/storageCount/complete" });
-          this.SetActiveSteps(5);
-          break;
-        default:
-          this.$router.push({ path: "/main/storageCount/create" });
-          break;
-      }
-    }
   },
 };
 </script>

@@ -15,5 +15,6 @@ import java.util.List;
 @Repository
 public interface IStorageCountTicketDao extends JpaRepository<StorageCountTicket,String> {
     StorageCountTicket findByCode(String code);
+    List<StorageCountTicket> findByStoreCodeAndStatusLessThan(String storeCode,Integer status);
     List<StorageCountTicket> findByCreateTimeBetweenAndStoreCode(Date startDate,Date endDate,String storeCode);
 }

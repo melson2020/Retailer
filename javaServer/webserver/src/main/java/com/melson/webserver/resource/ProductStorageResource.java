@@ -274,6 +274,7 @@ public class ProductStorageResource extends BaseResource {
             return this.GenerateResult(ResultType.ParametersNeeded);
         if(dtoList.size()<=0){
             ticket.setResult("correct");
+            ticket.setStatus(5);
             storageCountTicketService.SaveTicket(ticket);
             return new Result();
         }
@@ -316,5 +317,16 @@ public class ProductStorageResource extends BaseResource {
         result.setData(detailList);
         return result;
     }
-    
+
+    @RequestMapping(value = "/unfinishedTicket",method = RequestMethod.GET)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result FindExistUnFinishCountTicket(HttpServletRequest request){
+        Result result=new Result();
+        String storeCode=request.getParameter("storeCode");
+        if(StringUtils.isEmpty(storeCode))return this.GenerateResult(ResultType.ParametersNeeded);
+        List<StorageCountTicket> existList=storageCountTicketService.FindUnFinishedTicket(storeCode);
+        result.setData(existList);
+        return result;
+    }
+
 }

@@ -130,6 +130,9 @@ const actions = {
     },
     DownLoadFile({},params){
         return request.DownLoadFile(params)
+    },
+    GetUnFinishedCountTickets({},params){
+        return request.GetUnFinishedCountTickets(params)
     }
 };
 

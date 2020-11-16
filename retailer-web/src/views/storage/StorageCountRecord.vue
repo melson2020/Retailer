@@ -114,7 +114,7 @@
               icon="el-icon-tickets"
               plain
               size="mini"
-              @click="detailOnClick(scope.row.code)"
+              @click="detailOnClick(scope.row)"
               >详细</el-button
             >
             <el-button
@@ -135,7 +135,7 @@
         ></el-table-column>
       </el-table>
       <el-dialog title="盘点详细(变动项)" :visible.sync="dialogTableVisible">
-        <el-table :data="countTicketDetails">
+        <el-table v-if="countTicketDetails.length>0" :data="countTicketDetails">
           <el-table-column
             property="productName"
             label="商品名称"
@@ -143,19 +143,22 @@
           <el-table-column property="batchNo" label="批次号"></el-table-column>
           <el-table-column property="totalCountChange" label="只修改总数">
             <template slot-scope="scope">
-              <span v-if="scope.row.totalCountChange == 1" class="yellow">是</span>
+              <span v-if="scope.row.totalCountChange == 1" class="yellow"
+                >是</span
+              >
               <span v-else class="green">否</span>
             </template>
           </el-table-column>
           <el-table-column property="type" label="+/-">
             <template slot-scope="scope">
-             <i v-if="scope.row.type=='plus'" class="el-icon-plus"></i>
-             <i v-else class="el-icon-minus"></i>
+              <i v-if="scope.row.type == 'plus'" class="el-icon-plus"></i>
+              <i v-else class="el-icon-minus"></i>
             </template>
           </el-table-column>
           <el-table-column property="count" label="数量"></el-table-column>
         </el-table>
-      </el-dialog>
+          <span v-else>盘点无数量变动,盘点数量与原数量一致</span>
+      </el-dialog>    
     </div>
   </div>
 </template>
@@ -171,10 +174,10 @@ export default {
       countTicketDetails: [],
       dialogTableVisible: false,
       pickerOptions: {
-        onPick: obj => {
+        onPick: (obj) => {
           this.startDateMin = new Date(obj.minDate).getTime();
         },
-        disabledDate: time => {
+        disabledDate: (time) => {
           if (this.startDateMin) {
             let maxDate = this.startDateMin + 3600 * 1000 * 24 * 31;
             let minDate = this.startDateMin - 3600 * 1000 * 24 * 31;
@@ -194,7 +197,7 @@ export default {
               const end = new Date();
               const start = new Date();
               picker.$emit("pick", [start, end]);
-            }
+            },
           },
           {
             text: "最近三天",
@@ -203,7 +206,7 @@ export default {
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
               picker.$emit("pick", [start, end]);
-            }
+            },
           },
           {
             text: "最近一个月",
@@ -212,9 +215,9 @@ export default {
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
               picker.$emit("pick", [start, end]);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       tableColums: [
         { field: "code", label: "单号", width: "350px" },
@@ -225,12 +228,12 @@ export default {
         { field: "productType", label: "产品类型", width: "150px" },
         { field: "excelExportFileName", label: "盘点单(初始)", width: "200px" },
         { field: "excelImportFileName", label: "盘点单(完成)", width: "200px" },
-        { field: "description", label: "描述", width: "auto" }
-      ]
+        { field: "description", label: "描述", width: "auto" },
+      ],
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "storageCountTickets"])
+    ...mapGetters(["userInfo", "storageCountTickets"]),
   },
   methods: {
     ...mapActions({
@@ -246,7 +249,7 @@ export default {
       let params = {
         storeCode: this.userInfo.storeCode,
         startDate: this.date[0],
-        endDate: this.date[1]
+        endDate: this.date[1],
       };
       this.GetStorageCountTickets(params);
     },
@@ -256,7 +259,7 @@ export default {
       let path = type === "exprot" ? row.excelExportPath : row.excelImportPath;
       let params = { path: path };
       this.DownLoadFile(params)
-        .then(response => {
+        .then((response) => {
           let blob = new Blob([response]);
           if (window.navigator.msSaveOrOpenBlob) {
             navigator.msSaveBlob(blob, fileName);
@@ -269,14 +272,14 @@ export default {
             window.URL.revokeObjectURL(link.href);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$message.error(error.message ? error.message : error);
         });
     },
-    detailOnClick(value) {
-      let params = { ticketCode: value };
+    detailOnClick(row) {
+      let params = { ticketCode: row.code };
       this.GetStorageCountTiketDetails(params)
-        .then(res => {
+        .then((res) => {
           if (res.resultStatus == 1) {
             this.countTicketDetails = res.data;
             this.dialogTableVisible = true;
@@ -284,18 +287,23 @@ export default {
             this.$message.error(res.message);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message.error(err.message);
         });
     },
-    loadTicketOnClick(ticket){
-      this.SetCurrentStorageCountTicket(ticket)
-      this.$router.push({ path: "/main/storageCount" });
-    }
+    loadTicketOnClick(ticket) {
+      this.SetCurrentStorageCountTicket(ticket);
+      this.$router.push({
+        path: "/main/storageCount",
+        query: {
+          type: "fromRecord",
+        },
+      });
+    },
   },
-  beforeMount: function() {
+  beforeMount: function () {
     this.timeDefaultShow = new Date().setMonth(new Date().getMonth() - 1);
-  }
+  },
 };
 </script>
 <style>

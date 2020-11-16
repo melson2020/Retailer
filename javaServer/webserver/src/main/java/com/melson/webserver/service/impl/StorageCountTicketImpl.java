@@ -63,6 +63,11 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
    }
 
     @Override
+    public List<StorageCountTicket> FindUnFinishedTicket(String storeCode) {
+        return storageCountTicketDao.findByStoreCodeAndStatusLessThan(storeCode,5);
+    }
+
+    @Override
     public Result ExportExcel(List<ProductStorageDto> storageList, String basePath, StorageCountTicket ticket) {
         Result result = new Result();
         Store store = storeDao.findByCode(ticket.getStoreCode());
