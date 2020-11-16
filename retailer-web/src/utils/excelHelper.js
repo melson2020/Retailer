@@ -30,8 +30,9 @@ export function fileToExcel(file,header) {
 /**
  * 
  * @param {*内容(json数组)，表头，是否有边框，sheet名称,结尾} param0 
+ * {json:json,header:[{value:"报表"}],keys:keys,border:true,sheetName:'sheet1',fileName:'报表1'}
  */
-export function export_json_to_excel({ json, header, border, sheetName,type,fileName}) {
+export function export_json_to_excel({ json, header,keys, border, sheetName,type,fileName}) {
 	var tmpdata = json[0];
 	json.unshift({});
 	header.map(() => {
@@ -40,7 +41,12 @@ export function export_json_to_excel({ json, header, border, sheetName,type,file
 	var keyMap = []; //获取keys
 	for (var k in tmpdata) {
 		keyMap.push(k);
-		json[header.length][k] = k;
+		var colunmKey=keys[k]
+		if(colunmKey){
+			json[header.length][k] = colunmKey;
+		}else{
+			json[header.length][k] = k;
+		}		
 	}
 	var borderStyle= { top: { style: 'thin' },bottom: { style: 'thin' },left: { style: 'thin' },right: { style: 'thin' }}
 	var contentCellStyle = border ? {font:{sz: 12},border:borderStyle,alignment: {
@@ -68,8 +74,9 @@ export function export_json_to_excel({ json, header, border, sheetName,type,file
 			tmpdata[v.position] = {
 				v: v.v,
 				s: contentCellStyle
-		}		
+		}	
 	}});
+	console.log(tmpdata)
 	var t="A"+(header.length+1)
 	tmpdata[t].s=tableHeaderStyle
 	var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
@@ -83,12 +90,12 @@ export function export_json_to_excel({ json, header, border, sheetName,type,file
 		}
 		merges.push(merge)
 		if(index==0){
-			tmpdata[key].s={font: { sz: 20, bold: true, color: { rgb: "FFFFAA00" }},alignment: {
+			tmpdata[key].s={font: { sz: 18, bold: true, color: { rgb: "FFFFAA00" }},alignment: {
 				horizontal: "center" ,
 				vertical: "center"
 			  },border:borderStyle}
 		}else{
-			tmpdata[key].s={font: { sz: 18, bold: true, color: { rgb: "FFFFAA00" }},alignment: {
+			tmpdata[key].s={font: { sz: 16, bold: true, color: { rgb: "FFFFAA00" }},alignment: {
 				horizontal: "right" ,
 				vertical: "center"
 			  },border:borderStyle}
