@@ -9,7 +9,12 @@
     </div>
     <div class="batch-update-div">
       <el-table
-        :header-cell-style="{ background: '#606266', color: 'white' }"
+        border
+        size="small"
+        :header-row-style="{height:'40px'}"
+          :row-style="{height:'40px'}"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white'}"
         :data="updateBatchListShow"
       >
         <el-table-column prop="productName" label="产品名" width="auto">
