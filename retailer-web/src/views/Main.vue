@@ -130,7 +130,6 @@ export default {
     ...mapActions({
       SetLoginStatus: "SetLoginStatus",
       ResetPassword: "ResetPassword",
-      Systemlogout:"Systemlogout"
     }),
     menuCollapseChange() {
       this.isCollapse = !this.isCollapse;
@@ -145,7 +144,6 @@ export default {
         })
         .then(() => {
           localStorage.removeItem("userInfo");
-          this.Systemlogout();
           this.$router.replace({ path: "/" });
         })
         .catch(e => e);

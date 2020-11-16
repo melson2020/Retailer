@@ -87,7 +87,7 @@
                       <span
                         v-if="ticket.outTicket.type == 'normal'"
                         class="normal-span"
-                        >正常入库</span
+                        >正常出库</span
                       >
                       <span v-else class="addtinal-span">库存损耗</span>
                     </el-col>
