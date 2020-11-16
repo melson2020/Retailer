@@ -33,8 +33,11 @@
     </div>
     <div>
       <el-table
-        :data="storageCountTickets"
-        :header-cell-style="{ background: '#606266', color: 'white' }"
+        :data="storageCountTickets" size="small"
+        :header-row-style="{height:'40px'}"
+          :row-style="{height:'40px'}"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white'}"
         class="record-table"
       >
         <el-table-column
@@ -328,7 +331,7 @@ export default {
   margin: 0px 20px;
 }
 .record-table {
-  margin-top: 30px;
+  margin-top: 5px;
 }
 .red {
   color: #f56c6c;

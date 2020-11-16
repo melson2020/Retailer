@@ -1,8 +1,30 @@
 <template>
-  <div class="complete-success">盘点完成!</div>
+  <div class="complete-success">
+    <el-button
+      type="success"
+      icon="el-icon-link"
+      plain
+      @click="loadNewTicketOnClick()"
+      >盘点完成!</el-button
+    >
+  </div>
 </template>
 <script>
-export default {};
+import { mapActions } from "vuex";
+export default {
+  methods: {
+        ...mapActions({
+      RefreshTicket: "RefreshTicket"
+    }),
+    loadNewTicketOnClick() {
+      this.RefreshTicket();
+      this.$router.push({path: "/main/storageCount/create"});
+      // window.location.reload("/main/storageCount/create" );
+      // this.$router.replace({ path: "/main/storageCount/create" });
+      // this.$router.push({ path: "/main/productStorage" });
+    },
+  },
+};
 </script>
 <style>
 .complete-success {

@@ -4,12 +4,12 @@
       <span class="title-name">盘点单预览</span>
       <div>
         <el-button
-          type="primary"
+          type="primary" size="small"
           @click="exportToExcel"
           :disabled="previewStorageList.length <= 0"
           >导出文件</el-button
         >
-        <el-button @click="prePageOnClick">返回</el-button>
+        <!-- <el-button @click="prePageOnClick">返回</el-button> -->
       </div>
     </div>
     <div v-if="previewStorageList.length > 0" class="table-div">
@@ -185,7 +185,7 @@ export default {
   color: #409eff;
 }
 .table-div {
-  padding-top: 30px;
+  padding-top: 5px;
 }
 .el-table__expanded-cell {
   padding-top: 0px !important;

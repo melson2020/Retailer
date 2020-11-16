@@ -3,16 +3,16 @@
     <div class="header-div">
       <span class="title-name">导入盘点单</span>
       <div>
-        <el-button type="primary" @click="setUploadDialogVisible"
+        <el-button type="primary" size="small" @click="setUploadDialogVisible"
           >导入文件</el-button
         >
         <el-button
-          type="primary"
+          type="primary" size="small"
           :disabled="!countedList.length > 0"
           @click="submitCountedList"
           >提交盘点单</el-button
         >
-        <el-button>返回</el-button>
+        <!-- <el-button size="small">返回</el-button> -->
         <el-dialog
           title="文件上传"
           :visible.sync="uploadDialogVisible"
@@ -51,9 +51,11 @@
       <el-table
         :data="countedList"
         border
-        :cell-style="{ color: '#909399' }"
-        class="storage-table"
-        :header-cell-style="{ background: '#606266', color: 'white' }"
+        size="small"
+        :header-row-style="{height:'40px'}"
+          :row-style="{height:'40px'}"
+          :cell-style="{ padding: '2px', color: '#909399' }"
+          :header-cell-style="{ background: '#808080', color: 'white'}"
         :span-method="objectSpanMethod"
       >
         <el-table-column
@@ -378,7 +380,7 @@ export default {
   text-align: center;
 }
 .table-div {
-  padding-top: 30px;
+  padding-top: 5px;
 }
 .red {
   color: #f56c6c;

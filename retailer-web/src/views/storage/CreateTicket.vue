@@ -2,29 +2,29 @@
   <div>
     <div class="header">盘点单</div>
     <el-form ref="form" label-width="120px" class="create-ticket-form">
-      <el-form-item label="商户名称">
+      <el-form-item label="商户名称" size="mini">
         <el-input v-model="ticket.storeName"></el-input>
       </el-form-item>
-      <el-form-item label="创建时间">
+      <el-form-item label="创建时间" size="mini">
         <el-input v-model="ticket.date"></el-input>
       </el-form-item>
-      <el-form-item label="盘点人员">
+      <el-form-item label="盘点人员" size="mini">
         <el-input v-model="ticket.employeeName"></el-input>
       </el-form-item>
-      <el-form-item label="盘点类型">
+      <el-form-item label="盘点类型" size="mini">
         <el-select v-model="ticket.type" placeholder="请选择类型">
           <el-option label="月度盘点" value="monthly"></el-option>
           <el-option label="临时盘点" value="addtional"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="盘点内容">
+      <el-form-item label="盘点内容" size="mini">
         <el-select v-model="ticket.productType" placeholder="请选择盘点产品">
           <el-option label="全部" value="all"></el-option>
           <el-option label="常用" value="normal"></el-option>
           <el-option label="数量大于0" value="morethanzero"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="描述">
+      <el-form-item label="描述" size="mini">
         <el-input
           type="textarea"
           v-model="ticket.description"
@@ -33,8 +33,8 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="createOnClick">立即创建</el-button>
-        <el-button
+        <el-button type="primary" size="mini" @click="createOnClick">立即创建</el-button>
+        <el-button  size="mini"
           @click="nextStep"
           :disabled="!this.currentStorageCountTicket.type"
           >下一页</el-button
@@ -209,7 +209,7 @@ export default {
   font-size: 30px;
   font-weight: bold;
   color: #409eff;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 .create-ticket-form {
   border: #e4e7ed solid 1px;

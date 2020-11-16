@@ -110,6 +110,9 @@ const actions = {
     SetActiveSteps({ commit }, data) {
         commit("SetActiveSteps", data)
     },
+    RefreshTicket({commit}){
+        commit("RefreshCurrentStorageCountTicket")
+    },
     SetCurrentStorageCountTicket({ commit }, data) {
         commit("SetcurrentStorageCountTicket", data)
     },
@@ -143,7 +146,7 @@ const getters = {
     previewStorageList: state => state.previewStorageList,
     currentStorageCountTicket: state => state.currentStorageCountTicket,
     updateBatchList: state => state.updateBatchList,
-    storageCountTickets:state=>state.storageCountTickets
+    storageCountTickets:state=>state.storageCountTickets,
 };
 
 const mutations = {
@@ -154,6 +157,9 @@ const mutations = {
         for (let i = 0; i < data.length; i++) {
             state.productStorageList.push(data[i])
         }
+    },
+    RefreshCurrentStorageCountTicket(state){
+        state.currentStorageCountTicket={};
     },
     SetStorageCount(state, data) {
         state.productAndStorageCount.storageCount = data;
