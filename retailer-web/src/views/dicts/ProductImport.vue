@@ -539,7 +539,6 @@ export default {
         .fileToExcel(file, false)
         .then((tabJson) => {
           if (tabJson && tabJson.length > 0) {
-            console.log("tabjson", tabJson);
             var formateCheckRes = this.checkExcelFormat(tabJson, [
               "别名",
               "型号",
@@ -653,6 +652,7 @@ export default {
         storeCode: this.userInfo.storeCode,
         productList: this.productListShow,
       };
+      console.log(this.productListShow);
       this.SaveExcelListNew(params);
     },
     setpageSize() {

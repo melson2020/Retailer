@@ -172,7 +172,7 @@
         <el-pagination
           background
           :current-page="storageTable.currentPage"
-          layout="prev, pager, next"
+          layout="prev, pager, next, total, jumper"
           @current-change="pageChanged"
           :page-size="storageTable.pageSize"
           :total="storageListShow.length"
