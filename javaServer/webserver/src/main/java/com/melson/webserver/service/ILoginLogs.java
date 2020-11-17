@@ -9,4 +9,5 @@ import com.melson.webserver.entity.LoginLogs;
  */
 public interface ILoginLogs extends IService<LoginLogs> {
     void Records(StoreEmployee employee);
+    LoginLogs FindBylogs(String log);
 }

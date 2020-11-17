@@ -31,4 +31,9 @@ public class ILoginLogsImpl extends AbstractService<LoginLogs> implements ILogin
         logs.setLogDate(new Date());
         loginLogsDao.save(logs);
     }
+
+    @Override
+    public LoginLogs FindBylogs(String log) {
+        return loginLogsDao.findWithQuery(log);
+    }
 }

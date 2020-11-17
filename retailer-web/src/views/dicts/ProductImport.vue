@@ -646,6 +646,7 @@ export default {
         this.$message.warning("存在重复名称，请修改");
         return;
       }
+      this.isSrearchDuplicate=false;
       // let params={storeCode:this.userInfo.storeCode,productList:this.excelProductList,categoryList:this.excelCategroyList}
       // let params={storeCode:this.userInfo.storeCode,productList:this.productListShow,categoryList:this.excelCategroyListShow}
       let params = {
