@@ -17,11 +17,20 @@ public class ProductDto {
     private String specification;
     private String unit;
     private String feature;
+    private String searchType;
     private String categoryId;
     private String categoryName;
     private String categoryComment;
     private Integer categoryKeyId;
     private List<ProductCategoryDto> categoryList;
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
 
     public Integer getId() {
         return id;

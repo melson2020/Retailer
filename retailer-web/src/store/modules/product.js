@@ -23,7 +23,7 @@ const actions = {
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {
                 let p = products[j];
-                let product = { categoryId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"], isRepeat: false, isSet: false, categoryName: element.sheetName.toUpperCase(), comment: "",searchType:"normal" }
+                let product = { categoryId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"], isRepeat: false, isSet: false, categoryName: element.sheetName.toUpperCase(), comment: "",searchType:p['是否常用']=='Y'?'normal':'' }
                 productions.push(product)
             }
         }

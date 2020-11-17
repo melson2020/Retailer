@@ -1,49 +1,76 @@
 <template>
-  <div style="height:100%">
+  <div style="height: 100%">
     <div class="productdict-content-header">
-          <div>
-            <span class="productdict-title-name">商品目录</span>
-          </div>
-          <div>
-            <el-input
-              class="productdict-fliter-input"
-              size="small"
-              v-model="searchContent"
-              placeholder="搜索名称 / 型号"
-              suffix-icon="el-icon-search"
-              @focus="searchFocus"
-            ></el-input>
-            <el-button
-            size="small"
-            type="primary"
-            icon="el-icon-plus"
-            @click="handleNewProduct('newProduct')"
-            >添加</el-button>
-        </div>
+      <div>
+        <span class="productdict-title-name">商品目录</span>
+      </div>
+      <div>
+        <el-input
+          class="productdict-fliter-input"
+          size="small"
+          v-model="searchContent"
+          placeholder="搜索名称 / 型号"
+          suffix-icon="el-icon-search"
+          @focus="searchFocus"
+        ></el-input>
+        <el-button
+          size="small"
+          type="primary"
+          icon="el-icon-plus"
+          @click="handleNewProduct('newProduct')"
+          >添加</el-button
+        >
+      </div>
     </div>
-    <div  class="productdict-content">
-      <el-table :data="list" border class="productdict-producttable" size="small"
-          :header-row-style="{ height: '40px' }"
-          :height="producttableHeight"
-          :row-style="{ height: '40px' }"
-          :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white' }">
-        <el-table-column prop="name" label="名字" align="left"></el-table-column>
-        <el-table-column prop="type" label="型号" align="left"></el-table-column>
-        <el-table-column prop="specification" label="规格" align="left"></el-table-column>
-        <el-table-column prop="unit" label="单位" align="left"></el-table-column>
-        <el-table-column prop="categoryName" label="类别" align="left"></el-table-column>
+    <div class="productdict-content">
+      <el-table
+        :data="list"
+        border
+        class="productdict-producttable"
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :height="producttableHeight"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }"
+      >
+        <el-table-column
+          prop="name"
+          label="名字"
+          align="left"
+        ></el-table-column>
+        <el-table-column
+          prop="type"
+          label="型号"
+          align="left"
+        ></el-table-column>
+        <el-table-column
+          prop="specification"
+          label="规格"
+          align="left"
+        ></el-table-column>
+        <el-table-column
+          prop="unit"
+          label="单位"
+          align="left"
+        ></el-table-column>
+        <el-table-column
+          prop="categoryName"
+          label="类别"
+          align="left"
+        ></el-table-column>
         <!-- <el-table-column prop="feature" label="特征" align="center"></el-table-column> -->
         <el-table-column label="特征" align="center" width="auto">
           <template slot-scope="scope">
-              <el-tag
-                class="el-tag"
-                :key="tag"
-                v-for="tag in scope.row.feature"
-                :disable-transitions="false"
-                size="small"
-                type="success">
-              {{tag}}
+            <el-tag
+              class="el-tag"
+              :key="tag"
+              v-for="tag in scope.row.feature"
+              :disable-transitions="false"
+              size="small"
+              type="success"
+            >
+              {{ tag }}
             </el-tag>
           </template>
         </el-table-column>
@@ -52,7 +79,7 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleEdit(scope.$index,scope.row)"
+              @click="handleEdit(scope.$index, scope.row)"
               plain
               circle
               type="primary"
@@ -60,7 +87,7 @@
             />
             <el-button
               size="mini"
-              @click="handleDelete(scope.$index,scope.row)"
+              @click="handleDelete(scope.$index, scope.row)"
               plain
               circle
               type="danger"
@@ -77,7 +104,7 @@
         layout="prev, pager, next, total, jumper"
         :page-size="listQuery.limit"
         :total="productLishPageShow.length"
-        v-show="productLishPageShow.length>listQuery.limit"
+        v-show="productLishPageShow.length > listQuery.limit"
         @current-change="pageChange"
       ></el-pagination>
     </div>
@@ -88,38 +115,61 @@
       :close-on-click-modal="false"
       :show-close="false"
     >
-      <el-form :model="editProduct" :rules="rules" ref="editProduct" label-width="120px">
+      <el-form
+        :model="editProduct"
+        :rules="rules"
+        ref="editProduct"
+        label-width="120px"
+      >
         <el-row>
           <el-col :span="8">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="editProduct.name" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="editProduct.name"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="型号" prop="type">
-              <el-input v-model="editProduct.type" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="editProduct.type"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="8" prop="specification">
             <el-form-item label="规格" prop="specification">
-              <el-input v-model="editProduct.specification" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="editProduct.specification"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
             </el-form-item>
           </el-col>
-
-
         </el-row>
 
         <el-row>
           <el-col :span="8">
             <el-form-item label="单位" prop="unit">
-              <el-input v-model="editProduct.unit" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="editProduct.unit"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="8" prop="categoryName">
             <el-form-item label="类别" prop="categoryName">
-              <el-input v-model="editProduct.categoryName" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="editProduct.categoryName"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
               <!-- <template>
                 <el-select v-model="editProduct.categoryId" filterable placeholder="请选择" @change="CategoryChange">
                   <el-option
@@ -130,7 +180,17 @@
                   </el-option>
                 </el-select>
               </template> -->
-
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item prop="searchType">
+              <el-checkbox
+                v-model="editProduct.searchType"
+                :checked="editProduct.searchType === 'normal'"
+                true-label="normal"
+                false-label=""
+                >是否常用</el-checkbox
+              >
             </el-form-item>
           </el-col>
 
@@ -144,7 +204,6 @@
               @click="handleEditCategory()"
             />
           </el-col> -->
-
         </el-row>
 
         <el-tag
@@ -156,7 +215,8 @@
           size="small"
           type="success"
           @close="handleEditTagsClose(tag)"
-        >{{tag}}</el-tag>
+          >{{ tag }}</el-tag
+        >
         <el-input
           class="productdict-input-new-tag"
           v-if="inputEditVisible"
@@ -166,11 +226,24 @@
           @keyup.enter.native="handleEditInputConfirm"
           @blur="handleEditInputConfirm"
         ></el-input>
-        <el-button v-else class="productdict-button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
+        <el-button
+          v-else
+          class="productdict-button-new-tag"
+          size="small"
+          @click="showEditInput"
+          >+ 标签</el-button
+        >
       </el-form>
       <div slot="footer" class="productdict-dialog-footer">
-        <el-button @click="editProductFormVisible = false" v-if="!loading">取消</el-button>
-        <el-button type="primary" @click="onEditProduct('editProduct')" :loading="loading">确定</el-button>
+        <el-button @click="editProductFormVisible = false" v-if="!loading"
+          >取消</el-button
+        >
+        <el-button
+          type="primary"
+          @click="onEditProduct('editProduct')"
+          :loading="loading"
+          >确定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -180,38 +253,56 @@
       :close-on-click-modal="false"
       :show-close="false"
     >
-    <el-form :model="newProduct" :rules="rules" ref="newProduct" label-width="120px">
+      <el-form
+        :model="newProduct"
+        :rules="rules"
+        ref="newProduct"
+        label-width="120px"
+      >
         <el-row>
           <el-col :span="8">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="newProduct.name" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="newProduct.name"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="型号" prop="type">
-              <el-input v-model="newProduct.type" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="newProduct.type"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="8" prop="specification">
             <el-form-item label="规格" prop="specification">
-              <el-input v-model="newProduct.specification" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="newProduct.specification"
+                autocomplete="off"
+                style="width: 100%"
+              ></el-input>
             </el-form-item>
           </el-col>
-
-
         </el-row>
 
         <el-row>
           <el-col :span="8">
             <el-form-item label="单位" prop="unit">
-              <el-input v-model="newProduct.unit" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input v-model="newProduct.unit" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="8" prop="categoryName">
             <el-form-item label="类别" prop="categoryName">
-              <el-input v-model="newProduct.categoryName" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input
+                v-model="newProduct.categoryName"
+                autocomplete="off"
+              ></el-input>
               <!-- <template>
                 <el-select v-model="newProduct.categoryId" filterable placeholder="请选择" @change="CategoryChange">
                   <el-option
@@ -222,7 +313,16 @@
                   </el-option>
                 </el-select>
               </template> -->
-
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item prop="searchType">
+              <el-checkbox
+                v-model="newProduct.searchType"
+                true-label="normal"
+                false-label=""
+                >是否常用</el-checkbox
+              >
             </el-form-item>
           </el-col>
 
@@ -236,7 +336,6 @@
               @click="handleEditCategory()"
             />
           </el-col> -->
-
         </el-row>
 
         <el-tag
@@ -248,7 +347,8 @@
           size="small"
           type="success"
           @close="handleEditTagsClose(tag)"
-        >{{tag}}</el-tag>
+          >{{ tag }}</el-tag
+        >
         <el-input
           class="productdict-input-new-tag"
           v-if="inputEditVisible"
@@ -258,16 +358,26 @@
           @keyup.enter.native="handleEditInputConfirm"
           @blur="handleEditInputConfirm"
         ></el-input>
-        <el-button v-else class="productdict-button-new-tag" size="small" @click="showEditInput">+ 标签</el-button>
-
-    </el-form>
-    <div slot="footer" class="productdict-dialog-footer">
-      <el-button @click="newProductFormVisible = false" v-if="!loading">取消</el-button>
-      <el-button type="primary" @click="onNewProduct('newProduct')" :loading="loading">确定</el-button>
-    </div>
-
+        <el-button
+          v-else
+          class="productdict-button-new-tag"
+          size="small"
+          @click="showEditInput"
+          >+ 标签</el-button
+        >
+      </el-form>
+      <div slot="footer" class="productdict-dialog-footer">
+        <el-button @click="newProductFormVisible = false" v-if="!loading"
+          >取消</el-button
+        >
+        <el-button
+          type="primary"
+          @click="onNewProduct('newProduct')"
+          :loading="loading"
+          >确定</el-button
+        >
+      </div>
     </el-dialog>
-
 
     <!-- <el-dialog
       title="编辑分类"
@@ -366,12 +476,12 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      producttableHeight:window.innerHeight  - 150,
+      producttableHeight: window.innerHeight - 150,
       searchContent: "",
-      searchCategory:"",
+      searchCategory: "",
       editProductFormVisible: false,
       newProductFormVisible: false,
-      oldEditName:"",
+      oldEditName: "",
       // editCategoryVisible:false,
       loading: false,
       newProduct: {
@@ -383,16 +493,16 @@ export default {
         feature: "",
         categoryId: "",
         categoryName: "",
-        searchType:"normal"
+        searchType: "",
       },
       listQuery: {
         page: 1,
         limit: 12,
-        height:""
+        height: "",
       },
       categoryQuery: {
         page: 1,
-        limit: 8
+        limit: 8,
       },
       editProduct: {
         id: "",
@@ -403,7 +513,7 @@ export default {
         feature: "",
         categoryId: "",
         categoryName: "",
-        searchType:""
+        searchType: "",
       },
       editTags: [],
       inputEditVisible: false,
@@ -411,22 +521,27 @@ export default {
       rules: {
         name: [
           { required: true, message: "请输入名称", trigger: "blur" },
-          { min: 2, max: 55, message: "长度在 2 到 55 个字符", trigger: "blur" }
+          {
+            min: 2,
+            max: 55,
+            message: "长度在 2 到 55 个字符",
+            trigger: "blur",
+          },
         ],
         type: [{ required: true, message: "请输入型号", trigger: "blur" }],
         categoryId: [
-          { required: true, message: "请输入类别", trigger: "blur" }
-        ]
+          { required: true, message: "请输入类别", trigger: "blur" },
+        ],
       },
-      category:{
-        id:"",
-        name:"",
-        comment:"",
-        storeCode:"",
-        categoryId:"",
+      category: {
+        id: "",
+        name: "",
+        comment: "",
+        storeCode: "",
+        categoryId: "",
       },
       categroyTableColums: [
-        { field: "name", label: "类别", width: "auto",align:"center"},
+        { field: "name", label: "类别", width: "auto", align: "center" },
       ],
     };
   },
@@ -436,10 +551,10 @@ export default {
       DeleteProduct: "DeleteProduct",
       QueryProductObj: "QueryProductObj",
       SaveProduct: "SaveProduct",
-      GetCategoryList:"GetCategoryList",
-      SaveCategory:"SaveCategory",
-      PushCategoryList:"PushCategoryList",
-      DeleteCategory:"DeleteCategory",
+      GetCategoryList: "GetCategoryList",
+      SaveCategory: "SaveCategory",
+      PushCategoryList: "PushCategoryList",
+      DeleteCategory: "DeleteCategory",
     }),
     searchFocus() {
       this.listQuery.page = 1;
@@ -448,12 +563,16 @@ export default {
       this.listQuery.page = page;
     },
     handleDelete(index, row) {
-      let prod = { id: row.id, index: index,storeCode:this.userInfo.storeCode };
+      let prod = {
+        id: row.id,
+        index: index,
+        storeCode: this.userInfo.storeCode,
+      };
       this.$messageBox
         .confirm("确认删除？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         })
         .then(() => {
           this.DeleteProduct(prod);
@@ -461,9 +580,9 @@ export default {
     },
     handleEdit(index, row) {
       let prod = { id: row.id, index: index };
-      this.oldEditName=row.name;
+      this.oldEditName = row.name;
       this.QueryProductObj(prod)
-        .then(res => {
+        .then((res) => {
           if (res.resultStatus == 1) {
             // let params = { storeCode: this.userInfo.storeCode };
             // this.GetCategoryList(params);
@@ -474,15 +593,15 @@ export default {
             this.$message.error(res.message);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           let alert = err.message ? err.message : err;
           this.$message.error(alert);
         });
     },
-    handleNewProduct(newForm){
+    handleNewProduct(newForm) {
       let params = { storeCode: this.userInfo.storeCode };
       this.GetCategoryList(params);
-      this.editTags=[];
+      this.editTags = [];
       if (this.$refs[newForm]) {
         this.$refs[newForm].resetFields();
       }
@@ -490,34 +609,36 @@ export default {
       this.newProductFormVisible = true;
     },
     onEditProduct(editForm) {
-      this.$refs[editForm].validate(valid => {
+      this.$refs[editForm].validate((valid) => {
         if (valid) {
           let fe = JSON.stringify(this.editTags);
           this.editProduct.feature = fe;
-          this.editTags=[];
-          if(this.compareExistingProduct(this.editProduct.name)&&(this.editProduct.name.trim()!==this.oldEditName.trim()))
-          {
+          this.editTags = [];
+          if (
+            this.compareExistingProduct(this.editProduct.name) &&
+            this.editProduct.name.trim() !== this.oldEditName.trim()
+          ) {
             console.log(this.oldEditName);
             this.$message.warning("商品已存在！");
-            return false
+            return false;
           }
           this.SaveProduct(this.editProduct)
-            .then(res => {
+            .then((res) => {
               if (res.resultStatus == 1) {
                 let params = { storeCode: this.userInfo.storeCode };
                 this.GetProductList(params);
                 this.editProductFormVisible = false;
-                this.editTags=[];
+                this.editTags = [];
                 this.$message({
                   showClose: true,
                   message: "操作成功",
-                  type: "success"
+                  type: "success",
                 });
               } else {
                 this.$message.error(res.error);
               }
             })
-            .catch(err => {
+            .catch((err) => {
               let alert = err.message ? err.message : err;
               this.$message.error(alert);
             });
@@ -527,96 +648,90 @@ export default {
         }
       });
     },
-    compareExistingProduct(value){
-        let mapExisting = new Map();
-        let result=Boolean;
-        for(let i=0;i<this.productList.length;i++){
-          if(!mapExisting.has(this.productList[i].name))
-          {
-            mapExisting.set(this.productList[i].name,this.productList[i]);
-          }
+    compareExistingProduct(value) {
+      let mapExisting = new Map();
+      let result = Boolean;
+      for (let i = 0; i < this.productList.length; i++) {
+        if (!mapExisting.has(this.productList[i].name)) {
+          mapExisting.set(this.productList[i].name, this.productList[i]);
         }
-        if(mapExisting.has(value))
-        {
-          result=true;
-        }
-        else{
-          result=false;
-        }
-        return result;
+      }
+      if (mapExisting.has(value)) {
+        result = true;
+      } else {
+        result = false;
+      }
+      return result;
     },
-    onNewProduct(newForm){
-      this.$refs[newForm].validate(valid => {
-      if (valid) {
+    onNewProduct(newForm) {
+      this.$refs[newForm].validate((valid) => {
+        if (valid) {
           let fe = JSON.stringify(this.editTags);
           this.newProduct.feature = fe;
-          this.newProduct.storeCode=this.userInfo.storeCode;
-          this.editTags=[];
-          if(this.compareExistingProduct(this.newProduct.name))
-          {
+          this.newProduct.storeCode = this.userInfo.storeCode;
+          this.editTags = [];
+          if (this.compareExistingProduct(this.newProduct.name)) {
             this.$message.warning("商品已存在！");
-            return false
+            return false;
           }
           this.SaveProduct(this.newProduct)
-            .then(res => {
+            .then((res) => {
               if (res.resultStatus == 1) {
-                          let params = { storeCode: this.userInfo.storeCode };
+                let params = { storeCode: this.userInfo.storeCode };
                 this.GetProductList(params);
                 this.newProductFormVisible = false;
                 this.$message({
                   showClose: true,
                   message: "操作成功",
-                  type: "success"
+                  type: "success",
                 });
               } else {
                 this.$message.error(res.error);
               }
             })
-            .catch(err => {
+            .catch((err) => {
               let alert = err.message ? err.message : err;
               this.$message.error(alert);
             });
-      }
-      else{
-        this.$message.warning("请填写准确信息！");
-          return false
-      }
+        } else {
+          this.$message.warning("请填写准确信息！");
+          return false;
+        }
       });
     },
     // handleEditCategory(){
     //   this.editCategoryVisible=true;
     // },
-    addCategory(){
-      this.category.storeCode=this.userInfo.storeCode;
-      this.category.name=this.searchCategory.toUpperCase();
+    addCategory() {
+      this.category.storeCode = this.userInfo.storeCode;
+      this.category.name = this.searchCategory.toUpperCase();
       this.SaveCategory(this.category)
-        .then(res=>{
-          if(res.resultStatus==1){
+        .then((res) => {
+          if (res.resultStatus == 1) {
             this.PushCategoryList(res.data);
 
-            this.searchCategory="",
-            this.$message({
-              showClose:true,
-              message:"操作成功",
-              type:"success",
-            });
-          }
-          else{
+            (this.searchCategory = ""),
+              this.$message({
+                showClose: true,
+                message: "操作成功",
+                type: "success",
+              });
+          } else {
             this.$message.error(res.error);
           }
         })
-        .catch(err=>{
-          let alert=err.message?err.message:err;
+        .catch((err) => {
+          let alert = err.message ? err.message : err;
           this.$message.error(alert);
         });
     },
-    searchCate(){
-      this.categoryQuery.page=1;
+    searchCate() {
+      this.categoryQuery.page = 1;
     },
-    pageChangeCate(page){
-      this.categoryQuery.page=page;
+    pageChangeCate(page) {
+      this.categoryQuery.page = page;
     },
-    categroyEdit(index,row){
+    categroyEdit(index, row) {
       if (this.CheckUnSaveCategroy()) {
         this.$message.warning("有未保存项，请先保存");
         return;
@@ -625,70 +740,68 @@ export default {
     },
     CheckUnSaveCategroy() {
       return (
-        this.editCategoryList.filter(item => {
+        this.editCategoryList.filter((item) => {
           return item.isSet;
         }).length > 0
       );
     },
-    CheckDuplicate(payrod){
-      return(
-        this.calCategoryList.filter(item=>{
-          let key=item.name;
-          let index=key.toUpperCase().indexOf(payrod.toUpperCase());
+    CheckDuplicate(payrod) {
+      return (
+        this.calCategoryList.filter((item) => {
+          let key = item.name;
+          let index = key.toUpperCase().indexOf(payrod.toUpperCase());
           return index != -1;
-        }).length>1
-      )
+        }).length > 1
+      );
     },
-    categroySave(index,row){
-      if(this.CheckDuplicate(row.name)){
+    categroySave(index, row) {
+      if (this.CheckDuplicate(row.name)) {
         this.$message.warning("有重复数据");
         return;
-      }
-      else
-      {
+      } else {
         row.isSet = !row.isSet;
-        this.category.storeCode=this.userInfo.storeCode;
-        this.category.id=row.id;
-        this.category.name=row.name;
-        this.category.comment=row.comment;
-        this.category.categoryId=row.categoryId;
+        this.category.storeCode = this.userInfo.storeCode;
+        this.category.id = row.id;
+        this.category.name = row.name;
+        this.category.comment = row.comment;
+        this.category.categoryId = row.categoryId;
         this.SaveCategory(this.category)
-          .then(res=>{
-            if(res.resultStatus==1){
+          .then((res) => {
+            if (res.resultStatus == 1) {
               // this.GetCategoryList(this.userInfo.storeCode);
-  // console.log(this.categoryList);
-              this.searchCategory="",
-              this.$message({
-                showClose:true,
-                message:"操作成功",
-                type:"success",
-              });
-            }
-            else{
+              // console.log(this.categoryList);
+              (this.searchCategory = ""),
+                this.$message({
+                  showClose: true,
+                  message: "操作成功",
+                  type: "success",
+                });
+            } else {
               this.$message.error(res.error);
             }
           })
-          .catch(err=>{
-            let alert=err.message?err.message:err;
+          .catch((err) => {
+            let alert = err.message ? err.message : err;
             this.$message.error(alert);
           });
       }
     },
-    categroyDelete(index,row){
+    categroyDelete(index, row) {
       // let cate={id:row.id}
-      this.$messageBox.confirm('确认删除？',"提示",{
-          confirmButtonText:'确定',
-          cancelButtonText:'取消',
-          type:'warning'
+      this.$messageBox
+        .confirm("确认删除？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         })
-          .then(()=>{
-            this.DeleteCategory(row);
-          })
+        .then(() => {
+          this.DeleteCategory(row);
+        });
     },
-//     CategoryChange(value){
-// console.log("value:_"+value)
-//       this.editProduct.categoryId=value;
-//     },
+    //     CategoryChange(value){
+    // console.log("value:_"+value)
+    //       this.editProduct.categoryId=value;
+    //     },
     handleEditTagsClose(tag) {
       this.editTags.splice(this.editTags.indexOf(tag), 1);
     },
@@ -696,7 +809,7 @@ export default {
     showEditInput() {
       this.inputEditVisible = true;
       // eslint-disable-next-line no-unused-vars
-      this.$nextTick(_ => {
+      this.$nextTick((_) => {
         this.$refs.saveEditTagInput.$refs.input.focus();
       });
     },
@@ -715,20 +828,20 @@ export default {
       this.inputEditVisible = false;
       this.inputEditValue = "";
     },
-    cateClose(){
-      this.searchCategory="";
+    cateClose() {
+      this.searchCategory = "";
     },
     setpageSize() {
-      let rect = this.producttableHeight-40;
-      this.listQuery.height=rect+40;
+      let rect = this.producttableHeight - 40;
+      this.listQuery.height = rect + 40;
       let pageSize = Math.floor(rect / 40);
-      this.listQuery.limit=pageSize;
+      this.listQuery.limit = pageSize;
     },
   },
   computed: {
-    ...mapGetters(["userInfo", "productList","categoryList"]),
+    ...mapGetters(["userInfo", "productList", "categoryList"]),
     productLishPageShow() {
-      return this.productList.filter(item => {
+      return this.productList.filter((item) => {
         let key =
           item.name +
           item.type +
@@ -750,18 +863,23 @@ export default {
         this.listQuery.page * this.listQuery.limit
       );
     },
-    calCategoryList(){
+    calCategoryList() {
       return this.categoryList;
     },
-    editCategoryList(){  
-      return this.categoryList.filter(item=>{
-        let key=item.name;
-        let index=key.toUpperCase().indexOf(this.searchCategory.toUpperCase());
+    editCategoryList() {
+      return this.categoryList.filter((item) => {
+        let key = item.name;
+        let index = key
+          .toUpperCase()
+          .indexOf(this.searchCategory.toUpperCase());
         return index != -1;
-      })
+      });
     },
-    showCategoryList(){
-      return this.editCategoryList.slice((this.categoryQuery.page - 1) * this.categoryQuery.limit, this.categoryQuery.page * this.categoryQuery.limit);
+    showCategoryList() {
+      return this.editCategoryList.slice(
+        (this.categoryQuery.page - 1) * this.categoryQuery.limit,
+        this.categoryQuery.page * this.categoryQuery.limit
+      );
     },
   },
   beforeMount() {
@@ -770,10 +888,10 @@ export default {
     // console.log(this.productList);
     // this.GetCategoryList(params);
   },
-  mounted: function() {
-  this.$nextTick(function() {
-    this.setpageSize();
-  })
+  mounted: function () {
+    this.$nextTick(function () {
+      this.setpageSize();
+    });
   },
 };
 </script>
@@ -795,16 +913,16 @@ export default {
   width: 400px;
   margin: 0px 20px;
 }
-.productdict-content{
+.productdict-content {
   margin-top: 5px;
 }
-.productdict-content-footer{
+.productdict-content-footer {
   margin-top: 20px;
   height: 60px;
   align-items: center;
   justify-content: space-between;
 }
-.el-tag{
+.el-tag {
   margin-left: 10px;
 }
 .productdict-button-new-tag {

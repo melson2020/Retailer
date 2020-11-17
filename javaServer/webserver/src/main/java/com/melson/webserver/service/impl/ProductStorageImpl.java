@@ -81,7 +81,6 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
                 return productStorageDao.findByStoreCode(storeCode);
             case "NORMAL":
                 return productStorageDao.findByStoreCodeAndSearchType(storeCode, productType);
-
             default:
                 return productStorageDao.findByStoreCodeAndCountGreaterThan(storeCode, 0);
 
@@ -103,14 +102,14 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
                 storageList = productStorageDao.findByStoreCodeAndCountGreaterThan(storeCode, 0);
                 break;
         }
-        List<ProductStorageDto> dtoList= GenerateCountList(storageList, batchList);
+        List<ProductStorageDto> dtoList = GenerateCountList(storageList, batchList);
         dtoList.sort(new Comparator<ProductStorageDto>() {
             @Override
             public int compare(ProductStorageDto o1, ProductStorageDto o2) {
-                return o1.getProductId()<o2.getProductId()?0:1;
+                return o1.getProductId() < o2.getProductId() ? 0 : 1;
             }
         });
-        return  dtoList;
+        return dtoList;
     }
 
 
@@ -130,11 +129,11 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
         for (ProductStorage storage : productStorageList) {
             List<ProductBatch> batchList = productBatchMap.get(storage.getProductId());
             if (batchList == null || batchList.size() <= 0) {
-                ProductStorageDto dto = CreateDto(storage, null,1);
+                ProductStorageDto dto = CreateDto(storage, null, 1);
                 dtoList.add(dto);
             } else {
                 for (ProductBatch batch : batchList) {
-                    ProductStorageDto dto = CreateDto(storage, batch,batchList.size());
+                    ProductStorageDto dto = CreateDto(storage, batch, batchList.size());
                     dtoList.add(dto);
                 }
             }
@@ -142,7 +141,7 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
         return dtoList;
     }
 
-    private ProductStorageDto CreateDto(ProductStorage storage, ProductBatch batch,Integer spanCount) {
+    private ProductStorageDto CreateDto(ProductStorage storage, ProductBatch batch, Integer spanCount) {
         ProductStorageDto dto = new ProductStorageDto();
         dto.setProductId(storage.getProductId());
         dto.setProductName(storage.getProductName());
@@ -169,7 +168,7 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
 
     @Override
     public ProductStorage FindByProductIdAndStoreCode(Integer id, String storeCode) {
-        ProductStorage storage= productStorageDao.findByProductIdAndStoreCode(id,storeCode);
+        ProductStorage storage = productStorageDao.findByProductIdAndStoreCode(id, storeCode);
         return storage;
     }
 }

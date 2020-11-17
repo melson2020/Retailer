@@ -1,10 +1,10 @@
 <template>
-  <div style="height:100%">
+  <div style="height: 100%">
     <div
       class="productstorage-info-div"
       v-if="
         productAndStorageCount.productCount !=
-          productAndStorageCount.storageCount
+        productAndStorageCount.storageCount
       "
     >
       <el-card class="productstorage-box-card" shadow="always">
@@ -26,7 +26,7 @@
             type="success"
             v-if="
               (productAndStorageCount.productCount > 0) &
-                (productAndStorageCount.storageCount == 0)
+              (productAndStorageCount.storageCount == 0)
             "
             @click.prevent.stop="GenerateAll"
             >生成库存</el-button
@@ -40,9 +40,9 @@
             type="primary"
             v-if="
               (productAndStorageCount.productCount > 0) &
-                (productAndStorageCount.storageCount > 0) &
-                (productAndStorageCount.productCount >
-                  productAndStorageCount.storageCount)
+              (productAndStorageCount.storageCount > 0) &
+              (productAndStorageCount.productCount >
+                productAndStorageCount.storageCount)
             "
             >添加库存</el-button
           >
@@ -50,9 +50,9 @@
             type="primary"
             v-if="
               (productAndStorageCount.productCount > 0) &
-                (productAndStorageCount.storageCount > 0) &
-                (productAndStorageCount.productCount >
-                  productAndStorageCount.storageCount)
+              (productAndStorageCount.storageCount > 0) &
+              (productAndStorageCount.productCount >
+                productAndStorageCount.storageCount)
             "
             >跳过提示</el-button
           >
@@ -65,6 +65,20 @@
           <span class="productstorage-title-name">库存信息</span>
         </div>
         <div>
+          <el-button type="primary" icon="el-icon-refresh" size="small" @click="productTypeChanged"
+            >刷新</el-button
+          >
+          <el-select
+            v-model="productType"
+            size="small"
+            placeholder="请选产品类型"
+            class="product-type-select"
+            @change="productTypeChanged"
+          >
+            <el-option label="全部" value="all"></el-option>
+            <el-option label="常用" value="normal"></el-option>
+            <el-option label="数量大于0" value="morethanzero"></el-option>
+          </el-select>
           <el-input
             class="productstorage-fliter-input"
             size="small"
@@ -77,14 +91,18 @@
       </div>
       <div class="productstorage-content">
         <el-table
-          :data="storages" border class="productstorage-storage-table"  size="small"
+          :data="storages"
+          border
+          class="productstorage-storage-table"
+          size="small"
           ref="tableStorage"
           :height="tableHeight"
-          :header-row-style="{height:'40px'}"
-          :row-style="{height:'40px'}"
+          :header-row-style="{ height: '40px' }"
+          :row-style="{ height: '40px' }"
           :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white'}"
-          @expand-change="expandChanged">
+          :header-cell-style="{ background: '#808080', color: 'white' }"
+          @expand-change="expandChanged"
+        >
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-table
@@ -171,11 +189,12 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      tableHeight: window.innerHeight  - 150,
+      tableHeight: window.innerHeight - 150,
+      productType: "normal",
       storageTable: {
         pageSize: 15,
         currentPage: 1,
-        height:""
+        height: "",
       },
       searchContent: "",
       tableColums: [
@@ -183,28 +202,33 @@ export default {
         { field: "productType", label: "型号", width: "auto" },
         { field: "productSpecification", label: "规格", width: "auto" },
         { field: "count", label: "数量", width: "150px" },
-        { field: "unit", label: "单位", width: "150px" }
-      ]
+        { field: "unit", label: "单位", width: "150px" },
+      ],
     };
   },
   computed: {
     ...mapGetters(["productAndStorageCount", "userInfo", "productStorageList"]),
-    storageListShow: function() {
-      return this.productStorageList.filter(item => {
+    storageListShow: function () {
+      return this.productStorageList.filter((item) => {
         let key = item.productName + item.productType;
-        return key.toUpperCase().indexOf(this.searchContent.toUpperCase()) != -1;
+        return (
+          key.toUpperCase().indexOf(this.searchContent.toUpperCase()) != -1
+        );
       });
     },
-    storages(){
-      return this.storageListShow.slice((this.storageTable.currentPage - 1) * this.storageTable.pageSize,this.storageTable.currentPage * this.storageTable.pageSize)
-    }
+    storages() {
+      return this.storageListShow.slice(
+        (this.storageTable.currentPage - 1) * this.storageTable.pageSize,
+        this.storageTable.currentPage * this.storageTable.pageSize
+      );
+    },
   },
   methods: {
     ...mapActions({
       GetProductAndStorageCount: "GetProductAndStorageCount",
       GenerateProductStorageList: "GenerateProductStorageList",
       GetProductStorageList: "GetProductStorageList",
-      GetBatchList: "GetBatchList"
+      GetBatchList: "GetBatchList",
     }),
     searchFocus() {
       this.storageTable.currentPage = 1;
@@ -221,8 +245,8 @@ export default {
           row: row,
           params: {
             storeCode: this.userInfo.storeCode,
-            productId: row.productId
-          }
+            productId: row.productId,
+          },
         };
         this.GetBatchList(payload);
       }
@@ -231,22 +255,31 @@ export default {
       this.storageTable.currentPage = page;
     },
     setpageSize() {
-      let rect = this.tableHeight-40;
-      this.storageTable.height=rect+40;
+      let rect = this.tableHeight - 40;
+      this.storageTable.height = rect + 40;
       let pageSize = Math.floor(rect / 40);
-      this.storageTable.pageSize=pageSize;
-    }
+      this.storageTable.pageSize = pageSize;
+    },
+    productTypeChanged() {
+      this.GetProductStorageList({
+        storeCode: this.userInfo.storeCode,
+        searchType: this.productType,
+      });
+    },
   },
-  beforeMount: function() {
+  beforeMount: function () {
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductAndStorageCount(params);
-    this.GetProductStorageList({ storeCode: this.userInfo.storeCode,searchType:"normal" });
+    this.GetProductStorageList({
+      storeCode: this.userInfo.storeCode,
+      searchType: this.productType,
+    });
   },
-  mounted: function() {
-    this.$nextTick(function() {
+  mounted: function () {
+    this.$nextTick(function () {
       this.setpageSize();
     });
-  }
+  },
 };
 </script>
 <style>
@@ -290,6 +323,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  padding: 10px;
 }
 .productstorage-title-name {
   font-size: 28px;
@@ -298,12 +332,13 @@ export default {
   margin-left: 20px;
 }
 .productstorage-fliter-input {
+  margin-left: 20px;
   width: 400px;
 }
-.productstorage-content{
+.productstorage-content {
   margin-top: 5px;
 }
-.productstorage-content-footer{
+.productstorage-content-footer {
   margin-top: 20px;
   height: 60px;
   align-items: center;
@@ -326,5 +361,8 @@ export default {
 }
 .el-tag {
   margin: 0px 10px;
+}
+.product-type-select {
+  margin-left: 20px;
 }
 </style>

@@ -125,7 +125,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
 
     @Override
     public List<ProductDto> FindProductList(String storeCode) {
-        String sql="SELECT id,name,type,specification,unit,feature,categoryName as category from product WHERE storeCode='"+storeCode+"'order by id DESC";
+        String sql="SELECT id,name,type,specification,unit,feature,categoryName as category,searchType from product WHERE storeCode='"+storeCode+"'order by id DESC";
         List<Object[]> objList=entityManagerUtil.ExcuteSql(sql);
         List<ProductDto> dtoList=new ArrayList<>(objList.size());
         for (Object[] obj:objList){
@@ -137,6 +137,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
             dto.setUnit(obj[4]==null?null:obj[4].toString());
             dto.setFeature(obj[5]==null?null:obj[5].toString());
             dto.setCategoryName(obj[6]==null?null:obj[6].toString());
+            dto.setSearchType(obj[7]==null?null:obj[7].toString());
             dtoList.add(dto);
         }
         return dtoList;
@@ -201,6 +202,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         prodDto.setStoreCode(prod.getStoreCode());
 //        prodDto.setCategoryComment(productCategory.getComment());
         prodDto.setName(prod.getName());
+        prodDto.setSearchType(prod.getSearchType());
 //        prodDto.setCategoryKeyId(productCategory.getId());
         return prodDto;
     }
@@ -253,6 +255,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         prod.setSpecification(productDto.getSpecification());
         prod.setUnit(productDto.getUnit());
         prod.setFeature(productDto.getFeature());
+        prod.setSearchType(productDto.getSearchType());
         Product saved = productDao.save(prod);
 
         if(storageList.size()>0) {
