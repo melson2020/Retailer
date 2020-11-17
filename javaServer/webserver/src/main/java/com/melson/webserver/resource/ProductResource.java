@@ -192,6 +192,7 @@ public class ProductResource extends BaseResource {
         }else {
             result.setData(saved);
         }
+        System.out.println("GET Rest Call: /product/save ...");
         return result;
     }
 

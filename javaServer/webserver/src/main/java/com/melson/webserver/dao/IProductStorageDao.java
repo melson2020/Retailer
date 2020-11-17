@@ -27,8 +27,8 @@ public interface IProductStorageDao extends JpaRepository<ProductStorage,String>
     List<ProductStorage> findByStoreCodeAndCountGreaterThan(String storeCode,Integer count);
 
     @Modifying
-    @Query(value = "UPDATE product_storage SET productName=?2, productType=?3, productSpecification=?4, unit=?5 where productId=?1",nativeQuery = true)
-    void updateStorage(Integer id, String name, String type, String specification, String unit);
+    @Query(value = "UPDATE product_storage SET productName=?2, productType=?3, productSpecification=?4, unit=?5 ,searchType=?6 where productId=?1",nativeQuery = true)
+    void updateStorage(Integer id, String name, String type, String specification, String unit,String searchType);
 
 
     ProductStorage findByProductIdAndStoreCode(Integer id, String storeCode);
