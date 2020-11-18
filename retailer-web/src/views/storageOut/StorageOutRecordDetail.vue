@@ -68,6 +68,7 @@
       >
         <el-table-column prop="productName" label="商品名称"> </el-table-column>
         <el-table-column prop="batchNo" label="入库批次号"></el-table-column>
+        <el-table-column prop="supplyName" label="供应商"></el-table-column>
         <el-table-column label="入库税">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.vatIn == 1" size="mini">
