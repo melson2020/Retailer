@@ -1,7 +1,13 @@
 <template>
   <div>
     <div class="header">盘点单</div>
-    <el-form ref="form" label-width="120px" class="create-ticket-form">
+    <el-form
+      :model="ticket"
+      ref="ticketForm"
+      label-width="120px"
+      :rules="rules"
+      class="create-ticket-form"
+    >
       <el-form-item label="商户名称" size="mini">
         <el-input v-model="ticket.storeName"></el-input>
       </el-form-item>
@@ -11,20 +17,20 @@
       <el-form-item label="盘点人员" size="mini">
         <el-input v-model="ticket.employeeName"></el-input>
       </el-form-item>
-      <el-form-item label="盘点类型" size="mini">
+      <el-form-item label="盘点类型" size="mini" prop="type">
         <el-select v-model="ticket.type" placeholder="请选择类型">
           <el-option label="月度盘点" value="monthly"></el-option>
           <el-option label="临时盘点" value="addtional"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="盘点内容" size="mini">
+      <el-form-item label="盘点内容" size="mini" prop="productType">
         <el-select v-model="ticket.productType" placeholder="请选择盘点产品">
           <el-option label="全部" value="all"></el-option>
           <el-option label="常用" value="normal"></el-option>
           <el-option label="数量大于0" value="morethanzero"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="描述" size="mini">
+      <el-form-item label="描述" size="mini" prop="description">
         <el-input
           type="textarea"
           v-model="ticket.description"
@@ -33,8 +39,14 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="mini" @click="createOnClick">立即创建</el-button>
-        <el-button  size="mini"
+        <el-button
+          type="primary"
+          size="mini"
+          @click="createOnClick('ticketForm')"
+          >立即创建</el-button
+        >
+        <el-button
+          size="mini"
           @click="nextStep"
           :disabled="!this.currentStorageCountTicket.type"
           >下一页</el-button
@@ -74,6 +86,15 @@ export default {
       },
       dialogVisible: false,
       unfinishedTickets: [],
+      rules: {
+        type: [{ required: true, message: "请选择类型", trigger: "blur" }],
+        productType: [
+          { required: true, message: "请选择盘点内容", trigger: "blur" },
+        ],
+        description: [
+          { required: true, message: "请填写描述", trigger: "blur" },
+        ],
+      },
     };
   },
   computed: {
@@ -104,20 +125,27 @@ export default {
     nextStep() {
       this.$router.push({ path: "/main/storageCount/preview" });
     },
-    createOnClick() {
-      this.CreateStorageCountTicket(this.ticket)
-        .then((res) => {
-          if (res.resultStatus == 1) {
-            this.SetCurrentStorageCountTicket(res.data);
-            this.SetActiveSteps(1);
-            this.$router.replace({ path: "/main/storageCount/preview" });
-          } else {
-            this.$message.error(res.message);
-          }
-        })
-        .catch((error) => {
-          this.$message.error(error.message ? error.message : error);
-        });
+    createOnClick(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.CreateStorageCountTicket(this.ticket)
+            .then((res) => {
+              if (res.resultStatus == 1) {
+                this.SetCurrentStorageCountTicket(res.data);
+                this.SetActiveSteps(1);
+                this.$router.replace({ path: "/main/storageCount/preview" });
+              } else {
+                this.$message.error(res.message);
+              }
+            })
+            .catch((error) => {
+              this.$message.error(error.message ? error.message : error);
+            });
+        } else {
+          this.$message.warning("请填写准确信息");
+          return false;
+        }
+      });
     },
     routerTo(status, type) {
       switch (status) {
@@ -161,7 +189,7 @@ export default {
     loadExistTicket() {
       this.SetCurrentStorageCountTicket(this.unfinishedTickets[0]);
       this.dialogVisible = false;
-      this.routerTo(this.unfinishedTickets[0].status,'fromLoad');
+      this.routerTo(this.unfinishedTickets[0].status, "fromLoad");
     },
   },
   mounted: function () {

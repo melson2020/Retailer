@@ -155,6 +155,7 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
         } else {
             dto.setBatchNo(batch.getBatchNo());
             dto.setSupplyName(batch.getSupplyName());
+            dto.setSupplyId(batch.getSupplyId());
             dto.setCount(batch.getCount());
             dto.setCountUnit(batch.getCountUnit());
         }

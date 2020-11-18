@@ -257,6 +257,10 @@ public class ProductStorageResource extends BaseResource {
         return storageCountTicketService.ImportCountedExcel(ticketCode, file, basePath);
     }
 
+
+    /**
+     * 更具上传的excel 更新库存
+     */
     @RequestMapping(value = "/updateStorageAfterCounted", method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
     @Transactional
@@ -272,12 +276,14 @@ public class ProductStorageResource extends BaseResource {
         }
         if (dtoList == null || ticket == null)
             return this.GenerateResult(ResultType.ParametersNeeded);
+        //未有数据变动，直接更新ticket 状态
         if(dtoList.size()<=0){
             ticket.setResult("correct");
             ticket.setStatus(5);
             storageCountTicketService.SaveTicket(ticket);
             return new Result();
         }
+        //存在数据变动项 更新库存信息
         return storageCountTicketDetailService.SaveDetailWithCountedList(dtoList, ticket);
     }
 

@@ -73,7 +73,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
         //已存在的批次map 防止添加批次时重复添加 key 值为入库单号+产品ID
         Map<String, ProductBatch> existBatchMap = new HashMap<>();
         for (ProductBatch batch : batchList) {
-            String key = batch.getProductId() + batch.getBatchNo();
+            String key = batch.getProductId() + batch.getBatchNo()+batch.getSupplyId();
             productBatchMap.put(key, batch);
             existBatchMap.put(batch.getProductId() + batch.getStorageInCode(), batch);
         }
@@ -90,12 +90,14 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
             }
             if (!StringUtils.isEmpty(dto.getBatchNo())) {
                 //添加需要更新的库存批次
-                ProductBatch needToUpdateBatch = productBatchMap.get(dto.getProductId() + dto.getBatchNo());
-                needToUpdateBatch.setCount(dto.getCounted());
-                if(dto.getCounted()<=0){
-                  needToUpdateBatch.setFinished(1);
+                ProductBatch needToUpdateBatch = productBatchMap.get(dto.getProductId() + dto.getBatchNo()+dto.getSupplyId());
+                if (needToUpdateBatch != null) {
+                    needToUpdateBatch.setCount(dto.getCounted());
+                    if (dto.getCounted() <= 0) {
+                        needToUpdateBatch.setFinished(1);
+                    }
+                    saveBatchList.add(needToUpdateBatch);
                 }
-                saveBatchList.add(needToUpdateBatch);
             } else {
                 emptyBatchNoList.add(dto);
             }
@@ -148,7 +150,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
 
     @Override
     public List<StorageCountTicketDetail> FindCountTicketDetails(String ticketCode) {
-      return storageCountTicketDetailDao.findByTicketCode(ticketCode);
+        return storageCountTicketDetailDao.findByTicketCode(ticketCode);
     }
 
     /**

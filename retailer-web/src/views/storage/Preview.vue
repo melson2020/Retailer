@@ -49,6 +49,7 @@ export default {
         { field: "type", label: "型号", width: "auto" },
         { field: "specification", label: "规格", width: "auto" },
         { field: "batchNo", label: "批次", width: "auto" },
+         { field: "supplyId", label: "供应商识别码", width: "auto" },
         { field: "supplyName", label: "供应商", width: "auto" },
         { field: "count", label: "现有数量", width: "auto" },
         { field: "totalCount", label: "现有总数", width: "auto" },

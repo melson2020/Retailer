@@ -12,6 +12,7 @@ public class ProductStorageDto {
     private String type;
     private String specification;
     private String batchNo;
+    private Integer supplyId;
     private String supplyName;
     //现有数量
     private Integer count;
@@ -24,6 +25,14 @@ public class ProductStorageDto {
     private Integer totalCounted;
     //合并数量
     private Integer spanCount;
+
+    public Integer getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(Integer supplyId) {
+        this.supplyId = supplyId;
+    }
 
     public Integer getTotalCounted() {
         return totalCounted;

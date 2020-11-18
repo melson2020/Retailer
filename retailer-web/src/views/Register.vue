@@ -3,20 +3,31 @@
     <el-card class="register-card">
       <div slot="header">
         <el-button
-              style="float: left; padding: 3px 0"
-              type="text"
-              @click="backClick"
-              >返回</el-button>
+          style="float: left; padding: 3px 0"
+          type="text"
+          @click="backClick"
+          >返回</el-button
+        >
         <!-- <i class="el-icon-back back-icon" @click="backClick" font-size="20px"></i> -->
         <span class="register-title">商户注册</span>
       </div>
-      <el-form ref="storeForm" :model="store" label-width="100px" :rules="rules">
+      <el-form
+        ref="storeForm"
+        :model="store"
+        label-width="100px"
+        :rules="rules"
+      >
         <el-form-item label="商户名称" prop="storeName">
           <el-input v-model="store.storeName"></el-input>
         </el-form-item>
         <el-form-item label="商户地址">
           <div class="register-row-between">
-            <el-select filterable placeholder="省" v-model="store.provinceCode" @change="provinceChanged">
+            <el-select
+              filterable
+              placeholder="省"
+              v-model="store.provinceCode"
+              @change="provinceChanged"
+            >
               <el-option
                 v-for="item in provinceList"
                 :key="item.id"
@@ -58,19 +69,35 @@
           <el-input placeholder="详细地址" v-model="store.location"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input type="textarea" autosize v-model="address" disabled></el-input>
+          <el-input
+            type="textarea"
+            autosize
+            v-model="address"
+            disabled
+          ></el-input>
         </el-form-item>
         <el-form-item label="联系人" prop="communicateName">
           <el-input v-model="store.communicateName"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input placeholder="号码会被用作管理员登录账户" v-model="store.phone"></el-input>
+          <el-input
+            placeholder="号码会被用作管理员登录账户"
+            v-model="store.phone"
+          ></el-input>
         </el-form-item>
         <el-form-item label="登录密码" prop="password">
-          <el-input type="password" v-model="store.password" autocomplete="off"></el-input>
+          <el-input
+            type="password"
+            v-model="store.password"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="再次输入密码" prop="checkpassword">
-          <el-input type="password" v-model="store.checkpassword" autocomplete="off"></el-input>
+          <el-input
+            type="password"
+            v-model="store.checkpassword"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="描述">
           <el-input
@@ -82,7 +109,12 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="register-button" @click="onSubmit('storeForm')">注册</el-button>
+          <el-button
+            type="primary"
+            class="register-button"
+            @click="onSubmit('storeForm')"
+            >注册</el-button
+          >
         </el-form-item>
       </el-form>
     </el-card>
@@ -114,19 +146,22 @@ export default {
       }
     };
     var validatePhone = (rule, value, callback) => {
+      var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
       if (value === "") {
         callback(new Error("请输入联系电话"));
+      } else if (!myreg.test(value)) {
+        callback(new Error("请输入正确的号码"));
       } else {
         let phoneNumber = { phoneNumber: value };
         this.CheckPhone(phoneNumber)
-          .then(res => {
+          .then((res) => {
             if (res.data) {
               callback();
             } else {
               callback(new Error("该号码已存在"));
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.$message.error(error.message);
           });
       }
@@ -145,69 +180,69 @@ export default {
         phone: "",
         password: "",
         checkpassword: "",
-        description: ""
+        description: "",
       },
       loginBackground: {
         backgroundImage:
           "url(" + require("../assets/login-background.png") + ")",
-        backgroundRepeat: "no-repeat"
+        backgroundRepeat: "no-repeat",
       },
       rules: {
         storeName: [
-          { required: true, message: "请输入商户名称", trigger: "blur" }
+          { required: true, message: "请输入商户名称", trigger: "blur" },
         ],
         location: [
-          { required: true, message: "请填写商户地址", trigger: "blur" }
+          { required: true, message: "请填写商户地址", trigger: "blur" },
         ],
         communicateName: [
-          { required: true, message: "请填写联系人员", trigger: "blur" }
+          { required: true, message: "请填写联系人员", trigger: "blur" },
         ],
         phone: [
           {
             validator: validatePhone,
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         password: [{ validator: validatePass, trigger: "blur" }],
-        checkpassword: [{ validator: validatePass2, trigger: "blur" }]
-      }
+        checkpassword: [{ validator: validatePass2, trigger: "blur" }],
+      },
     };
   },
   computed: {
     ...mapGetters(["alterMessage", "provinceList", "cityList", "areaList"]),
-    showCity: function() {
+    showCity: function () {
       return (
         typeof this.store.provinceCode == "undefined" ||
         this.store.provinceCode == null ||
         this.store.provinceCode == ""
       );
     },
-    showArea: function() {
+    showArea: function () {
       return (
         typeof this.store.cityCode === "undefined" ||
         this.store.cityCode == null ||
         this.store.cityCode == ""
       );
     },
-    address: function() {
+    address: function () {
       return (
         this.store.provinceName +
         this.store.cityName +
         this.store.areaName +
         this.store.location
       );
-    }
+    },
   },
   watch: {
     // 如果 `errorMessage` 发生改变，这个函数就会运行
-    alterMessage: function() {
+    alterMessage: function () {
       if (this.alterMessage.show) {
         this.$message({
           message: this.alterMessage.message,
-          type: this.alterMessage.type
+          type: this.alterMessage.type,
         });
       }
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -215,10 +250,10 @@ export default {
       GetCityList: "GetCityWithCode",
       GetAreaList: "GetAreaWithCode",
       RegisterStore: "RegisterStore",
-      CheckPhone: "CheckPhone"
+      CheckPhone: "CheckPhone",
     }),
     onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           this.RegisterStore(this.store);
         } else {
@@ -228,34 +263,34 @@ export default {
       });
     },
 
-    backClick: function() {
+    backClick: function () {
       this.$router.push({ path: "/" });
     },
-    provinceChanged: function(item) {
+    provinceChanged: function (item) {
       let privinceCode = { provinceCode: item };
-      let provinceName = this.provinceList.find(province => {
+      let provinceName = this.provinceList.find((province) => {
         return province.code == item;
       }).name;
       this.store.provinceName = provinceName;
       this.GetCityList(privinceCode);
     },
-    cityChanged: function(item) {
+    cityChanged: function (item) {
       let cityCode = { cityCode: item };
-      let cityName = this.cityList.find(city => {
+      let cityName = this.cityList.find((city) => {
         return city.code == item;
       }).name;
       this.store.cityName = cityName;
       this.GetAreaList(cityCode);
     },
-    areaChanged: function(item) {
-      this.store.areaName = this.areaList.find(area => {
+    areaChanged: function (item) {
+      this.store.areaName = this.areaList.find((area) => {
         return area.code == item;
       }).name;
-    }
+    },
   },
-  beforeMount: function() {
+  beforeMount: function () {
     this.GetProvinceList();
-  }
+  },
 };
 </script>
 <style>
