@@ -1,7 +1,7 @@
 spring:
   datasource:
      driver-class-name: com.mysql.jdbc.Driver
-     url: jdbc:mysql://www.melson.top:3306/wechat?Unicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+     url: jdbc:mysql://www.melson.top:3306/wechat?Unicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
      username: root
      password: liang3363
   jpa:

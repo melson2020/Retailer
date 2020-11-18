@@ -171,6 +171,12 @@ public class ProductStorageResource extends BaseResource {
     @RequiredPermission(SecurityLevel.Employee)
     public Result CreateStorageCountTicket(@RequestBody StorageCountTicket ticket, HttpServletRequest request) {
         Result result = new Result();
+        List<StorageCountTicket> unfinishEdTickets=storageCountTicketService.FindUnFinishedTicket(ticket.getStoreCode());
+        if(unfinishEdTickets.size()>0){
+            result.setResultStatus(2);
+            result.setMessage("unfinished ticket count::"+unfinishEdTickets.size());
+            return result;
+        }
         StorageCountTicket savedTicket = storageCountTicketService.CreateTicekt(ticket);
         if (savedTicket != null) {
             result.setData(savedTicket);
