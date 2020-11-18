@@ -1,5 +1,5 @@
 <template>
-  <div>无法找到指定页面</div>
+  <div>403 权限不足，请注意，不要随意访问限制页面</div>
 </template>
 <script>
 export default {};
