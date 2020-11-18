@@ -184,6 +184,8 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
             } else {
                 for (ProductStorageDto dto : dtoList) {
                     StorageCountTicketDetail detail = CreateDetail(dto, ticket, newBatchNoMap.get(ticket.getCode()), detailMap.get(productId));
+                    //数量未变化 不加入记录
+                    if(detail==null)continue;
                     saveDetails.add(detail);
                 }
             }
@@ -198,6 +200,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
         }
         existDetail.setProductId(dto.getProductId());
         existDetail.setStoreCode(ticket.getStoreCode());
+        existDetail.setTicketCode(ticket.getCode());
         existDetail.setProductName(dto.getProductName());
         String type = dto.getTotalCounted() > dto.getTotalCount() ? "plus" : "minus ";
         existDetail.setType(type);
@@ -215,6 +218,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
         String type = dto.getCounted() > dto.getCount() ? "plus" : "minus ";
         existDetail.setType(type);
         Integer count = dto.getCounted() - dto.getCount();
+        if(count==0)return null;
         existDetail.setCount(count < 0 ? count * -1 : count);
         if (!StringUtils.isEmpty(dto.getBatchNo())) {
             existDetail.setBatchNo(dto.getBatchNo());

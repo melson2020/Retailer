@@ -351,9 +351,9 @@ export default {
     objectSpanMethod({ rowIndex, columnIndex }) {
       if (
         columnIndex <= 3 ||
-        columnIndex === 7 ||
         columnIndex === 8 ||
-        columnIndex === 10
+        columnIndex === 9 ||
+        columnIndex === 11
       ) {
         const _row = this.spanArr[rowIndex];
         const _col = _row > 0 ? 1 : 0;

@@ -211,9 +211,9 @@ public class PoiUtils {
             sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 1, 1));
             sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 2, 2));
             sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 3, 3));
-            sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 7, 7));
             sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 8, 8));
-            sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 10, 10));
+            sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 9, 9));
+            sheet.addMergedRegion(new CellRangeAddress(rowCount, lastRow, 11, 11));
             for (ProductStorageDto storage : dtoList) {
                 HSSFRow contentRow = sheet.createRow(rowCount);
                 contentRow.setHeightInPoints(23);

@@ -144,7 +144,7 @@ export default {
       return Y + "-" + M + "-" + D;
     },
     objectSpanMethod({rowIndex, columnIndex }) {
-       if (columnIndex <= 2||columnIndex>=6) {
+       if (columnIndex <= 2||columnIndex>=7) {
             const _row = this.spanArr[rowIndex];
             const _col = _row > 0 ? 1 : 0;
             return {
