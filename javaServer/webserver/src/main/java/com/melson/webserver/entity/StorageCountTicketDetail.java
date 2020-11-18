@@ -16,12 +16,21 @@ public class StorageCountTicketDetail {
     private String storeCode;
     private Integer productId;
     private String productName;
+    private String supplyName;
     private String type;
     private Integer count;
     private String ticketCode;
     private String batchNo;
     //1 总数变化 批次数量未变 0 批次数量变化
     private Integer totalCountChange;
+
+    public String getSupplyName() {
+        return supplyName;
+    }
+
+    public void setSupplyName(String supplyName) {
+        this.supplyName = supplyName;
+    }
 
     public Integer getTotalCountChange() {
         return totalCountChange;

@@ -53,7 +53,7 @@
         >
       </el-form-item>
     </el-form>
-    <el-dialog
+    <!-- <el-dialog
       title="提示"
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
@@ -66,7 +66,7 @@
           >加载至工作区</el-button
         >
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 <script>
@@ -134,6 +134,9 @@ export default {
                 this.SetCurrentStorageCountTicket(res.data);
                 this.SetActiveSteps(1);
                 this.$router.replace({ path: "/main/storageCount/preview" });
+              } else if (res.resultStatus == 2) {
+                this.SetActiveSteps(0);
+                window.location.reload();
               } else {
                 this.$message.error(res.message);
               }
@@ -147,45 +150,45 @@ export default {
         }
       });
     },
-    routerTo(status, type) {
-      switch (status) {
-        case 1:
-          this.$router.push({ path: "/main/storageCount/preview" });
-          this.SetActiveSteps(2);
-          break;
-        case 2:
-          if (type) {
-            this.$message.warning("为确保库存正确，请重新导入导出");
-            this.$router.push({ path: "/main/storageCount/preview" });
-            this.SetActiveSteps(2);
-          } else {
-            this.$router.push({ path: "/main/storageCount/import" });
-            this.SetActiveSteps(3);
-          }
-          break;
-        case 3:
-          if (type) {
-            this.$message.warning("为确保库存正确，请重新导入导出");
-            this.$router.push({ path: "/main/storageCount/preview" });
-            this.SetActiveSteps(2);
-          } else {
-            this.$router.push({ path: "/main/storageCount/import" });
-            this.SetActiveSteps(3);
-          }
-          break;
-        case 4:
-          this.$router.push({ path: "/main/storageCount/updateBatch" });
-          this.SetActiveSteps(4);
-          break;
-        case 5:
-          this.$router.push({ path: "/main/storageCount/complete" });
-          this.SetActiveSteps(5);
-          break;
-        default:
-          this.$router.push({ path: "/main/storageCount/create" });
-          break;
-      }
-    },
+    // routerTo(status, type) {
+    //   switch (status) {
+    //     case 1:
+    //       this.$router.push({ path: "/main/storageCount/preview" });
+    //       this.SetActiveSteps(2);
+    //       break;
+    //     case 2:
+    //       if (type) {
+    //         this.$message.warning("为确保库存正确，请重新导入导出");
+    //         this.$router.push({ path: "/main/storageCount/preview" });
+    //         this.SetActiveSteps(2);
+    //       } else {
+    //         this.$router.push({ path: "/main/storageCount/import" });
+    //         this.SetActiveSteps(3);
+    //       }
+    //       break;
+    //     case 3:
+    //       if (type) {
+    //         this.$message.warning("为确保库存正确，请重新导入导出");
+    //         this.$router.push({ path: "/main/storageCount/preview" });
+    //         this.SetActiveSteps(2);
+    //       } else {
+    //         this.$router.push({ path: "/main/storageCount/import" });
+    //         this.SetActiveSteps(3);
+    //       }
+    //       break;
+    //     case 4:
+    //       this.$router.push({ path: "/main/storageCount/updateBatch" });
+    //       this.SetActiveSteps(4);
+    //       break;
+    //     case 5:
+    //       this.$router.push({ path: "/main/storageCount/complete" });
+    //       this.SetActiveSteps(5);
+    //       break;
+    //     default:
+    //       this.$router.push({ path: "/main/storageCount/create" });
+    //       break;
+    //   }
+    // },
     loadExistTicket() {
       this.SetCurrentStorageCountTicket(this.unfinishedTickets[0]);
       this.dialogVisible = false;
@@ -202,32 +205,32 @@ export default {
   },
   beforeMount: function () {
     //防止多次点击menu 跳过检测
-    var type = this.$route.query.type;
-    //从盘点记录转跳过来或者本身有未完成的ticket
-    if (this.currentStorageCountTicket.status || type) {
-      let status = this.currentStorageCountTicket.status;
-      this.routerTo(status, type);
-    } else {
-      //查询数据库查询是否有未完成单子
-      let params = {
-        storeCode: this.userInfo.storeCode,
-      };
-      this.GetUnFinishedCountTickets(params)
-        .then((res) => {
-          if (res.resultStatus == 1) {
-            var existList = res.data;
-            if (existList.length > 0) {
-              this.dialogVisible = true;
-              this.unfinishedTickets = existList;
-            }
-          } else {
-            this.$message.error(res.message);
-          }
-        })
-        .catch((err) => {
-          this.$message.error(err.message);
-        });
-    }
+    // var type = this.$route.query.type;
+    // //从盘点记录转跳过来或者本身有未完成的ticket
+    // if (this.currentStorageCountTicket.status || type) {
+    //   let status = this.currentStorageCountTicket.status;
+    //   this.routerTo(status, type);
+    // } else {
+    //   //查询数据库查询是否有未完成单子
+    //   let params = {
+    //     storeCode: this.userInfo.storeCode,
+    //   };
+    //   this.GetUnFinishedCountTickets(params)
+    //     .then((res) => {
+    //       if (res.resultStatus == 1) {
+    //         var existList = res.data;
+    //         if (existList.length > 0) {
+    //           this.dialogVisible = true;
+    //           this.unfinishedTickets = existList;
+    //         }
+    //       } else {
+    //         this.$message.error(res.message);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       this.$message.error(err.message);
+    //     });
+    // }
   },
 };
 </script>

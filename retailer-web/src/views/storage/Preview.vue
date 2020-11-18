@@ -4,7 +4,8 @@
       <span class="title-name">盘点单预览</span>
       <div>
         <el-button
-          type="primary" size="small"
+          type="primary"
+          size="small"
           @click="exportToExcel"
           :disabled="previewStorageList.length <= 0"
           >导出文件</el-button
@@ -18,10 +19,10 @@
         :data="previewStorageList"
         ref="storagePreviewTable"
         size="small"
-        :header-row-style="{height:'40px'}"
-          :row-style="{height:'40px'}"
-          :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white'}"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }"
         :span-method="objectSpanMethod"
       >
         <el-table-column
@@ -34,7 +35,14 @@
       </el-table>
     </div>
     <div v-else class="data-empty-info">
-      暂无数据，请先创建盘点单
+      <el-button
+        v-if="currentStorageCountTicket"
+        type="primary"
+        plain
+        @click="loadPreviewStorageList"
+        >找不到数据？点击加载</el-button
+      >
+      <span v-else> 暂无数据，请先创建盘点单</span>
     </div>
   </div>
 </template>
@@ -49,41 +57,41 @@ export default {
         { field: "type", label: "型号", width: "auto" },
         { field: "specification", label: "规格", width: "auto" },
         { field: "batchNo", label: "批次", width: "auto" },
-         { field: "supplyId", label: "供应商识别码", width: "auto" },
+        { field: "supplyId", label: "供应商识别码", width: "auto" },
         { field: "supplyName", label: "供应商", width: "auto" },
         { field: "count", label: "现有数量", width: "auto" },
         { field: "totalCount", label: "现有总数", width: "auto" },
-        { field: "countUnit", label: "单位", width: "auto" }
-      ]
+        { field: "countUnit", label: "单位", width: "auto" },
+      ],
     };
   },
   computed: {
     ...mapGetters([
       "previewStorageList",
       "currentStorageCountTicket",
-      "userInfo"
+      "userInfo",
     ]),
     spanArr() {
-      let spanRowArr=[];
-      let pos=0;
+      let spanRowArr = [];
+      let pos = 0;
       for (let index = 0; index < this.previewStorageList.length; index++) {
-         if(index==0){
-           spanRowArr.push(1);
-           pos=0;
-         }else{
-           var pre=this.previewStorageList[index-1];
-           var current=this.previewStorageList[index];
-           if(pre.productId===current.productId){
-               spanRowArr[pos]+=1;
-               spanRowArr.push(0)
-           }else{
-             spanRowArr.push(1)
-             pos=index;
-           }
-         }      
+        if (index == 0) {
+          spanRowArr.push(1);
+          pos = 0;
+        } else {
+          var pre = this.previewStorageList[index - 1];
+          var current = this.previewStorageList[index];
+          if (pre.productId === current.productId) {
+            spanRowArr[pos] += 1;
+            spanRowArr.push(0);
+          } else {
+            spanRowArr.push(1);
+            pos = index;
+          }
+        }
       }
       return spanRowArr;
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -91,7 +99,7 @@ export default {
       ExportCountTicket: "ExportCountTicket",
       SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
       SetActiveSteps: "SetActiveSteps",
-      DownStorageCountTicketExportExcel: "DownStorageCountTicketExportExcel"
+      DownStorageCountTicketExportExcel: "DownStorageCountTicketExportExcel",
     }),
     prePageOnClick() {
       this.$router.replace({ path: "/main/storageCount/create" });
@@ -99,10 +107,10 @@ export default {
     exportToExcel() {
       if (this.currentStorageCountTicket.type) {
         this.ExportCountTicket(this.currentStorageCountTicket)
-          .then(res => {
+          .then((res) => {
             if (res.resultStatus == 1) {
               this.DownStorageCountTicketExportExcel(res.data)
-                .then(response => {
+                .then((response) => {
                   let blob = new Blob([response]);
                   let fileName = res.data.excelExportFileName;
                   if (window.navigator.msSaveOrOpenBlob) {
@@ -119,14 +127,14 @@ export default {
                   this.SetActiveSteps(3);
                   this.$router.replace({ path: "/main/storageCount/import" });
                 })
-                .catch(error => {
+                .catch((error) => {
                   this.$message.error(error.message ? error.message : error);
                 });
             } else {
               this.$message.error(res.message);
             }
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message.error(err.message ? err.message : err);
           });
       } else {
@@ -143,27 +151,29 @@ export default {
         D = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
       return Y + "-" + M + "-" + D;
     },
-    objectSpanMethod({rowIndex, columnIndex }) {
-       if (columnIndex <= 2||columnIndex>=7) {
-            const _row = this.spanArr[rowIndex];
-            const _col = _row > 0 ? 1 : 0;
-            return {
-                  rowspan: _row,
-                  colspan: _col
-            }
+    objectSpanMethod({ rowIndex, columnIndex }) {
+      if (columnIndex <= 2 || columnIndex >= 7) {
+        const _row = this.spanArr[rowIndex];
+        const _col = _row > 0 ? 1 : 0;
+        return {
+          rowspan: _row,
+          colspan: _col,
+        };
       }
-
-    }
+    },
+    loadPreviewStorageList() {
+      if (this.currentStorageCountTicket.productType) {
+        let params = {
+          storeCode: this.userInfo.storeCode,
+          searchType: this.currentStorageCountTicket.productType,
+        };
+        this.GetPreviewStorageList(params);
+      }
+    },
   },
-  mounted: function() {
-    if (this.currentStorageCountTicket.productType) {
-      let params = {
-        storeCode: this.userInfo.storeCode,
-        searchType: this.currentStorageCountTicket.productType
-      };
-      this.GetPreviewStorageList(params);
-    }
-  }
+  beforeMount: function () {
+    this.loadPreviewStorageList();
+  },
 };
 </script>
 <style>

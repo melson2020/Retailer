@@ -9,7 +9,7 @@ spring:
       #mysql驱动
       driver-class-name: com.mysql.jdbc.Driver
       #基本属性
-      url: jdbc:mysql://localhost:3306/retailer?Unicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+      url: jdbc:mysql://localhost:3306/retailer?Unicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
       password: root
       #配置初始化大小/最小/最大

@@ -143,6 +143,10 @@
             property="productName"
             label="商品名称"
           ></el-table-column>
+           <el-table-column
+            property="supplyName"
+            label="供应商"
+          ></el-table-column>
           <el-table-column property="batchNo" label="批次号"></el-table-column>
           <el-table-column property="totalCountChange" label="只修改总数">
             <template slot-scope="scope">

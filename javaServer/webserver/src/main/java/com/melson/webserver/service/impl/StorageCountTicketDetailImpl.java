@@ -199,6 +199,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
             existDetail = new StorageCountTicketDetail();
         }
         existDetail.setProductId(dto.getProductId());
+        existDetail.setSupplyName(dto.getSupplyName());
         existDetail.setStoreCode(ticket.getStoreCode());
         existDetail.setTicketCode(ticket.getCode());
         existDetail.setProductName(dto.getProductName());
@@ -215,6 +216,7 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
         existDetail.setProductId(dto.getProductId());
         existDetail.setStoreCode(ticket.getStoreCode());
         existDetail.setProductName(dto.getProductName());
+        existDetail.setSupplyName(dto.getSupplyName());
         String type = dto.getCounted() > dto.getCount() ? "plus" : "minus ";
         existDetail.setType(type);
         Integer count = dto.getCounted() - dto.getCount();
