@@ -283,8 +283,10 @@ public class ProductStorageResource extends BaseResource {
             storageCountTicketService.SaveTicket(ticket);
             return new Result();
         }
+        System.out.println("Rest Call: /storage/updateStorageAfterCounted ...");
         //存在数据变动项 更新库存信息
         return storageCountTicketDetailService.SaveDetailWithCountedList(dtoList, ticket);
+
     }
 
     @RequestMapping(value = "/storageCountRecord", method = RequestMethod.GET)
@@ -321,6 +323,7 @@ public class ProductStorageResource extends BaseResource {
         Result result=new Result();
         List<StorageCountTicketDetail> detailList=storageCountTicketDetailService.FindCountTicketDetails(ticketCode);
         result.setData(detailList);
+        System.out.println("Rest Call: /storage/countTicketDetail ...");
         return result;
     }
 
@@ -332,6 +335,7 @@ public class ProductStorageResource extends BaseResource {
         if(StringUtils.isEmpty(storeCode))return this.GenerateResult(ResultType.ParametersNeeded);
         List<StorageCountTicket> existList=storageCountTicketService.FindUnFinishedTicket(storeCode);
         result.setData(existList);
+        System.out.println("Rest Call: /storage/unfinishedTicket ...");
         return result;
     }
 
