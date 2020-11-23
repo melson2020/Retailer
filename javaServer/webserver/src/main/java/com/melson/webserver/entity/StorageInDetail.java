@@ -27,6 +27,33 @@ public class StorageInDetail {
     private BigDecimal totalPrice;
     private String storeCode;
     private String storageInTicketCode;
+    private String batchNo;
+    private Integer beforeStorageCount;
+    private Integer afterInCount;
+
+    public Integer getAfterInCount() {
+        return afterInCount;
+    }
+
+    public void setAfterInCount(Integer afterInCount) {
+        this.afterInCount = afterInCount;
+    }
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public Integer getBeforeStorageCount() {
+        return beforeStorageCount;
+    }
+
+    public void setBeforeStorageCount(Integer beforeStorageCount) {
+        this.beforeStorageCount = beforeStorageCount;
+    }
 
     public Integer getId() {
         return id;

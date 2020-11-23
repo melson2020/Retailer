@@ -27,6 +27,24 @@ public class StorageOutDetail {
     private BigDecimal totalPrice;
     private Integer supplyId;
     private String supplyName;
+    private Integer beforeOutCount;
+    private Integer afterOutCount;
+
+    public Integer getBeforeOutCount() {
+        return beforeOutCount;
+    }
+
+    public void setBeforeOutCount(Integer beforeOutCount) {
+        this.beforeOutCount = beforeOutCount;
+    }
+
+    public Integer getAfterOutCount() {
+        return afterOutCount;
+    }
+
+    public void setAfterOutCount(Integer afterOutCount) {
+        this.afterOutCount = afterOutCount;
+    }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;

@@ -383,25 +383,17 @@ export default {
           );
         }
       }
-      // console.log(mapExistingCategoryId)
-      for (let i = 0; i < this.excelProductList.length; i++) {
-        // console.log(this.excelProductList[i].name);
-        if (!mapExisting.has(this.excelProductList[i].name)) {
-          // console.log(this.excelProductList[i].name);
-          // console.log(mapExistingCategoryId.get(this.excelProductList[i].categoryName));
+      for (let i = 0; i < this.excelProductList.length; i++) {     
+        if (!mapExisting.has(this.excelProductList[i].name)) {        
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          // this.excelProductList[i].categoryId = mapExistingCategoryId.get(this.excelProductList[i].categoryName);
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           this.excelProductList[i].storeCode = this.userInfo.storeCode;
-          // console.log(this.excelProductList[i].categoryId);
           result.push(this.excelProductList[i]);
         }
       }
       return result;
     },
     productListShow: function () {
-      // console.log(this.compareExistingProduct);
-
       if (this.isSrearchDuplicate) {
         // return this.excelProductList.filter(item => {
         return this.compareExistingProduct.filter((item) => {

@@ -78,8 +78,8 @@ const mutations = {
             item.checked = false;
             item.outPrice = "";
             item.outCount = 0;
-            item.outVat = item.vat;
-            item.outTaxRate = item.taxRate
+            item.outVat =item.vat === null?0:item.vat,
+            item.outTaxRate =item.taxRate===null?'':item.taxRate
         })
         state.productBatchList = data
     },

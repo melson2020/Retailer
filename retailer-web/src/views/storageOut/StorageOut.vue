@@ -189,7 +189,7 @@
             <div class="storageout-dialog-header">
               <el-select
                 class="storageout-width-input"
-                size=mini
+                size="mini"
                 v-model="selectPid"
                 placeholder="选择商品"
                 filterable
@@ -251,7 +251,7 @@
                     >是否含税</el-checkbox
                   >
                   <el-select
-                    style="width:100px"
+                    style="width: 100px"
                     :disabled="!pb.outVat"
                     v-model="pb.outTaxRate"
                     filterable
@@ -270,7 +270,7 @@
                     :disabled="!pb.checked"
                     :placeholder="'>' + computePerSale(pb)"
                     size="mini"
-                    style="width:100px"
+                    style="width: 100px"
                     v-model="pb.outPrice"
                   ></el-input>
                   <div>
@@ -351,12 +351,12 @@ export default {
         employeeName: "",
         code: "",
         type: "",
-        details: []
+        details: [],
       },
       rules: {
         type: [{ required: true, message: "请选择类型", trigger: "blur" }],
-        details: [{ required: true, message: "请添加商品", trigger: "blur" }]
-      }
+        details: [{ required: true, message: "请添加商品", trigger: "blur" }],
+      },
     };
   },
   computed: {
@@ -364,18 +364,20 @@ export default {
       "userInfo",
       "productList",
       "productBatchList",
-      "taxRateList"
+      "taxRateList",
     ]),
-    checkedOutList: function() {
-      return this.productBatchList.filter(item => {
+    checkedOutList: function () {
+      return this.productBatchList.filter((item) => {
         return item.checked & (item.outCount > 0);
       });
     },
-    storageComputedProductBtahList: function() {
+    storageComputedProductBtahList: function () {
       if (this.storageOutTicket.details.length >= 0) {
-        this.storageOutTicket.details.map(item => {
-          let existProductBatch = this.productBatchList.filter(p => {
-            return p.batchNo == item.storageInBatchNo;
+        this.storageOutTicket.details.map((item) => {
+          let existProductBatch = this.productBatchList.filter((p) => {
+            return (
+              p.batchNo + p.productId +p.supplyId== item.storageInBatchNo + item.productId+item.supplyId
+            );
           })[0];
           if (existProductBatch) {
             existProductBatch.count = parseInt(
@@ -386,9 +388,9 @@ export default {
       }
       return this.productBatchList;
     },
-    outTicketProfitList: function() {
+    outTicketProfitList: function () {
       let list = [];
-      this.storageOutTicket.details.map(item => {
+      this.storageOutTicket.details.map((item) => {
         let l = {
           productId: item.productId,
           productName: item.productName,
@@ -404,12 +406,12 @@ export default {
           outCount: item.outCount,
           unitPriceOut: item.outPrice,
           profit: item.profit,
-          countUnit: item.countUnit
+          countUnit: item.countUnit,
         };
         list.push(l);
       });
       return list;
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -417,7 +419,7 @@ export default {
       GetProductBatchList: "GetProductBatchList",
       ClearProductBatchList: "ClearProductBatchList",
       GetTaxRateList: "GetTaxRateList",
-      SaveStorageOutTicket: "SaveStorageOutTicket"
+      SaveStorageOutTicket: "SaveStorageOutTicket",
     }),
     direct() {
       this.showTicket = !this.showTicket;
@@ -509,7 +511,7 @@ export default {
     //计算出库详细总利润
     computeTotalProfit() {
       let profit = 0;
-      this.checkedOutList.map(item => {
+      this.checkedOutList.map((item) => {
         if (item.profit && item.checked) {
           profit = this.NumberAdd(profit, item.profit);
         }
@@ -518,10 +520,17 @@ export default {
     },
     addOutDetails() {
       if (!this.validateOutDetails()) return;
-      let pName = this.productList.filter(p => {
+      let pName = this.productList.filter((p) => {
         return p.id == this.selectPid;
       })[0].name;
-      this.checkedOutList.map(item => {
+
+      this.checkedOutList.map((item) => {
+        let batch = this.storageComputedProductBtahList.filter((b) => {
+          return (
+            b.productId + b.batchNo + b.supplyId ===
+            item.productId + item.batchNo + item.supplyId
+          );
+        })[0];
         let addItem = {
           productId: item.productId,
           productName: pName,
@@ -537,9 +546,11 @@ export default {
           storeCode: this.userInfo.storeCode,
           countUnit: item.countUnit,
           profit: item.profit,
+          beforeOutCount: batch.count,
+          afterOutCount:this.NumberSub(batch.count,item.outCount),
           totalPrice: this.NumberMul(item.outCount, item.outPrice),
           vatIn: item.vat,
-          taxRateIn: item.taxRate
+          taxRateIn: item.taxRate,
         };
         this.addToDetailCheck(addItem);
       });
@@ -551,7 +562,7 @@ export default {
         this.$message.warning("请添加出库详细");
         return false;
       }
-      let misPriceList = this.checkedOutList.filter(mis => {
+      let misPriceList = this.checkedOutList.filter((mis) => {
         return mis.outPrice == "";
       });
       if (misPriceList.length > 0) {
@@ -564,11 +575,14 @@ export default {
      * 添加批次数据至出库详细，校验是否重复
      */
     addToDetailCheck(value) {
-      let vKey = value.storageInBatchNo + value.taxRate + value.outPrice+value.supplyId;
-      let existProduct = this.storageOutTicket.details.filter(p => {
-        let key = p.storageInBatchNo + p.taxRate + p.outPrice+p.supplyId;
+      let vKey =
+        value.storageInBatchNo +
+        value.taxRate +
+        value.outPrice +
+        value.supplyId;
+      let existProduct = this.storageOutTicket.details.filter((p) => {
+        let key = p.storageInBatchNo + p.taxRate + p.outPrice + p.supplyId;
         return vKey == key;
-       
       })[0];
       if (existProduct) {
         existProduct.outCount = this.NumberAdd(
@@ -596,8 +610,8 @@ export default {
           return;
         }
         if (column.property == "profit") {
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
+          const values = data.map((item) => Number(item[column.property]));
+          if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr);
               if (!isNaN(value)) {
@@ -614,16 +628,16 @@ export default {
       return sums;
     },
     submitOutTicket(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           this.storageOutTicket.storeCode = this.userInfo.storeCode;
           let params = {
             outTicket: this.storageOutTicket,
-            billDetailList: this.outTicketProfitList
+            billDetailList: this.outTicketProfitList,
           };
           this.SaveStorageOutTicket(params)
-            .then(res => {
-              console.log(res)
+            .then((res) => {
+              console.log(res);
               if (res.resultStatus == 1) {
                 this.showTicket = !this.showTicket;
                 this.$message.success("保存成功");
@@ -633,7 +647,7 @@ export default {
                 this.$message.error(res.message);
               }
             })
-            .catch(err => {
+            .catch((err) => {
               this.$message.error(err.message ? err.message : err);
             });
         } else {
@@ -641,13 +655,13 @@ export default {
           return false;
         }
       });
-    }
+    },
   },
   beforeMount() {
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductList(params);
     this.GetTaxRateList();
-  }
+  },
 };
 </script>
 <style>
@@ -694,11 +708,11 @@ export default {
   color: #606266;
   height: 80px;
 }
-.storageout-width-category{
+.storageout-width-category {
   width: 200px;
   float: left;
 }
-.storageout-width-input{
+.storageout-width-input {
   width: 400px;
   float: left;
 }

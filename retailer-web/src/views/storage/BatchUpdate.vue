@@ -8,13 +8,21 @@
       </div>
     </div>
     <div class="batch-update-div">
+      <el-button
+        v-if="currentStorageCountTicket && updateBatchListShow.length <= 0"
+        type="primary"
+        plain
+        @click="GetUpdateBatchList"
+        >找不到数据？点击加载</el-button
+      >
       <el-table
+        v-else
         border
         size="small"
-        :header-row-style="{height:'40px'}"
-          :row-style="{height:'40px'}"
-          :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white'}"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }"
         :data="updateBatchListShow"
       >
         <el-table-column prop="productName" label="产品名" width="auto">
@@ -67,11 +75,16 @@
               placeholder="请选择供应商"
             >
               <el-option
-                v-for="item in supplyList"
+                v-for="item in supplyListShow"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
-              ></el-option>
+              >
+                <span v-if="item.id >= 0">{{ item.name }}</span>
+                <el-button v-else type="text" @click="routerToSupply"
+                  >添加供应商</el-button
+                >
+              </el-option>
             </el-select>
           </template>
         </el-table-column>
@@ -109,12 +122,12 @@ export default {
       "currentStorageCountTicket",
       "updateBatchList",
       "taxRateList",
-      "supplyList"
+      "supplyList",
     ]),
     updateBatchListShow() {
-      return this.updateBatchList.filter(item => {
+      return this.updateBatchList.filter((item) => {
         if (item.supplyId && item.supplyId !== "") {
-          this.supplyList.map(supply => {
+          this.supplyList.map((supply) => {
             if (supply.id == item.supplyId) {
               item.supplyName = supply.name;
               item.discount = supply.discount;
@@ -126,6 +139,7 @@ export default {
         }
         var dataCorrect =
           item.supplyId !== null &&
+          item.supplyId >= 0 &&
           item.supplyId !== "" &&
           item.supplyName !== null &&
           item.supplyName !== "" &&
@@ -140,7 +154,15 @@ export default {
         item.dataCorrect = dataCorrect;
         return item != null;
       });
-    }
+    },
+    supplyListShow() {
+      var shows = [];
+      this.supplyList.map((item) => {
+        shows.push(item);
+      });
+      shows.push({ id: -1, name: "未选择" });
+      return shows;
+    },
   },
   methods: {
     ...mapActions({
@@ -151,10 +173,10 @@ export default {
       UpdateCountTicket: "UpdateCountTicket",
       SetActiveSteps: "SetActiveSteps",
       SetTicketStatus: "SetTicketStatus",
-      SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket"
+      SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
     }),
     submit() {
-      var updateList = this.updateBatchListShow.filter(item => {
+      var updateList = this.updateBatchListShow.filter((item) => {
         return item.dataCorrect;
       });
       if (updateList.length <= 0) {
@@ -162,13 +184,13 @@ export default {
         return;
       }
       this.UpdateProductBatchList(updateList)
-        .then(res => {
+        .then((res) => {
           if (res.resultStatus === 1) {
             if (updateList.length === this.updateBatchListShow.length) {
               this.SetTicketStatus(5);
-              this.currentStorageCountTicket.result='changed'
+              this.currentStorageCountTicket.result = "changed";
               this.UpdateCountTicket(this.currentStorageCountTicket)
-                .then(r => {
+                .then((r) => {
                   if (r.resultStatus == 1) {
                     this.$router.push({ path: "/main/storageCount/complete" });
                     this.SetActiveSteps(5);
@@ -177,7 +199,7 @@ export default {
                     this.$message.error(r.message);
                   }
                 })
-                .catch(e => {
+                .catch((e) => {
                   this.$message.error(e.message);
                 });
             } else {
@@ -187,7 +209,7 @@ export default {
             this.$message.error(res.message);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message.error(err.message);
         });
     },
@@ -197,31 +219,35 @@ export default {
         !this.currentStorageCountTicket.code
       ) {
         this.$message.error("暂无盘点单，请创建或者加载");
-        return
+        return;
       }
       let params = {
         storeCode: this.userInfo.storeCode,
-        ticketCode: this.currentStorageCountTicket.code
+        ticketCode: this.currentStorageCountTicket.code,
       };
-      if (this.updateBatchList.length <= 0) {
-        this.GetBatchListForUpdate(params);
-      }
-    }
+      this.GetBatchListForUpdate(params);
+    },
+    routerToSupply() {
+      this.$router.push({ path: "/main/supply" });
+    },
   },
-  mounted() {
-    this.GetUpdateBatchList()
+  mounted: function () {
+    this.GetUpdateBatchList();
+  },
+  beforeMount: function () {
     if (this.taxRateList.length <= 0) {
       this.GetTaxRateList();
     }
     if (this.supplyList.length <= 0) {
       this.GetSupplyList({ storeCode: this.userInfo.storeCode });
     }
-  }
+  },
 };
 </script>
 <style>
 .batch-update-div {
   padding-top: 30px;
+  text-align: center;
 }
 .icon-green {
   color: #008000;

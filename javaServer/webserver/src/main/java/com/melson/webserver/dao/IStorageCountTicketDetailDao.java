@@ -14,4 +14,5 @@ import java.util.List;
 @Repository
 public interface IStorageCountTicketDetailDao extends JpaRepository<StorageCountTicketDetail,String> {
     List<StorageCountTicketDetail> findByTicketCode(String ticketCode);
+    List<StorageCountTicketDetail> findByStoreCodeAndSupplyNameIsNull(String storeCode);
 }

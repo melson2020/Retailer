@@ -68,7 +68,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="厂家折扣" prop="discount">
-              <el-input v-model="newSupply.discount" placeholder="折扣：0.0001-1" autocomplete="off" style="width: 100%;"></el-input>
+              <el-input v-model="newSupply.discount" placeholder="折扣:1-99" autocomplete="off" style="width: 100%;"></el-input>
             </el-form-item>
           </el-col>
             <el-col :span="8">

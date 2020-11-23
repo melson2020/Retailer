@@ -181,7 +181,8 @@ const messgaePage = ['/main/pageNotFound']
 
 /**
  * 路由守卫
- * 可添加权限验证
+ * 权限验证逻辑：进入下个路由前，判断是否在用户menuList 中 不在则无权限
+ * 下个路由也有可能是不存在的路劲 如（/ssss) 这种情况也无法查找出
  */
 router.beforeEach((to, from, next) => {
   var index = noPermissionPage.indexOf(to.path);
@@ -201,7 +202,7 @@ router.beforeEach((to, from, next) => {
           const menu = menuList[i];
           for (let j = 0; j < menu.subMenus.length; j++) {
             const subMenu = menu.subMenus[j];
-            if (subMenu.index===path) {
+            if (path.indexOf(subMenu.index)>=0) {
               hasPermission = true;
               break
             }

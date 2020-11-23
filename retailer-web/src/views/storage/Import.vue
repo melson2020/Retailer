@@ -7,7 +7,8 @@
           >导入文件</el-button
         >
         <el-button
-          type="primary" size="small"
+          type="primary"
+          size="small"
           :disabled="!countedList.length > 0"
           @click="submitCountedList"
           >提交盘点单</el-button
@@ -39,6 +40,11 @@
             <div class="el-upload__tip" slot="tip">
               只能上传xls文件，且不超过500kb
             </div>
+            <div class="el-upload__tip" slot="tip">
+              <span class="red"
+                >*注意：导入的盘点单只能自动补充1个批次,如果新批次数量>=2，请使用入库功能</span
+              >
+            </div>
           </el-upload>
           <div slot="footer" class="dialog-footer">
             <el-button @click="setUploadDialogVisible">取 消</el-button>
@@ -52,10 +58,10 @@
         :data="countedList"
         border
         size="small"
-        :header-row-style="{height:'40px'}"
-          :row-style="{height:'40px'}"
-          :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white'}"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }"
         :span-method="objectSpanMethod"
       >
         <el-table-column
@@ -100,22 +106,22 @@ export default {
         { field: "type", label: "型号", width: "auto" },
         { field: "specification", label: "规格", width: "auto" },
         { field: "batchNo", label: "批次", width: "auto" },
-         { field: "supplyId", label: "供应商识别码", width: "auto" },
+        { field: "supplyId", label: "供应商识别码", width: "auto" },
         { field: "supplyName", label: "供应商", width: "auto" },
         { field: "count", label: "现有数量", width: "auto" },
         { field: "totalCount", label: "现有总数", width: "auto" },
         { field: "countUnit", label: "单位", width: "auto" },
-        { field: "counted", label: "盘点数量", width: "auto" }
+        { field: "counted", label: "盘点数量", width: "auto" },
       ],
       countedList: [],
-      uploadData: { ticketCode: "" }
+      uploadData: { ticketCode: "" },
     };
   },
   computed: {
     ...mapGetters([
       "currentStorageCountTicket",
       "userInfo",
-      "previewStorageList"
+      "previewStorageList",
     ]),
     spanArr() {
       let spanRowArr = [];
@@ -137,7 +143,7 @@ export default {
         }
       }
       return spanRowArr;
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -145,10 +151,14 @@ export default {
       SetActiveSteps: "SetActiveSteps",
       UpdateStorageAfterCount: "UpdateStorageAfterCount",
       SetUpdateBatchList: "SetUpdateBatchList",
-      SetTicketStatus: "SetTicketStatus"
+      SetTicketStatus: "SetTicketStatus",
     }),
     setUploadDialogVisible() {
-      this.uploadDialogVisible = !this.uploadDialogVisible;
+      if (this.currentStorageCountTicket.type) {
+        this.uploadDialogVisible = !this.uploadDialogVisible;
+      } else {
+        this.$message.warning("暂无盘点单,请创建");
+      }
     },
     submitFile() {
       let file = this.$refs.upload.$children[0].fileList[0];
@@ -168,12 +178,12 @@ export default {
       }
       excelHelper
         .fileToExcel(file, true)
-        .then(tabJson => {
+        .then((tabJson) => {
           this.countedList = [];
           this.genrateExcelToResultList(tabJson, 3);
           this.setUploadDialogVisible();
         })
-        .catch(err => {
+        .catch((err) => {
           let mss = err.message ? err.message : err;
           this.$message.warning("解析excel错误：" + mss);
         });
@@ -188,7 +198,7 @@ export default {
           type: item[2],
           specification: item[3],
           batchNo: item[4],
-          supplyId:item[5],
+          supplyId: item[5],
           supplyName: item[6],
           count: item[7],
           totalCount: item[8],
@@ -196,7 +206,7 @@ export default {
           counted: item[10],
           totalCounted: item[11],
           flag: 0,
-          dataCorrect: true
+          dataCorrect: true,
         };
         //检查批次数量是否匹配
         if (json.counted - json.count > 0) {
@@ -214,10 +224,10 @@ export default {
       this.countedList.map((item, index) => {
         var count = 0;
         this.countedList
-          .filter(c => {
+          .filter((c) => {
             return c.productId === item.productId;
           })
-          .map(s => {
+          .map((s) => {
             var sc = parseInt(s.counted);
             if (isNaN(sc)) {
               sc = 0;
@@ -260,8 +270,8 @@ export default {
         for (let index = 0; index < this.countedList.length; index++) {
           let item = this.countedList[index];
           var key = item.productId + "" + item.batchNo;
-          var exist = this.previewStorageList.filter(p => {
-            var batchNo=p.batchNo?p.batchNo:'';
+          var exist = this.previewStorageList.filter((p) => {
+            var batchNo = p.batchNo ? p.batchNo : "";
             var pKey = p.productId + "" + batchNo;
             return pKey === key;
           }).length;
@@ -285,7 +295,7 @@ export default {
       }
       if (
         this.countedList.length > 0 &&
-        this.countedList.filter(item => {
+        this.countedList.filter((item) => {
           return !item.dataCorrect;
         }).length > 0
       ) {
@@ -316,15 +326,15 @@ export default {
       }
     },
     updaetStorage() {
-      var updateList = this.countedList.filter(item => {
+      var updateList = this.countedList.filter((item) => {
         return item.flag != 0;
       });
       var params = {
         ticket: this.currentStorageCountTicket,
-        dtoList: updateList
+        dtoList: updateList,
       };
       this.UpdateStorageAfterCount(params)
-        .then(res => {
+        .then((res) => {
           if (res.resultStatus == 1) {
             //盘点完成
             this.SetActiveSteps(5);
@@ -341,7 +351,7 @@ export default {
             this.$message.error(res.message);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message.error(err.messgae ? err.message : err);
         });
     },
@@ -359,11 +369,11 @@ export default {
         const _col = _row > 0 ? 1 : 0;
         return {
           rowspan: _row,
-          colspan: _col
+          colspan: _col,
         };
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

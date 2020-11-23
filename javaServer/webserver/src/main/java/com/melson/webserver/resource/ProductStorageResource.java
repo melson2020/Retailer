@@ -177,6 +177,12 @@ public class ProductStorageResource extends BaseResource {
             result.setMessage("unfinished ticket count::"+unfinishEdTickets.size());
             return result;
         }
+        List<ProductStorage> list = productStorageService.FindStorageListWithType(ticket.getStoreCode(), ticket.getProductType());
+        if(list.size()<=0){
+            result.setResultStatus(-1);
+            result.setMessage("盘点内容数量<=0，请检查盘点内容");
+            return result;
+        }
         StorageCountTicket savedTicket = storageCountTicketService.CreateTicekt(ticket);
         if (savedTicket != null) {
             result.setData(savedTicket);

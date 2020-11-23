@@ -261,6 +261,7 @@ export default {
       this.storageTable.pageSize = pageSize;
     },
     productTypeChanged() {
+      this.storageTable.currentPage=1;
       this.GetProductStorageList({
         storeCode: this.userInfo.storeCode,
         searchType: this.productType,

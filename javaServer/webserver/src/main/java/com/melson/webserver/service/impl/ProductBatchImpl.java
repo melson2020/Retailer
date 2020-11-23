@@ -2,18 +2,18 @@ package com.melson.webserver.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.webserver.dao.IProductBatchDao;
+import com.melson.webserver.dao.IStorageCountTicketDetailDao;
 import com.melson.webserver.dto.ProductStorageDto;
 import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.StorageCountTicket;
+import com.melson.webserver.entity.StorageCountTicketDetail;
 import com.melson.webserver.service.IProductBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author Nelson
@@ -23,9 +23,11 @@ import java.util.Map;
 @Service
 public class ProductBatchImpl extends AbstractService<ProductBatch> implements IProductBatch {
     private final IProductBatchDao productBatchDao;
+    private final IStorageCountTicketDetailDao storageCountTicketDetailDao;
 
-    public ProductBatchImpl(IProductBatchDao productBatchDao) {
+    public ProductBatchImpl(IProductBatchDao productBatchDao, IStorageCountTicketDetailDao storageCountTicketDetailDao) {
         this.productBatchDao = productBatchDao;
+        this.storageCountTicketDetailDao = storageCountTicketDetailDao;
     }
 
     @Override
@@ -66,7 +68,29 @@ public class ProductBatchImpl extends AbstractService<ProductBatch> implements I
     }
 
     @Override
-    public List<ProductBatch> SaveAll(List<ProductBatch> productBatchList) {
+    @Transactional
+   public List<ProductBatch> SaveAll(List<ProductBatch> productBatchList) {
+        //更新盘点单详细供应商名称
+        List<StorageCountTicketDetail> emptysupplyNameList=storageCountTicketDetailDao.findByStoreCodeAndSupplyNameIsNull(productBatchList.get(0).getStoreCode());
+        if(emptysupplyNameList.size()>0){
+            Map<String,StorageCountTicketDetail> detailMap=new HashMap<>(emptysupplyNameList.size());
+            for (StorageCountTicketDetail detail:emptysupplyNameList){
+                String key=detail.getProductId()+detail.getBatchNo();
+                detailMap.put(key,detail);
+            }
+            List<StorageCountTicketDetail> detailUpdateList=new ArrayList<>();
+            for (ProductBatch batch:productBatchList){
+                String key=batch.getProductId()+batch.getBatchNo();
+                StorageCountTicketDetail existDetail=detailMap.get(key);
+                if(existDetail!=null){
+                    existDetail.setSupplyName(batch.getSupplyName());
+                    detailUpdateList.add(existDetail);
+                }
+            }
+            if(detailUpdateList.size()>0){
+                storageCountTicketDetailDao.saveAll(detailUpdateList);
+            }
+        }
         return productBatchDao.saveAll(productBatchList);
     }
 
@@ -83,6 +107,8 @@ public class ProductBatchImpl extends AbstractService<ProductBatch> implements I
         batch.setCount(dto.getCounted());
         batch.setStorageInCode(ticketCode);
         batch.setCountUnit(dto.getCountUnit());
+        batch.setTaxRate("");
+        batch.setVat(0);
         batch.setFinished(batch.getCount() == 0 ? 1 : 0);
         batch.setBatchType("C");
         batch.setProductName(dto.getProductName());

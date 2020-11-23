@@ -5,9 +5,11 @@ import com.melson.base.utils.EntityManagerExcuteRs;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.Vo.StoreInTicketVo;
 import com.melson.webserver.dao.IProductBatchDao;
+import com.melson.webserver.dao.IProductStorageDao;
 import com.melson.webserver.dao.IStorageInDetailDao;
 import com.melson.webserver.dao.IStorageInTicketDao;
 import com.melson.webserver.entity.ProductBatch;
+import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageInDetail;
 import com.melson.webserver.entity.StorageInTicket;
 import com.melson.webserver.service.IStorageInTicket;
@@ -26,12 +28,14 @@ import java.util.*;
 @Service
 public class StorageInTicketImpl extends AbstractService<StorageInTicket> implements IStorageInTicket {
     private final IStorageInTicketDao storageInTicketDao;
+    private final IProductStorageDao storageDao;
     private final IStorageInDetailDao storageInDetailDao;
     private final EntityManagerUtil entityManagerUtil;
     private final IProductBatchDao batchDao;
 
-    public StorageInTicketImpl(IStorageInTicketDao storageInTicketDao, IStorageInDetailDao storageInDetailDao, EntityManagerUtil entityManagerUtil, IProductBatchDao batchDao) {
+    public StorageInTicketImpl(IStorageInTicketDao storageInTicketDao, IProductStorageDao storageDao, IStorageInDetailDao storageInDetailDao, EntityManagerUtil entityManagerUtil, IProductBatchDao batchDao) {
         this.storageInTicketDao = storageInTicketDao;
+        this.storageDao = storageDao;
         this.storageInDetailDao = storageInDetailDao;
         this.entityManagerUtil = entityManagerUtil;
         this.batchDao = batchDao;
@@ -50,32 +54,52 @@ public class StorageInTicketImpl extends AbstractService<StorageInTicket> implem
     public Integer SaveStorageInTicket(StorageInTicket ticket) {
         List<StorageInDetail> products = ticket.getProducts();
         List<ProductBatch> batchList = new ArrayList<>(products.size());
+        //用于存储productId 和变化总数
         Map<Integer, Integer> sqlMap = new HashMap<>();
+        List<ProductStorage> productStorageList=storageDao.findByStoreCode(ticket.getStoreCode());
+        if(productStorageList.size()<=0)return -1;
+        //拿出库存备用，以便后续找出需要更新的库存
+        Map<Integer,ProductStorage> storageMap=new HashMap<>(productStorageList.size());
+        for(ProductStorage storage:productStorageList){
+            storageMap.put(storage.getProductId(),storage);
+        }
         ticket.setCreateTime(new Date());
         for (StorageInDetail detail : products) {
             detail.setStorageInTicketCode(ticket.getCode());
             detail.setStoreCode(ticket.getStoreCode());
+            detail.setBatchNo(ticket.getBatchNo());
+            ProductStorage storage=storageMap.get(detail.getProductId());
             ProductBatch batch = GenerateBatch(detail, ticket);
             batchList.add(batch);
             Integer addCount = sqlMap.get(detail.getProductId());
+            //记录变化之前的商品总数
+            if(storage!=null){
+                detail.setBeforeStorageCount(storage.getCount()+(addCount==null?0:addCount));
+            }
             if (addCount == null) {
                 sqlMap.put(detail.getProductId(), detail.getCount());
             } else {
                 addCount += detail.getCount();
                 sqlMap.put(detail.getProductId(),addCount);
             }
+
+            detail.setAfterInCount(sqlMap.get(detail.getProductId())+detail.getCount());
         }
-        List<String> sqls = new ArrayList<>(sqlMap.size());
+
+       List<ProductStorage> updateStorageList=new ArrayList<>();
         for (Integer id : sqlMap.keySet()) {
-            String sql = "update product_storage ps set ps.count=(ps.count+" + sqlMap.get(id) + ") WHERE productId=" + id + ";";
-            sqls.add(sql);
+           ProductStorage storage=storageMap.get(id);
+           if(storage!=null){
+               storage.setCount(storage.getCount()+sqlMap.get(id));
+               updateStorageList.add(storage);
+           }
         }
         List<ProductBatch> productBatchList = batchDao.saveAll(batchList);
         StorageInTicket resTicket = storageInTicketDao.save(ticket);
         List<StorageInDetail> details = storageInDetailDao.saveAll(products);
-        if (productBatchList.size() > 0 & resTicket != null & details.size() > 0) {
-            EntityManagerExcuteRs rs = entityManagerUtil.BatchUpdateSql(sqls);
-            return rs.getStatus();
+        List<ProductStorage> updated=storageDao.saveAll(updateStorageList);
+        if (productBatchList.size() > 0 & resTicket != null & details.size() > 0&updated.size()>0) {
+            return 1;
         } else {
             return -1;
         }
