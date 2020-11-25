@@ -160,6 +160,7 @@ const mutations = {
     },
     RefreshCurrentStorageCountTicket(state){
         state.currentStorageCountTicket={};
+        state.activeStep=0;
     },
     SetStorageCount(state, data) {
         state.productAndStorageCount.storageCount = data;

@@ -23,6 +23,7 @@ const StorageOut = () => import("../views/storageOut/StorageOut.vue")
 const StorageOutRecord = () => import("../views/storageOut/StorageOutRecord.vue")
 const StorageOutRecordDetail = () => import("../views/storageOut/StorageOutRecordDetail.vue")
 const OutboundDelivery = () => import("../views/report/OutboundDelivery.vue")
+const ProductStorageRecord=()=>import("../views/report/ProductStorageRecord.vue")
 
 Vue.use(VueRouter);
 
@@ -146,6 +147,11 @@ const routes = [
         path: "OutboundDelivery",
         name: "OutboundDelivery",
         component: OutboundDelivery,
+      },
+      {
+        path: "productStorageRec",
+        name: "productStorageRec",
+        component: ProductStorageRecord,
       },
       {
         path: "pageNotFound",

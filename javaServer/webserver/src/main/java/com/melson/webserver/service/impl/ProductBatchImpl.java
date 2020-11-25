@@ -53,12 +53,12 @@ public class ProductBatchImpl extends AbstractService<ProductBatch> implements I
             ProductBatch existBatch = existMap.get(key);
             if (existBatch == null) {
                 saveBatchList.add(CreateProductBatch(dto, ticket.getStoreCode(), batchNo, ticket.getCode()));
-            }else {
+            } else {
                 existBatch.setCount(dto.getCounted());
                 saveBatchList.add(existBatch);
             }
         }
-        List<ProductBatch> saved=productBatchDao.saveAll(saveBatchList);
+        List<ProductBatch> saved = productBatchDao.saveAll(saveBatchList);
         return saved;
     }
 
@@ -69,26 +69,28 @@ public class ProductBatchImpl extends AbstractService<ProductBatch> implements I
 
     @Override
     @Transactional
-   public List<ProductBatch> SaveAll(List<ProductBatch> productBatchList) {
+    public List<ProductBatch> SaveAll(List<ProductBatch> productBatchList) {
         //更新盘点单详细供应商名称
-        List<StorageCountTicketDetail> emptysupplyNameList=storageCountTicketDetailDao.findByStoreCodeAndSupplyNameIsNull(productBatchList.get(0).getStoreCode());
-        if(emptysupplyNameList.size()>0){
-            Map<String,StorageCountTicketDetail> detailMap=new HashMap<>(emptysupplyNameList.size());
-            for (StorageCountTicketDetail detail:emptysupplyNameList){
-                String key=detail.getProductId()+detail.getBatchNo();
-                detailMap.put(key,detail);
-            }
-            List<StorageCountTicketDetail> detailUpdateList=new ArrayList<>();
-            for (ProductBatch batch:productBatchList){
-                String key=batch.getProductId()+batch.getBatchNo();
-                StorageCountTicketDetail existDetail=detailMap.get(key);
-                if(existDetail!=null){
-                    existDetail.setSupplyName(batch.getSupplyName());
-                    detailUpdateList.add(existDetail);
+        if (productBatchList.size() > 0) {
+            List<StorageCountTicketDetail> emptysupplyNameList = storageCountTicketDetailDao.findByStoreCodeAndSupplyNameIsNull(productBatchList.get(0).getStoreCode());
+            if (emptysupplyNameList.size() > 0) {
+                Map<String, StorageCountTicketDetail> detailMap = new HashMap<>(emptysupplyNameList.size());
+                for (StorageCountTicketDetail detail : emptysupplyNameList) {
+                    String key = detail.getProductId() + detail.getBatchNo();
+                    detailMap.put(key, detail);
                 }
-            }
-            if(detailUpdateList.size()>0){
-                storageCountTicketDetailDao.saveAll(detailUpdateList);
+                List<StorageCountTicketDetail> detailUpdateList = new ArrayList<>();
+                for (ProductBatch batch : productBatchList) {
+                    String key = batch.getProductId() + batch.getBatchNo();
+                    StorageCountTicketDetail existDetail = detailMap.get(key);
+                    if (existDetail != null) {
+                        existDetail.setSupplyName(batch.getSupplyName());
+                        detailUpdateList.add(existDetail);
+                    }
+                }
+                if (detailUpdateList.size() > 0) {
+                    storageCountTicketDetailDao.saveAll(detailUpdateList);
+                }
             }
         }
         return productBatchDao.saveAll(productBatchList);

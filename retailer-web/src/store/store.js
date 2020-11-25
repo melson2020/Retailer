@@ -9,6 +9,7 @@ import product from "./modules/product";
 import storage from "./modules/productStorage"
 import storageIn from "./modules/storageIn"
 import storageOut from "./modules/storageOut"
+import report from "./modules/report"
 
 Vue.use(Vuex);
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
     product,
     storage,
     storageIn,
-    storageOut
+    storageOut,
+    report
   },
 });

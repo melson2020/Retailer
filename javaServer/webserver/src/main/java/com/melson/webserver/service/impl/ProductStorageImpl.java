@@ -2,14 +2,15 @@ package com.melson.webserver.service.impl;
 
 import com.melson.base.AbstractService;
 import com.melson.webserver.Vo.StorageAndProductCountVo;
-import com.melson.webserver.dao.IProductBatchDao;
-import com.melson.webserver.dao.IProductDao;
-import com.melson.webserver.dao.IProductStorageDao;
+import com.melson.webserver.Vo.StorageRecordVo;
+import com.melson.webserver.dao.*;
 import com.melson.webserver.dto.ProductStorageDto;
 import com.melson.webserver.entity.Product;
 import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.service.IProductStorage;
+import com.melson.webserver.service.IStorageInTicket;
+import com.melson.webserver.utils.EntityUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,17 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
     private final IProductStorageDao productStorageDao;
     private final IProductDao productDao;
     private final IProductBatchDao productBatchDao;
+    private final IStorageInTicketDao storageInTicketDao;
+    private final IStorageOutTicketDao storageOutTicketDao;
+    private final IStorageCountTicketDao storageCountTicketDao;
 
-    public ProductStorageImpl(IProductStorageDao productStorageDao, IProductDao productDao, IProductBatchDao productBatchDao) {
+    public ProductStorageImpl(IProductStorageDao productStorageDao, IProductDao productDao, IProductBatchDao productBatchDao, IStorageInTicketDao storageInTicketDao, IStorageOutTicketDao storageOutTicketDao, IStorageCountTicketDao storageCountTicketDao) {
         this.productStorageDao = productStorageDao;
         this.productDao = productDao;
         this.productBatchDao = productBatchDao;
+        this.storageInTicketDao = storageInTicketDao;
+        this.storageOutTicketDao = storageOutTicketDao;
+        this.storageCountTicketDao = storageCountTicketDao;
     }
 
     @Override
@@ -106,7 +113,7 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
         dtoList.sort(new Comparator<ProductStorageDto>() {
             @Override
             public int compare(ProductStorageDto o1, ProductStorageDto o2) {
-                return o1.getProductId() < o2.getProductId() ? 0 : 1;
+                return o1.getProductId() < o2.getProductId() ? -1 : 1;
             }
         });
         return dtoList;
@@ -165,6 +172,34 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
     @Override
     public List<ProductBatch> FindBatchList(String storeCode, Integer productId) {
         return productBatchDao.findByStoreCodeAndProductIdAndFinished(storeCode, productId, 0);
+    }
+
+    @Override
+    public List<StorageRecordVo> FindProductStorageRec(Integer productId, String startDate, String endDate, String storeCode) {
+        List<Object[]> storageInRecList = storageInTicketDao.findStorageInRec(productId, startDate, endDate, storeCode);
+        List<StorageRecordVo> listIn = EntityUtils.castEntity(storageInRecList, StorageRecordVo.class, new StorageRecordVo());
+        List<Object[]> storageOutRecList = storageOutTicketDao.findStorageOutRec(productId, startDate, endDate, storeCode);
+        List<StorageRecordVo> listOut = EntityUtils.castEntity(storageOutRecList, StorageRecordVo.class, new StorageRecordVo());
+        List<Object[]> storageCountRecList = storageCountTicketDao.findStorageCountRec(productId, startDate, endDate, storeCode);
+        List<StorageRecordVo> listCount = EntityUtils.castEntity(storageCountRecList, StorageRecordVo.class, new StorageRecordVo());
+        List<StorageRecordVo> allList=new ArrayList<>();
+        for(StorageRecordVo vo:listIn){
+            allList.add(vo);
+        }
+        for(StorageRecordVo vo:listOut){
+            allList.add(vo);
+        }
+        for(StorageRecordVo vo:listCount){
+            allList.add(vo);
+        }
+        allList.sort(new Comparator<StorageRecordVo>() {
+            @Override
+            public int compare(StorageRecordVo o1, StorageRecordVo o2) {
+                return o1.getCreateTime().getTime() < o2.getCreateTime().getTime() ? -1 : 1;
+            }
+        });
+        allList.size();
+        return allList;
     }
 
     @Override

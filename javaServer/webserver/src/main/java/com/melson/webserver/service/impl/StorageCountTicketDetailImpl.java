@@ -208,6 +208,8 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
         Integer count = dto.getTotalCounted() - dto.getTotalCount();
         existDetail.setCount(count < 0 ? count * -1 : count);
         existDetail.setTotalCountChange(1);
+        existDetail.setBeforeCount(dto.getTotalCount());
+        existDetail.setAfterCount(dto.getTotalCounted());
         return existDetail;
     }
 
@@ -220,6 +222,8 @@ public class StorageCountTicketDetailImpl extends AbstractService<StorageCountTi
         String type = dto.getCounted() > dto.getCount() ? "plus" : "minus ";
         existDetail.setType(type);
         Integer count = dto.getCounted() - dto.getCount();
+        existDetail.setBeforeCount(dto.getTotalCount());
+        existDetail.setAfterCount(dto.getTotalCounted());
         if(count==0)return null;
         existDetail.setCount(count < 0 ? count * -1 : count);
         if (!StringUtils.isEmpty(dto.getBatchNo())) {

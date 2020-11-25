@@ -59,56 +59,66 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         }
         //添加出库以及出售单记录
         StorageOutTicket saveTicket = storageOutTicketDao.save(ticket);
-        List<StorageOutDetail> saveDetailList = storageOutDetailDao.saveAll(ticket.getDetails());
         StorageOutBill saveBill = storageOutBillDao.save(bill);
         List<StorageOutBillDetail> billDetails = storageOutBillDetailDao.saveAll(billList);
         //更新库存
-        boolean success = UpdateStorage(saveDetailList);
-        return saveTicket != null & saveDetailList != null & saveBill != null & billDetails != null & success;
+        boolean success = UpdateStorage(ticket.getDetails());
+        return saveTicket != null & saveBill != null & billDetails != null & success;
     }
 
 
     //更新总库存和批次库存
     private boolean UpdateStorage(List<StorageOutDetail> outDetails) {
         Map<String, Integer> batchMap = new HashMap<>();
-        Map<Integer, Integer> productMap = new HashMap<>();
-        Set<String> batchNos=new HashSet<>();
+        Set<Integer> productIds = new HashSet<>();
+        Set<String> batchNos = new HashSet<>();
+        Map<String, StorageOutDetail> detailMap = new HashMap<>(outDetails.size());
         for (StorageOutDetail detail : outDetails) {
             batchNos.add(detail.getStorageInBatchNo());
-            Integer batchCount = batchMap.get(detail.getStorageInBatchNo());
+            String key = detail.getStorageInBatchNo() + detail.getSupplyId() + detail.getProductId() + detail.getStoreCode();
+            Integer batchCount = batchMap.get(key);
             if (batchCount == null) {
-                batchMap.put(detail.getStorageInBatchNo()+detail.getSupplyId()+detail.getProductId()+detail.getStoreCode(), detail.getOutCount());
+                batchMap.put(key, detail.getOutCount());
             } else {
                 batchCount += detail.getOutCount();
+                batchMap.put(key, batchCount);
             }
-            Integer productCount = productMap.get(detail.getProductId());
-            if (productCount == null) {
-                productMap.put(detail.getProductId(), detail.getOutCount());
-            } else {
-                productCount += detail.getOutCount();
-                productMap.put(detail.getProductId(), productCount);
-            }
+            detailMap.put(key, detail);
+            productIds.add(detail.getProductId());
         }
         List<ProductBatch> productBatchList = productBatchDao.findByBatchNoIn(batchNos);
-        List<ProductStorage> productStorageList = productStorageDao.findByProductIdIn(productMap.keySet());
+        List<ProductStorage> productStorageList = productStorageDao.findByProductIdIn(productIds);
+        Map<Integer, ProductStorage> storageMap = new HashMap<>(productStorageList.size());
+        //获取待更新库存，以便使用
+        for (ProductStorage storage : productStorageList) {
+            storageMap.put(storage.getProductId(), storage);
+        }
+        //更新批次库存,同时刷新库存数据
         for (ProductBatch batch : productBatchList) {
-            Integer mins = batchMap.get(batch.getBatchNo()+batch.getSupplyId()+batch.getProductId()+batch.getStoreCode());
+            String key=batch.getBatchNo() + batch.getSupplyId() + batch.getProductId() + batch.getStoreCode();
+            Integer mins = batchMap.get(key);
             if (mins != null) {
                 batch.setCount(batch.getCount() - mins);
                 if (batch.getCount() <= 0) {
                     batch.setFinished(1);
                 }
-            }
-        }
-        for (ProductStorage storage : productStorageList) {
-            Integer mins = productMap.get(storage.getProductId());
-            if (mins != null) {
-                storage.setCount(storage.getCount() - mins);
+                //库存减少
+                ProductStorage storage = storageMap.get(batch.getProductId());
+                if (storage != null) {
+                    //设置更新前数据记录
+                    StorageOutDetail detail=detailMap.get(key);
+                    if(detail!=null){
+                        detail.setBeforeOutCount(storage.getCount());
+                        detail.setAfterOutCount(storage.getCount()-detail.getOutCount());
+                    }
+                    storage.setCount(storage.getCount() - mins);
+                }
             }
         }
         List<ProductBatch> savedBatchs = productBatchDao.saveAll(productBatchList);
-        List<ProductStorage> savedStorages = productStorageDao.saveAll(productStorageList);
-        return savedBatchs != null && savedStorages != null;
+        List<ProductStorage> savedStorages = productStorageDao.saveAll(storageMap.values());
+        List<StorageOutDetail> saveDetailList = storageOutDetailDao.saveAll(outDetails);
+        return savedBatchs != null && savedStorages != null&&saveDetailList!=null;
     }
 
     private StorageOutBill GenrateOutBill(List<StorageOutBillDetail> billDetails, StorageOutTicket ticket, Date createDate) {
@@ -137,22 +147,18 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             BigDecimal count = new BigDecimal(detail.getOutCount());
             totalPriceIn = totalPriceIn.add(detail.getUnitPriceIn().multiply(count));
             BigDecimal discountRate;
-            if(detail.getDiscount()!=null) {
+            if (detail.getDiscount() != null) {
                 discountRate = (new BigDecimal(100).subtract(new BigDecimal(detail.getDiscount()))).divide(new BigDecimal(100));
-            }
-            else
-            {
-                discountRate=(new BigDecimal(100).subtract(new BigDecimal(0))).divide(new BigDecimal(100));
+            } else {
+                discountRate = (new BigDecimal(100).subtract(new BigDecimal(0))).divide(new BigDecimal(100));
             }
             BigDecimal singleCost = detail.getUnitPriceIn().multiply(discountRate);
             cost = cost.add(singleCost.multiply(count));
             totalPriceOut = totalPriceOut.add(detail.getUnitPriceOut().multiply(count));
             BigDecimal taxRateValue;
-            if(!StringUtils.isNullOrEmpty(detail.getTaxRateOut())) {
+            if (!StringUtils.isNullOrEmpty(detail.getTaxRateOut())) {
                 taxRateValue = (new BigDecimal(100).subtract(new BigDecimal(detail.getTaxRateOut()))).divide(new BigDecimal(100));
-            }
-            else
-            {
+            } else {
                 taxRateValue = (new BigDecimal(100).subtract(new BigDecimal(0))).divide(new BigDecimal(100));
             }
             BigDecimal singleSale = detail.getUnitPriceOut().multiply(taxRateValue);
@@ -196,50 +202,49 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             Date newEnd = calendar.getTime();
             switch (permission) {
                 case "1":
-                    voList= GenerateDataByUserId(dateBegin, newEnd, userId);
+                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
                     return voList;
                 case "2":
-                    voList=GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
+                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
                     return voList;
                 case "3":
-                    voList=GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
+                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
                     return voList;
                 default:
-                    voList= GenerateDataByUserId(dateBegin, newEnd, userId);
+                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
                     return voList;
             }
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     private List<OutBoundVo> GenerateDataByStoreCode(Date dateBegin, Date newEnd, String storeCode) {
         List<Object[]> VoObjs = productStorageDao.findVoByStoreCode(dateBegin, newEnd, storeCode);
-        List<OutBoundVo> voList= GenerateVoList(VoObjs);
+        List<OutBoundVo> voList = GenerateVoList(VoObjs);
         return voList;
     }
 
     private List<OutBoundVo> GenerateDataByUserId(Date dateBegin, Date newEnd, String userId) {
         List<Object[]> VoObjs = productStorageDao.findVoByUserId(dateBegin, newEnd, userId);
-        List<OutBoundVo> voList= GenerateVoList(VoObjs);
+        List<OutBoundVo> voList = GenerateVoList(VoObjs);
         return voList;
     }
 
     private List<OutBoundVo> GenerateVoList(List<Object[]> VoObjs) {
-        List<OutBoundVo> voList =new ArrayList<>();
-        for(Object[] obj:VoObjs){
-            OutBoundVo r =new OutBoundVo();
-            r.setDate(obj[0]==null?null:obj[0].toString());
-            r.setOutBoundNo(obj[1]==null?null:obj[1].toString());
-            r.setSalesName(obj[2]==null?null:obj[2].toString());
-            r.setProduct(obj[3]==null?null:obj[3].toString());
-            r.setSupply(obj[4]==null?null:obj[4].toString());
-            r.setBatchNo(obj[5]==null?null:obj[5].toString());
-            r.setPriceIn(obj[6]==null?new BigDecimal(0):new BigDecimal(obj[6].toString()));
-            r.setPriceOut(obj[7]==null?new BigDecimal(0):new BigDecimal(obj[7].toString()));
-            r.setOutCount(obj[8]==null?0:Integer.parseInt(obj[8].toString()));
-            r.setProfit(obj[9]==null?new BigDecimal(0):new BigDecimal(obj[9].toString()));
+        List<OutBoundVo> voList = new ArrayList<>();
+        for (Object[] obj : VoObjs) {
+            OutBoundVo r = new OutBoundVo();
+            r.setDate(obj[0] == null ? null : obj[0].toString());
+            r.setOutBoundNo(obj[1] == null ? null : obj[1].toString());
+            r.setSalesName(obj[2] == null ? null : obj[2].toString());
+            r.setProduct(obj[3] == null ? null : obj[3].toString());
+            r.setSupply(obj[4] == null ? null : obj[4].toString());
+            r.setBatchNo(obj[5] == null ? null : obj[5].toString());
+            r.setPriceIn(obj[6] == null ? new BigDecimal(0) : new BigDecimal(obj[6].toString()));
+            r.setPriceOut(obj[7] == null ? new BigDecimal(0) : new BigDecimal(obj[7].toString()));
+            r.setOutCount(obj[8] == null ? 0 : Integer.parseInt(obj[8].toString()));
+            r.setProfit(obj[9] == null ? new BigDecimal(0) : new BigDecimal(obj[9].toString()));
             voList.add(r);
         }
         return voList;
@@ -248,12 +253,12 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
     @Override
     public StorageOutTicketDetailVo FindRecordDetail(String ticketCode, String billCode) {
-       StorageOutTicketDetailVo vo=new StorageOutTicketDetailVo();
-       List<StorageOutDetail> ticketDetails=storageOutDetailDao.findByOutTicketCode(ticketCode);
-       List<StorageOutBillDetail> billDetails=storageOutBillDetailDao.findByOutBillCode(billCode);
-       vo.setBillDetails(billDetails);
-       vo.setTicketDetails(ticketDetails);
-       return vo;
+        StorageOutTicketDetailVo vo = new StorageOutTicketDetailVo();
+        List<StorageOutDetail> ticketDetails = storageOutDetailDao.findByOutTicketCode(ticketCode);
+        List<StorageOutBillDetail> billDetails = storageOutBillDetailDao.findByOutBillCode(billCode);
+        vo.setBillDetails(billDetails);
+        vo.setTicketDetails(ticketDetails);
+        return vo;
     }
 
     private List<StorageOutRecordVo> GenerateVos(List<StorageOutTicket> outTicketList, List<StorageOutBill> outBillList) {

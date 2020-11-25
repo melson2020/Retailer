@@ -62,7 +62,7 @@ public class StorageOutResource extends BaseResource {
     }
 
     @RequestMapping(value = "/outboundList",method = RequestMethod.GET)
-    @RequiredPermission(SecurityLevel.Employee)
+    @RequiredPermission(SecurityLevel.Manager)
     public Result GetOutboundList(HttpServletRequest request){
         String storeCode = request.getParameter("storeCode");
         String permission = request.getParameter("permission");

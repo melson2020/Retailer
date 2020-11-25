@@ -198,5 +198,11 @@ export default {
   },
   GetStorageOutRecordDetails(params){
     return service.get("/storageOut/recordDetail",params)
+  },
+  /**
+   * reprot
+   */
+  GetProductStorageRecords(params){
+    return service.get("/report/productStorageRec",params)
   }
 };

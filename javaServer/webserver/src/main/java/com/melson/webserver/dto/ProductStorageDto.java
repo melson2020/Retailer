@@ -16,8 +16,8 @@ public class ProductStorageDto {
     private String supplyName;
     //现有数量
     private Integer count;
-    //盘点数量
     private String countUnit;
+    //盘点数量
     private Integer counted;
     //现有总数
     private Integer totalCount;

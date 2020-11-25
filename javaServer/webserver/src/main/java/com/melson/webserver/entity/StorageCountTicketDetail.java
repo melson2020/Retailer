@@ -23,6 +23,24 @@ public class StorageCountTicketDetail {
     private String batchNo;
     //1 总数变化 批次数量未变 0 批次数量变化
     private Integer totalCountChange;
+    private Integer beforeCount;
+    private Integer afterCount;
+
+    public Integer getBeforeCount() {
+        return beforeCount;
+    }
+
+    public void setBeforeCount(Integer beforeCount) {
+        this.beforeCount = beforeCount;
+    }
+
+    public Integer getAfterCount() {
+        return afterCount;
+    }
+
+    public void setAfterCount(Integer afterCount) {
+        this.afterCount = afterCount;
+    }
 
     public String getSupplyName() {
         return supplyName;
