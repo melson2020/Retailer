@@ -43,7 +43,7 @@
         :data="outBoundList"
         ref="outBoundTable"
         border
-        size="small"
+        size="mini"
         show-summary
         :summary-method="getSummaries"
         :header-row-style="{ height: '40px' }"
@@ -52,26 +52,29 @@
         :header-cell-style="{ background: '#808080', color: 'white' }"
       >
         }" >
-        <el-table-column prop="date" label="销售日期" width="90%">
+        <el-table-column prop="date" label="日期" width="90%" sortable>
         </el-table-column>
         <el-table-column
           prop="outBoundNo"
           label="出库单号"
           width="130%"
+          sortable
         ></el-table-column>
-        <el-table-column prop="salesName" label="销售人员" width="auto">
+        <el-table-column prop="salesName" label="销售人员" width="auto" sortable>
         </el-table-column>
-        <el-table-column prop="product" label="产品名称" width="auto">
+        <el-table-column prop="product" label="产品名称" width="auto" sortable>
         </el-table-column>
         <el-table-column
           prop="supply"
           label="供应商"
           width="200px"
+          sortable
         ></el-table-column>
         <el-table-column
           prop="batchNo"
           label="入库批次"
           width="130%"
+           sortable
         ></el-table-column>
         <el-table-column label="入库单价" width="200px">
           <template slot-scope="scope">
@@ -89,7 +92,7 @@
             {{ scope.row.outCount }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
-        <el-table-column prop="profit" label="总利润" width="auto">
+        <el-table-column prop="profit" label="总利润" width="auto" sortable>
           <template slot-scope="scope">
             <span class="color-orange"> {{ scope.row.profit }}</span>
           </template>

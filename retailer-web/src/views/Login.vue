@@ -70,7 +70,9 @@ export default {
       // eslint-disable-next-line no-undef
       this.loginUser.loginFrom = JSON.stringify({
         user: this.loginUser.loginName,
+        // eslint-disable-next-line no-undef
         ip: returnCitySN["cip"],
+        // eslint-disable-next-line no-undef
         city: returnCitySN["cname"],
       });
       this.$refs[formName].validate((valid) => {
