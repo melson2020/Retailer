@@ -11,7 +11,7 @@
           class="date-picker"
           type="daterange"
           align="right"
-          size="small" 
+          size="small"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -24,7 +24,7 @@
         <el-button
           :disabled="date ? false : true"
           type="primary"
-          size="small" 
+          size="small"
           icon="el-icon-search"
           @click="searchOnClick"
           >查询</el-button
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="content-no-shadow">
-      <el-scrollbar  class="content-scrollbar">
+      <el-scrollbar class="content-scrollbar">
         <div
           v-for="(item, index) in storageOutRecordList"
           :key="index"
@@ -52,15 +52,26 @@
                   <span class="card-title"
                     >出库单号： {{ ticket.outTicket.code }}</span
                   >
-                  <el-button
-                    style="float: right; padding: 3px 0"
-                    type="text"
-                    :id="ticket.outTicket.code"
-                    :name="ticket.outBill.code"
-                    @click.prevent.stop="detailOnClick($event)"
-                  >
-                    查看详细</el-button
-                  >
+                  <div>
+                    <el-button
+                      style="float: right; padding: 3px 0; margin-left: 10px"
+                      type="text"
+                      :id="ticket.outTicket.code"
+                      :name="ticket.outBill.code"
+                      @click.prevent.stop="detailOnClick($event)"
+                    >
+                      查看详细</el-button
+                    >
+                    <el-button
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                      @click.prevent.stop="
+                        printDetail(ticket.outTicket.code, ticket)
+                      "
+                    >
+                      打印</el-button
+                    >
+                  </div>
                 </div>
                 <div>
                   <el-row class="card-content">
@@ -98,7 +109,10 @@
                     >
                     <el-col :span="15" class="card-content-col-content">
                       <el-popover
-                        v-if="ticket.outTicket.description&&ticket.outTicket.description.length > 15"
+                        v-if="
+                          ticket.outTicket.description &&
+                          ticket.outTicket.description.length > 15
+                        "
                         placement="top-start"
                         title="详细描述"
                         width="300"
@@ -152,23 +166,87 @@
           </el-row>
         </div>
       </el-scrollbar>
+      <el-dialog
+        title="打印详细"
+        :visible.sync="printDialogVisible"
+        width="60%"
+      >
+        <div id="exportPdf" ref="exportPdf">
+          <div class="padding-15 bold-large">
+            {{ userInfo.store.storeName }}出库单
+          </div>
+          <div>
+            <el-row>
+              <el-col :span="8" class="text-left padding-10"
+                >日期: {{ outTicketInfo.date }}</el-col
+              >
+              <el-col :span="8" class="text-left padding-10"
+                >单号: {{ outTicketInfo.code }}</el-col
+              >
+              <el-col :span="8" class="text-left padding-10"
+                >出库人员: {{ outTicketInfo.employeeName }}</el-col
+              >
+            </el-row>
+            <el-row>
+              <el-col :span="8" class="text-left padding-10"
+                >创建时间：
+                {{
+                  new Date(outTicketInfo.createTime).format(
+                    "yyyy-MM-dd hh:mm:ss"
+                  )
+                }}</el-col
+              >
+              <el-col :span="8" class="text-left padding-10"
+                >打印时间：{{
+                  new Date().format("yyyy-MM-dd hh:mm:ss")
+                }}</el-col
+              >
+              <el-col :span="8" class="text-left padding-10"
+                >种类数量： {{ outTicketInfo.categroyCount }}</el-col
+              >
+            </el-row>
+          </div>
+          <div class="print-detail-div">详细内容</div>
+          <el-table border size="small" :data="outTicketInfo.details">
+            <el-table-column prop="productName" label="产品名称">
+            </el-table-column>
+            <el-table-column prop="outCount" label="数量" width="auto">
+            </el-table-column>
+            <el-table-column prop="countUnit" label="单位" width="auto">
+            </el-table-column>
+            <el-table-column prop="outPrice" label="单价" width="auto">
+            </el-table-column>
+            <el-table-column prop="totalPrice" label="总价" width="auto">
+            </el-table-column>
+            <el-table-column prop="taxRate" label="税" width="100px">
+            </el-table-column>
+          </el-table>
+          <div class="signature-div">签名/盖章___________</div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button>取 消</el-button>
+          <el-button type="primary" @click="printPdf">打印</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
+import print from "print-js";
 export default {
   data() {
     return {
       date: "",
       timeDefaultShow: "",
       startDateMin: null,
+      printDialogVisible: false,
       pickerOptions: {
-        onPick: obj => {
+        onPick: (obj) => {
           this.startDateMin = new Date(obj.minDate).getTime();
         },
-        disabledDate: time => {
+        disabledDate: (time) => {
           if (this.startDateMin) {
             let maxDate = this.startDateMin + 3600 * 1000 * 24 * 31;
             let minDate = this.startDateMin - 3600 * 1000 * 24 * 31;
@@ -188,7 +266,7 @@ export default {
               const end = new Date();
               const start = new Date();
               picker.$emit("pick", [start, end]);
-            }
+            },
           },
           {
             text: "最近三天",
@@ -197,7 +275,7 @@ export default {
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
               picker.$emit("pick", [start, end]);
-            }
+            },
           },
           {
             text: "最近一个月",
@@ -206,25 +284,26 @@ export default {
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
               picker.$emit("pick", [start, end]);
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "storageOutRecordList"])
+    ...mapGetters(["userInfo", "storageOutRecordList", "outTicketInfo"]),
   },
   methods: {
     ...mapActions({
       GetStorageOutRecordList: "GetStorageOutRecordList",
-      GetStorageOutRecordDetails:"GetStorageOutRecordDetails"
+      GetStorageOutRecordDetails: "GetStorageOutRecordDetails",
+      GetOutTicketInfo: "GetOutTicketInfo",
     }),
     searchOnClick() {
       let params = {
         storeCode: this.userInfo.storeCode,
         startDate: this.date[0],
-        endDate: this.date[1]
+        endDate: this.date[1],
       };
       this.GetStorageOutRecordList(params);
     },
@@ -246,32 +325,44 @@ export default {
           date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
       return Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s;
     },
-    detailOnClick: function(e) {
+    detailOnClick: function (e) {
       let ticketCode = e.currentTarget.id;
-      let billCode=e.currentTarget.name;
-      let params={ticketCode:ticketCode,billCode:billCode}
+      let billCode = e.currentTarget.name;
+      let params = {
+        ticketCode: ticketCode,
+        billCode: billCode,
+        storeCode: this.userInfo.storeCode,
+      };
       this.$router.replace({ path: "storageOutRecord/detail" });
-      this.GetStorageOutRecordDetails(params)
-    }
+      this.GetStorageOutRecordDetails(params);
+    },
+    printDetail(ticketCode) {
+      let params = {
+        ticketCode: ticketCode,
+        storeCode: this.userInfo.storeCode,
+      };
+      this.GetOutTicketInfo(params);
+      this.printDialogVisible = !this.printDialogVisible;
+    },
+    printPdf() {
+      print({
+        printable: "exportPdf",
+        type: "html",
+        maxWidth: "100%",
+        targetStyles: ["*"],
+      });
+    },
   },
-  beforeMount: function() {
+  beforeMount: function () {
     this.timeDefaultShow = new Date().setMonth(new Date().getMonth() - 1);
-  }
+  },
 };
 </script>
 <style>
-/* .content-header {
-  height: 80px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-.header-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #409eff;
-} */
+@page{
+    margin-bottom: 1mm;
+  }
+
 .storageoutrecord-content-header {
   height: 60px;
   display: flex;
@@ -297,7 +388,7 @@ export default {
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
 }
-.content-scrollbar{
+.content-scrollbar {
   height: 85vh;
 }
 .message-info {
@@ -367,5 +458,27 @@ export default {
 .color-orange {
   color: orange;
   font-weight: bold;
+}
+.text-left {
+  text-align: left;
+}
+.padding-10 {
+  padding: 10px;
+}
+.padding-15 {
+  padding: 15px;
+}
+.bold-large {
+  font-weight: bold;
+  font-size: 35px;
+}
+.print-detail-div {
+  padding: 10px;
+  text-align: left;
+}
+.signature-div {
+  text-align: right;
+  padding: 40px 10px;
+  font-weight: 500;
 }
 </style>

@@ -9,6 +9,7 @@ import com.melson.webserver.Vo.OutBoundVo;
 import com.melson.webserver.Vo.StorageOutRecordVo;
 import com.melson.webserver.Vo.StorageOutTicketDetailVo;
 import com.melson.webserver.dto.StorageOutTiketDto;
+import com.melson.webserver.entity.StorageOutTicket;
 import com.melson.webserver.service.IStorageOutTicket;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,17 +78,34 @@ public class StorageOutResource extends BaseResource {
         return result;
     }
 
-    @RequestMapping(value ="recordDetail",method = RequestMethod.GET)
+    @RequestMapping(value ="/recordDetail",method = RequestMethod.GET)
     @RequiredPermission(SecurityLevel.Employee)
     public Result FindRecordDetails(HttpServletRequest request){
         String ticketCode=request.getParameter("ticketCode");
         String billCode=request.getParameter("billCode");
-        if (StringUtils.isEmpty(ticketCode)||StringUtils.isEmpty(billCode)) return this.GenerateResult(ResultType.ParametersNeeded);
-        StorageOutTicketDetailVo vo=outTicketService.FindRecordDetail(ticketCode,billCode);
+        String storeCode=request.getParameter("storeCode");
+        if (StringUtils.isEmpty(ticketCode)||StringUtils.isEmpty(billCode)||StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+        StorageOutTicketDetailVo vo=outTicketService.FindRecordDetail(ticketCode,billCode,storeCode);
         Result result=new Result();
         result.setData(vo);
         System.out.println("Rest Call: /storageOut/recordDetail ...");
         return result;
     }
 
+    @RequestMapping(value ="/ticketInfo",method = RequestMethod.GET)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result GetOutTicketInfo(HttpServletRequest request){
+        String ticketCode=request.getParameter("ticketCode");
+        String storeCode=request.getParameter("storeCode");
+        if (StringUtils.isEmpty(ticketCode)||StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+        Result result=new Result();
+        StorageOutTicket ticket=outTicketService.GetTicketInfos(ticketCode,storeCode);
+        if(ticket==null){
+            result.setResultStatus(-1);
+            result.setMessage("no out bound ticket");
+        }else {
+            result.setData(ticket);
+        }
+        return result;
+    }
 }

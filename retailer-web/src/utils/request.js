@@ -199,6 +199,9 @@ export default {
   GetStorageOutRecordDetails(params){
     return service.get("/storageOut/recordDetail",params)
   },
+  GetOutTicketInfo(params){
+    return service.get("/storageOut/ticketInfo",params)
+  },
   /**
    * reprot
    */

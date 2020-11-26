@@ -252,13 +252,22 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
 
     @Override
-    public StorageOutTicketDetailVo FindRecordDetail(String ticketCode, String billCode) {
+    public StorageOutTicketDetailVo FindRecordDetail(String ticketCode, String billCode,String storeCode) {
         StorageOutTicketDetailVo vo = new StorageOutTicketDetailVo();
-        List<StorageOutDetail> ticketDetails = storageOutDetailDao.findByOutTicketCode(ticketCode);
+        List<StorageOutDetail> ticketDetails = storageOutDetailDao.findByOutTicketCodeAndStoreCode(ticketCode,storeCode);
         List<StorageOutBillDetail> billDetails = storageOutBillDetailDao.findByOutBillCode(billCode);
         vo.setBillDetails(billDetails);
         vo.setTicketDetails(ticketDetails);
         return vo;
+    }
+
+    @Override
+    public StorageOutTicket GetTicketInfos(String ticketCode, String storeCode) {
+        StorageOutTicket ticket=storageOutTicketDao.findByStoreCodeAndCode(storeCode,ticketCode);
+        if(ticket==null)return null;
+        List<StorageOutDetail> details=storageOutDetailDao.findByOutTicketCodeAndStoreCode(ticketCode,storeCode);
+        ticket.setDetails(details);
+        return ticket;
     }
 
     private List<StorageOutRecordVo> GenerateVos(List<StorageOutTicket> outTicketList, List<StorageOutBill> outBillList) {

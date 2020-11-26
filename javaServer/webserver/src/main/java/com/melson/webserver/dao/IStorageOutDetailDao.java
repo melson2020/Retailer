@@ -13,5 +13,5 @@ import java.util.List;
  */
 @Repository
 public interface IStorageOutDetailDao extends JpaRepository<StorageOutDetail,String> {
-    List<StorageOutDetail> findByOutTicketCode(String ticketCode);
+    List<StorageOutDetail> findByOutTicketCodeAndStoreCode(String ticketCode,String storeCode);
 }

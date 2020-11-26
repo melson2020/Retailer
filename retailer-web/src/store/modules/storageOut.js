@@ -6,8 +6,9 @@ import { Message } from "element-ui";
 const state = {
     productBatchList: [],
     storageOutRecordList: [],
-    storageOutDetails: { },
-    outBoundList:[]
+    storageOutDetails: {},
+    outBoundList: [],
+    outTicketInfo: {}
 };
 
 const actions = {
@@ -30,7 +31,7 @@ const actions = {
         return request.SaveStorageOutTicket(params);
     },
     GetStorageOutRecordList({ commit }, params) {
-        return request.GetStorageOutRecordList(params).then(res => {
+        request.GetStorageOutRecordList(params).then(res => {
             if (res.resultStatus == 1) {
                 commit("SetStorageOutRecordList", res.data)
             } else {
@@ -41,19 +42,18 @@ const actions = {
         })
     },
     GetStorageOutRecordDetails({ commit }, params) {
-        return request.GetStorageOutRecordDetails(params).then(res => {
+        request.GetStorageOutRecordDetails(params).then(res => {
             if (res.resultStatus == 1) {
                 commit("SetStorageOutRecordDetails", res.data)
             } else {
                 Message.error(res.message)
             }
         }).catch(error => {
-
+            Message.error(error.message ? error.message : error)
         })
     },
     GetOutBoundList({ commit }, params) {
-        console.log(params);
-        return request.GetOutBoundListReq(params).then(res => {
+        request.GetOutBoundListReq(params).then(res => {
             if (res.resultStatus == 1) {
                 commit("SetOutBoundList", res.data)
             } else {
@@ -63,13 +63,25 @@ const actions = {
             Message.error(err.message ? err.message : err)
         })
     },
+    GetOutTicketInfo({ commit }, params) {
+        request.GetOutTicketInfo(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetOutTicketInfo", res.data)
+            } else {
+                Message.error(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
+    }
 };
 
 const getters = {
     productBatchList: state => state.productBatchList,
     storageOutRecordList: state => state.storageOutRecordList,
-    storageOutDetails:state=>state.storageOutDetails,
-    outBoundList:state=>state.outBoundList
+    storageOutDetails: state => state.storageOutDetails,
+    outBoundList: state => state.outBoundList,
+    outTicketInfo:state=>state.outTicketInfo
 };
 
 const mutations = {
@@ -78,8 +90,8 @@ const mutations = {
             item.checked = false;
             item.outPrice = "";
             item.outCount = 0;
-            item.outVat =item.vat === null?0:item.vat,
-            item.outTaxRate =item.taxRate===null?'':item.taxRate
+            item.outVat = item.vat === null ? 0 : item.vat,
+                item.outTaxRate = item.taxRate === null ? '' : item.taxRate
         })
         state.productBatchList = data
     },
@@ -94,6 +106,9 @@ const mutations = {
     },
     SetStorageOutRecordDetails(state, data) {
         state.storageOutDetails = data
+    },
+    SetOutTicketInfo(state, data) {
+        state.outTicketInfo = data
     }
 };
 

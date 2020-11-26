@@ -59,7 +59,7 @@ import {
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
-
+//Date 对象添加format 函数转成String
 Date.prototype.format = function (fmt) {
   var o = {
       "M+": this.getMonth() + 1, //月份
