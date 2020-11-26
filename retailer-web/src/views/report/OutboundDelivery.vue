@@ -37,7 +37,7 @@
         >
       </div>
     </div>
-    <div class="ticket-title">{{ userInfo.store.storeName }}出库清单</div>
+    <!-- <div class="ticket-title">{{ userInfo.store.storeName }}出库清单</div> -->
     <div class="OutboundDelivery-content">
       <el-table
         :data="outBoundList"

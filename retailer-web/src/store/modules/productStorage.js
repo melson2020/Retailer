@@ -166,7 +166,13 @@ const mutations = {
         state.productAndStorageCount.storageCount = data;
     },
     SetStorageList(state, data) {
-        data.map(item => { item.batchList = [] })
+        data.map(item => { 
+            if (item.feature&&item.feature.length!=0) {
+                item.feature = JSON.parse(item.feature);
+            }else{
+                item.feature=[];
+            }
+            item.batchList = [] })
         state.productStorageList = data;
     },
     SetPreviewStorageList(state, data) {

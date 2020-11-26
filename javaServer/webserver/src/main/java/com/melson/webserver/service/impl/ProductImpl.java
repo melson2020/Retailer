@@ -269,7 +269,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
             }
             else
             {
-                productStorageDao.updateStorage(saved.getId(),saved.getName(),saved.getType(),saved.getSpecification(),saved.getUnit(), saved.getSearchType());
+                productStorageDao.updateStorage(saved.getId(),saved.getName(),saved.getType(),saved.getSpecification(),saved.getUnit(), saved.getSearchType(),saved.getFeature());
             }
         }
         else
@@ -290,6 +290,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
         storage.setProductSpecification(saved.getSpecification());
         storage.setUnit(saved.getUnit());
         storage.setSearchType(saved.getSearchType());
+        storage.setFeature(saved.getFeature());
         return storage;
     }
 

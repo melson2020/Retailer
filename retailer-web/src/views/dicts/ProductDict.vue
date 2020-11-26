@@ -67,7 +67,7 @@
               :key="tag"
               v-for="tag in scope.row.feature"
               :disable-transitions="false"
-              size="small"
+              size="mini"
               type="success"
             >
               {{ tag }}
@@ -212,7 +212,7 @@
           v-for="tag in editTags"
           closable
           :disable-transitions="false"
-          size="small"
+          size="mini"
           type="success"
           @close="handleEditTagsClose(tag)"
           >{{ tag }}</el-tag
@@ -344,7 +344,7 @@
           v-for="tag in editTags"
           closable
           :disable-transitions="false"
-          size="small"
+          size="mini"
           type="success"
           @close="handleEditTagsClose(tag)"
           >{{ tag }}</el-tag

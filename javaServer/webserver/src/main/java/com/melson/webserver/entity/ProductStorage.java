@@ -21,6 +21,7 @@ public class ProductStorage {
     private String productSpecification;
     private Integer count;
     private String unit;
+    private String feature;
     private String searchType;    //1,normall; 2,all
     @Transient
     private List<ProductBatch> batchList;
@@ -103,5 +104,13 @@ public class ProductStorage {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
     }
 }

@@ -40,6 +40,12 @@
         border
         :data="productStorageRecords"
         :span-method="objectSpanMethod"
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :height="producttableHeight"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }"
       >
         <el-table-column prop="date" label="日期"> </el-table-column>
         <el-table-column

@@ -97,7 +97,7 @@
                 :label="permission.name"
                 :value="permission.level"
                 :key="permission.id"
-                :disabled="permission.level>userInfo.permission"
+                :disabled="permission.level>=userInfo.permission"
               ></el-option>
             </el-select>
           </el-col>

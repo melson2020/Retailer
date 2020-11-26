@@ -166,6 +166,20 @@
             :label="item.label"
             :width="item.width"
           ></el-table-column>
+           <el-table-column label="特征" align="center" width="auto">
+          <template slot-scope="scope">
+            <el-tag
+              class="el-tag"
+              :key="tag"
+              v-for="tag in scope.row.feature"
+              :disable-transitions="false"
+              size="mini"
+              type="success"
+            >
+              {{ tag }}
+            </el-tag>
+          </template>
+        </el-table-column>
         </el-table>
       </div>
       <div class="productstorage-content-footer">
