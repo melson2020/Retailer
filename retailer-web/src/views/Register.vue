@@ -255,7 +255,18 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.RegisterStore(this.store);
+          this.RegisterStore(this.store)
+            .then((res) => {
+              if (res.resultStatus == 1) {
+                this.$message.success("注册成功");
+                this.$router.push({ path: "/" });
+              } else {
+                this.$message.warning("创建失败！");
+              }
+            })
+            .catch((error) => {
+              this.$message.error(error.message);
+            });
         } else {
           this.$message.warning("请填写准确信息");
           return false;

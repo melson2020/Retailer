@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import request from "../../utils/request";
 
 /**
@@ -71,27 +72,8 @@ const actions = {
    * 注册商户
    * @param {*} store 商户信息
    */
-  RegisterStore({ commit }, store) {
-    request
-      .RegisterStore(store)
-      .then(res => {
-        let alter = { show: true, type: "", message: "" };
-        if (res.resultStatus == 1) {
-          alter.type = "success";
-          alter.message = "创建成功！";
-        } else {
-          alter.type = "warning";
-          alter.message = "创建失败！";
-        }
-        commit("SetMessage", alter);
-      })
-      .catch(error => {
-        commit("SetMessage", {
-          show: true,
-          type: "error",
-          message: error.message
-        });
-      });
+  RegisterStore({  }, store) {
+   return request.RegisterStore(store)
   },
   // eslint-disable-next-line no-empty-pattern
   CheckPhone({ }, phoneNumber) {
