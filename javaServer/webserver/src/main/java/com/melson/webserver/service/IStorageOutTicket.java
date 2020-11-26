@@ -19,7 +19,14 @@ import java.util.List;
 public interface IStorageOutTicket extends IService<StorageOutTicket> {
     boolean SaveStorageOutTiket(StorageOutTicket ticket, List<StorageOutBillDetail> billList);
     List<StorageOutRecordVo> FindRecordList(String storeCode,String startDate,String endDate);
-    StorageOutTicketDetailVo FindRecordDetail(String ticketCode,String billCode);
+    StorageOutTicketDetailVo FindRecordDetail(String ticketCode,String billCode,String storeCode);
 
+    /**
+     * 查询出库单详细
+     * @param ticketCode
+     * @param storeCode
+     * @return
+     */
+    StorageOutTicket GetTicketInfos(String ticketCode,String storeCode);
     List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId);
 }
