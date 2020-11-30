@@ -218,7 +218,7 @@
             </el-table-column>
             <el-table-column prop="totalPrice" label="总价" width="auto">
             </el-table-column>
-            <el-table-column prop="taxRate" label="税" width="100px">
+            <el-table-column prop="taxRate" label="税(%)" width="100px">
             </el-table-column>
           </el-table>
           <div class="signature-div">签名/盖章___________</div>
