@@ -72,7 +72,7 @@ public class ProductBatchImpl extends AbstractService<ProductBatch> implements I
     public List<ProductBatch> SaveAll(List<ProductBatch> productBatchList) {
         //更新盘点单详细供应商名称
         if (productBatchList.size() > 0) {
-            List<StorageCountTicketDetail> emptysupplyNameList = storageCountTicketDetailDao.findByStoreCodeAndSupplyNameIsNull(productBatchList.get(0).getStoreCode());
+            List<StorageCountTicketDetail> emptysupplyNameList = storageCountTicketDetailDao.findByStoreCodeAndSupplyNameIsNullOrSupplyName(productBatchList.get(0).getStoreCode(),"");
             if (emptysupplyNameList.size() > 0) {
                 Map<String, StorageCountTicketDetail> detailMap = new HashMap<>(emptysupplyNameList.size());
                 for (StorageCountTicketDetail detail : emptysupplyNameList) {

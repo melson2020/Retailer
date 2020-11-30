@@ -331,6 +331,69 @@
             </div>
           </div>
         </el-dialog>
+        <el-dialog
+          title="保存成功，是否需要打印"
+          :visible.sync="printDialogVisible"
+          width="60%"
+          @closed="outTicketPdfClose"
+        >
+          <div id="outTicketPdf" ref="outTicketPdf">
+            <div class="padding-15 bold-large">
+              {{ userInfo.store.storeName }}出库单
+            </div>
+            <div>
+              <el-row>
+                <el-col :span="8" class="text-left padding-10"
+                  >日期: {{ outTicketInfo.date }}</el-col
+                >
+                <el-col :span="8" class="text-left padding-10"
+                  >单号: {{ outTicketInfo.code }}</el-col
+                >
+                <el-col :span="8" class="text-left padding-10"
+                  >出库人员: {{ outTicketInfo.employeeName }}</el-col
+                >
+              </el-row>
+              <el-row>
+                <el-col :span="8" class="text-left padding-10"
+                  >创建时间：
+                  {{
+                    new Date(outTicketInfo.createTime).format(
+                      "yyyy-MM-dd hh:mm:ss"
+                    )
+                  }}</el-col
+                >
+                <el-col :span="8" class="text-left padding-10"
+                  >打印时间：{{
+                    new Date().format("yyyy-MM-dd hh:mm:ss")
+                  }}</el-col
+                >
+                <el-col :span="8" class="text-left padding-10"
+                  >种类数量： {{ outTicketInfo.categroyCount }}</el-col
+                >
+              </el-row>
+            </div>
+            <div class="print-detail-div">详细内容</div>
+            <el-table border size="small" :data="outTicketInfo.details">
+              <el-table-column prop="productName" label="产品名称">
+              </el-table-column>
+              <el-table-column prop="outCount" label="数量" width="auto">
+              </el-table-column>
+              <el-table-column prop="countUnit" label="单位" width="auto">
+              </el-table-column>
+              <el-table-column prop="outPrice" label="单价" width="auto">
+              </el-table-column>
+              <el-table-column prop="totalPrice" label="总价" width="auto">
+              </el-table-column>
+              <el-table-column prop="taxRate" label="税" width="100px">
+              </el-table-column>
+            </el-table>
+            <div class="signature-div">签名/盖章___________</div>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="cancelOnClick">取 消</el-button>
+            <el-button type="primary" @click="printPdf">打印</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -338,11 +401,13 @@
 <script>
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
+import print from "print-js";
 export default {
   data() {
     return {
       showTicket: false,
       dialogVisible: false,
+      printDialogVisible: false,
       prods: [],
       selectPid: "",
       storageOutTicket: {
@@ -365,6 +430,7 @@ export default {
       "productList",
       "productBatchList",
       "taxRateList",
+      "outTicketInfo",
     ]),
     checkedOutList: function () {
       return this.productBatchList.filter((item) => {
@@ -376,7 +442,8 @@ export default {
         this.storageOutTicket.details.map((item) => {
           let existProductBatch = this.productBatchList.filter((p) => {
             return (
-              p.batchNo + p.productId +p.supplyId== item.storageInBatchNo + item.productId+item.supplyId
+              p.batchNo + p.productId + p.supplyId ==
+              item.storageInBatchNo + item.productId + item.supplyId
             );
           })[0];
           if (existProductBatch) {
@@ -420,6 +487,7 @@ export default {
       ClearProductBatchList: "ClearProductBatchList",
       GetTaxRateList: "GetTaxRateList",
       SaveStorageOutTicket: "SaveStorageOutTicket",
+      GetOutTicketInfo: "GetOutTicketInfo",
     }),
     direct() {
       this.showTicket = !this.showTicket;
@@ -547,7 +615,7 @@ export default {
           countUnit: item.countUnit,
           profit: item.profit,
           beforeOutCount: batch.count,
-          afterOutCount:this.NumberSub(batch.count,item.outCount),
+          afterOutCount: this.NumberSub(batch.count, item.outCount),
           totalPrice: this.NumberMul(item.outCount, item.outPrice),
           vatIn: item.vat,
           taxRateIn: item.taxRate,
@@ -637,12 +705,14 @@ export default {
           };
           this.SaveStorageOutTicket(params)
             .then((res) => {
-              console.log(res);
               if (res.resultStatus == 1) {
-                this.showTicket = !this.showTicket;
-                this.$message.success("保存成功");
+                let params = {
+                  ticketCode: this.storageOutTicket.code,
+                  storeCode: this.userInfo.storeCode,
+                };
+                this.GetOutTicketInfo(params);
+                this.printDialogVisible = !this.printDialogVisible;
                 this.clearOutTicket();
-                this.showTicket = false;
               } else {
                 this.$message.error(res.message);
               }
@@ -656,6 +726,21 @@ export default {
         }
       });
     },
+    cancelOnClick() {
+      this.printDialogVisible = !this.printDialogVisible;
+      this.showTicket = false;
+    },
+    printPdf() {
+      print({
+        printable: "outTicketPdf",
+        type: "html",
+        maxWidth: "100%",
+        targetStyles: ["*"],
+      });
+    },
+    outTicketPdfClose(){
+       this.showTicket = false;
+    }
   },
   beforeMount() {
     let params = { storeCode: this.userInfo.storeCode };
@@ -810,5 +895,28 @@ export default {
 }
 .color-light-gray {
   color: #909399;
+}
+.text-left {
+  text-align: left;
+}
+.padding-10 {
+  padding: 10px;
+}
+.padding-15 {
+  padding: 15px;
+}
+.bold-large {
+  font-weight: bold;
+  font-size: 35px;
+}
+.print-detail-div {
+  padding: 10px;
+  text-align: left;
+}
+.signature-div {
+  text-align: right;
+  font-size: 25px;
+  padding: 40px 10px;
+  font-weight: 500;
 }
 </style>

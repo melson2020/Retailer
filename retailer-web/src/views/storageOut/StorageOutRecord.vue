@@ -224,7 +224,7 @@
           <div class="signature-div">签名/盖章___________</div>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button>取 消</el-button>
+          <el-button @click="cancelOnClick">取 消</el-button>
           <el-button type="primary" @click="printPdf">打印</el-button>
         </span>
       </el-dialog>
@@ -344,6 +344,9 @@ export default {
       this.GetOutTicketInfo(params);
       this.printDialogVisible = !this.printDialogVisible;
     },
+    cancelOnClick() {
+      this.printDialogVisible = !this.printDialogVisible;
+    },
     printPdf() {
       print({
         printable: "exportPdf",
@@ -359,9 +362,9 @@ export default {
 };
 </script>
 <style>
-@page{
-    margin-bottom: 1mm;
-  }
+@page {
+  margin-bottom: 1mm;
+}
 
 .storageoutrecord-content-header {
   height: 60px;
@@ -478,6 +481,7 @@ export default {
 }
 .signature-div {
   text-align: right;
+  font-size: 25px;
   padding: 40px 10px;
   font-weight: 500;
 }
