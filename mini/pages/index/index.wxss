@@ -1,14 +1,15 @@
 /**index.wxss**/
 .userinfo {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  border-bottom: 1px solid rgb(226, 223, 223);
 }
 
 .userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
+  width: 80rpx;
+  height: 80rpx;
+  margin: 10rpx;
   border-radius: 50%;
 }
 
@@ -16,6 +17,70 @@
   color: #aaa;
 }
 
-.usermotto {
-  margin-top: 200px;
+.authorize-area {
+  height: 80%;
+  display: flex;
+  align-items: center;
+}
+
+.search_bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 10rpx;
+}
+
+.srearch_bar_input {
+  width: 80vw;
+  border: 1px solid rgb(226, 223, 223);
+  height: 50rpx;
+}
+
+.srearch_bar_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20vw;
+  height: 50rpx;
+  border: 1px solid rgb(226, 223, 223);
+  background-color: palegreen;
+}
+.product_area{
+  padding: 0 10rpx;
+}
+.product_card{
+  border: 1px solid rgb(212, 206, 206);
+  border-radius: 20rpx 20rpx 0 0;
+  margin-top: 10rpx;
+}
+.product_card_title{
+  display: flex;
+  flex-direction: row;
+  border-radius: 20rpx 20rpx 0 0;
+  font-size: medium;
+  justify-content: space-between;
+  background: lightblue;
+  padding: 10rpx;
+}
+.product_card_content{
+  display: flex;
+  flex-direction: column;
+}
+.product_batch_info{
+  height: 50rpx;
+  padding: 10rpx;
+  display: flex;
+  flex-direction: row;
+  font-size: small;
+  justify-content: space-between;
+}
+.toptip{
+  border-radius: 0;
+}
+.bind_retailer_user_area{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }

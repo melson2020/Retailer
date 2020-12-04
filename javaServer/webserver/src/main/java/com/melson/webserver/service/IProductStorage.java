@@ -24,4 +24,5 @@ public interface IProductStorage extends IService<ProductStorage> {
     List<ProductBatch> FindBatchList(String storeCode,Integer productId);
     List<StorageRecordVo> FindProductStorageRec(Integer productId, String startDate, String endDate, String storeCode);
     ProductStorage FindByProductIdAndStoreCode(Integer id, String storeCode);
+    List<ProductStorage> findStorageAndBatchByPName(String productNmae,String storeCode);
 }

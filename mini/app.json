@@ -1,35 +1,13 @@
 {
   "pages":[
-    "pages/index/index",
-    "pages/logs/logs",
-    "pages/firstpage/firstpages"
+    "pages/index/index"
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#1c86ee",
-    "navigationBarTitleText": "饿了吗",
+    "navigationBarBackgroundColor": "#2C61B1",
+    "navigationBarTitleText": "Retailer",
     "navigationBarTextStyle":"white"
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json",
-  "tabBar":{
-    "backgroundColor":"white",
-    "color":"#999999",
-    "selectedColor":"#1c86ee",
-    "boardStyele":"black",
-    "list":[
-      {
-        "pagePath":"pages/index/index",
-        "text":"首页",
-        "iconPath":"images/index.png",
-        "selectedIconPath":"images/balance.png"
-      },
-      {
-        "pagePath":"pages/logs/logs",
-        "text":"Logs",
-        "iconPath":"images/navigation.png",
-        "selectedIconPath":"images/share.png"
-      }
-    ]
-  }
+  "sitemapLocation": "sitemap.json"
 }

@@ -207,4 +207,29 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
         ProductStorage storage = productStorageDao.findByProductIdAndStoreCode(id, storeCode);
         return storage;
     }
+
+    @Override
+    public List<ProductStorage> findStorageAndBatchByPName(String productName, String storeCode) {
+        List<ProductStorage> storageList=productStorageDao.findByStoreCodeAndProductNameLike(storeCode,productName);
+        if(storageList==null||storageList.size()<=0)return null;
+        List<ProductBatch> batchList=productBatchDao.findByStoreCodeAndFinishedAndProductNameLike(storeCode,0,productName);
+        Map<Integer,ProductStorage> productStorageMap=new HashMap<>(storageList.size());
+        for (ProductStorage storage:storageList){
+            productStorageMap.put(storage.getProductId(),storage);
+        }
+        for (ProductBatch batch:batchList){
+            ProductStorage storage=productStorageMap.get(batch.getProductId());
+            if(storage!=null){
+              List<ProductBatch> existBatchList=storage.getBatchList();
+              if(existBatchList==null){
+                  existBatchList=new ArrayList<>();
+                  existBatchList.add(batch);
+                  storage.setBatchList(existBatchList);
+              }else {
+                  existBatchList.add(batch);
+              }
+            }
+        }
+        return new ArrayList<>(productStorageMap.values());
+    }
 }

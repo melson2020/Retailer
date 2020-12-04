@@ -13,6 +13,10 @@ import com.melson.base.service.IProvince;
 import com.melson.base.service.IStoreEmployee;
 import com.melson.webserver.entity.SysConfig;
 import com.melson.webserver.service.ISysConfig;
+import com.melson.wechatmini.dao.IWeChatApiDao;
+import com.melson.wechatmini.dao.IWeChatAppInfoDao;
+import com.melson.wechatmini.entity.WeChatApi;
+import com.melson.wechatmini.entity.WeChatAppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +44,18 @@ public class Cachelistener implements CommandLineRunner {
     private final ICity cityService;
     private final IArea areaService;
     private final ISysConfig sysConfigService;
+    private final IWeChatApiDao weChatApiDao;
+    private final IWeChatAppInfoDao weChatAppInfoDao;
 
-    public Cachelistener(CacheUtil cacheUtil, IStoreEmployee employeeService, IProvince provinceService, ICity cityService, IArea areaService,ISysConfig sysConfigService) {
+    public Cachelistener(CacheUtil cacheUtil, IStoreEmployee employeeService, IProvince provinceService, ICity cityService, IArea areaService, ISysConfig sysConfigService, IWeChatApiDao weChatApiDao, IWeChatAppInfoDao weChatAppInfoDao) {
         this.cacheUtil = cacheUtil;
         this.employeeService = employeeService;
         this.provinceService = provinceService;
         this.cityService = cityService;
         this.areaService = areaService;
-        this.sysConfigService=sysConfigService;
+        this.sysConfigService = sysConfigService;
+        this.weChatApiDao = weChatApiDao;
+        this.weChatAppInfoDao = weChatAppInfoDao;
     }
 
     @Override
@@ -63,6 +71,8 @@ public class Cachelistener implements CommandLineRunner {
         LoadArea();
         //加载系统配置到缓存
         LoadSysConfig();
+        //加载wechat 所需要缓存
+        LoadWeChatInfos();
         log.info("--------------------- cache init completed ------------------------");
     }
 
@@ -105,5 +115,18 @@ public class Cachelistener implements CommandLineRunner {
         }
         cacheUtil.Put(CacheKey.SysConfig, configMap);
         log.info("--------------------- system config added ----------------------------------");
+    }
+
+    private void LoadWeChatInfos(){
+        log.info("--------------------- add weChat infos to cache ---------------------------");
+        WeChatAppInfo appInfo=weChatAppInfoDao.findByAppName("retailer");
+        cacheUtil.Put(CacheKey.WeChatAppInfo,appInfo);
+        List<WeChatApi> apis=weChatApiDao.findAll();
+        Map<String,WeChatApi> apiMap=new HashMap<>(apis.size());
+        for (WeChatApi api:apis){
+            apiMap.put(api.getApiName(),api);
+        }
+        cacheUtil.Put(CacheKey.WeChatApi,apiMap);
+        log.info("--------------------- weChat infos added ----------------------------------");
     }
 }

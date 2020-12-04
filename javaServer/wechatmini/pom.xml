@@ -20,12 +20,18 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.melson</groupId>
-            <artifactId>base</artifactId>
+            <artifactId>webserver</artifactId>
             <version>0.0.1-dev</version>
+            <type>jar</type>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.melson</groupId>-->
+<!--            <artifactId>base</artifactId>-->
+<!--            <version>0.0.1-dev</version>-->
+<!--        </dependency>-->
         <!--小程序security 使用 2个-->
         <dependency>
             <groupId>commons-codec</groupId>

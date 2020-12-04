@@ -14,5 +14,7 @@ public final class CacheKey {
     public static String City="City";
     public static String Area="Area";
     public static String SysConfig="SysConifg";
+    public static String WeChatAppInfo="WeChatAppInfo";
+    public static String WeChatApi="WeChatApi";
 
 }
