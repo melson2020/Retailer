@@ -34,6 +34,10 @@ public class ProductBatch {
     private BigDecimal totalPrice;
     //批次类型  IN 入库生成  C 盘点生成
     private String batchType;
+    private BigDecimal netIn;   //净价格/unit （扣除返点）
+    private BigDecimal tepIn;   //去税价格/unit
+    private BigDecimal taxIn;   //税金/unit
+
 
     public String getProductName() {
         return productName;
@@ -178,5 +182,29 @@ public class ProductBatch {
 
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public BigDecimal getNetIn() {
+        return netIn;
+    }
+
+    public void setNetIn(BigDecimal netIn) {
+        this.netIn = netIn;
+    }
+
+    public BigDecimal getTepIn() {
+        return tepIn;
+    }
+
+    public void setTepIn(BigDecimal tepIn) {
+        this.tepIn = tepIn;
+    }
+
+    public BigDecimal getTaxIn() {
+        return taxIn;
+    }
+
+    public void setTaxIn(BigDecimal taxIn) {
+        this.taxIn = taxIn;
     }
 }

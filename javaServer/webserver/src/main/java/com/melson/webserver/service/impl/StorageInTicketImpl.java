@@ -144,6 +144,9 @@ public class StorageInTicketImpl extends AbstractService<StorageInTicket> implem
         pb.setDiscount(detail.getDiscount());
         pb.setTotalPrice(detail.getTotalPrice());
         pb.setProductName(detail.getProductName());
+        pb.setNetIn(detail.getNetIn());
+        pb.setTepIn(detail.getTepIn());
+        pb.setTaxIn(detail.getTaxIn());
         //设置批次类型
         pb.setBatchType("IN");
         return pb;

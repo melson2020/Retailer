@@ -45,6 +45,7 @@ public class StorageInResource extends BaseResource {
         Integer res = storageInTicketService.SaveStorageInTicket(ticket);
         result.setResultStatus(res);
         result.setMessage(res == 1 ? "" : res == -1 ? "update storage fail" : "save record fail");
+        System.out.println("GET Rest Call: /storageIn/saveTicket ...");
         return result;
     }
 

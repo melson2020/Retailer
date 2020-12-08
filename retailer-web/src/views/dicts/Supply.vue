@@ -28,7 +28,7 @@
         <el-table-column prop="address" label="联系地址" align="left"></el-table-column>
         <el-table-column prop="contact" label="联系人员" align="left"></el-table-column>
         <el-table-column prop="phone" label="联系电话" align="left"></el-table-column>
-        <el-table-column prop="discount" label="厂家折扣" align="left"></el-table-column>
+        <el-table-column prop="discount" label="厂家返点" align="left"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>
@@ -67,8 +67,8 @@
 
         <el-row>
           <el-col :span="8">
-            <el-form-item label="厂家折扣" prop="discount">
-              <el-input v-model="newSupply.discount" placeholder="折扣:1-99" autocomplete="off" style="width: 100%;"></el-input>
+            <el-form-item label="厂家返点" prop="discount">
+              <el-input v-model="newSupply.discount" placeholder="返点:1-99" autocomplete="off" style="width: 100%;"></el-input>
             </el-form-item>
           </el-col>
             <el-col :span="8">
@@ -116,8 +116,8 @@
 
         <el-row>
           <el-col :span="8">
-            <el-form-item label="厂家折扣" prop="discount">
-              <el-input v-model="editSupply.discount" placeholder="折扣：0.0001-1" autocomplete="off" style="width: 100%;"></el-input>
+            <el-form-item label="厂家返点" prop="discount">
+              <el-input v-model="editSupply.discount" placeholder="返点：0.0001-1" autocomplete="off" style="width: 100%;"></el-input>
             </el-form-item>
           </el-col>
             <el-col :span="8">

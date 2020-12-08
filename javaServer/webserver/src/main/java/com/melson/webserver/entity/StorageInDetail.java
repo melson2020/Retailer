@@ -30,6 +30,9 @@ public class StorageInDetail {
     private String batchNo;
     private Integer beforeStorageCount;
     private Integer afterInCount;
+    private BigDecimal netIn;   //净价格/unit （扣除返点）
+    private BigDecimal tepIn;   //去税价格/unit
+    private BigDecimal taxIn;   //税金/unit
 
     public Integer getAfterInCount() {
         return afterInCount;
@@ -165,5 +168,29 @@ public class StorageInDetail {
 
     public void setStorageInTicketCode(String storageInTicketCode) {
         this.storageInTicketCode = storageInTicketCode;
+    }
+
+    public BigDecimal getNetIn() {
+        return netIn;
+    }
+
+    public void setNetIn(BigDecimal netIn) {
+        this.netIn = netIn;
+    }
+
+    public BigDecimal getTepIn() {
+        return tepIn;
+    }
+
+    public void setTepIn(BigDecimal tepIn) {
+        this.tepIn = tepIn;
+    }
+
+    public BigDecimal getTaxIn() {
+        return taxIn;
+    }
+
+    public void setTaxIn(BigDecimal taxIn) {
+        this.taxIn = taxIn;
     }
 }
