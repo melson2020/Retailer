@@ -53,6 +53,8 @@
 }
 .icon-login-user:before{
   content: '\e622';
+  font-size: 110rpx;
+  color: lightgray;
 }
 .icon-deliver::before{
   content: '\e671';

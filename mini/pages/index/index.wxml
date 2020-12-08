@@ -1,201 +1,81 @@
 <!--index.wxml-->
 <view class="container">
+  <view class="mask" hidden="{{ !hide_mask }}">
+     loading......
+  </view>
   <!--授权区域-->
-  <view wx:if="{{!hasUserInfo && canIUse}}" class="authorize-area">
-    <button open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 使用微信登录 </button>
+  <view wx:if="{{!hasUserInfo}}" class="authorize-area">
+    <view wx:if="{{canIUse}}" class="login-user-icon">
+      <view class="userImage">
+        <view class="iconfont icon-login-user"></view>
+      </view>
+      <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary"> 使用微信登录 </button>
+    </view>
+    <text wx:else>请更新微信版本</text>
   </view>
 
   <!--用户绑定-->
-  <view wx:elif="{{appUserInfo.retailerUserId==null}}" class="bind_retailer_user_area">
+  <view wx:elif="{{appUserInfo.retailerUserId==null||appUserInfo.retailerUserId==''}}" class="bind_retailer_user_area">
     <mp-form models="{{formData}}">
       <mp-cells title="绑定Retailer账户">
         <mp-cell prop="loginName" title="账户" ext-class="">
-          <input bindinput="formInputChange"  data-field="loginName" class="weui-input" placeholder="请输入用户" />
+          <input bindinput="formInputChange" data-field="loginName" class="weui-input" placeholder="请输入用户" />
         </mp-cell>
         <mp-cell prop="password" title="密码" ext-class=" ">
-          <input bindinput="formInputChange" data-field="password" type="password" class="weui-input" placeholder="请输入密码" />
+          <input bindinput="formInputChange" data-field="password" type="password" class="weui-input"
+            placeholder="请输入密码" />
         </mp-cell>
       </mp-cells>
       <view class="weui-btn-area">
-      <button class="weui-btn" formType="submit" type="primary" bindtap="updateAppUser">确定</button>
-    </view>
+        <button class="weui-btn" formType="submit" type="primary" bindtap="updateAppUser">确定</button>
+      </view>
     </mp-form>
-   
   </view>
 
   <!--信息显示-->
   <view wx:else>
-    <view class="userinfo">
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    <view class="userinfo-area">
+      <view class="userinfo">
+        <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </view>
+      <text class="userinfo-store">{{appUserInfo.storeName}}</text>
     </view>
     <!--搜索栏-->
     <view class="search_bar">
-      <input name='phoneNumber' class="weui-input srearch_bar_input" placeholder="请输入商品名称"
-        placeholder-class="weui-input__placeholder" />
-      <view class="srearch_bar_button">
-        查寻
+      <input class="weui-input srearch_bar_input" placeholder="请输入商品名称" placeholder-class="weui-input__placeholder"
+        bindinput="searchInputChange" value="{{searchContent}}" />
+      <view class="srearch_bar_button" bindtap="productStorageSearch">
+        Search
       </view>
     </view>
+    <!--库存展示-->
     <view class="product_area">
-      <view class="product_card">
-        <view class="product_card_title">
-          <view>公牛插座R-3</view>
-          <view>50个</view>
-        </view>
-        <view class="product_card_content">
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
+      <view wx:if="{{productStorageList.length<=0}}">
+        <view class="empty-data">
+          <!-- <view class="empty-icon">
+            <view class="iconfont icon-smile"></view>
+          </view> -->
+          <view>暂无数据，请查询</view>
         </view>
       </view>
-
-      <view class="product_card">
-        <view class="product_card_title">
-          <view>公牛插座R-3</view>
-          <view>50个</view>
-        </view>
-        <view class="product_card_content">
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
+      <view wx:else>
+        <view wx:for='{{productStorageList}}' wx:key='id' wx:for-item="product" class="product_card">
+          <view class="product_card_title">
+            <view>{{product.productName}}</view>
+            <view class="color_blue">{{product.count}}{{product.unit}}</view>
           </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-        </view>
-      </view>
-
-      <view class="product_card">
-        <view class="product_card_title">
-          <view>公牛插座R-3</view>
-          <view>50个</view>
-        </view>
-        <view class="product_card_content">
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-        </view>
-      </view>
-
-      <view class="product_card">
-        <view class="product_card_title">
-          <view>公牛插座R-3</view>
-          <view>50个</view>
-        </view>
-        <view class="product_card_content">
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-        </view>
-      </view>
-
-      <view class="product_card">
-        <view class="product_card_title">
-          <view>公牛插座R-3</view>
-          <view>50个</view>
-        </view>
-        <view class="product_card_content">
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-        </view>
-      </view>
-
-      <view class="product_card">
-        <view class="product_card_title">
-          <view>公牛插座R-3</view>
-          <view>50个</view>
-        </view>
-        <view class="product_card_content">
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
-          </view>
-          <view class="product_batch_info">
-            <view>00001</view>
-            <view>江苏最大的电缆厂</view>
-            <view>50/个</view>
-            <view>200个</view>
+          <view class="product_card_content">
+            <view wx:for='{{product.batchList}}' wx:key='id' class="product_batch_info">
+              <view class="product_batch_info_row">
+                <view>{{item.batchNo}}</view>
+                <view class="color_orange">{{item.price}}/{{item.countUnit}}</view>
+                <view>{{item.count}}{{item.countUnit}}</view>
+              </view>
+              <view class="product_batch_info_row">
+                <view>{{item.supplyName}}</view>
+              </view>
+            </view>
           </view>
         </view>
       </view>

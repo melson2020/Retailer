@@ -15,6 +15,7 @@ import com.melson.wechatmini.entity.WeChatAppInfo;
 import com.melson.wechatmini.entity.WeChatUser;
 import com.melson.wechatmini.service.IWeChatUser;
 import com.melson.wechatmini.vo.WeChatLoginVo;
+import net.sf.json.JSONObject;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,12 +44,11 @@ public class WeChatResource extends BaseResource {
         this.weChatUserService = weChatUserService;
     }
 
-    @RequestMapping(value = "/productStorage")
+    @RequestMapping(value = "/productStorage",method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
-    public Result findProductStorage(HttpServletRequest request) {
-        String jsonData = request.getParameter("jsonData");
-        String prodName = request.getParameter("productName");
-        String storeCode = request.getParameter("storeCode");
+    public Result findProductStorage(@RequestBody JSONObject param, HttpServletRequest request) {
+        String prodName = param.getString("productName");
+        String storeCode = param.getString("storeCode");
         if (StringUtils.isEmpty(prodName) || StringUtils.isEmpty(storeCode))
             return this.GenerateResult(ResultType.ParametersNeeded);
         Result result = new Result();

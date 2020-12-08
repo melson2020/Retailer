@@ -3,7 +3,7 @@ import request from './utils/request.js'
 App({
   globalData: {
     userInfo: null,
-    baseUrl:'http://localhost:8080/retailer',
+    baseUrl:'http://192.168.43.209:8080/retailer',
   },
   myRequest(){
     let that=this

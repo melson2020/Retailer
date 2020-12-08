@@ -1,48 +1,47 @@
 class request {
   constructor(url) {
     this._baseUrl = url;
-    this._token = wx.getStorageSync('token');
-    // this._header = {'Authorization': 'Bearer ' + token}
   }
 
   /**
    * GET类型的网络请求
    */
-  getRequest(url, data) {
-    return this.requestAll(url, data, 'GET')
+  getRequest(url, data,token) {
+    return this.requestAll(url, data, 'GET',token)
   }
 
   /**
    * DELETE类型的网络请求
    */
-  deleteRequest(url, data) {
-    return this.requestAll(url, data, 'DELETE')
+  deleteRequest(url, data,token) {
+    return this.requestAll(url, data, 'DELETE',token)
   }
 
   /**
    * PUT类型的网络请求
    */
-  putRequest(url, data) {
-    return this.requestAll(url, data, 'PUT')
+  putRequest(url, data,token) {
+    return this.requestAll(url, data, 'PUT',token)
   }
 
   /**
    * POST类型的网络请求
    */
-  postRequest(url, data) {
-    return this.requestAll(url, data, 'POST')
+  postRequest(url, data,token) {
+    return this.requestAll(url, data, 'POST',token)
   }
 
   /**
    * 网络请求
    */
-  requestAll(url, data, method) {
+  requestAll(url, data, method,token) {
     return new Promise((resolve, reject) => {
       wx.request({
         url: this._baseUrl + url,
         data:JSON.stringify(data),
         method: method,
         dataType: 'json',
+        header:{token:token},
         success: (res => {
           if (res.statusCode === 200) {
             //200: 服务端业务处理正常结束

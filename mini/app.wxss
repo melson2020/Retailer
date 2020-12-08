@@ -7,4 +7,6 @@
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
+  background:rgb(240, 240, 240);
+  padding: 20rpx;
 } 

@@ -75,6 +75,15 @@ public class WeChatUserImpl extends AbstractService<WeChatUser> implements IWeCh
             //用户存在 刷新sessionKey 保存
             existUser.setSessionKey(sessionKey);
             existUser.setLoginDate(new Date());
+            if(existUser.getRetailerUserId()!=null){
+                //检查微信账户是否合格
+                StoreEmployee employee=storeEmployeeDao.findByLoginNameAndPassword(existUser.getLoginName(),existUser.getPassword());
+                if(employee==null){
+                    existUser.setRetailerUserId("");
+                    existUser.setLoginName("");
+                    existUser.setPassword("");
+                }
+            }
             saved = weChatUserDao.save(existUser);
         }
         WeChatLoginVo vo = new WeChatLoginVo();
