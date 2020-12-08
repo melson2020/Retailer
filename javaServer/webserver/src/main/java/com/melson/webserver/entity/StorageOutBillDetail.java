@@ -30,6 +30,11 @@ public class StorageOutBillDetail {
     private BigDecimal unitPriceOut;
     private BigDecimal profit;
     private String countUnit;
+    private BigDecimal netIn;   //净价格/unit （扣除返点）
+    private BigDecimal tepIn;   //去税进价/unit
+    private BigDecimal taxIn;   //税金/unit
+    private BigDecimal tepOut;  //去税售价/unit
+    private BigDecimal taxOut;  //税金/unit
 
 
     public String getCountUnit() {
@@ -168,4 +173,43 @@ public class StorageOutBillDetail {
         this.profit = profit;
     }
 
+    public BigDecimal getNetIn() {
+        return netIn;
+    }
+
+    public void setNetIn(BigDecimal netIn) {
+        this.netIn = netIn;
+    }
+
+    public BigDecimal getTepIn() {
+        return tepIn;
+    }
+
+    public void setTepIn(BigDecimal tepIn) {
+        this.tepIn = tepIn;
+    }
+
+    public BigDecimal getTaxIn() {
+        return taxIn;
+    }
+
+    public void setTaxIn(BigDecimal taxIn) {
+        this.taxIn = taxIn;
+    }
+
+    public BigDecimal getTepOut() {
+        return tepOut;
+    }
+
+    public void setTepOut(BigDecimal tepOut) {
+        this.tepOut = tepOut;
+    }
+
+    public BigDecimal getTaxOut() {
+        return taxOut;
+    }
+
+    public void setTaxOut(BigDecimal taxOut) {
+        this.taxOut = taxOut;
+    }
 }

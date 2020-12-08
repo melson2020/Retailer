@@ -268,7 +268,7 @@
                   <el-input
                     class="margin-left-10"
                     :disabled="!pb.checked"
-                    :placeholder="'>' + computePerSale(pb)"
+                    :placeholder="'>' + pb.netIn"
                     size="mini"
                     style="width: 100px"
                     v-model="pb.outPrice"
@@ -294,33 +294,30 @@
                     <div class="ver">
                       <div class="flex-left color-blue">{{ c.batchNo }}</div>
                       <div class="flex-left color-light-gray">
-                        成本：( 单价{{ c.price }} - 回点{{ c.price }}*{{
-                          c.discount
-                        }}%)*数量{{ c.outCount }}={{ computeCost(c)
+                        成本：单价 {{ c.netIn }} * 数量 {{ c.outCount }} = {{ computeCost(c)
                         }}{{ c.cost }}
                       </div>
-                      <div class="flex-left color-light-gray" v-if="!c.outVat">
-                        出售：单价{{ c.outPrice }}*数量{{ c.outCount }}={{
+                      <div class="flex-left color-light-gray">
+                        出售：售价 {{ c.outPrice }} * 数量 {{ c.outCount }} = {{
                           computeSales(c)
                         }}{{ c.sales }}
                       </div>
-                      <div class="flex-left color-light-gray" v-else>
-                        出售：(单价{{ c.outPrice }}-税{{ c.outPrice }}*{{
-                          c.outTaxRate
-                        }}%)*数量{{ c.outCount }}={{ computeSales(c)
-                        }}{{ c.sales }}
+                      <div class="flex-left color-light-gray">
+                        <!-- 利润：（未税售价 ({{ c.outPrice }} /({{c.outTaxRate+100}}/100) * 数量{{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }} -->
+                         利润：(价差({{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}} - {{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}) + 税差({{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}*{{NumberDiv(c.taxRate,100)}} - {{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}}*{{NumberDiv(c.outTaxRate,100)}})) * 数量 {{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }}
                       </div>
                     </div>
-                    <div class="cost-area-result">
+                    <!-- <div class="cost-area-result">
                       利润：
                       <span class="color-orange"
                         >{{ computeProfit(c) }}{{ c.profit }}</span
                       >
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="summary-area">
                   <span class="color-orange">{{ computeTotalProfit() }}</span>
+                  利润 ：
                 </div>
               </div>
               <div class="edit-area">
@@ -474,6 +471,12 @@ export default {
           unitPriceOut: item.outPrice,
           profit: item.profit,
           countUnit: item.countUnit,
+          netIn:item.netIn,
+          tepIn:item.tepIn,
+          taxIn:item.taxIn,
+          tepOut:item.tepOut,
+          taxOut:item.taxOut,
+
         };
         list.push(l);
       });
@@ -542,39 +545,56 @@ export default {
     //计算总成本
     computeCost(object) {
       let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
-      let cost = this.NumberMul(
-        object.outCount,
-        this.NumberMul(object.price, s)
-      );
+      let cost = this.NumberMul(object.outCount,this.NumberMul(object.price, s)).toFixed(2);
       object.cost = cost;
       // return cost;
     },
     //计算总售价考虑税点
     computeSales(object) {
-      if (object.outVat) {
-        let c = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
-        let s = this.NumberMul(object.outPrice, c);
-        object.sales = this.NumberMul(s, object.outCount).toFixed(2);
-      } else {
-        object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(
-          2
-        );
-      }
+      object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(2);
+      // if (object.outVat) {
+      //   let c = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
+      //   let s = this.NumberMul(object.outPrice, c);
+      //   object.sales = this.NumberMul(s, object.outCount).toFixed(2);
+      // } else {
+      //   object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(2);
+      // }
     },
-    //计算最低出售单价
-    computePerSale(object) {
-      let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
-      let cost = this.NumberMul(object.price, s);
-      if (object.outVat) {
-        let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
-        return this.NumberDiv(cost, taxCost).toFixed(2);
-      } else {
-        return cost.toFixed(2);
-      }
-    },
+//     //计算单个利润
+//     computePerSale(object) {
+//       console.log(object)
+//       let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
+//       let cost = this.NumberMul(object.price, s);
+//       if (object.outVat) {
+//         let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
+// console.log(taxCost)
+//         return this.NumberDiv(cost, taxCost).toFixed(2);
+//       } else {
+//         return cost.toFixed(2);
+//       }
+
+//       // let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
+//       // let cost = this.NumberMul(object.price, s);
+//       // if (object.outVat) {
+//       //   let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
+//       //   return this.NumberDiv(cost, taxCost).toFixed(2);
+//       // } else {
+//       //   return cost.toFixed(2);
+//       // }
+//     },
     //计算单批次利润
     computeProfit(object) {
-      object.profit = this.NumberSub(object.sales, object.cost);
+      let taxInRat=this.NumberDiv(object.taxRate,100)
+      let taxOutRat=this.NumberDiv(object.outTaxRate,100)
+      let taxInRatePercent=this.NumberAdd(taxInRat,1)
+      let taxOutRatePercent=this.NumberAdd(taxOutRat,1)
+      let tepIn=this.NumberDiv(object.netIn,taxInRatePercent)
+      let taxIn=this.NumberMul(tepIn,taxInRat)
+      let tepOut=this.NumberDiv(object.outPrice,taxOutRatePercent)
+      let taxOut=this.NumberMul(tepOut,taxOutRat)
+      let perProfit=this.NumberAdd(this.NumberSub(tepOut,tepIn),this.NumberSub(taxIn,taxOut)).toFixed(2)
+      object.profit = this.NumberMul(perProfit,object.outCount);
+      // object.profit = this.NumberSub(object.sales, object.cost);
     },
     //计算出库详细总利润
     computeTotalProfit() {
@@ -619,6 +639,11 @@ export default {
           totalPrice: this.NumberMul(item.outCount, item.outPrice),
           vatIn: item.vat,
           taxRateIn: item.taxRate,
+          netIn:item.netIn,
+          tepIn:item.tepIn,
+          taxIn:item.taxIn,
+          tepOut:this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)).toFixed(2),
+          taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2)
         };
         this.addToDetailCheck(addItem);
       });

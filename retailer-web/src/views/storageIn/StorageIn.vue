@@ -146,8 +146,11 @@
                 <span class="storagein-addDetailInfoSpan">成本价：{{addItemCostPrice}}￥/{{addItem.unit}}</span>
                 <span
                   class="storagein-addDetailInfoSpan"
+                >去税：{{addItemTepIn}}￥/{{addItem.unit}}</span>
+                <span
+                  class="storagein-addDetailInfoSpan"
                   v-if="addItem.vat"
-                >税：{{addItemTaxPrice}}￥/{{addItem.unit}}</span>
+                >税金：{{addItemTaxIn}}￥/{{addItem.unit}}</span>
               </div>
               <el-table
                 :data="storageInTicket.products"
@@ -243,7 +246,10 @@ export default {
         taxRate: "",
         discount: "",
         totalPrice: "",
-        price: ""
+        price: "",
+        netIn:"",
+        tepIn:"",
+        taxIn:""
       },
       rules: {
         type: [{ required: true, message: "请选择类型", trigger: "blur" }],
@@ -268,12 +274,45 @@ export default {
       let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
       return this.NumberDiv(costPrice, this.addItem.count).toFixed(2);
     },
-    addItemTaxPrice: function() {
-      let beforeTax = this.addItem.vat
-        ? this.NumberDiv(this.addItem.taxRate, 100)
-        : 0;
-      let price = this.NumberMul(this.addItem.totalPrice, beforeTax);
-      return this.NumberDiv(price, this.addItem.count).toFixed(2);
+    addItemTepIn: function() {
+      // let beforeTax = this.addItem.vat
+      //   ? this.NumberDiv(this.addItem.taxRate, 100)
+      //   : 0;
+      // let price = this.NumberMul(this.addItem.totalPrice, beforeTax);
+      // return this.NumberDiv(price, this.addItem.count).toFixed(2);
+      if (this.addItem.vat){
+        let tax = this.addItem.vat
+          ? this.NumberDiv((this.addItem.taxRate+100), 100)
+          : 0;
+        let discount = this.addItem.discount
+          ? this.NumberDiv(this.addItem.discount, 100)
+          : 0;
+        let costRate = this.NumberSub(1, discount);
+        let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
+        let price = this.NumberDiv(costPrice, tax);
+        return this.NumberDiv(price, this.addItem.count).toFixed(2);
+      }
+      else{
+        let discount = this.addItem.discount
+          ? this.NumberDiv(this.addItem.discount, 100)
+          : 0;
+        let costRate = this.NumberSub(1, discount);
+        let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
+        return this.NumberDiv(costPrice, this.addItem.count).toFixed(2);
+      }
+    },
+    addItemTaxIn: function() {
+        let tax = this.addItem.vat
+          ? this.NumberDiv((this.addItem.taxRate+100), 100)
+          : 0;
+        let discount = this.addItem.discount
+          ? this.NumberDiv(this.addItem.discount, 100)
+          : 0;
+        let costRate = this.NumberSub(1, discount);
+        let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
+        let price = this.NumberDiv(costPrice, tax);
+        let taxIn=this.NumberDiv(costPrice, this.addItem.count) - this.NumberDiv(price, this.addItem.count)
+        return taxIn.toFixed(2);
     },
     storageListShow: function() {
       return this.productStorageList.filter(item => {
@@ -373,7 +412,10 @@ export default {
         price: parseFloat(this.addItemPrice),
         vat: this.addItem.vat ? 1 : 0,
         taxRate: this.addItem.taxRate,
-        totalPrice: parseFloat(this.addItem.totalPrice)
+        totalPrice: parseFloat(this.addItem.totalPrice),
+        netIn:parseFloat(this.addItemCostPrice),
+        tepIn:parseFloat(this.addItemTepIn),
+        taxIn:this.addItem.vat ? parseFloat(this.addItemTaxIn): 0
       };
       let pkey =
         p.productId +
@@ -413,6 +455,9 @@ export default {
       this.addItem.vat = false;
       this.addItem.taxRate = "";
       this.addItem.discount = "";
+      this.addItem.netIn="";
+      this.addItem.tepIn="";
+      this.addItem.taxIn=""
     },
     handleDelete(index) {
       this.storageInTicket.products.splice(index, 1);
