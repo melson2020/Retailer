@@ -8,6 +8,11 @@
     "navigationBarTitleText": "Retailer",
     "navigationBarTextStyle":"white"
   },
+  "permission": {
+    "scope.userInfo": {
+      "desc": "你的用户信息将用关联retailer系统账户，以便查询相关信息"
+    }
+  },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

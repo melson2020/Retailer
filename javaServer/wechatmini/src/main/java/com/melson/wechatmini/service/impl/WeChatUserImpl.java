@@ -76,7 +76,7 @@ public class WeChatUserImpl extends AbstractService<WeChatUser> implements IWeCh
             existUser.setSessionKey(sessionKey);
             existUser.setLoginDate(new Date());
             if(existUser.getRetailerUserId()!=null){
-                //检查微信账户是否合格
+                //检查微信账户对应Retailer的账户密码
                 StoreEmployee employee=storeEmployeeDao.findByLoginNameAndPassword(existUser.getLoginName(),existUser.getPassword());
                 if(employee==null){
                     existUser.setRetailerUserId("");

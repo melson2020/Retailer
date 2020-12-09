@@ -10,6 +10,7 @@
         <view class="iconfont icon-login-user"></view>
       </view>
       <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary"> 使用微信登录 </button>
+      <text class="messgae">用户信息将用于关联Retailer系统账户，以便查询账户对应信息</text>
     </view>
     <text wx:else>请更新微信版本</text>
   </view>
