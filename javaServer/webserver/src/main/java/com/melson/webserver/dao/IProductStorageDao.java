@@ -49,5 +49,5 @@ public interface IProductStorageDao extends JpaRepository<ProductStorage,String>
             "where sot.storeCode =:storeCode and sot.createTime>=:dateBegin and sot.createTime<=:newEnd")
     List<Object[]> findVoByStoreCode(@Param("dateBegin") Date dateBegin,@Param("newEnd")  Date newEnd,@Param("storeCode")   String storeCode);
 
-    List<ProductStorage> findByStoreCodeAndProductNameLike(String storeCode,String productName);
+    List<ProductStorage> findByStoreCodeAndProductNameLikeAndCountGreaterThan(String storeCode,String productName,Integer count);
 }
