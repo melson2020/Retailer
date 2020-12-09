@@ -523,7 +523,7 @@ export default {
 }
 .storagein-in-ticket-form{
   min-height: 500px;
-  width: 70vw;
+  width: 85vw;
   padding: 30px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 }

@@ -179,3 +179,8 @@
   flex-direction: column;
   z-index: 200;
 }
+.messgae{
+  color:rgb(190, 189, 189);
+  margin-top: 50rpx;
+  font-size: small;
+}
