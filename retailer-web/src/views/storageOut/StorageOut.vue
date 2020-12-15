@@ -270,31 +270,35 @@
                   >
                 </el-col>
                 <el-col :span="14" class="out-info">
-                  <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat" disabled
+                  <!-- <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat" disabled
                     >税点</el-checkbox
-                  >
-                  <el-select
-                    style="width: 100px"
-                    v-model="pb.outTaxRate"
-                    filterable
-                    placeholder="出货税点"
-                    size="mini"
-                  >
-                    <el-option
-                      v-for="taxRate in taxRateList"
-                      :label="taxRate.description"
-                      :value="taxRate.rate"
-                      :key="taxRate.id"
-                    ></el-option>
-                  </el-select>
-                  <el-input
-                    class="margin-left-10"
-                    :disabled="!pb.checked"
-                    :placeholder="'>' + pb.netIn"
-                    size="mini"
-                    style="width: 100px"
-                    v-model="pb.outPrice"
-                  ></el-input>
+                  > -->
+                  <div>税点:
+                    <el-select
+                      style="width: 100px"
+                      v-model="pb.outTaxRate"
+                      filterable
+                      placeholder="出货税点"
+                      size="mini"
+                    >
+                      <el-option
+                        v-for="taxRate in taxRateList"
+                        :label="taxRate.description"
+                        :value="taxRate.rate"
+                        :key="taxRate.id"
+                      ></el-option>
+                    </el-select>
+                  </div>
+                  <div>单价:
+                    <el-input
+                      class="margin-left-10"
+                      :disabled="!pb.checked"
+                      :placeholder="'>' + pb.netIn"
+                      size="mini"
+                      style="width: 100px"
+                      v-model="pb.outPrice"
+                    ></el-input>
+                  </div>
                   <div>
                     出货量：
                     <el-input-number
@@ -437,6 +441,7 @@ export default {
         employeeId: "",
         employeeName: "",
         customerName:"",
+        customerId:"",
         code: "",
         type: "",
         details: [],
@@ -505,6 +510,7 @@ export default {
           tepOut:item.tepOut,
           taxOut:item.taxOut,
           customerName:item.customerName,
+          customerId:item.customerId,
         };
         list.push(l);
       });
@@ -544,6 +550,7 @@ export default {
       this.storageOutTicket.type = "";
       this.storageOutTicket.details = [];
       this.storageOutTicket.customerName="";
+      this.storageOutTicket.customerId="";
     },
     addStorageOutDetail() {
       if (this.selectPid == "") {
@@ -576,6 +583,7 @@ export default {
       this.customerList.map(item=>{
         if(item.id == value){
           this.storageOutTicket.customerName=item.name;
+          this.storageOutTicket.customerId=value;
         }
       });
     },
@@ -692,6 +700,7 @@ export default {
           tepOut:this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)).toFixed(2),
           taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2),
           customerName:this.storageOutTicket.customerName,
+          customerId:this.storageOutTicket.customerId,
         };
         this.addToDetailCheck(addItem);
       });

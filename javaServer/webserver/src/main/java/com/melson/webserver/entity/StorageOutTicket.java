@@ -26,6 +26,7 @@ public class StorageOutTicket {
     private Integer categroyCount;
     private String billCode;
     private String customerName;
+    private Integer customerId;
 
     @Transient
     private List<StorageOutDetail> details;
@@ -132,5 +133,13 @@ public class StorageOutTicket {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
     }
 }

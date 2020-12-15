@@ -56,6 +56,8 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         for (StorageOutDetail d : ticket.getDetails()) {
             d.setOutTicketCode(ticket.getCode());
             d.setStoreCode(ticket.getStoreCode());
+            d.setCustomerId(ticket.getCustomerId());
+            d.setCustomerName(ticket.getCustomerName());
         }
         //添加出库以及出售单记录
         StorageOutTicket saveTicket = storageOutTicketDao.save(ticket);
@@ -125,6 +127,8 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         String billCode = UUID.randomUUID().toString();
         for (StorageOutBillDetail detail : billDetails) {
             detail.setOutBillCode(billCode);
+            detail.setCustomerId(ticket.getCustomerId());
+            detail.setCustomerName(ticket.getCustomerName());
         }
         StorageOutBill bill = new StorageOutBill();
         bill.setCode(billCode);
@@ -134,6 +138,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         bill.setCreateTime(createDate);
         bill.setDate(ticket.getDate());
         bill.setCustomerName(ticket.getCustomerName());
+        bill.setCustomerId(ticket.getCustomerId());
         SetBillDetails(billDetails, bill);
         return bill;
     }
