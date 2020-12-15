@@ -27,6 +27,7 @@
         :header-cell-style="{ background: '#808080', color: 'white' 
         }"
       >
+        <el-table-column prop="customerName" label="客户名称"> </el-table-column>
         <el-table-column prop="productName" label="商品名称"> </el-table-column>
         <el-table-column
           prop="storageInBatchNo"
