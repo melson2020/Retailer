@@ -29,4 +29,5 @@ public interface IStorageOutTicket extends IService<StorageOutTicket> {
      */
     StorageOutTicket GetTicketInfos(String ticketCode,String storeCode);
     List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId);
+    List<StorageOutTicket> FindTicketsWithCodeOrCustomerNameAndDate(String searchValue,String date);
 }

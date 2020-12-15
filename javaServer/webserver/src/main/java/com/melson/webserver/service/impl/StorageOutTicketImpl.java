@@ -220,6 +220,19 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         }
     }
 
+    @Override
+    public List<StorageOutTicket> FindTicketsWithCodeOrCustomerNameAndDate(String searchValue, String date) {
+         if(org.springframework.util.StringUtils.isEmpty(searchValue)){
+             return storageOutTicketDao.findByDate(date);
+         }else if(org.springframework.util.StringUtils.isEmpty(date)) {
+             String likeStr="%"+searchValue+"%";
+             return  storageOutTicketDao.findByCodeLikeOrCustomerNameLike(likeStr,likeStr);
+         }else {
+             String likeStr="%"+searchValue+"%";
+             return storageOutTicketDao.findByCodeLikeOrCustomerNameLikeAndDate(likeStr,likeStr,date);
+         }
+    }
+
     private List<OutBoundVo> GenerateDataByStoreCode(Date dateBegin, Date newEnd, String storeCode) {
         List<Object[]> VoObjs = productStorageDao.findVoByStoreCode(dateBegin, newEnd, storeCode);
         List<OutBoundVo> voList = GenerateVoList(VoObjs);

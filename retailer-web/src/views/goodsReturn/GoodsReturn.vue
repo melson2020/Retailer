@@ -22,9 +22,14 @@
         </div>
       </div>
     </div>
+    <div>
+        {{storageOutTickets.length}}
+    </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -33,9 +38,28 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      FindOutTicketsWithSearchVale: "FindOutTicketsWithSearchVale",
+    }),
     searchOnClick() {
-      console.log(this.searchValue, this.searchDate);
+      if (
+        this.searchValue == "" &&
+        (this.searchDate == "" || this.searchDate == null)
+      ) {
+        this.$message.warning("请输入查询数据");
+      }
+      var params =
+        this.searchDate == null || this.searchDate == ""
+          ? { searchValue: this.searchValue }
+          : {
+              searchValue: this.searchValue,
+              date: this.searchDate.format("yyyy-MM-dd"),
+            };
+      this.FindOutTicketsWithSearchVale(params);
     },
+  },
+  computed: {
+    ...mapGetters(["userInfo", "storageOutTickets"]),
   },
 };
 </script>
