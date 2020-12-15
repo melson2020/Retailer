@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public class OutBoundVo {
     private String date;
     private String outBoundNo;
+    private String customerName;
     private String salesName;
     private String product;
     private String supply;
@@ -39,6 +40,14 @@ public class OutBoundVo {
 
     public void setSalesName(String salesName) {
         this.salesName = salesName;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getProduct() {

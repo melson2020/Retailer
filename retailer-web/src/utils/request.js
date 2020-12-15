@@ -118,6 +118,20 @@ export default {
     return service.post("/supply/query",params);
   },
 
+    /**
+   * Customer
+   */
+  FetchCustomerListReq(params) {
+    return service.get("/customer/list", params);
+  },
+  SaveCustomerReq(params){
+    return service.post("/customer/save",params)
+  },
+  QueryCustomerObjReq(params){
+    return service.post("/customer/query",params);
+  },
+
+
   /**
    * Storage
    */

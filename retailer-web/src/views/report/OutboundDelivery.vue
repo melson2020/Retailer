@@ -60,6 +60,8 @@
           width="130%"
           sortable
         ></el-table-column>
+        <el-table-column prop="customerName" label="客户名" width="auto" sortable>
+        </el-table-column>
         <el-table-column prop="salesName" label="销售人员" width="auto" sortable>
         </el-table-column>
         <el-table-column prop="product" label="产品名称" width="auto" sortable>
@@ -76,18 +78,18 @@
           width="130%"
            sortable
         ></el-table-column>
-        <el-table-column label="入库单价" width="200px">
+        <el-table-column label="入库单价" width="100px">
           <template slot-scope="scope">
             {{ scope.row.priceIn }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
-        <el-table-column label="出库单价" width="200px">
+        <el-table-column label="出库单价" width="100px">
           <template slot-scope="scope">
             {{ scope.row.priceOut }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
 
-        <el-table-column label="出库数量" width="200px">
+        <el-table-column label="数量" width="50px">
           <template slot-scope="scope">
             {{ scope.row.outCount }}{{ scope.row.countUnit }}
           </template>
@@ -205,6 +207,7 @@ export default {
       var keys = {
         date: "销售日期",
         outBoundNo: "出库单号",
+        customerName:"客户名",
         salesName: "销售人员",
         product: "产品名称",
         supply: "供应商",
@@ -229,6 +232,7 @@ export default {
         date: "总价",
         outBoundNo: "",
         salesName: "",
+        customerName:"",
         product: "",
         supply: "",
         batchNo: "",

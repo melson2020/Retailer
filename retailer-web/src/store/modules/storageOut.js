@@ -89,6 +89,7 @@ const mutations = {
         data.map(item => {
             item.checked = false;
             item.outPrice = "";
+            item.customerName = "";
             item.outCount = 0;
             item.outVat = item.vat === null ? 0 : item.vat,
                 item.outTaxRate = item.taxRate === null ? '' : item.taxRate

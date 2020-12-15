@@ -30,6 +30,7 @@ public class StorageOutBill {
     private String date;
     private String code;
     private String storeCode;
+    private String customerName;
 
     public Integer getId() {
         return id;
@@ -125,5 +126,13 @@ public class StorageOutBill {
 
     public void setStoreCode(String storeCode) {
         this.storeCode = storeCode;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 }

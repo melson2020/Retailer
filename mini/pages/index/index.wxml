@@ -10,7 +10,7 @@
         <view class="iconfont icon-login-user"></view>
       </view>
       <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary"> 使用微信登录 </button>
-      <text class="messgae">用户信息将用于关联Retailer系统账户，以便查询账户对应信息</text>
+      <text class="message">用户信息将用于关联Retailer系统账户，以便查询账户对应信息</text>
     </view>
     <text wx:else>请更新微信版本</text>
   </view>
@@ -31,6 +31,7 @@
         <button class="weui-btn" formType="submit" type="primary" bindtap="updateAppUser">确定</button>
       </view>
     </mp-form>
+    <text class="message">请输入retailer对应的账户密码，用于绑定微信账户以便微信小程序查询对应信息！</text>
   </view>
 
   <!--信息显示-->
