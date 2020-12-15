@@ -32,6 +32,7 @@ public class StorageOutDetail {
     private BigDecimal tepOut;   //去税售价/unit
     private BigDecimal taxOut;   //税金/unit
     private String customerName;
+    private Integer customerId;
 
     public Integer getBeforeOutCount() {
         return beforeOutCount;
@@ -183,6 +184,14 @@ public class StorageOutDetail {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
     }
 }
 

@@ -134,6 +134,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         bill.setCreateTime(createDate);
         bill.setDate(ticket.getDate());
         bill.setCustomerName(ticket.getCustomerName());
+        bill.setCustomerId(ticket.getCustomerId());
         SetBillDetails(billDetails, bill);
         return bill;
     }

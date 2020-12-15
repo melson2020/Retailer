@@ -437,6 +437,7 @@ export default {
         employeeId: "",
         employeeName: "",
         customerName:"",
+        customerId:"",
         code: "",
         type: "",
         details: [],
@@ -505,6 +506,7 @@ export default {
           tepOut:item.tepOut,
           taxOut:item.taxOut,
           customerName:item.customerName,
+          customerId:item.customerId,
         };
         list.push(l);
       });
@@ -544,6 +546,7 @@ export default {
       this.storageOutTicket.type = "";
       this.storageOutTicket.details = [];
       this.storageOutTicket.customerName="";
+      this.storageOutTicket.customerId="";
     },
     addStorageOutDetail() {
       if (this.selectPid == "") {
@@ -576,6 +579,7 @@ export default {
       this.customerList.map(item=>{
         if(item.id == value){
           this.storageOutTicket.customerName=item.name;
+          this.storageOutTicket.customerId=value;
         }
       });
     },
@@ -692,6 +696,7 @@ export default {
           tepOut:this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)).toFixed(2),
           taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2),
           customerName:this.storageOutTicket.customerName,
+          customerId:this.storageOutTicket.customerId,
         };
         this.addToDetailCheck(addItem);
       });
