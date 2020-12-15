@@ -23,7 +23,8 @@ const StorageOut = () => import("../views/storageOut/StorageOut.vue")
 const StorageOutRecord = () => import("../views/storageOut/StorageOutRecord.vue")
 const StorageOutRecordDetail = () => import("../views/storageOut/StorageOutRecordDetail.vue")
 const OutboundDelivery = () => import("../views/report/OutboundDelivery.vue")
-const ProductStorageRecord=()=>import("../views/report/ProductStorageRecord.vue")
+const ProductStorageRecord = () => import("../views/report/ProductStorageRecord.vue")
+const GoodsReturn = () => import("../views/goodsReturn/GoodsReturn.vue")
 
 Vue.use(VueRouter);
 
@@ -154,6 +155,11 @@ const routes = [
         component: ProductStorageRecord,
       },
       {
+        path: "goodsReturn",
+        name: "goodsReturn",
+        component: GoodsReturn
+      },
+      {
         path: "pageNotFound",
         name: "pageNotFound",
         component: Error,
@@ -208,7 +214,7 @@ router.beforeEach((to, from, next) => {
           const menu = menuList[i];
           for (let j = 0; j < menu.subMenus.length; j++) {
             const subMenu = menu.subMenus[j];
-            if (path.indexOf(subMenu.index)>=0) {
+            if (path.indexOf(subMenu.index) >= 0) {
               hasPermission = true;
               break
             }
