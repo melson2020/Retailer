@@ -14,7 +14,7 @@ import java.util.List;
  * @Date 2020/8/6
  */
 @Repository
-public interface IMenuDao extends JpaRepository<Menu,String> {
-    @Query("FROM Menu sb where sb.permission <=?1")
+public interface IMenuDao extends JpaRepository<Menu, String> {
+    @Query("FROM Menu sb where sb.permission <=?1 order by  sb.index")
     List<Menu> findUnderPermission(Integer permission);
 }
