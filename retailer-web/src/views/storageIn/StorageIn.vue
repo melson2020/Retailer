@@ -69,7 +69,7 @@
                   filterable
                   placeholder="请选择商品"
                   size="mini"
-                  class="storagein-width-input storagein-content-left"
+                  class="storagein-products"
                   @change="productChange"
                 >
                   <el-option
@@ -95,7 +95,9 @@
                   ></el-option>
                 </el-select>
                 <div>
+                  数量：
                   <el-input-number
+                    style="width: 100px"
                     v-model="addItem.count"
                     controls-position="right"
                     :min="0"
@@ -107,6 +109,7 @@
                 </div>
                 <div>
                   <el-input
+                    style="width: 100px"
                     v-model="addItem.totalPrice"
                     placeholder="总价"
                     size="mini"
@@ -114,22 +117,25 @@
                   ></el-input>
                   <span>￥</span>
                 </div>
-                <el-checkbox v-model="addItem.vat">是否含税</el-checkbox>
-                <el-select
-                  :disabled="!addItem.vat"
-                  v-model="addItem.taxRate"
-                  filterable
-                  placeholder="税点"
-                  size="mini"
-                  class="storagein-tax-input"
-                >
-                  <el-option
-                    v-for="taxRate in taxRateList"
-                    :label="taxRate.description"
-                    :value="taxRate.rate"
-                    :key="taxRate.id"
-                  ></el-option>
-                </el-select>
+                <div>
+                  <el-checkbox v-model="addItem.vat">含税</el-checkbox>
+                  <el-select
+                    style="width: 75px"
+                    :disabled="!addItem.vat"
+                    v-model="addItem.taxRate"
+                    filterable
+                    placeholder="税点"
+                    size="mini"
+                    class="storagein-tax-input"
+                  >
+                    <el-option
+                      v-for="taxRate in taxRateList"
+                      :label="taxRate.description"
+                      :value="taxRate.rate"
+                      :key="taxRate.id"
+                    ></el-option>
+                  </el-select>
+                </div>
                 <div>
                   <el-button
                     type="primary"
@@ -535,6 +541,10 @@ export default {
 }
 .storagein-content-left {
   float: left;
+}
+.storagein-products{
+  float: left;
+  width: 400px;
 }
 .storagein-big-font-size {
   font-size: 30px;

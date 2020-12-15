@@ -275,7 +275,7 @@
                   > -->
                   <div>税点:
                     <el-select
-                      style="width: 100px"
+                      style="width: 75px"
                       v-model="pb.outTaxRate"
                       filterable
                       placeholder="出货税点"
@@ -302,6 +302,7 @@
                   <div>
                     出货量：
                     <el-input-number
+                      style="width: 100px"
                       size="mini"
                       :disabled="!pb.checked"
                       v-model="pb.outCount"
