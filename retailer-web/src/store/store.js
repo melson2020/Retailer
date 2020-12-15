@@ -5,6 +5,7 @@ import login from "./modules/login";
 import employee from "./modules/employee";
 import com from "./modules/com";
 import supply from "./modules/supply";
+import customer from "./modules/customer";
 import product from "./modules/product";
 import storage from "./modules/productStorage"
 import storageIn from "./modules/storageIn"
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     employee,
     com,
     supply,
+    customer,
     product,
     storage,
     storageIn,

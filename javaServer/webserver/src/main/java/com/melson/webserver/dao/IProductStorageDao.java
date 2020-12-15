@@ -37,17 +37,17 @@ public interface IProductStorageDao extends JpaRepository<ProductStorage,String>
     @Query(value = "DELETE from product_storage where productId=?1",nativeQuery = true)
     void deleteByProductId(Integer id);
 
-    @Query(nativeQuery=true,value = "SELECT sot.date,sot.`code`,sot.employeeName, sobd.productName,sobd.supplyName,sobd.batchNo,sobd.unitPriceIn,sobd.unitPriceOut,sobd.outCount,sobd.profit\n" +
+    @Query(nativeQuery=true,value = "SELECT sot.date,sot.`code`,sot.employeeName, sobd.productName,sobd.supplyName,sobd.batchNo,sobd.unitPriceIn,sobd.unitPriceOut,sobd.outCount,sobd.profit,sot.customerName\n" +
             "from storage_out_ticket sot\n" +
             "LEFT JOIN storage_out_bill_detail sobd on sot.billCode = sobd.outBillCode\n" +
             "where sot.employeeId =:userId and sot.createTime>=:dateBegin and sot.createTime<=:newEnd")
     List<Object[]> findVoByUserId(@Param("dateBegin") Date dateBegin,@Param("newEnd")  Date newEnd,@Param("userId")   String userId);
 
-    @Query(nativeQuery=true,value = "SELECT sot.date,sot.`code`,sot.employeeName, sobd.productName,sobd.supplyName,sobd.batchNo,sobd.unitPriceIn,sobd.unitPriceOut,sobd.outCount,sobd.profit\n" +
+    @Query(nativeQuery=true,value = "SELECT sot.date,sot.`code`,sot.employeeName, sobd.productName,sobd.supplyName,sobd.batchNo,sobd.unitPriceIn,sobd.unitPriceOut,sobd.outCount,sobd.profit,sot.customerName\n" +
             "from storage_out_ticket sot\n" +
             "LEFT JOIN storage_out_bill_detail sobd on sot.billCode = sobd.outBillCode\n" +
             "where sot.storeCode =:storeCode and sot.createTime>=:dateBegin and sot.createTime<=:newEnd")
     List<Object[]> findVoByStoreCode(@Param("dateBegin") Date dateBegin,@Param("newEnd")  Date newEnd,@Param("storeCode")   String storeCode);
 
-    List<ProductStorage> findByStoreCodeAndProductNameLike(String storeCode,String productName);
+    List<ProductStorage> findByStoreCodeAndProductNameLikeAndCountGreaterThan(String storeCode,String productName,Integer count);
 }

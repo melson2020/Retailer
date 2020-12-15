@@ -27,22 +27,45 @@
           </div>
           <el-form ref="outTicketForm" :rules="rules" :model="storageOutTicket">
             <el-col :span="12">
+              <el-form-item class="item" label="出库时间：" prop="date" v-if="false">
+                <span class="content-left">{{ storageOutTicket.date }}</span>
+              </el-form-item>
+
               <el-form-item class="item" label="出库单号:" prop="code">
                 <span class="content-left">{{ storageOutTicket.code }}</span>
               </el-form-item>
+
+              <el-form-item class="item" label="客户名称：" prop="customerName">
+                <!-- <span class="content-left">{{ storageOutTicket.customerName }}</span> -->
+                <el-select
+                v-model="storageOutTicket.customerName"
+                  filterable
+                  placeholder="请选择客户"
+                  size="mini"
+                  class="storageout-width-category"
+                  @change="customerChange"
+                >
+                  <el-option
+                    v-for="item in customerList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
               <el-form-item class="item" label="出库人员：" prop="employeeName">
                 <span class="content-left">{{
                   storageOutTicket.employeeName
                 }}</span>
               </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item class="item" label="出库时间：" prop="date">
-                <span class="content-left">{{ storageOutTicket.date }}</span>
-              </el-form-item>
-              <el-form-item class="item" label="出库类型:" prop="type">
+
+              <el-form-item class="item" label="出库类型: " prop="type">
                 <el-select
                   v-model="storageOutTicket.type"
+                   filterable
                   placeholder="请选择类型"
                   class="storageout-width-category"
                   size="mini"
@@ -247,12 +270,11 @@
                   >
                 </el-col>
                 <el-col :span="14" class="out-info">
-                  <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat"
-                    >是否含税</el-checkbox
+                  <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat" disabled
+                    >税点</el-checkbox
                   >
                   <el-select
                     style="width: 100px"
-                    :disabled="!pb.outVat"
                     v-model="pb.outTaxRate"
                     filterable
                     placeholder="出货税点"
@@ -288,7 +310,7 @@
                 </el-col>
               </div>
               <div>
-                <div class="cost-header">利润核算</div>
+                <div class="cost-header">利润估算</div>
                 <div v-for="c in checkedOutList" :key="c.id" class="cost-area">
                   <div class="cost-area-layout">
                     <div class="ver">
@@ -303,8 +325,11 @@
                         }}{{ c.sales }}
                       </div>
                       <div class="flex-left color-light-gray">
+                         利润：({{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}} - {{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}) * 数量 {{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }}
+                      </div>
+                      <div class="flex-left color-light-gray">
                         <!-- 利润：（未税售价 ({{ c.outPrice }} /({{c.outTaxRate+100}}/100) * 数量{{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }} -->
-                         利润：(价差({{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}} - {{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}) + 税差({{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}*{{NumberDiv(c.taxRate,100)}} - {{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}}*{{NumberDiv(c.outTaxRate,100)}})) * 数量 {{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }}
+                         RoE：(({{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}} - {{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}) + ({{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}*{{NumberDiv(c.taxRate,100)}} - {{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}}*{{NumberDiv(c.outTaxRate,100)}})) * 数量 {{ c.outCount }} = {{ computeRoE(c)}}{{ c.roe }}
                       </div>
                     </div>
                     <!-- <div class="cost-area-result">
@@ -411,11 +436,13 @@ export default {
         date: "",
         employeeId: "",
         employeeName: "",
+        customerName:"",
         code: "",
         type: "",
         details: [],
       },
       rules: {
+        customerName: [{ required: true, message: "请选择客户", trigger: "blur" }],
         type: [{ required: true, message: "请选择类型", trigger: "blur" }],
         details: [{ required: true, message: "请添加商品", trigger: "blur" }],
       },
@@ -424,7 +451,8 @@ export default {
   computed: {
     ...mapGetters([
       "userInfo",
-      "productList",
+      "productList", 
+      "customerList",
       "productBatchList",
       "taxRateList",
       "outTicketInfo",
@@ -476,7 +504,7 @@ export default {
           taxIn:item.taxIn,
           tepOut:item.tepOut,
           taxOut:item.taxOut,
-
+          customerName:item.customerName,
         };
         list.push(l);
       });
@@ -486,6 +514,7 @@ export default {
   methods: {
     ...mapActions({
       GetProductList: "GetProductList",
+      GetCustomerList:"GetCustomerList",
       GetProductBatchList: "GetProductBatchList",
       ClearProductBatchList: "ClearProductBatchList",
       GetTaxRateList: "GetTaxRateList",
@@ -514,6 +543,7 @@ export default {
       this.storageOutTicket.code = "";
       this.storageOutTicket.type = "";
       this.storageOutTicket.details = [];
+      this.storageOutTicket.customerName="";
     },
     addStorageOutDetail() {
       if (this.selectPid == "") {
@@ -541,6 +571,13 @@ export default {
     productChanegd(value) {
       let params = { storeCode: this.userInfo.storeCode, productId: value };
       this.GetProductBatchList(params);
+    },
+    customerChange(value){
+      this.customerList.map(item=>{
+        if(item.id == value){
+          this.storageOutTicket.customerName=item.name;
+        }
+      });
     },
     //计算总成本
     computeCost(object) {
@@ -589,11 +626,21 @@ export default {
       let taxInRatePercent=this.NumberAdd(taxInRat,1)
       let taxOutRatePercent=this.NumberAdd(taxOutRat,1)
       let tepIn=this.NumberDiv(object.netIn,taxInRatePercent)
+      let tepOut=this.NumberDiv(object.outPrice,taxOutRatePercent)
+      let perProfit=this.NumberSub(tepOut,tepIn)
+      object.profit = this.NumberMul(perProfit,object.outCount).toFixed(2);
+    },
+    computeRoE(object) {
+      let taxInRat=this.NumberDiv(object.taxRate,100)
+      let taxOutRat=this.NumberDiv(object.outTaxRate,100)
+      let taxInRatePercent=this.NumberAdd(taxInRat,1)
+      let taxOutRatePercent=this.NumberAdd(taxOutRat,1)
+      let tepIn=this.NumberDiv(object.netIn,taxInRatePercent)
       let taxIn=this.NumberMul(tepIn,taxInRat)
       let tepOut=this.NumberDiv(object.outPrice,taxOutRatePercent)
       let taxOut=this.NumberMul(tepOut,taxOutRat)
       let perProfit=this.NumberAdd(this.NumberSub(tepOut,tepIn),this.NumberSub(taxIn,taxOut)).toFixed(2)
-      object.profit = this.NumberMul(perProfit,object.outCount);
+      object.roe = this.NumberMul(perProfit,object.outCount);
       // object.profit = this.NumberSub(object.sales, object.cost);
     },
     //计算出库详细总利润
@@ -643,7 +690,8 @@ export default {
           tepIn:item.tepIn,
           taxIn:item.taxIn,
           tepOut:this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)).toFixed(2),
-          taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2)
+          taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2),
+          customerName:this.storageOutTicket.customerName,
         };
         this.addToDetailCheck(addItem);
       });
@@ -728,6 +776,7 @@ export default {
             outTicket: this.storageOutTicket,
             billDetailList: this.outTicketProfitList,
           };
+
           this.SaveStorageOutTicket(params)
             .then((res) => {
               if (res.resultStatus == 1) {
@@ -770,6 +819,7 @@ export default {
   beforeMount() {
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductList(params);
+    this.GetCustomerList(params);
     this.GetTaxRateList();
   },
 };

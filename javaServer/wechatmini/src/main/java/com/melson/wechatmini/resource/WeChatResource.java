@@ -59,6 +59,7 @@ public class WeChatResource extends BaseResource {
         } else {
             result.setData(storageList);
         }
+        System.out.println("Rest Call: /weChat/productStorage ...");
         return result;
     }
 

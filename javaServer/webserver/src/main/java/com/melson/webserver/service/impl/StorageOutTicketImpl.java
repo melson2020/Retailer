@@ -133,6 +133,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         bill.setStoreCode(ticket.getStoreCode());
         bill.setCreateTime(createDate);
         bill.setDate(ticket.getDate());
+        bill.setCustomerName(ticket.getCustomerName());
         SetBillDetails(billDetails, bill);
         return bill;
     }
@@ -245,6 +246,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             r.setPriceOut(obj[7] == null ? new BigDecimal(0) : new BigDecimal(obj[7].toString()));
             r.setOutCount(obj[8] == null ? 0 : Integer.parseInt(obj[8].toString()));
             r.setProfit(obj[9] == null ? new BigDecimal(0) : new BigDecimal(obj[9].toString()));
+            r.setCustomerName(obj[10] == null ? null : obj[10].toString());
             voList.add(r);
         }
         return voList;

@@ -83,11 +83,17 @@
                     }}</el-col>
                   </el-row>
                   <el-row class="card-content">
-                    <el-col :span="6" class="card-content-col-name"
+                    <!-- <el-col :span="6" class="card-content-col-name"
                       >创建人员:</el-col
                     >
                     <el-col :span="15" class="card-content-col-content">{{
                       ticket.outTicket.employeeName
+                    }}</el-col> -->
+                    <el-col :span="6" class="card-content-col-name"
+                      >客户名称:</el-col
+                    >
+                    <el-col :span="15" class="card-content-col-content">{{
+                      ticket.outTicket.customerName
                     }}</el-col>
                   </el-row>
                   <el-row class="card-content">
