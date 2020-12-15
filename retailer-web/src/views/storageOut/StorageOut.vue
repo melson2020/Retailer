@@ -270,31 +270,35 @@
                   >
                 </el-col>
                 <el-col :span="14" class="out-info">
-                  <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat" disabled
+                  <!-- <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat" disabled
                     >税点</el-checkbox
-                  >
-                  <el-select
-                    style="width: 100px"
-                    v-model="pb.outTaxRate"
-                    filterable
-                    placeholder="出货税点"
-                    size="mini"
-                  >
-                    <el-option
-                      v-for="taxRate in taxRateList"
-                      :label="taxRate.description"
-                      :value="taxRate.rate"
-                      :key="taxRate.id"
-                    ></el-option>
-                  </el-select>
-                  <el-input
-                    class="margin-left-10"
-                    :disabled="!pb.checked"
-                    :placeholder="'>' + pb.netIn"
-                    size="mini"
-                    style="width: 100px"
-                    v-model="pb.outPrice"
-                  ></el-input>
+                  > -->
+                  <div>税点:
+                    <el-select
+                      style="width: 100px"
+                      v-model="pb.outTaxRate"
+                      filterable
+                      placeholder="出货税点"
+                      size="mini"
+                    >
+                      <el-option
+                        v-for="taxRate in taxRateList"
+                        :label="taxRate.description"
+                        :value="taxRate.rate"
+                        :key="taxRate.id"
+                      ></el-option>
+                    </el-select>
+                  </div>
+                  <div>单价:
+                    <el-input
+                      class="margin-left-10"
+                      :disabled="!pb.checked"
+                      :placeholder="'>' + pb.netIn"
+                      size="mini"
+                      style="width: 100px"
+                      v-model="pb.outPrice"
+                    ></el-input>
+                  </div>
                   <div>
                     出货量：
                     <el-input-number
