@@ -512,6 +512,7 @@ export default {
           taxOut:item.taxOut,
           customerName:item.customerName,
           customerId:item.customerId,
+          unitProfit:item.unitProfit,
         };
         list.push(l);
       });
@@ -636,8 +637,9 @@ export default {
       let taxOutRatePercent=this.NumberAdd(taxOutRat,1)
       let tepIn=this.NumberDiv(object.netIn,taxInRatePercent)
       let tepOut=this.NumberDiv(object.outPrice,taxOutRatePercent)
-      let perProfit=this.NumberSub(tepOut,tepIn)
+      let perProfit=this.NumberSub(tepOut,tepIn); 
       object.profit = this.NumberMul(perProfit,object.outCount).toFixed(2);
+      object.unitProfit=perProfit
     },
     computeRoE(object) {
       let taxInRat=this.NumberDiv(object.taxRate,100)
@@ -702,6 +704,7 @@ export default {
           taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2),
           customerName:this.storageOutTicket.customerName,
           customerId:this.storageOutTicket.customerId,
+          unitProfit:item.unitProfit,
         };
         this.addToDetailCheck(addItem);
       });
