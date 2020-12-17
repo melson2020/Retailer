@@ -227,5 +227,11 @@ export default {
    */
   FindOutTicketsWithSearchVale(params){
     return service.get("/goodsReturn/findOutTickets",params)
+  },
+  FindOutTicketForGoodsReturn(params){
+    return service.get("/goodsReturn/findOutTicketDetails",params)
+  },
+  SaveGoodsReturnRecords(params){
+    return service.post("/goodsReturn/saveGoodsReturnRecord",params)
   }
 };

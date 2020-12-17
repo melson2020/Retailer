@@ -27,9 +27,13 @@ public class StorageOutTicket {
     private String billCode;
     private String customerName;
     private Integer customerId;
+    //出库单状态值  0 初始值 1 有退货 2已退完
+    private Integer status;
 
     @Transient
     private List<StorageOutDetail> details;
+    @Transient
+    private List<GoodsReturnRecord> returnList;
 
     public List<StorageOutDetail> getDetails() {
         return details;
@@ -141,5 +145,21 @@ public class StorageOutTicket {
 
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public List<GoodsReturnRecord> getReturnList() {
+        return returnList;
+    }
+
+    public void setReturnList(List<GoodsReturnRecord> returnList) {
+        this.returnList = returnList;
     }
 }

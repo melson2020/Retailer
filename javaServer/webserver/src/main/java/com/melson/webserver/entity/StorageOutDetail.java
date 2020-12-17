@@ -33,6 +33,21 @@ public class StorageOutDetail {
     private BigDecimal taxOut;   //税金/unit
     private String customerName;
     private Integer customerId;
+    //出库单状态值  0 初始值 1 有退货 2已退完
+    private Integer status;
+    private String code;
+    //退货数量，通过退货记录填充
+    @Transient
+    private Integer returnCount;
+
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getBeforeOutCount() {
         return beforeOutCount;
@@ -192,6 +207,22 @@ public class StorageOutDetail {
 
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public Integer getReturnCount() {
+        return returnCount==null?0:returnCount;
+    }
+
+    public void setReturnCount(Integer returnCount) {
+        this.returnCount = returnCount;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
 

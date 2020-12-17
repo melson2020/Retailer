@@ -1,13 +1,13 @@
 package com.melson.webserver.service.impl;
 
 import com.melson.base.AbstractService;
-import com.melson.webserver.Vo.OutBoundVo;
-import com.melson.webserver.Vo.StorageOutRecordVo;
-import com.melson.webserver.Vo.StorageOutTicketDetailVo;
-import com.melson.webserver.Vo.StorageOutTicketVo;
+import com.melson.base.utils.EntityManagerUtil;
+import com.melson.webserver.Vo.*;
 import com.melson.webserver.dao.*;
+import com.melson.webserver.dto.StorageOutTicketInfoDto;
 import com.melson.webserver.entity.*;
 import com.melson.webserver.service.IStorageOutTicket;
+import com.melson.webserver.utils.EntityUtils;
 import com.mysql.cj.util.StringUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,18 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
     private final IStorageOutBillDetailDao storageOutBillDetailDao;
     private final IProductBatchDao productBatchDao;
     private final IProductStorageDao productStorageDao;
+    private final EntityManagerUtil entityManagerUtil;
+    private final IGoodsReturnRecordDao goodsReturnRecordDao;
 
-    public StorageOutTicketImpl(IStorageOutTicketDao storageOutTicketDao, IStorageOutDetailDao storageOutDetailDao, IStorageOutBillDao storageOutBillDao, IStorageOutBillDetailDao storageOutBillDetailDao, IProductBatchDao productBatchDao, IProductStorageDao productStorageDao) {
+    public StorageOutTicketImpl(IStorageOutTicketDao storageOutTicketDao, IStorageOutDetailDao storageOutDetailDao, IStorageOutBillDao storageOutBillDao, IStorageOutBillDetailDao storageOutBillDetailDao, IProductBatchDao productBatchDao, IProductStorageDao productStorageDao, EntityManagerUtil entityManagerUtil, IGoodsReturnRecordDao goodsReturnRecordDao) {
         this.storageOutTicketDao = storageOutTicketDao;
         this.storageOutDetailDao = storageOutDetailDao;
         this.storageOutBillDao = storageOutBillDao;
         this.storageOutBillDetailDao = storageOutBillDetailDao;
         this.productBatchDao = productBatchDao;
         this.productStorageDao = productStorageDao;
+        this.entityManagerUtil = entityManagerUtil;
+        this.goodsReturnRecordDao = goodsReturnRecordDao;
     }
 
     @Override
@@ -97,7 +101,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         }
         //更新批次库存,同时刷新库存数据
         for (ProductBatch batch : productBatchList) {
-            String key=batch.getBatchNo() + batch.getSupplyId() + batch.getProductId() + batch.getStoreCode();
+            String key = batch.getBatchNo() + batch.getSupplyId() + batch.getProductId() + batch.getStoreCode();
             Integer mins = batchMap.get(key);
             if (mins != null) {
                 batch.setCount(batch.getCount() - mins);
@@ -108,10 +112,10 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
                 ProductStorage storage = storageMap.get(batch.getProductId());
                 if (storage != null) {
                     //设置更新前数据记录
-                    StorageOutDetail detail=detailMap.get(key);
-                    if(detail!=null){
+                    StorageOutDetail detail = detailMap.get(key);
+                    if (detail != null) {
                         detail.setBeforeOutCount(storage.getCount());
-                        detail.setAfterOutCount(storage.getCount()-detail.getOutCount());
+                        detail.setAfterOutCount(storage.getCount() - detail.getOutCount());
                     }
                     storage.setCount(storage.getCount() - mins);
                 }
@@ -120,7 +124,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         List<ProductBatch> savedBatchs = productBatchDao.saveAll(productBatchList);
         List<ProductStorage> savedStorages = productStorageDao.saveAll(storageMap.values());
         List<StorageOutDetail> saveDetailList = storageOutDetailDao.saveAll(outDetails);
-        return savedBatchs != null && savedStorages != null&&saveDetailList!=null;
+        return savedBatchs != null && savedStorages != null && saveDetailList != null;
     }
 
     private StorageOutBill GenrateOutBill(List<StorageOutBillDetail> billDetails, StorageOutTicket ticket, Date createDate) {
@@ -226,16 +230,94 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
     }
 
     @Override
-    public List<StorageOutTicket> FindTicketsWithCodeOrCustomerNameAndDate(String searchValue, String date) {
-         if(org.springframework.util.StringUtils.isEmpty(searchValue)){
-             return storageOutTicketDao.findByDate(date);
-         }else if(org.springframework.util.StringUtils.isEmpty(date)) {
-             String likeStr="%"+searchValue+"%";
-             return  storageOutTicketDao.findByCodeLikeOrCustomerNameLike(likeStr,likeStr);
-         }else {
-             String likeStr="%"+searchValue+"%";
-             return storageOutTicketDao.findByCodeLikeOrCustomerNameLikeAndDate(likeStr,likeStr,date);
-         }
+    public List<StorageOutTicket> FindTicketsWithCodeOrCustomerNameAndDate(String searchValue, String date, String storeCode) {
+        String sql = "SELECT st.id,st.date,st.code,st.customerName,sd.productName,sd.storageInBatchNo as batchNo,sd.supplyName,sd.outCount,sd.countUnit,st.storeCode FROM `storage_out_ticket` st right JOIN  storage_out_detail sd on st.`code`=sd.outTicketCode where st.storeCode='" + storeCode + "'";
+        StringBuffer sBuffer = new StringBuffer(sql);
+        if (org.springframework.util.StringUtils.isEmpty(searchValue)) {
+            sBuffer.append("and st.date='" + date + "'");
+        } else if (org.springframework.util.StringUtils.isEmpty(date)) {
+            String likeStr = "%" + searchValue + "%";
+            sBuffer.append("and st.code like '" + likeStr + "' or st.customerName like '" + likeStr + "'");
+        } else {
+            String likeStr = "%" + searchValue + "%";
+            sBuffer.append("and st.code like '" + likeStr + "' or st.customerName like '" + likeStr + "' and st.date='" + date + "'");
+        }
+        List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
+        List<StorageOutTicketInfoDto> dtos = EntityUtils.castEntity(list, StorageOutTicketInfoDto.class, new StorageOutTicketInfoDto());
+        return GenerateOutTickes(dtos);
+    }
+
+    @Override
+    public StorageOutTicket FindTicketForGoodsReturn(String storeCode, String tiketCode) {
+        StorageOutTicket outTicket = storageOutTicketDao.findByStoreCodeAndCode(storeCode, tiketCode);
+        List<StorageOutDetail> details = storageOutDetailDao.findByOutTicketCodeAndStoreCode(tiketCode, storeCode);
+        List<GoodsReturnRecord> backList=goodsReturnRecordDao.findByStoreCodeAndOutTicketCode(storeCode,tiketCode);
+        if(backList!=null&&backList.size()>0){
+            outTicket.setReturnList(backList);
+            Map<String,List<GoodsReturnRecord>> recordMap=new HashMap<>(backList.size());
+            //退货记录按照Key 分类，以便填充details 退货数量 以及ticket 退货list
+            for(GoodsReturnRecord record:backList){
+                String key=record.getProductId()+record.getSupplyId()+record.getBatchNo();
+                List<GoodsReturnRecord> existList=recordMap.get(key);
+                if(existList!=null){
+                    existList.add(record);
+                }else {
+                    existList=new ArrayList<>();
+                    existList.add(record);
+                    recordMap.put(key,existList);
+                }
+            }
+            for(StorageOutDetail detail:details){
+                String key=detail.getProductId()+detail.getSupplyId()+detail.getStorageInBatchNo();
+                List<GoodsReturnRecord> returnList=recordMap.get(key);
+                Integer returnCount=0;
+                for(GoodsReturnRecord grr:returnList){
+                    returnCount+=grr.getCount();
+                }
+                detail.setReturnCount(returnCount);
+            }
+        }
+        outTicket.setDetails(details);
+        return outTicket;
+    }
+
+    private List<StorageOutTicket> GenerateOutTickes(List<StorageOutTicketInfoDto> dtos) {
+        Map<String, StorageOutTicket> outTicketMap = new HashMap<>();
+        for (StorageOutTicketInfoDto dto : dtos) {
+            StorageOutTicket out = outTicketMap.get(dto.getCode());
+            if (out == null) {
+                StorageOutTicket ticket = CreateOutTicket(dto);
+                outTicketMap.put(dto.getCode(), ticket);
+            } else {
+                StorageOutDetail detail = CreateDetail(dto);
+                out.getDetails().add(detail);
+            }
+        }
+        return new ArrayList<>(outTicketMap.values());
+    }
+
+    private StorageOutTicket CreateOutTicket(StorageOutTicketInfoDto dto) {
+        StorageOutTicket ticket = new StorageOutTicket();
+        ticket.setDate(dto.getDate());
+        ticket.setCode(dto.getCode());
+        ticket.setId(dto.getId());
+        ticket.setStoreCode(dto.getStoreCode());
+        ticket.setCustomerName(dto.getCustomerName());
+        List<StorageOutDetail> details = new ArrayList<>();
+        StorageOutDetail detail = CreateDetail(dto);
+        details.add(detail);
+        ticket.setDetails(details);
+        return ticket;
+    }
+
+    private StorageOutDetail CreateDetail(StorageOutTicketInfoDto dto) {
+        StorageOutDetail detail = new StorageOutDetail();
+        detail.setStorageInBatchNo(dto.getBatchNo());
+        detail.setProductName(dto.getProductName());
+        detail.setSupplyName(dto.getSupplyName());
+        detail.setOutCount(dto.getOutCount());
+        detail.setCountUnit(dto.getCountUnit());
+        return detail;
     }
 
     private List<OutBoundVo> GenerateDataByStoreCode(Date dateBegin, Date newEnd, String storeCode) {
@@ -272,9 +354,9 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
 
     @Override
-    public StorageOutTicketDetailVo FindRecordDetail(String ticketCode, String billCode,String storeCode) {
+    public StorageOutTicketDetailVo FindRecordDetail(String ticketCode, String billCode, String storeCode) {
         StorageOutTicketDetailVo vo = new StorageOutTicketDetailVo();
-        List<StorageOutDetail> ticketDetails = storageOutDetailDao.findByOutTicketCodeAndStoreCode(ticketCode,storeCode);
+        List<StorageOutDetail> ticketDetails = storageOutDetailDao.findByOutTicketCodeAndStoreCode(ticketCode, storeCode);
         List<StorageOutBillDetail> billDetails = storageOutBillDetailDao.findByOutBillCode(billCode);
         vo.setBillDetails(billDetails);
         vo.setTicketDetails(ticketDetails);
@@ -283,9 +365,9 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
     @Override
     public StorageOutTicket GetTicketInfos(String ticketCode, String storeCode) {
-        StorageOutTicket ticket=storageOutTicketDao.findByStoreCodeAndCode(storeCode,ticketCode);
-        if(ticket==null)return null;
-        List<StorageOutDetail> details=storageOutDetailDao.findByOutTicketCodeAndStoreCode(ticketCode,storeCode);
+        StorageOutTicket ticket = storageOutTicketDao.findByStoreCodeAndCode(storeCode, ticketCode);
+        if (ticket == null) return null;
+        List<StorageOutDetail> details = storageOutDetailDao.findByOutTicketCodeAndStoreCode(ticketCode, storeCode);
         ticket.setDetails(details);
         return ticket;
     }

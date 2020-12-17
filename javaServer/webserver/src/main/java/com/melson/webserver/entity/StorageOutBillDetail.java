@@ -37,6 +37,7 @@ public class StorageOutBillDetail {
     private BigDecimal taxOut;  //税金/unit
     private String customerName;
     private Integer customerId;
+    private String outDetailCode;
 
 
     public String getCountUnit() {
@@ -229,5 +230,13 @@ public class StorageOutBillDetail {
 
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public String getOutDetailCode() {
+        return outDetailCode;
+    }
+
+    public void setOutDetailCode(String outDetailCode) {
+        this.outDetailCode = outDetailCode;
     }
 }

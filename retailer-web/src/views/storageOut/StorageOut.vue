@@ -511,6 +511,7 @@ export default {
           taxOut:item.taxOut,
           customerName:item.customerName,
           customerId:item.customerId,
+          outDetailCode:item.code
         };
         list.push(l);
       });
@@ -701,6 +702,7 @@ export default {
           taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2),
           customerName:this.storageOutTicket.customerName,
           customerId:this.storageOutTicket.customerId,
+          code: item.code=this.UUID()
         };
         this.addToDetailCheck(addItem);
       });
