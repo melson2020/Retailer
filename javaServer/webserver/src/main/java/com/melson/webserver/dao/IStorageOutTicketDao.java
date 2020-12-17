@@ -20,4 +20,10 @@ public interface IStorageOutTicketDao extends JpaRepository<StorageOutTicket,Str
 
     @Query(value = "SELECT st.date,st.code,sd.storageInBatchNo as batchNo,sd.productId,sd.productName,sd.outCount as count,sd.beforeOutCount as beforeCount,sd.afterOutCount as afterCount,'OUT' as type, 'minus' as action,st.createTime,sd.supplyName FROM storage_out_ticket st RIGHT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode where sd.productId=?1 and st.storeCode=?4 and st.createTime>=?2 and st.createTime<=?3", nativeQuery = true)
     List<Object[]> findStorageOutRec(Integer productId, String startDate, String endDate, String storeCode);
+
+    List<StorageOutTicket> findByCodeLikeOrCustomerNameLike(String searchValue1,String searchValue2);
+
+    List<StorageOutTicket> findByCodeLikeOrCustomerNameLikeAndDate(String searchValue1,String searchValue2,String date);
+
+    List<StorageOutTicket> findByDate(String date);
 }

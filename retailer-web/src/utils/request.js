@@ -221,5 +221,17 @@ export default {
    */
   GetProductStorageRecords(params){
     return service.get("/report/productStorageRec",params)
+  },
+  /**
+   * goodReturn
+   */
+  FindOutTicketsWithSearchVale(params){
+    return service.get("/goodsReturn/findOutTickets",params)
+  },
+  FindOutTicketForGoodsReturn(params){
+    return service.get("/goodsReturn/findOutTicketDetails",params)
+  },
+  SaveGoodsReturnRecords(params){
+    return service.post("/goodsReturn/saveGoodsReturnRecord",params)
   }
 };
