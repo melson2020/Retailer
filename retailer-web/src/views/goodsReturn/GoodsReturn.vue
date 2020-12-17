@@ -30,7 +30,7 @@
         <el-col
           v-for="item in storageOutTickets"
           :key="item.id"
-          :span="6"
+          :span="8"
           class="el-col-card"
         >
           <el-card>
