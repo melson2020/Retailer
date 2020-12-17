@@ -27,7 +27,12 @@
           </div>
           <el-form ref="outTicketForm" :rules="rules" :model="storageOutTicket">
             <el-col :span="12">
-              <el-form-item class="item" label="出库时间：" prop="date" v-if="false">
+              <el-form-item
+                class="item"
+                label="出库时间："
+                prop="date"
+                v-if="false"
+              >
                 <span class="content-left">{{ storageOutTicket.date }}</span>
               </el-form-item>
 
@@ -38,7 +43,7 @@
               <el-form-item class="item" label="客户名称：" prop="customerName">
                 <!-- <span class="content-left">{{ storageOutTicket.customerName }}</span> -->
                 <el-select
-                v-model="storageOutTicket.customerName"
+                  v-model="storageOutTicket.customerName"
                   filterable
                   placeholder="请选择客户"
                   size="mini"
@@ -65,7 +70,7 @@
               <el-form-item class="item" label="出库类型: " prop="type">
                 <el-select
                   v-model="storageOutTicket.type"
-                   filterable
+                  filterable
                   placeholder="请选择类型"
                   class="storageout-width-category"
                   size="mini"
@@ -273,9 +278,10 @@
                   <!-- <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat" disabled
                     >税点</el-checkbox
                   > -->
-                  <div>税点:
+                  <div>
+                    税点:
                     <el-select
-                      style="width: 100px"
+                      style="width: 75px"
                       v-model="pb.outTaxRate"
                       filterable
                       placeholder="出货税点"
@@ -289,7 +295,8 @@
                       ></el-option>
                     </el-select>
                   </div>
-                  <div>单价:
+                  <div>
+                    单价:
                     <el-input
                       class="margin-left-10"
                       :disabled="!pb.checked"
@@ -302,6 +309,7 @@
                   <div>
                     出货量：
                     <el-input-number
+                      style="width: 100px"
                       size="mini"
                       :disabled="!pb.checked"
                       v-model="pb.outCount"
@@ -320,20 +328,36 @@
                     <div class="ver">
                       <div class="flex-left color-blue">{{ c.batchNo }}</div>
                       <div class="flex-left color-light-gray">
-                        成本：单价 {{ c.netIn }} * 数量 {{ c.outCount }} = {{ computeCost(c)
-                        }}{{ c.cost }}
+                        成本：单价 {{ c.netIn }} * 数量 {{ c.outCount }} =
+                        {{ computeCost(c) }}{{ c.cost }}
                       </div>
                       <div class="flex-left color-light-gray">
-                        出售：售价 {{ c.outPrice }} * 数量 {{ c.outCount }} = {{
-                          computeSales(c)
-                        }}{{ c.sales }}
+                        出售：售价 {{ c.outPrice }} * 数量 {{ c.outCount }} =
+                        {{ computeSales(c) }}{{ c.sales }}
                       </div>
                       <div class="flex-left color-light-gray">
-                         利润：({{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}} - {{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}) * 数量 {{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }}
+                        利润：({{ c.outPrice }} /{{
+                          NumberAdd(NumberDiv(c.outTaxRate, 100), 1)
+                        }}
+                        - {{ c.netIn }} /{{
+                          NumberAdd(NumberDiv(c.taxRate, 100), 1)
+                        }}) * 数量 {{ c.outCount }} = {{ computeProfit(c)
+                        }}{{ c.profit }}
                       </div>
                       <div class="flex-left color-light-gray">
                         <!-- 利润：（未税售价 ({{ c.outPrice }} /({{c.outTaxRate+100}}/100) * 数量{{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }} -->
-                         RoE：(({{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}} - {{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}) + ({{ c.netIn }} /{{NumberAdd(NumberDiv(c.taxRate,100),1)}}*{{NumberDiv(c.taxRate,100)}} - {{ c.outPrice }} /{{NumberAdd(NumberDiv(c.outTaxRate,100),1)}}*{{NumberDiv(c.outTaxRate,100)}})) * 数量 {{ c.outCount }} = {{ computeRoE(c)}}{{ c.roe }}
+                        RoE：(({{ c.outPrice }} /{{
+                          NumberAdd(NumberDiv(c.outTaxRate, 100), 1)
+                        }}
+                        - {{ c.netIn }} /{{
+                          NumberAdd(NumberDiv(c.taxRate, 100), 1)
+                        }}) + ({{ c.netIn }} /{{
+                          NumberAdd(NumberDiv(c.taxRate, 100), 1)
+                        }}*{{ NumberDiv(c.taxRate, 100) }} -
+                        {{ c.outPrice }} /{{
+                          NumberAdd(NumberDiv(c.outTaxRate, 100), 1)
+                        }}*{{ NumberDiv(c.outTaxRate, 100) }})) * 数量
+                        {{ c.outCount }} = {{ computeRoE(c) }}{{ c.roe }}
                       </div>
                     </div>
                     <!-- <div class="cost-area-result">
@@ -440,14 +464,16 @@ export default {
         date: "",
         employeeId: "",
         employeeName: "",
-        customerName:"",
-        customerId:"",
+        customerName: "",
+        customerId: "",
         code: "",
         type: "",
         details: [],
       },
       rules: {
-        customerName: [{ required: true, message: "请选择客户", trigger: "blur" }],
+        customerName: [
+          { required: true, message: "请选择客户", trigger: "blur" },
+        ],
         type: [{ required: true, message: "请选择类型", trigger: "blur" }],
         details: [{ required: true, message: "请添加商品", trigger: "blur" }],
       },
@@ -456,7 +482,7 @@ export default {
   computed: {
     ...mapGetters([
       "userInfo",
-      "productList", 
+      "productList",
       "customerList",
       "productBatchList",
       "taxRateList",
@@ -504,14 +530,17 @@ export default {
           unitPriceOut: item.outPrice,
           profit: item.profit,
           countUnit: item.countUnit,
-          netIn:item.netIn,
-          tepIn:item.tepIn,
-          taxIn:item.taxIn,
-          tepOut:item.tepOut,
-          taxOut:item.taxOut,
-          customerName:item.customerName,
-          customerId:item.customerId,
-          outDetailCode:item.code
+          netIn: item.netIn,
+          tepIn: item.tepIn,
+          taxIn: item.taxIn,
+          tepOut: item.tepOut,
+          taxOut: item.taxOut,
+          customerName: item.customerName,
+          customerId: item.customerId,
+
+          outDetailCode: item.code,
+
+          unitProfit: item.unitProfit,
         };
         list.push(l);
       });
@@ -521,7 +550,7 @@ export default {
   methods: {
     ...mapActions({
       GetProductList: "GetProductList",
-      GetCustomerList:"GetCustomerList",
+      GetCustomerList: "GetCustomerList",
       GetProductBatchList: "GetProductBatchList",
       ClearProductBatchList: "ClearProductBatchList",
       GetTaxRateList: "GetTaxRateList",
@@ -550,8 +579,8 @@ export default {
       this.storageOutTicket.code = "";
       this.storageOutTicket.type = "";
       this.storageOutTicket.details = [];
-      this.storageOutTicket.customerName="";
-      this.storageOutTicket.customerId="";
+      this.storageOutTicket.customerName = "";
+      this.storageOutTicket.customerId = "";
     },
     addStorageOutDetail() {
       if (this.selectPid == "") {
@@ -580,24 +609,29 @@ export default {
       let params = { storeCode: this.userInfo.storeCode, productId: value };
       this.GetProductBatchList(params);
     },
-    customerChange(value){
-      this.customerList.map(item=>{
-        if(item.id == value){
-          this.storageOutTicket.customerName=item.name;
-          this.storageOutTicket.customerId=value;
+    customerChange(value) {
+      this.customerList.map((item) => {
+        if (item.id == value) {
+          this.storageOutTicket.customerName = item.name;
+          this.storageOutTicket.customerId = value;
         }
       });
     },
     //计算总成本
     computeCost(object) {
       let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
-      let cost = this.NumberMul(object.outCount,this.NumberMul(object.price, s)).toFixed(2);
+      let cost = this.NumberMul(
+        object.outCount,
+        this.NumberMul(object.price, s)
+      ).toFixed(2);
       object.cost = cost;
       // return cost;
     },
     //计算总售价考虑税点
     computeSales(object) {
-      object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(2);
+      object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(
+        2
+      );
       // if (object.outVat) {
       //   let c = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
       //   let s = this.NumberMul(object.outPrice, c);
@@ -606,50 +640,55 @@ export default {
       //   object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(2);
       // }
     },
-//     //计算单个利润
-//     computePerSale(object) {
-//       console.log(object)
-//       let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
-//       let cost = this.NumberMul(object.price, s);
-//       if (object.outVat) {
-//         let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
-// console.log(taxCost)
-//         return this.NumberDiv(cost, taxCost).toFixed(2);
-//       } else {
-//         return cost.toFixed(2);
-//       }
+    //     //计算单个利润
+    //     computePerSale(object) {
+    //       console.log(object)
+    //       let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
+    //       let cost = this.NumberMul(object.price, s);
+    //       if (object.outVat) {
+    //         let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
+    // console.log(taxCost)
+    //         return this.NumberDiv(cost, taxCost).toFixed(2);
+    //       } else {
+    //         return cost.toFixed(2);
+    //       }
 
-//       // let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
-//       // let cost = this.NumberMul(object.price, s);
-//       // if (object.outVat) {
-//       //   let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
-//       //   return this.NumberDiv(cost, taxCost).toFixed(2);
-//       // } else {
-//       //   return cost.toFixed(2);
-//       // }
-//     },
+    //       // let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
+    //       // let cost = this.NumberMul(object.price, s);
+    //       // if (object.outVat) {
+    //       //   let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
+    //       //   return this.NumberDiv(cost, taxCost).toFixed(2);
+    //       // } else {
+    //       //   return cost.toFixed(2);
+    //       // }
+    //     },
     //计算单批次利润
     computeProfit(object) {
-      let taxInRat=this.NumberDiv(object.taxRate,100)
-      let taxOutRat=this.NumberDiv(object.outTaxRate,100)
-      let taxInRatePercent=this.NumberAdd(taxInRat,1)
-      let taxOutRatePercent=this.NumberAdd(taxOutRat,1)
-      let tepIn=this.NumberDiv(object.netIn,taxInRatePercent)
-      let tepOut=this.NumberDiv(object.outPrice,taxOutRatePercent)
-      let perProfit=this.NumberSub(tepOut,tepIn)
-      object.profit = this.NumberMul(perProfit,object.outCount).toFixed(2);
+      let taxInRat = this.NumberDiv(object.taxRate, 100);
+      let taxOutRat = this.NumberDiv(object.outTaxRate, 100);
+      let taxInRatePercent = this.NumberAdd(taxInRat, 1);
+      let taxOutRatePercent = this.NumberAdd(taxOutRat, 1);
+      let tepIn = this.NumberDiv(object.netIn, taxInRatePercent);
+      let tepOut = this.NumberDiv(object.outPrice, taxOutRatePercent);
+      let perProfit = this.NumberSub(tepOut, tepIn);
+      let profit = this.NumberMul(perProfit, object.outCount).toFixed(2);
+      object.profit = profit;
+      object.unitProfit = this.NumberDiv(profit, object.outCount).toFixed(2);
     },
     computeRoE(object) {
-      let taxInRat=this.NumberDiv(object.taxRate,100)
-      let taxOutRat=this.NumberDiv(object.outTaxRate,100)
-      let taxInRatePercent=this.NumberAdd(taxInRat,1)
-      let taxOutRatePercent=this.NumberAdd(taxOutRat,1)
-      let tepIn=this.NumberDiv(object.netIn,taxInRatePercent)
-      let taxIn=this.NumberMul(tepIn,taxInRat)
-      let tepOut=this.NumberDiv(object.outPrice,taxOutRatePercent)
-      let taxOut=this.NumberMul(tepOut,taxOutRat)
-      let perProfit=this.NumberAdd(this.NumberSub(tepOut,tepIn),this.NumberSub(taxIn,taxOut)).toFixed(2)
-      object.roe = this.NumberMul(perProfit,object.outCount);
+      let taxInRat = this.NumberDiv(object.taxRate, 100);
+      let taxOutRat = this.NumberDiv(object.outTaxRate, 100);
+      let taxInRatePercent = this.NumberAdd(taxInRat, 1);
+      let taxOutRatePercent = this.NumberAdd(taxOutRat, 1);
+      let tepIn = this.NumberDiv(object.netIn, taxInRatePercent);
+      let taxIn = this.NumberMul(tepIn, taxInRat);
+      let tepOut = this.NumberDiv(object.outPrice, taxOutRatePercent);
+      let taxOut = this.NumberMul(tepOut, taxOutRat);
+      let perProfit = this.NumberAdd(
+        this.NumberSub(tepOut, tepIn),
+        this.NumberSub(taxIn, taxOut)
+      ).toFixed(2);
+      object.roe = this.NumberMul(perProfit, object.outCount);
       // object.profit = this.NumberSub(object.sales, object.cost);
     },
     //计算出库详细总利润
@@ -695,14 +734,24 @@ export default {
           totalPrice: this.NumberMul(item.outCount, item.outPrice),
           vatIn: item.vat,
           taxRateIn: item.taxRate,
-          netIn:item.netIn,
-          tepIn:item.tepIn,
-          taxIn:item.taxIn,
-          tepOut:this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)).toFixed(2),
-          taxOut:this.NumberMul(this.NumberDiv(item.outPrice,this.NumberAdd(this.NumberDiv(item.outTaxRate,100),1)),this.NumberDiv(item.outTaxRate,100)).toFixed(2),
-          customerName:this.storageOutTicket.customerName,
-          customerId:this.storageOutTicket.customerId,
-          code: item.code=this.UUID()
+          netIn: item.netIn,
+          tepIn: item.tepIn,
+          taxIn: item.taxIn,
+          tepOut: this.NumberDiv(
+            item.outPrice,
+            this.NumberAdd(this.NumberDiv(item.outTaxRate, 100), 1)
+          ).toFixed(2),
+          taxOut: this.NumberMul(
+            this.NumberDiv(
+              item.outPrice,
+              this.NumberAdd(this.NumberDiv(item.outTaxRate, 100), 1)
+            ),
+            this.NumberDiv(item.outTaxRate, 100)
+          ).toFixed(2),
+          customerName: this.storageOutTicket.customerName,
+          customerId: this.storageOutTicket.customerId,
+          code: (item.code = this.UUID()),
+          unitProfit: item.unitProfit,
         };
         this.addToDetailCheck(addItem);
       });
@@ -823,9 +872,9 @@ export default {
         targetStyles: ["*"],
       });
     },
-    outTicketPdfClose(){
-       this.showTicket = false;
-    }
+    outTicketPdfClose() {
+      this.showTicket = false;
+    },
   },
   beforeMount() {
     let params = { storeCode: this.userInfo.storeCode };
