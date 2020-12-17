@@ -638,8 +638,9 @@ export default {
       let tepIn=this.NumberDiv(object.netIn,taxInRatePercent)
       let tepOut=this.NumberDiv(object.outPrice,taxOutRatePercent)
       let perProfit=this.NumberSub(tepOut,tepIn); 
-      object.profit = this.NumberMul(perProfit,object.outCount).toFixed(2);
-      object.unitProfit=perProfit
+      let profit=this.NumberMul(perProfit,object.outCount).toFixed(2);
+      object.profit = profit;
+      object.unitProfit=this.NumberDiv(profit,object.outCount).toFixed(2);
     },
     computeRoE(object) {
       let taxInRat=this.NumberDiv(object.taxRate,100)
