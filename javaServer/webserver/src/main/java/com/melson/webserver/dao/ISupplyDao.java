@@ -24,4 +24,6 @@ public interface ISupplyDao extends JpaRepository<Supply,String> {
     int deleteBySupplyId(Integer id);
 
     Supply findById(Integer id);
+
+    Supply findByNameAndStoreCode(String name,String storeCode);
 }

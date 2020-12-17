@@ -1,6 +1,7 @@
 package com.melson.webserver.service;
 
 import com.melson.base.IService;
+import com.melson.base.Result;
 import com.melson.base.entity.StoreEmployee;
 import com.melson.webserver.entity.Supply;
 
@@ -19,4 +20,6 @@ public interface ISupply extends IService<Supply> {
     Supply Query(Supply supply);
 
     Supply SaveSupply(Supply supply);
+
+    Result SaveAndUpdate(Supply supply);
 }

@@ -14,4 +14,6 @@ public interface ICustomerDao extends JpaRepository<Customer,String> {
     List<Customer> findAllByStoreCode(String storeCode);
 
     Customer findById(Integer id);
+
+    Customer findByNameAndStoreCode(String name, String storeCode);
 }

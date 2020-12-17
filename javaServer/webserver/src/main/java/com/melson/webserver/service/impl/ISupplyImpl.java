@@ -1,6 +1,7 @@
 package com.melson.webserver.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.base.Result;
 import com.melson.base.entity.StoreEmployee;
 import com.melson.webserver.dao.ISupplyDao;
 import com.melson.webserver.entity.Supply;
@@ -57,6 +58,48 @@ public class ISupplyImpl extends AbstractService <Supply> implements ISupply {
         Supply saved=supplyDao.save(supply);
         return saved;
     }
+
+    @Override
+    public Result SaveAndUpdate(Supply supply) {
+        Result result = new Result();
+        //判断是否存在相同名称
+        Supply checkExist=CheckExisting(supply.getName(),supply.getStoreCode());
+        if(checkExist!=null){
+            if(supply.getId()==checkExist.getId()){
+                Supply saved=supplyDao.save(supply);
+                if(saved==null){
+                    result.setResultStatus(-1);
+                    result.setMessage("保存失败！");
+                }else {
+                    result.setData(saved);
+                }
+            }
+            else
+            {
+                result.setResultStatus(-1);
+                result.setMessage("已经存在此供应商名称！");
+            }
+
+        }
+        else
+        {
+            Supply saved=supplyDao.save(supply);
+            if(saved==null){
+                result.setResultStatus(-1);
+                result.setMessage("保存失败！");
+            }else {
+                result.setData(saved);
+            }
+        }
+        return result;
+    }
+
+    //检查是否重名
+    private Supply CheckExisting(String name,String storeCode) {
+        Supply supply=supplyDao.findByNameAndStoreCode(name,storeCode);
+        return supply;
+    }
+
 
     @Override
     @Transactional
