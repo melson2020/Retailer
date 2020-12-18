@@ -2,6 +2,7 @@ package com.melson.webserver.dao;
 
 import com.melson.webserver.entity.StorageOutTicket;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,8 @@ public interface IStorageOutTicketDao extends JpaRepository<StorageOutTicket,Str
     List<StorageOutTicket> findByCodeLikeOrCustomerNameLikeAndDate(String searchValue1,String searchValue2,String date);
 
     List<StorageOutTicket> findByDate(String date);
+
+    @Modifying
+    @Query(value = "UPDATE StorageOutTicket st set st.status=?1 where st.code=?2 and st.storeCode=?3")
+   void UpdateOutTicketStatus(Integer status,String code,String storeCode);
 }

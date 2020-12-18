@@ -623,7 +623,7 @@ export default {
       let cost = this.NumberMul(
         object.outCount,
         this.NumberMul(object.price, s)
-      ).toFixed(2);
+      ).toFixed(4);
       object.cost = cost;
       // return cost;
     },
@@ -635,9 +635,9 @@ export default {
       // if (object.outVat) {
       //   let c = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
       //   let s = this.NumberMul(object.outPrice, c);
-      //   object.sales = this.NumberMul(s, object.outCount).toFixed(2);
+      //   object.sales = this.NumberMul(s, object.outCount).toFixed(4);
       // } else {
-      //   object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(2);
+      //   object.sales = this.NumberMul(object.outPrice, object.outCount).toFixed(4);
       // }
     },
     //     //计算单个利润
@@ -648,18 +648,18 @@ export default {
     //       if (object.outVat) {
     //         let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
     // console.log(taxCost)
-    //         return this.NumberDiv(cost, taxCost).toFixed(2);
+    //         return this.NumberDiv(cost, taxCost).toFixed(4);
     //       } else {
-    //         return cost.toFixed(2);
+    //         return cost.toFixed(4);
     //       }
 
     //       // let s = this.NumberSub(1, this.NumberDiv(object.discount, 100));
     //       // let cost = this.NumberMul(object.price, s);
     //       // if (object.outVat) {
     //       //   let taxCost = this.NumberSub(1, this.NumberDiv(object.outTaxRate, 100));
-    //       //   return this.NumberDiv(cost, taxCost).toFixed(2);
+    //       //   return this.NumberDiv(cost, taxCost).toFixed(4);
     //       // } else {
-    //       //   return cost.toFixed(2);
+    //       //   return cost.toFixed(4);
     //       // }
     //     },
     //计算单批次利润
@@ -671,9 +671,9 @@ export default {
       let tepIn = this.NumberDiv(object.netIn, taxInRatePercent);
       let tepOut = this.NumberDiv(object.outPrice, taxOutRatePercent);
       let perProfit = this.NumberSub(tepOut, tepIn);
-      let profit = this.NumberMul(perProfit, object.outCount).toFixed(2);
+      let profit = this.NumberMul(perProfit, object.outCount).toFixed(4);
       object.profit = profit;
-      object.unitProfit = this.NumberDiv(profit, object.outCount).toFixed(2);
+      object.unitProfit = this.NumberDiv(profit, object.outCount).toFixed(4);
     },
     computeRoE(object) {
       let taxInRat = this.NumberDiv(object.taxRate, 100);
@@ -687,7 +687,7 @@ export default {
       let perProfit = this.NumberAdd(
         this.NumberSub(tepOut, tepIn),
         this.NumberSub(taxIn, taxOut)
-      ).toFixed(2);
+      ).toFixed(4);
       object.roe = this.NumberMul(perProfit, object.outCount);
       // object.profit = this.NumberSub(object.sales, object.cost);
     },
@@ -699,7 +699,7 @@ export default {
           profit = this.NumberAdd(profit, item.profit);
         }
       });
-      return profit.toFixed(2);
+      return profit.toFixed(4);
     },
     addOutDetails() {
       if (!this.validateOutDetails()) return;
@@ -740,14 +740,14 @@ export default {
           tepOut: this.NumberDiv(
             item.outPrice,
             this.NumberAdd(this.NumberDiv(item.outTaxRate, 100), 1)
-          ).toFixed(2),
+          ).toFixed(4),
           taxOut: this.NumberMul(
             this.NumberDiv(
               item.outPrice,
               this.NumberAdd(this.NumberDiv(item.outTaxRate, 100), 1)
             ),
             this.NumberDiv(item.outTaxRate, 100)
-          ).toFixed(2),
+          ).toFixed(4),
           customerName: this.storageOutTicket.customerName,
           customerId: this.storageOutTicket.customerId,
           code: (item.code = this.UUID()),
@@ -816,7 +816,7 @@ export default {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr);
               if (!isNaN(value)) {
-                return this.NumberAdd(prev, curr).toFixed(2);
+                return this.NumberAdd(prev, curr).toFixed(4);
               } else {
                 return prev;
               }

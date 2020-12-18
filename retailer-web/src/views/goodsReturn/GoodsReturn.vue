@@ -26,18 +26,19 @@
       暂无数据，请查询
     </div>
     <div v-else>
+      <div class="card-area-title">搜寻到一下出库单：</div>
       <el-row :gutter="30">
         <el-col
           v-for="item in storageOutTickets"
           :key="item.id"
-          :span="6"
+          :span="8"
           class="el-col-card"
         >
           <el-card>
             <div slot="header">
-              <span class="font-bold color-title float-left">{{
-                item.code
-              }}</span>
+              <span class="font-bold color-title float-left"
+                >{{ item.code }}</span
+              >
               <span class="color-light-orange">{{ item.date }}</span>
               <span class="margin-left color-light-orange">{{
                 item.customerName
@@ -76,7 +77,12 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="dialogVisible" width="70%" :show-close="false" :close-on-click-modal="false">
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="70%"
+      :show-close="false"
+      :close-on-click-modal="false"
+    >
       <div slot="title" class="dialog-title">
         <el-tag
           v-if="
@@ -85,7 +91,7 @@
           "
           class="dialog-title-tag"
           type="danger"
-          >退</el-tag
+          >已退完</el-tag
         >
         <el-tag
           v-if="
@@ -94,7 +100,7 @@
           "
           class="dialog-title-tag"
           type="warning"
-          >退</el-tag
+          >有退货</el-tag
         >
         退货
       </div>
@@ -105,7 +111,7 @@
         </el-table-column>
         <el-table-column prop="supplyName" label="供货商" width="auto">
         </el-table-column>
-         <el-table-column prop="outPrice" label="出库单价" width="auto">
+        <el-table-column prop="outPrice" label="出库单价" width="auto">
         </el-table-column>
         <el-table-column prop="outCount" label="数量" width="auto">
           <template slot-scope="scope">
@@ -113,6 +119,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="returnCount" label="已退数量" width="auto">
+          <template slot-scope="scope">
+            <span class="goods-return-color-warning">
+              {{ scope.row.returnCount }}{{ scope.row.countUnit }}</span
+            >
+          </template>
         </el-table-column>
         <el-table-column label="退货" width="auto">
           <template slot-scope="scope">
@@ -121,21 +132,26 @@
               v-model="scope.row.backCount"
               controls-position="right"
               :min="0"
-              :max="Number(NumberSub(scope.row.outCount, scope.row.returnCount))"
+              :max="
+                Number(NumberSub(scope.row.outCount, scope.row.returnCount))
+              "
             ></el-input-number>
           </template>
         </el-table-column>
-           <el-table-column  label="退货总价" width="auto">
-          <template  slot-scope="scope">
-             <span >{{NumberMul(scope.row.backCount==null?0:scope.row.backCount,scope.row.outPrice)}}</span>
+        <el-table-column label="退货总价" width="auto">
+          <template slot-scope="scope">
+            <span>{{
+              NumberMul(
+                scope.row.backCount == null ? 0 : scope.row.backCount,
+                scope.row.outPrice
+              )
+            }}</span>
           </template>
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="SubmitGoodsReturn"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="SubmitGoodsReturn">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -155,7 +171,7 @@ export default {
     ...mapActions({
       FindOutTicketsWithSearchVale: "FindOutTicketsWithSearchVale",
       FindOutTicketForGoodsReturn: "FindOutTicketForGoodsReturn",
-      SaveGoodsReturnRecords:"SaveGoodsReturnRecords"
+      SaveGoodsReturnRecords: "SaveGoodsReturnRecords",
     }),
     searchOnClick() {
       if (
@@ -163,7 +179,7 @@ export default {
         (this.searchDate == "" || this.searchDate == null)
       ) {
         this.$message.warning("请输入查询数据");
-        return
+        return;
       }
       var params =
         this.searchDate == null || this.searchDate == ""
@@ -184,38 +200,55 @@ export default {
       let params = { storeCode: ticket.storeCode, ticketCode: ticket.code };
       this.FindOutTicketForGoodsReturn(params);
     },
-    SubmitGoodsReturn(){
-      var returnDetails=[];
-      this.GoodsReturn_outTicketForReturn.details.map(item=>{
-        if(item.backCount>0){
-          var backDetail={
-            storeCode:item.storeCode,
-            outTicketCode:item.outTicketCode,
-            productId:item.productId,
-            productName:item.productName,
-            supplyId:item.supplyId,
-            supplyName:item.supplyName,
-            customerId:item.customerId,
-            customerName:item.customerName,
-            count:item.backCount,
-            countUnit:item.countUnit,
-            totalPrice:this.NumberMul(item.backCount,item.outPrice).toFixed(2),
-            priceUnit:item.outPrice,
-            batchNo:item.storageInBatchNo,
-            date:new Date().format("yyyy-MM-dd"),
-            operationEmployeeName:this.userInfo.userName,
+    SubmitGoodsReturn() {
+      var returnDetails = [];
+      this.GoodsReturn_outTicketForReturn.details.map((item) => {
+        if (item.backCount > 0) {
+          var backDetail = {
+            storeCode: item.storeCode,
+            outTicketCode: item.outTicketCode,
+            productId: item.productId,
+            productName: item.productName,
+            supplyId: item.supplyId,
+            supplyName: item.supplyName,
+            customerId: item.customerId,
+            customerName: item.customerName,
+            count: item.backCount,
+            countUnit: item.countUnit,
+            totalPrice: this.NumberMul(item.backCount, item.outPrice).toFixed(
+              2
+            ),
+            priceUnit: item.outPrice,
+            batchNo: item.storageInBatchNo,
+            date: new Date().format("yyyy-MM-dd"),
+            operationEmployeeName: this.userInfo.userName,
             billCode: this.GoodsReturn_outTicketForReturn.billCode,
-            outDetailCode:item.code
-          }
-          returnDetails.push(backDetail)
+            outDetailCode: item.code,
+          };
+          returnDetails.push(backDetail);
         }
-      })
-      if(returnDetails.length<=0){
-        this.$message.warning("请选择退货商品")
-        return
+      });
+      if (returnDetails.length <= 0) {
+        this.$message.warning("请选择退货商品");
+        return;
       }
-      this.SaveGoodsReturnRecords(returnDetails) 
-    }
+      var params = {
+        records: returnDetails,
+        outDetails: this.GoodsReturn_outTicketForReturn.details,
+      };
+      this.SaveGoodsReturnRecords(params)
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.$message.success("退货成功");
+            this.dialogVisible = !this.dialogVisible;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
   },
   computed: {
     ...mapGetters([
@@ -232,9 +265,10 @@ export default {
   justify-content: center;
 }
 .search-box {
-  width: 18vw;
+  width: 25vw;
   border-radius: 10px;
   padding: 20px;
+  background: rgb(236, 245, 255);
   border: 1px solid lightgray;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
@@ -297,12 +331,24 @@ export default {
   padding: 10px 30px !important;
 }
 .dialog-title {
-  font-size: large;
+  font-size: x-large;
   font-weight: bold;
   color: #409eff;
+  text-align: center;
 }
 .dialog-title-tag {
   float: left;
-  border-radius: 50%;
+  border-radius: 10px;
+  font-size: medium;
+  font-weight: bold;
+}
+.card-area-title {
+  text-align: left;
+  padding: 20px;
+  color: #67c23a;
+  font-size: medium;
+}
+.goods-return-color-warning {
+  color: #f56c6c;
 }
 </style>

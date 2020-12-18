@@ -5,25 +5,61 @@
         <span class="OutboundDelivery-title-name">出库核算</span>
       </div>
       <div>
-        <span class="message-info">*时间跨度最多30天</span>
-        <el-date-picker
-          v-model="date"
-          class="date-picker"
-          type="daterange"
-          align="right"
-          size="small"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="yyyy-MM-dd"
-          format="yyyy 年 MM 月 dd 日"
-          :picker-options="pickerOptions"
-          @focus="focusOn"
-        ></el-date-picker>
+        <el-popover placement="left" width="500" trigger="click">
+          <div class="popover-items-area">
+          <div class="message-info">*时间跨度最多30天</div>
+          <el-date-picker
+            v-model="date"
+            class="date-picker margin-top"
+            type="daterange"
+            align="right"
+            size="small"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd"
+            format="yyyy 年 MM 月 dd 日"
+            :picker-options="pickerOptions"
+            @focus="focusOn"
+          ></el-date-picker>
+          <el-select v-if="this.userInfo.permission>2" v-model="employeeId" placeholder="销售人员" class="margin-top" size="small" :clearable="true">
+            <el-option
+              v-for="employee in employeeList"
+              :key="employee.id"
+              :label="employee.userName"
+              :value="employee.userId"
+            >
+            </el-option>
+          </el-select>
+          <el-select v-model="customerId" placeholder="客户" class="margin-top" size="small" :clearable="true">
+            <el-option
+              v-for="customer in customerList"
+              :key="customer.id"
+              :label="customer.name"
+              :value="customer.id"
+            >
+            </el-option>
+          </el-select>
+          <el-select v-model="productId" placeholder="产品" class="margin-top" size="small" :clearable="true">
+            <el-option
+              v-for="product in productList"
+              :key="product.id"
+              :label="product.name"
+              :value="product.id"
+            >
+            </el-option>
+          </el-select>
+          </div>
+          <el-button slot="reference" type="primary" size="small"
+            >查询选项</el-button
+          >
+        </el-popover>
+
         <el-button
           :disabled="date ? false : true"
           type="primary"
           size="small"
+          class="margin-left"
           icon="el-icon-search"
           @click="searchOnClick"
           >查询</el-button
@@ -57,46 +93,71 @@
         <el-table-column
           prop="outBoundNo"
           label="出库单号"
-          width="130%"
           sortable
         ></el-table-column>
-        <el-table-column prop="customerName" label="客户名" width="auto" sortable>
+        <el-table-column
+          prop="customerName"
+          label="客户名"
+          width="auto"
+          sortable
+        >
         </el-table-column>
-        <el-table-column prop="salesName" label="销售人员" width="auto" sortable>
+        <el-table-column
+          prop="salesName"
+          label="销售人员"
+          width="auto"
+          sortable
+        >
         </el-table-column>
         <el-table-column prop="product" label="产品名称" width="auto" sortable>
         </el-table-column>
         <el-table-column
           prop="supply"
           label="供应商"
-          width="200px"
           sortable
         ></el-table-column>
         <el-table-column
           prop="batchNo"
           label="入库批次"
-          width="130%"
-           sortable
+          sortable
         ></el-table-column>
-        <el-table-column label="入库单价" width="100px">
+        <el-table-column label="入库单价" >
           <template slot-scope="scope">
             {{ scope.row.priceIn }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
-        <el-table-column label="出库单价" width="100px">
+        <el-table-column label="出库单价">
           <template slot-scope="scope">
             {{ scope.row.priceOut }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
-
-        <el-table-column label="数量" width="50px">
+        <el-table-column label="数量" >
           <template slot-scope="scope">
             {{ scope.row.outCount }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
-        <el-table-column prop="profit" label="总利润" width="auto" sortable>
+         <el-table-column
+          prop="totalPrice"
+          label="销售额"
+          sortable
+        ></el-table-column>
+          <el-table-column
+          prop="unitProfit"
+          label="单个利润"
+          sortable
+        ></el-table-column>
+         <el-table-column
+          prop="returnCount"
+          label="退货数量"
+          sortable
+        >
+         <template slot-scope="scope">
+            <span v-if=" scope.row.returnCount>0" class="color-green"> {{ scope.row.returnCount }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="profit" label="销售利润" width="auto" sortable>
           <template slot-scope="scope">
-            <span class="color-orange"> {{ scope.row.profit }}</span>
+            <span class="color-orange"> {{ Number(NumberSub(scope.row.profit,NumberMul(scope.row.returnCount,scope.row.unitProfit))).toFixed(2) }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -112,6 +173,9 @@ export default {
     return {
       date: "",
       startDateMin: null,
+      employeeId:'',
+      customerId:'',
+      productId:'',
       pickerOptions: {
         onPick: (obj) => {
           this.startDateMin = new Date(obj.minDate).getTime();
@@ -163,6 +227,9 @@ export default {
   methods: {
     ...mapActions({
       GetOutBoundList: "GetOutBoundList",
+      GetEmployeeList: "GetEmployeeList",
+      GetCustomerList: "GetCustomerList",
+       GetProductList: "GetProductList",
     }),
     getSummaries(param) {
       const { columns, data } = param;
@@ -197,6 +264,9 @@ export default {
         userId: this.userInfo.userId,
         startDate: this.date[0],
         endDate: this.date[1],
+        customerId:this.customerId,
+        productId:this.productId,
+        employeeId:this.employeeId
       };
       this.GetOutBoundList(params);
     },
@@ -207,7 +277,7 @@ export default {
       var keys = {
         date: "销售日期",
         outBoundNo: "出库单号",
-        customerName:"客户名",
+        customerName: "客户名",
         salesName: "销售人员",
         product: "产品名称",
         supply: "供应商",
@@ -223,16 +293,17 @@ export default {
       });
       var table = this.$refs.outBoundTable;
       var sum = this.getSummaries(table);
-      if(!this.date){
-        this.$message.warning('请重新选择查询时间范围')
-        return
+      if (!this.date) {
+        this.$message.warning("请重新选择查询时间范围");
+        return;
       }
-      var fileName='出库清单'+'('+this.date[0]+'至'+this.date[1]+')'
+      var fileName =
+        "出库清单" + "(" + this.date[0] + "至" + this.date[1] + ")";
       json.push({
         date: "总价",
         outBoundNo: "",
         salesName: "",
-        customerName:"",
+        customerName: "",
         product: "",
         supply: "",
         batchNo: "",
@@ -252,7 +323,15 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["userInfo", "outBoundList"]),
+    ...mapGetters(["userInfo", "outBoundList","employeeList","customerList","productList"]),
+  },
+  mounted: function() {
+    if(this.userInfo.permission>2){
+       this.GetEmployeeList(this.userInfo);
+    }
+    this.GetCustomerList(this.userInfo);  
+     let params = { storeCode: this.userInfo.storeCode };
+    this.GetProductList(params);
   },
 };
 </script>
@@ -292,5 +371,19 @@ export default {
   align-items: center;
   color: #303133;
   justify-content: center;
+}
+.popover-items-area{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.margin-top{
+  margin-top: 20px;
+}
+.margin-left{
+  margin-left: 20px;
+}
+.color-green{
+  color: #67C23A;
 }
 </style>
