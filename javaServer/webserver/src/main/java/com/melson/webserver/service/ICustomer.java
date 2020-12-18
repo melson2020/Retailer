@@ -1,6 +1,7 @@
 package com.melson.webserver.service;
 
 import com.melson.base.IService;
+import com.melson.base.Result;
 import com.melson.webserver.entity.Customer;
 import com.melson.webserver.entity.Supply;
 
@@ -15,4 +16,6 @@ public interface ICustomer extends IService<Customer> {
     Customer SaveCustomer(Customer customer);
 
     Customer Query(Customer customer);
+
+    Result SaveAndUpdate(Customer customer);
 }

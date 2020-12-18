@@ -46,16 +46,16 @@ public class CustomerResource extends BaseResource {
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
     public Result CreateCustomer(@RequestBody Customer customer){
-        Result result=new Result();
-        Customer saved=customerService.SaveCustomer(customer);
-        if(saved==null){
-            result.setResultStatus(-1);
-            result.setMessage("create fail");
-        }else {
-            result.setData(saved);
-        }
+//        Result result=new Result();
+//        Customer saved=customerService.SaveCustomer(customer);
+//        if(saved==null){
+//            result.setResultStatus(-1);
+//            result.setMessage("create fail");
+//        }else {
+//            result.setData(saved);
+//        }
         System.out.println("Rest Call: /customer/save ...");
-        return result;
+        return customerService.SaveAndUpdate(customer);
     }
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)

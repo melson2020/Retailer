@@ -58,16 +58,12 @@ public class SupplyResource extends BaseResource {
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Manager)
     public Result CreateSupply(@RequestBody Supply supply){
-        Result result=new Result();
-        Supply saved=supplyService.SaveSupply(supply);
-        if(saved==null){
-            result.setResultStatus(-1);
-            result.setMessage("create fail");
-        }else {
-            result.setData(saved);
+        if(supply.getDiscount()==null)
+        {
+            supply.setDiscount(0.0);
         }
         System.out.println("Rest Call: /supply/save ...");
-        return result;
+        return supplyService.SaveAndUpdate(supply);
     }
 
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
