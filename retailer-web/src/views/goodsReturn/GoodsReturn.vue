@@ -25,7 +25,7 @@
     <div v-if="storageOutTickets.length <= 0" class="empty-data-div">
       暂无数据，请查询
     </div>
-    <div v-else>
+    <div class="goods-return-result-area" v-else>
       <div class="card-area-title">搜寻到一下出库单：</div>
       <el-row :gutter="30">
         <el-col
@@ -350,5 +350,9 @@ export default {
 }
 .goods-return-color-warning {
   color: #f56c6c;
+}
+.goods-return-result-area{
+  display: flex;
+  flex-direction: column;
 }
 </style>

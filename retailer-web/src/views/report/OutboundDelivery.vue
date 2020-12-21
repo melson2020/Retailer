@@ -7,48 +7,67 @@
       <div>
         <el-popover placement="left" width="500" trigger="click">
           <div class="popover-items-area">
-          <div class="message-info">*时间跨度最多30天</div>
-          <el-date-picker
-            v-model="date"
-            class="date-picker margin-top"
-            type="daterange"
-            align="right"
-            size="small"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="yyyy-MM-dd"
-            format="yyyy 年 MM 月 dd 日"
-            :picker-options="pickerOptions"
-            @focus="focusOn"
-          ></el-date-picker>
-          <el-select v-if="this.userInfo.permission>2" v-model="employeeId" placeholder="销售人员" class="margin-top" size="small" :clearable="true">
-            <el-option
-              v-for="employee in employeeList"
-              :key="employee.id"
-              :label="employee.userName"
-              :value="employee.userId"
+            <div class="message-info">*时间跨度最多30天</div>
+            <el-date-picker
+              v-model="date"
+              class="date-picker outbound-margin-top"
+              type="daterange"
+              align="right"
+              size="small"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+              format="yyyy 年 MM 月 dd 日"
+              :picker-options="pickerOptions"
+              @focus="focusOn"
+            ></el-date-picker>
+            <el-select
+              v-if="this.userInfo.permission > 2"
+              v-model="employeeId"
+              placeholder="销售人员"
+              class="outbound-margin-top"
+              size="small"
+              :clearable="true"
             >
-            </el-option>
-          </el-select>
-          <el-select v-model="customerId" placeholder="客户" class="margin-top" size="small" :clearable="true">
-            <el-option
-              v-for="customer in customerList"
-              :key="customer.id"
-              :label="customer.name"
-              :value="customer.id"
+              <el-option
+                v-for="employee in employeeList"
+                :key="employee.id"
+                :label="employee.userName"
+                :value="employee.userId"
+              >
+              </el-option>
+            </el-select>
+            <el-select
+              v-model="customerId"
+              placeholder="客户"
+              class="outbound-margin-top"
+              size="small"
+              :clearable="true"
             >
-            </el-option>
-          </el-select>
-          <el-select v-model="productId" placeholder="产品" class="margin-top" size="small" :clearable="true">
-            <el-option
-              v-for="product in productList"
-              :key="product.id"
-              :label="product.name"
-              :value="product.id"
+              <el-option
+                v-for="customer in customerList"
+                :key="customer.id"
+                :label="customer.name"
+                :value="customer.id"
+              >
+              </el-option>
+            </el-select>
+            <el-select
+              v-model="productId"
+              placeholder="产品"
+              class="outbound-margin-top"
+              size="small"
+              :clearable="true"
             >
-            </el-option>
-          </el-select>
+              <el-option
+                v-for="product in productList"
+                :key="product.id"
+                :label="product.name"
+                :value="product.id"
+              >
+              </el-option>
+            </el-select>
           </div>
           <el-button slot="reference" type="primary" size="small"
             >查询选项</el-button
@@ -59,7 +78,7 @@
           :disabled="date ? false : true"
           type="primary"
           size="small"
-          class="margin-left"
+          class="outbound-margin-left"
           icon="el-icon-search"
           @click="searchOnClick"
           >查询</el-button
@@ -121,7 +140,7 @@
           label="入库批次"
           sortable
         ></el-table-column>
-        <el-table-column label="入库单价" >
+        <el-table-column label="入库单价">
           <template slot-scope="scope">
             {{ scope.row.priceIn }}{{ scope.row.countUnit }}
           </template>
@@ -131,33 +150,40 @@
             {{ scope.row.priceOut }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
-        <el-table-column label="数量" >
+        <el-table-column label="数量">
           <template slot-scope="scope">
             {{ scope.row.outCount }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
-         <el-table-column
+        <el-table-column
           prop="totalPrice"
           label="销售额"
           sortable
         ></el-table-column>
-          <el-table-column
+        <el-table-column
           prop="unitProfit"
           label="单个利润"
           sortable
         ></el-table-column>
-         <el-table-column
-          prop="returnCount"
-          label="退货数量"
-          sortable
-        >
-         <template slot-scope="scope">
-            <span v-if=" scope.row.returnCount>0" class="color-green"> {{ scope.row.returnCount }}</span>
+        <el-table-column prop="returnCount" label="退货数量" sortable>
+          <template slot-scope="scope">
+            <span v-if="scope.row.returnCount > 0" class="color-green">
+              {{ scope.row.returnCount }}</span
+            >
           </template>
         </el-table-column>
         <el-table-column prop="profit" label="销售利润" width="auto" sortable>
           <template slot-scope="scope">
-            <span class="color-orange"> {{ Number(NumberSub(scope.row.profit,NumberMul(scope.row.returnCount,scope.row.unitProfit))).toFixed(2) }}</span>
+            <span class="color-orange">
+              {{
+                Number(
+                  NumberSub(
+                    scope.row.profit,
+                    NumberMul(scope.row.returnCount, scope.row.unitProfit)
+                  )
+                ).toFixed(2)
+              }}</span
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -173,9 +199,9 @@ export default {
     return {
       date: "",
       startDateMin: null,
-      employeeId:'',
-      customerId:'',
-      productId:'',
+      employeeId: "",
+      customerId: "",
+      productId: "",
       pickerOptions: {
         onPick: (obj) => {
           this.startDateMin = new Date(obj.minDate).getTime();
@@ -229,7 +255,7 @@ export default {
       GetOutBoundList: "GetOutBoundList",
       GetEmployeeList: "GetEmployeeList",
       GetCustomerList: "GetCustomerList",
-       GetProductList: "GetProductList",
+      GetProductList: "GetProductList",
     }),
     getSummaries(param) {
       const { columns, data } = param;
@@ -264,9 +290,9 @@ export default {
         userId: this.userInfo.userId,
         startDate: this.date[0],
         endDate: this.date[1],
-        customerId:this.customerId,
-        productId:this.productId,
-        employeeId:this.employeeId
+        customerId: this.customerId,
+        productId: this.productId,
+        employeeId: this.employeeId,
       };
       this.GetOutBoundList(params);
     },
@@ -285,7 +311,10 @@ export default {
         priceIn: "入库单价",
         priceOut: "出库单价",
         outCount: "出库数量",
-        profit: "总利润",
+        totalPrice: "单个利润",
+        unitProfit: "销售额",
+        returnCount: "退货数量",
+        profit: "销售利润",
       };
       var json = [];
       this.outBoundList.map((item) => {
@@ -310,7 +339,7 @@ export default {
         priceIn: "",
         priceOut: "",
         outCount: "",
-        profit: sum[9],
+        profit: sum[13],
       });
       excelHelper.export_json_to_excel({
         json: json,
@@ -323,14 +352,20 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["userInfo", "outBoundList","employeeList","customerList","productList"]),
+    ...mapGetters([
+      "userInfo",
+      "outBoundList",
+      "employeeList",
+      "customerList",
+      "productList",
+    ]),
   },
-  mounted: function() {
-    if(this.userInfo.permission>2){
-       this.GetEmployeeList(this.userInfo);
+  mounted: function () {
+    if (this.userInfo.permission > 2) {
+      this.GetEmployeeList(this.userInfo);
     }
-    this.GetCustomerList(this.userInfo);  
-     let params = { storeCode: this.userInfo.storeCode };
+    this.GetCustomerList(this.userInfo);
+    let params = { storeCode: this.userInfo.storeCode };
     this.GetProductList(params);
   },
 };
@@ -372,18 +407,18 @@ export default {
   color: #303133;
   justify-content: center;
 }
-.popover-items-area{
+.popover-items-area {
   display: flex;
   flex-direction: column;
   padding: 20px;
 }
-.margin-top{
+.outbound-margin-top {
   margin-top: 20px;
 }
-.margin-left{
+.outbound-margin-left {
   margin-left: 20px;
 }
-.color-green{
-  color: #67C23A;
+.color-green {
+  color: #67c23a;
 }
 </style>
