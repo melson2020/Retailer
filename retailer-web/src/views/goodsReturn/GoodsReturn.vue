@@ -1,46 +1,46 @@
 <template>
   <div>
-    <div class="search-area">
-      <div class="search-box">
-        <span class="font-size-35 color-title">查询出货单</span>
+    <div class="goods-return-search-area">
+      <div class="goods-return-search-box">
+        <span class="goods-return-font-size-35 color-title">查询出货单</span>
         <el-divider></el-divider>
-        <div class="value-area">
+        <div class="goods-return-value-area">
           <el-input
             v-model="searchValue"
             placeholder="出库单号/客户名称"
           ></el-input>
           <el-date-picker
             v-model="searchDate"
-            class="margin-left"
+            class="goods-return-margin-left"
             type="date"
             placeholder="选择日期"
           >
           </el-date-picker>
         </div>
-        <div class="button-area">
+        <div class="goods-return-button-area">
           <el-button @click="searchOnClick" type="primary">查询</el-button>
         </div>
       </div>
     </div>
-    <div v-if="storageOutTickets.length <= 0" class="empty-data-div">
+    <div v-if="storageOutTickets.length <= 0" class="goods-return-empty-data-div">
       暂无数据，请查询
     </div>
     <div class="goods-return-result-area" v-else>
-      <div class="card-area-title">搜寻到一下出库单：</div>
+      <div class="goods-return-card-area-title">搜寻到以下出库单：</div>
       <el-row :gutter="30">
         <el-col
           v-for="item in storageOutTickets"
           :key="item.id"
           :span="8"
-          class="el-col-card"
+          class="goods-return-el-col-card"
         >
           <el-card>
             <div slot="header">
-              <span class="font-bold color-title float-left"
+              <span class="goods-return-font-bold color-title float-left"
                 >{{ item.code }}</span
               >
-              <span class="color-light-orange">{{ item.date }}</span>
-              <span class="margin-left color-light-orange">{{
+              <span class="goods-return-color-light-orange">{{ item.date }}</span>
+              <span class="goods-return-margin-left color-light-orange">{{
                 item.customerName
               }}</span>
               <el-button
@@ -50,7 +50,7 @@
                 >退货</el-button
               >
             </div>
-            <el-scrollbar class="card-content">
+            <el-scrollbar class="goods-return-card-content">
               <el-table :data="item.details" size="mini" :show-header="false">
                 <el-table-column
                   prop="storageInBatchNo"
@@ -83,13 +83,13 @@
       :show-close="false"
       :close-on-click-modal="false"
     >
-      <div slot="title" class="dialog-title">
+      <div slot="title" class="goods-return-dialog-title">
         <el-tag
           v-if="
             GoodsReturn_outTicketForReturn &&
             GoodsReturn_outTicketForReturn.status == 2
           "
-          class="dialog-title-tag"
+          class="goods-return-dialog-title-tag"
           type="danger"
           >已退完</el-tag
         >
@@ -98,7 +98,7 @@
             GoodsReturn_outTicketForReturn &&
             GoodsReturn_outTicketForReturn.status == 1
           "
-          class="dialog-title-tag"
+          class="goods-return-dialog-title-tag"
           type="warning"
           >有退货</el-tag
         >
@@ -149,7 +149,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer" class="goods-return-dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="SubmitGoodsReturn">确 定</el-button>
       </span>
@@ -260,11 +260,11 @@ export default {
 };
 </script>
 <style>
-.search-area {
+.goods-return-search-area {
   display: flex;
   justify-content: center;
 }
-.search-box {
+.goods-return-search-box {
   width: 25vw;
   border-radius: 10px;
   padding: 20px;
@@ -272,77 +272,77 @@ export default {
   border: 1px solid lightgray;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
-.font-size-35 {
+.goods-return-font-size-35 {
   font-size: 1.5em;
   font-weight: bold;
 }
-.color-title {
+.goods-return-color-title {
   color: #303133;
 }
-.button-area {
+.goods-return-button-area {
   padding: 20px 0;
   text-align: right;
 }
-.float-left {
+.goods-return-float-left {
   float: left;
 }
-.value-area {
+.goods-return-value-area {
   display: flex;
   flex-direction: row;
 }
-.margin-left {
+.goods-return-margin-left {
   margin-left: 10px;
 }
-.empty-data-div {
+.goods-return-empty-data-div {
   padding: 50px;
   color: #909399;
 }
-.el-col-card {
+.goods-return-el-col-card {
   padding: 20px;
 }
-.title-div-goods-return {
+.goods-return-title-div-goods-return {
   float: left;
 }
-.color-light-orange {
+.goods-return-color-light-orange {
   color: #e6a23c;
 }
-.font-bold {
+.goods-return-font-bold {
   font-weight: bold;
 }
-.text-item {
+.goods-return-text-item {
   text-align: left;
   font-size: small;
 }
-.clearfix:before,
-.clearfix:after {
+.goods-return-clearfix:before,
+.goods-return-clearfix:after {
   display: table;
   content: "";
 }
-.clearfix:after {
+.goods-return-clearfix:after {
   clear: both;
 }
-.card-content {
+.goods-return-card-content {
   height: 250px;
 }
-.card-content /deep/.el-scrollbar__wrap {
+.goods-return-card-content /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
 }
-.el-card__body {
+.goods-return-el-card__body {
   padding: 10px 30px !important;
 }
-.dialog-title {
+.goods-return-dialog-title {
   font-size: x-large;
   font-weight: bold;
   color: #409eff;
   text-align: center;
 }
-.dialog-title-tag {
+.goods-return-dialog-title-tag {
   float: left;
   border-radius: 10px;
   font-size: medium;
   font-weight: bold;
 }
-.card-area-title {
+.goods-return-card-area-title {
   text-align: left;
   padding: 20px;
   color: #67c23a;
