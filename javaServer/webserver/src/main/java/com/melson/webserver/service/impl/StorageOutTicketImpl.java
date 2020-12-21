@@ -92,7 +92,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             detailMap.put(key, detail);
             productIds.add(detail.getProductId());
         }
-        List<ProductBatch> productBatchList = productBatchDao.findByBatchNoIn(batchNos);
+        List<ProductBatch> productBatchList = productBatchDao.findByBatchNoInAndStoreCode(batchNos,outDetails.get(0).getStoreCode());
         List<ProductStorage> productStorageList = productStorageDao.findByProductIdIn(productIds);
         Map<Integer, ProductStorage> storageMap = new HashMap<>(productStorageList.size());
         //获取待更新库存，以便使用
@@ -200,31 +200,66 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
     }
 
     @Override
-    public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId) {
+    public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId,String customerId,String productId,String employeeId) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        try {
+//            List<OutBoundVo> voList;
+//            Date dateBegin = sdf.parse(startDate);
+//            Date dateEnd = sdf.parse(endDate);
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(dateEnd);
+//            calendar.add(Calendar.DATE, 1);
+//            Date newEnd = calendar.getTime();
+//            switch (permission) {
+//                case "1":
+//                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
+//                    return voList;
+//                case "2":
+//                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
+//                    return voList;
+//                case "3":
+//                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
+//                    return voList;
+//                default:
+//                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
+//                    return voList;
+//            }
+//        } catch (Exception ex) {
+//            return null;
+//        }
+
+        String sql="select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount " +
+                "FROM storage_out_ticket st LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode " +
+                "RIGHT JOIN storage_out_bill_detail sb on st.billCode=sb.outBillCode";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            List<OutBoundVo> voList;
-            Date dateBegin = sdf.parse(startDate);
             Date dateEnd = sdf.parse(endDate);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(dateEnd);
             calendar.add(Calendar.DATE, 1);
             Date newEnd = calendar.getTime();
-            switch (permission) {
-                case "1":
-                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
-                    return voList;
-                case "2":
-                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
-                    return voList;
-                case "3":
-                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
-                    return voList;
-                default:
-                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
-                    return voList;
+            String newDateEnd=sdf.format(newEnd);
+            StringBuffer buffer = new StringBuffer(sql);
+            buffer.append(" where st.createTime>'"+startDate+"' and st.createTime<'"+newDateEnd+"'");
+            buffer.append(" and st.storeCode='"+storeCode+"'");
+            if(permission.equals("1")){
+                buffer.append(" and st.employeeId='"+userId+"'");
+            }else {
+                if(!StringUtils.isNullOrEmpty(employeeId)){
+                    buffer.append(" and st.employeeId='"+employeeId+"'");
+                }
             }
-        } catch (Exception ex) {
+            if(!StringUtils.isNullOrEmpty(customerId)){
+                buffer.append(" and st.customerId="+customerId);
+            }
+            if(!StringUtils.isNullOrEmpty(productId)){
+                buffer.append(" and sd.productId="+productId);
+            }
+            String excuteSql=buffer.toString();
+            List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
+            List<OutBoundVo> vos = EntityUtils.castEntity(list, OutBoundVo.class, new OutBoundVo());
+            return  vos;
+        }catch (Exception ex){
             return null;
         }
     }
@@ -254,28 +289,35 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         List<GoodsReturnRecord> backList=goodsReturnRecordDao.findByStoreCodeAndOutTicketCode(storeCode,tiketCode);
         if(backList!=null&&backList.size()>0){
             outTicket.setReturnList(backList);
-            Map<String,List<GoodsReturnRecord>> recordMap=new HashMap<>(backList.size());
-            //退货记录按照Key 分类，以便填充details 退货数量 以及ticket 退货list
-            for(GoodsReturnRecord record:backList){
-                String key=record.getProductId()+record.getSupplyId()+record.getBatchNo();
-                List<GoodsReturnRecord> existList=recordMap.get(key);
-                if(existList!=null){
-                    existList.add(record);
-                }else {
-                    existList=new ArrayList<>();
-                    existList.add(record);
-                    recordMap.put(key,existList);
-                }
-            }
-            for(StorageOutDetail detail:details){
-                String key=detail.getProductId()+detail.getSupplyId()+detail.getStorageInBatchNo();
-                List<GoodsReturnRecord> returnList=recordMap.get(key);
-                Integer returnCount=0;
-                for(GoodsReturnRecord grr:returnList){
-                    returnCount+=grr.getCount();
-                }
-                detail.setReturnCount(returnCount);
-            }
+//            Map<String,List<GoodsReturnRecord>> recordMap=new HashMap<>(backList.size());
+//            //退货记录按照Key 分类，以便填充details 退货数量 以及ticket 退货list
+//            for(GoodsReturnRecord record:backList){
+//                String key=record.getProductId()+record.getSupplyId()+record.getBatchNo();
+//                List<GoodsReturnRecord> existList=recordMap.get(key);
+//                if(existList!=null){
+//                    existList.add(record);
+//                }else {
+//                    existList=new ArrayList<>();
+//                    existList.add(record);
+//                    recordMap.put(key,existList);
+//                }
+//            }
+//            Integer ticketReturnStatus=0;
+//            for(StorageOutDetail detail:details){
+//                String key=detail.getProductId()+detail.getSupplyId()+detail.getStorageInBatchNo();
+//                List<GoodsReturnRecord> returnList=recordMap.get(key);
+//                Integer returnCount=0;
+//                for(GoodsReturnRecord grr:returnList){
+//                    returnCount+=grr.getCount();
+//                }
+//                detail.setReturnCount(returnCount);
+//                Integer detailStatus=returnCount==0?0:returnCount<detail.getOutCount()?1:2;
+//                detail.setStatus(detailStatus);
+//                if(detailStatus>0){
+//                    ticketReturnStatus=ticketReturnStatus==0?detailStatus:ticketReturnStatus==1?1:detailStatus==2?2:1;
+//                }
+//            }
+//            outTicket.setStatus(ticketReturnStatus);
         }
         outTicket.setDetails(details);
         return outTicket;

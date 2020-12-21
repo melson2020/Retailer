@@ -37,8 +37,9 @@ public class StorageOutDetail {
     private Integer status;
     private String code;
     //退货数量，通过退货记录填充
-    @Transient
     private Integer returnCount;
+    @Transient
+    private Integer backCount;
 
 
     public Integer getStatus() {
@@ -223,6 +224,14 @@ public class StorageOutDetail {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getBackCount() {
+        return backCount;
+    }
+
+    public void setBackCount(Integer backCount) {
+        this.backCount = backCount;
     }
 }
 

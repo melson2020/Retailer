@@ -3,6 +3,7 @@ package com.melson.webserver.service;
 import com.melson.base.IService;
 import com.melson.base.Result;
 import com.melson.webserver.entity.GoodsReturnRecord;
+import com.melson.webserver.entity.StorageOutDetail;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
  * @Date 2020/12/16
  */
 public interface IGoodsReturnRecord extends IService<GoodsReturnRecord> {
-    Result SaveGoodsReturnRecords(List<GoodsReturnRecord> returnRecords);
+    Result SaveGoodsReturnRecords(List<GoodsReturnRecord> returnRecords,List<StorageOutDetail> details);
 }

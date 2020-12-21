@@ -270,7 +270,7 @@ export default {
       return this.NumberDiv(
         this.addItem.totalPrice,
         this.addItem.count
-      ).toFixed(2);
+      ).toFixed(4);
     },
     addItemCostPrice: function() {
       let discount = this.addItem.discount
@@ -278,14 +278,14 @@ export default {
         : 0;
       let costRate = this.NumberSub(1, discount);
       let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
-      return this.NumberDiv(costPrice, this.addItem.count).toFixed(2);
+      return this.NumberDiv(costPrice, this.addItem.count).toFixed(4);
     },
     addItemTepIn: function() {
       // let beforeTax = this.addItem.vat
       //   ? this.NumberDiv(this.addItem.taxRate, 100)
       //   : 0;
       // let price = this.NumberMul(this.addItem.totalPrice, beforeTax);
-      // return this.NumberDiv(price, this.addItem.count).toFixed(2);
+      // return this.NumberDiv(price, this.addItem.count).toFixed(4);
       if (this.addItem.vat){
         let tax = this.addItem.vat
           ? this.NumberDiv((this.addItem.taxRate+100), 100)
@@ -296,7 +296,7 @@ export default {
         let costRate = this.NumberSub(1, discount);
         let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
         let price = this.NumberDiv(costPrice, tax);
-        return this.NumberDiv(price, this.addItem.count).toFixed(2);
+        return this.NumberDiv(price, this.addItem.count).toFixed(4);
       }
       else{
         let discount = this.addItem.discount
@@ -304,7 +304,7 @@ export default {
           : 0;
         let costRate = this.NumberSub(1, discount);
         let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
-        return this.NumberDiv(costPrice, this.addItem.count).toFixed(2);
+        return this.NumberDiv(costPrice, this.addItem.count).toFixed(4);
       }
     },
     addItemTaxIn: function() {
@@ -318,7 +318,7 @@ export default {
         let costPrice = this.NumberMul(this.addItem.totalPrice, costRate);
         let price = this.NumberDiv(costPrice, tax);
         let taxIn=this.NumberDiv(costPrice, this.addItem.count) - this.NumberDiv(price, this.addItem.count)
-        return taxIn.toFixed(2);
+        return taxIn.toFixed(4);
     },
     storageListShow: function() {
       return this.productStorageList.filter(item => {

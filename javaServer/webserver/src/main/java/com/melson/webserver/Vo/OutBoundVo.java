@@ -16,7 +16,30 @@ public class OutBoundVo {
     private BigDecimal priceIn;
     private BigDecimal priceOut;
     private Integer outCount;
+    private BigDecimal totalPrice;
+    private BigDecimal unitProfit;
     private BigDecimal profit;
+    private Integer returnCount;
+
+    public OutBoundVo() {
+    }
+
+    public OutBoundVo(String date, String outBoundNo, String customerName, String salesName, String product, String supply, String batchNo, BigDecimal priceIn, BigDecimal priceOut, Integer outCount, BigDecimal totalPrice, BigDecimal unitProfit, BigDecimal profit, Integer returnCount) {
+        this.date = date;
+        this.outBoundNo = outBoundNo;
+        this.customerName = customerName;
+        this.salesName = salesName;
+        this.product = product;
+        this.supply = supply;
+        this.batchNo = batchNo;
+        this.priceIn = priceIn;
+        this.priceOut = priceOut;
+        this.outCount = outCount;
+        this.totalPrice = totalPrice;
+        this.unitProfit = unitProfit;
+        this.profit = profit;
+        this.returnCount = returnCount;
+    }
 
     public String getDate() {
         return date;
@@ -104,5 +127,29 @@ public class OutBoundVo {
 
     public void setProfit(BigDecimal profit) {
         this.profit = profit;
+    }
+
+    public BigDecimal getUnitProfit() {
+        return unitProfit;
+    }
+
+    public void setUnitProfit(BigDecimal unitProfit) {
+        this.unitProfit = unitProfit;
+    }
+
+    public Integer getReturnCount() {
+        return returnCount==null?0:returnCount;
+    }
+
+    public void setReturnCount(Integer returnCount) {
+        this.returnCount = returnCount;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

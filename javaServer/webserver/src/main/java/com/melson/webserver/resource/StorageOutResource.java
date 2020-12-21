@@ -71,8 +71,11 @@ public class StorageOutResource extends BaseResource {
         if (StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
+        String customerId= request.getParameter("customerId");
+        String productId= request.getParameter("productId");
+        String employeeId= request.getParameter("employeeId");
         Result result=new Result();
-        List<OutBoundVo> voList=outTicketService.FindOutBoundList(startDate,endDate,storeCode,permission,userId);
+        List<OutBoundVo> voList=outTicketService.FindOutBoundList(startDate,endDate,storeCode,permission,userId,customerId,productId,employeeId);
         result.setData(voList);
         System.out.println("Rest Call: /storageOut/outboundList ...");
         return result;

@@ -5,7 +5,9 @@ import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
+import com.melson.webserver.Vo.GoodsReturnVo;
 import com.melson.webserver.entity.GoodsReturnRecord;
+import com.melson.webserver.entity.StorageOutDetail;
 import com.melson.webserver.entity.StorageOutTicket;
 import com.melson.webserver.service.IGoodsReturnRecord;
 import com.melson.webserver.service.IStorageOutTicket;
@@ -61,8 +63,10 @@ public class GoodsReturnResource extends BaseResource {
 
     @RequestMapping(value = "/saveGoodsReturnRecord",method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
-    public Result SaveGoodsReturnRecord(@RequestBody List<GoodsReturnRecord> records, HttpServletRequest request){
-        if(records.size()<=0)return this.GenerateResult(ResultType.ParametersNeeded);
-        return null;
+    public Result SaveGoodsReturnRecord(@RequestBody GoodsReturnVo vo, HttpServletRequest request){
+        List<GoodsReturnRecord> records=vo.getRecords();
+        List<StorageOutDetail> details=vo.getOutDetails();
+        if(records.size()<=0||details.size()<=0)return this.GenerateResult(ResultType.ParametersNeeded);
+        return goodsReturnRecordService.SaveGoodsReturnRecords(records,details);
     }
 }
