@@ -24,7 +24,7 @@
           :row-style="{height:'40px'}"
           :cell-style="{ padding: '2px', color: '#909399' }"
           :header-cell-style="{ background: '#808080', color: 'white'}">
-        <el-table-column prop="name" label="客户名" align="left"></el-table-column>
+        <el-table-column prop="name" label="客户名称" align="left"></el-table-column>
         <el-table-column prop="address" label="联系地址" align="left"></el-table-column>
         <el-table-column prop="phone" label="联系电话" align="left" width="200px"></el-table-column>
         <el-table-column prop="comment" label="备注" align="left"></el-table-column>
@@ -57,7 +57,7 @@
       :show-close="false"
     >
       <el-form :model="newcustomer" :rules="rules" ref="addNewcustomer" label-width="120px">
-        <el-form-item label="客户名" prop="name">
+        <el-form-item label="客户名称" prop="name">
           <el-input v-model="newcustomer.name" autocomplete="off" style="width: 100%;"></el-input>
         </el-form-item>
         <el-form-item label="联系地址" prop="address">
@@ -93,7 +93,7 @@
       :show-close="false"
     >
       <el-form :model="editcustomer" :rules="rules" ref="editcustomer" label-width="120px">
-        <el-form-item label="客户名" prop="name">
+        <el-form-item label="客户名称" prop="name">
           <el-input v-model="editcustomer.name" autocomplete="off" style="width: 100%;"></el-input>
         </el-form-item>
         <el-form-item label="联系地址" prop="address">

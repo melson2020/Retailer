@@ -7,7 +7,7 @@ import com.melson.base.entity.StoreEmployee;
 import com.melson.base.service.*;
 import com.melson.webserver.dto.StoreDto;
 import com.melson.webserver.entity.Menu;
-import com.melson.webserver.service.ILoginLogs;
+import com.melson.webserver.service.ILogs;
 import com.melson.webserver.service.IMenu;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,13 +33,13 @@ public class SystemResource extends BaseResource {
     private final IStore storeService;
     private final IStoreEmployee employeeService;
     private final IMenu menuService;
-    private final ILoginLogs loginLogsService;
+    private final ILogs logsService;
 
-    public SystemResource(IStore storeService, IStoreEmployee employeeService,IMenu menuService,ILoginLogs loginLogsService) {
+    public SystemResource(IStore storeService, IStoreEmployee employeeService, IMenu menuService, ILogs loginLogsService) {
         this.storeService = storeService;
         this.employeeService = employeeService;
         this.menuService=menuService;
-        this.loginLogsService=loginLogsService;
+        this.logsService=loginLogsService;
     }
 
     @RequestMapping(value = "/registerStore", method = RequestMethod.POST)
@@ -95,7 +95,7 @@ public class SystemResource extends BaseResource {
             exist.setStore(store);
             List<Menu> menuList = menuService.GetMenuListWithPermission(exist.getPermission());
             exist.setMenuList(menuList);
-            loginLogsService.Records(employee);
+            logsService.Records(employee);
         }
         result.setData(exist);
         System.out.println("Rest Call: /system/login ...");

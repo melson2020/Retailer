@@ -7,8 +7,8 @@ import java.util.Date;
  * Created by Messi on 2020/8/31
  */
 @Entity
-@Table(name = "loginLogs")
-public class LoginLogs {
+@Table(name = "logs")
+public class Logs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
