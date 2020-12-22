@@ -37,6 +37,8 @@ public class GoodsReturnRecord {
     private String operationEmployeeName;
     private String billCode;
     private String outDetailCode;
+    private Integer beforeCount;
+    private Integer afterCount;
 
     public Integer getId() {
         return id;
@@ -204,5 +206,21 @@ public class GoodsReturnRecord {
 
     public void setOutDetailCode(String outDetailCode) {
         this.outDetailCode = outDetailCode;
+    }
+
+    public Integer getBeforeCount() {
+        return beforeCount;
+    }
+
+    public void setBeforeCount(Integer beforeCount) {
+        this.beforeCount = beforeCount;
+    }
+
+    public Integer getAfterCount() {
+        return afterCount;
+    }
+
+    public void setAfterCount(Integer afterCount) {
+        this.afterCount = afterCount;
     }
 }

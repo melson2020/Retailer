@@ -29,14 +29,16 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
     private final IStorageInTicketDao storageInTicketDao;
     private final IStorageOutTicketDao storageOutTicketDao;
     private final IStorageCountTicketDao storageCountTicketDao;
+    private final IGoodsReturnRecordDao goodsReturnRecordDao;
 
-    public ProductStorageImpl(IProductStorageDao productStorageDao, IProductDao productDao, IProductBatchDao productBatchDao, IStorageInTicketDao storageInTicketDao, IStorageOutTicketDao storageOutTicketDao, IStorageCountTicketDao storageCountTicketDao) {
+    public ProductStorageImpl(IProductStorageDao productStorageDao, IProductDao productDao, IProductBatchDao productBatchDao, IStorageInTicketDao storageInTicketDao, IStorageOutTicketDao storageOutTicketDao, IStorageCountTicketDao storageCountTicketDao, IGoodsReturnRecordDao goodsReturnRecordDao) {
         this.productStorageDao = productStorageDao;
         this.productDao = productDao;
         this.productBatchDao = productBatchDao;
         this.storageInTicketDao = storageInTicketDao;
         this.storageOutTicketDao = storageOutTicketDao;
         this.storageCountTicketDao = storageCountTicketDao;
+        this.goodsReturnRecordDao = goodsReturnRecordDao;
     }
 
     @Override
@@ -182,6 +184,8 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
         List<StorageRecordVo> listOut = EntityUtils.castEntity(storageOutRecList, StorageRecordVo.class, new StorageRecordVo());
         List<Object[]> storageCountRecList = storageCountTicketDao.findStorageCountRec(productId, startDate, endDate, storeCode);
         List<StorageRecordVo> listCount = EntityUtils.castEntity(storageCountRecList, StorageRecordVo.class, new StorageRecordVo());
+        List<Object[]> goodReturnList = goodsReturnRecordDao.findGoodsReturnRec(productId, startDate, endDate, storeCode);
+        List<StorageRecordVo> listReturn = EntityUtils.castEntity(goodReturnList, StorageRecordVo.class, new StorageRecordVo());
         List<StorageRecordVo> allList=new ArrayList<>();
         for(StorageRecordVo vo:listIn){
             allList.add(vo);
@@ -190,6 +194,9 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
             allList.add(vo);
         }
         for(StorageRecordVo vo:listCount){
+            allList.add(vo);
+        }
+        for(StorageRecordVo vo:listReturn){
             allList.add(vo);
         }
         allList.sort(new Comparator<StorageRecordVo>() {

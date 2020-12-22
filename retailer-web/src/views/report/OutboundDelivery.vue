@@ -92,8 +92,45 @@
         >
       </div>
     </div>
-    <!-- <div class="ticket-title">{{ userInfo.store.storeName }}出库清单</div> -->
     <div class="OutboundDelivery-content">
+      <div class="OutboundDelivery-Summary-area">
+        <el-row :gutter="30">
+          <el-col :span="8">
+            <div class="OutboundDelivery-Summart-card color-bk-green">
+              <span class="OutboundDelivery-Summary-card-title color-green"
+                >销售额</span
+              >
+              <div
+                class="OutboundDelivery-Summary-card-content color-dark-green"
+              >
+                {{ summarys.salesTotal }}
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="OutboundDelivery-Summart-card color-bk-gray">
+              <span class="OutboundDelivery-Summary-card-title color-gray"
+                >退货额</span
+              >
+              <div class="OutboundDelivery-Summary-card-content">
+                {{ summarys.returnTotal }}
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="OutboundDelivery-Summart-card color-bk-yellow">
+              <span class="OutboundDelivery-Summary-card-title color-yellow"
+                >销售利润</span
+              >
+              <div
+                class="OutboundDelivery-Summary-card-content color-dark-yellow"
+              >
+                {{ summarys.profit }}
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
       <el-table
         :data="outBoundList"
         ref="outBoundTable"
@@ -172,18 +209,16 @@
             >
           </template>
         </el-table-column>
-        <el-table-column prop="profit" label="销售利润" width="auto" sortable>
+        <el-table-column
+          prop="salesProfit"
+          label="销售利润"
+          width="auto"
+          sortable
+        >
           <template slot-scope="scope">
             <span class="color-orange">
-              {{
-                Number(
-                  NumberSub(
-                    scope.row.profit,
-                    NumberMul(scope.row.returnCount, scope.row.unitProfit)
-                  )
-                ).toFixed(2)
-              }}</span
-            >
+              {{ scope.row.salesProfit.toFixed(2) }}
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -262,10 +297,13 @@ export default {
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = "总价";
+          sums[index] = "总计";
           return;
         }
-        if (column.property == "profit") {
+        if (
+          column.property == "salesProfit" ||
+          column.property == "totalPrice"
+        ) {
           const values = data.map((item) => Number(item[column.property]));
           if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
@@ -311,25 +349,27 @@ export default {
         priceIn: "入库单价",
         priceOut: "出库单价",
         outCount: "出库数量",
-        totalPrice: "单个利润",
-        unitProfit: "销售额",
+        totalPrice: "销售额",
+        unitProfit: "单个利润",
         returnCount: "退货数量",
-        profit: "销售利润",
+        salesProfit: "销售利润",
+        profit: "出库利润",
       };
       var json = [];
-      this.outBoundList.map((item) => {
+      var table = this.$refs.outBoundTable;
+      const { data } = table;
+      var sum = this.getSummaries(table);
+      data.map((item) => {
         json.push(item);
       });
-      var table = this.$refs.outBoundTable;
-      var sum = this.getSummaries(table);
       if (!this.date) {
-        this.$message.warning("请重新选择查询时间范围");
+        this.$message.warning("请选择时间范围");
         return;
       }
       var fileName =
-        "出库清单" + "(" + this.date[0] + "至" + this.date[1] + ")";
+        "销售报表" + "(" + this.date[0] + "至" + this.date[1] + ")";
       json.push({
-        date: "总价",
+        date: "总计",
         outBoundNo: "",
         salesName: "",
         customerName: "",
@@ -338,12 +378,16 @@ export default {
         batchNo: "",
         priceIn: "",
         priceOut: "",
+        unitProfit: "",
         outCount: "",
-        profit: sum[13],
+        profit: "",
+        returnCount: "",
+        totalPrice: sum[10],
+        salesProfit: sum[13],
       });
       excelHelper.export_json_to_excel({
         json: json,
-        header: [{ value: this.userInfo.store.storeName + "出库清单" }],
+        header: [{ value: this.userInfo.store.storeName + "销售报表" }],
         keys: keys,
         border: true,
         sheetName: "sheet1",
@@ -359,6 +403,26 @@ export default {
       "customerList",
       "productList",
     ]),
+    summarys() {
+      var summary = { salesTotal: 0, returnTotal: 0, profit: 0 };
+      this.outBoundList.map((item) => {
+        summary.salesTotal = this.NumberAdd(
+          summary.salesTotal,
+          item.totalPrice
+        );
+        summary.profit = this.NumberAdd(summary.profit, item.salesProfit);
+        if (item.returnCount > 0) {
+          summary.returnTotal = this.NumberAdd(
+            summary.returnTotal,
+            this.NumberMul(item.returnCount, item.priceOut)
+          );
+        }
+      });
+      summary.profit = summary.profit.toFixed(2);
+      summary.returnTotal = summary.returnTotal.toFixed(2);
+      summary.salesTotal = summary.salesTotal.toFixed(2);
+      return summary;
+    },
   },
   mounted: function () {
     if (this.userInfo.permission > 2) {
@@ -389,7 +453,7 @@ export default {
   color: #409eff;
 }
 .OutboundDelivery-content {
-  margin-top: 5px;
+  padding: 20px;
 }
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
@@ -418,7 +482,52 @@ export default {
 .outbound-margin-left {
   margin-left: 20px;
 }
+.OutboundDelivery-Summart-card {
+  border-radius: 10px;
+  height: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+}
+.OutboundDelivery-Summary-area {
+  margin-bottom: 20px;
+}
+.color-bk-green {
+  background: #f0f9eb;
+}
+.color-bk-yellow {
+  background: #faecd8;
+}
+.color-bk-red {
+  background: #fde2e2;
+}
+.color-bk-gray {
+  background: #e9e9eb;
+}
 .color-green {
   color: #67c23a;
+}
+.color-yellow {
+  color: #e6a23c;
+}
+.color-gray {
+  color: #909399;
+}
+.color-dark-green {
+  color: #008000;
+}
+.color-dark-yellow {
+  color: #ff8c00;
+}
+.OutboundDelivery-Summary-card-title {
+  width: 200px;
+  font-size: 35px;
+  font-weight: bold;
+}
+.OutboundDelivery-Summary-card-content {
+  width: 100%;
+  font-size: xx-large;
 }
 </style>

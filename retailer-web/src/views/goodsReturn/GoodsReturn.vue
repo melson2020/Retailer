@@ -26,7 +26,7 @@
       暂无数据，请查询
     </div>
     <div class="goods-return-result-area" v-else>
-      <div class="card-area-title">搜寻到一下出库单：</div>
+      <div class="card-area-title">搜寻到以下出库单：</div>
       <el-row :gutter="30">
         <el-col
           v-for="item in storageOutTickets"
@@ -36,9 +36,9 @@
         >
           <el-card>
             <div slot="header">
-              <span class="font-bold color-title float-left"
-                >{{ item.code }}</span
-              >
+              <span class="font-bold color-title float-left">{{
+                item.code
+              }}</span>
               <span class="color-light-orange">{{ item.date }}</span>
               <span class="margin-left color-light-orange">{{
                 item.customerName
@@ -149,10 +149,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <span slot="footer" class="dialog-footer">
+      <div class="dialog-footer-text">
+        <span>退货金额:</span>
+        <span class="color-light-orange font-bold">{{ returnBackPrice }}</span>
+      </div>
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="SubmitGoodsReturn">确 定</el-button>
-      </span>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -196,7 +200,6 @@ export default {
     },
     goodsReturnOnClick(ticket) {
       this.dialogVisible = !this.dialogVisible;
-      console.log(ticket);
       let params = { storeCode: ticket.storeCode, ticketCode: ticket.code };
       this.FindOutTicketForGoodsReturn(params);
     },
@@ -256,6 +259,20 @@ export default {
       "storageOutTickets",
       "GoodsReturn_outTicketForReturn",
     ]),
+    returnBackPrice: function () {
+      var price = 0;
+      if (this.GoodsReturn_outTicketForReturn.details) {
+        this.GoodsReturn_outTicketForReturn.details.map((item) => {
+          if (item.backCount > 0) {
+            price = this.NumberAdd(
+              price,
+              this.NumberMul(item.outPrice, item.backCount)
+            );
+          }
+        });
+      }
+      return price.toFixed(2);
+    },
   },
 };
 </script>
@@ -351,8 +368,15 @@ export default {
 .goods-return-color-warning {
   color: #f56c6c;
 }
-.goods-return-result-area{
+.goods-return-result-area {
   display: flex;
   flex-direction: column;
+}
+.dialog-footer-text {
+  padding-right: 20px;
+  padding-top: 20px;
+  text-align: right;
+  font-size: 30px;
+  align-items: center;
 }
 </style>

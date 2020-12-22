@@ -75,10 +75,10 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
             record.setTotalProfit(totalProfit);
         }
         if (computed) {
-            List<GoodsReturnRecord> saved = goodsReturnRecordDao.saveAll(returnRecords);
+//            List<GoodsReturnRecord> saved = goodsReturnRecordDao.saveAll(returnRecords);
             //更新库存
-            if (saved != null) {
-                String storeCode = saved.get(0).getStoreCode();
+            if (returnRecords.size()>0) {
+                String storeCode = returnRecords.get(0).getStoreCode();
                 List<ProductBatch> productBatchList = productBatchDao.findByBatchNoInAndStoreCode(batchNos, storeCode);
                 List<ProductStorage> productStorageList = productStorageDao.findByProductIdIn(productIds);
                 Map<String, ProductBatch> batchMap = new HashMap<>(productBatchList.size());
@@ -89,12 +89,15 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
                 for (ProductStorage storage : productStorageList) {
                     storageMap.put(storage.getProductId(), storage);
                 }
-                for (GoodsReturnRecord saveRecord : saved) {
+                for (GoodsReturnRecord saveRecord : returnRecords) {
                     ProductStorage storage = storageMap.get(saveRecord.getProductId());
+                    saveRecord.setBeforeCount(storage.getCount());
                     storage.setCount(storage.getCount() + saveRecord.getCount());
+                    saveRecord.setAfterCount(storage.getCount());
                     ProductBatch batch = batchMap.get(saveRecord.getBatchNo() + saveRecord.getProductId());
                     batch.setCount(batch.getCount() + saveRecord.getCount());
                 }
+                goodsReturnRecordDao.saveAll(returnRecords);
                 productBatchDao.saveAll(batchMap.values());
                 productStorageDao.saveAll(storageMap.values());
                 UpdateOutTicketAndDetailStatus(outDetails);

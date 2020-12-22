@@ -76,6 +76,9 @@
             <span v-else-if="scope.row.type == 'IN'" class="blod green"
               >入库</span
             >
+             <span v-else-if="scope.row.type == 'R'" class="blod red"
+              >退货</span
+            >
             <span v-else class="blod yellow"> 出库</span>
           </template>
         </el-table-column>

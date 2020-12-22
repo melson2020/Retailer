@@ -76,7 +76,6 @@ export function export_json_to_excel({ json, header,keys, border, sheetName,type
 				s: contentCellStyle
 		}	
 	}});
-	console.log(tmpdata)
 	var t="A"+(header.length+1)
 	tmpdata[t].s=tableHeaderStyle
 	var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
