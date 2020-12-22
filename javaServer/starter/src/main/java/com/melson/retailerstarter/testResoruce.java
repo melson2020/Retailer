@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class testResoruce {
     @RequestMapping(value = "/hello")
     public String test(){
+        System.out.println("Rest Call: /test/helloWorld ...");
         return "helloWorld";
     }
 }

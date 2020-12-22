@@ -1,7 +1,7 @@
 package com.melson.webserver.resource;
 
-import com.melson.webserver.entity.LoginLogs;
-import com.melson.webserver.service.ILoginLogs;
+import com.melson.webserver.entity.Logs;
+import com.melson.webserver.service.ILogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/testweb")
 public class testResource {
     @Autowired
-    private ILoginLogs loginLogsService;
+    private ILogs loginLogsService;
 
     @RequestMapping(value = "/hello")
     public String test() {
@@ -21,7 +21,7 @@ public class testResource {
     }
 
     @RequestMapping(value = "/testDemo1")
-    public LoginLogs Demo1() {
+    public Logs Demo1() {
         String value = "ssss_55\"x7\"";
         return loginLogsService.FindBylogs(value);
     }
