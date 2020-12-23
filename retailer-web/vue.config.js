@@ -1,4 +1,7 @@
 module.exports = {
+  //生产环境打包
+  publicPath: process.env.NODE_ENV === "production" ? "/jxc/" : "/",          
+
   lintOnSave: true,
   css: {
     loaderOptions: {
@@ -27,6 +30,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
+        // target: "http://121.4.112.204:8080/retailer/", //对应自己的接口
         target: "http://localhost:8080/retailer", //对应自己的接口
         changeOrigin: true,
         ws: true,

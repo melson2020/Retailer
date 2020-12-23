@@ -55,7 +55,7 @@
 
     <build>
         <!-- 为war包取名 -->
-        <finalName>retailer</finalName>
+        <finalName>javaRetailerAPI</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
