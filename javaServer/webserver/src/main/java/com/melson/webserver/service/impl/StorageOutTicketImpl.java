@@ -201,34 +201,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
     @Override
     public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId,String customerId,String productId,String employeeId) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//            List<OutBoundVo> voList;
-//            Date dateBegin = sdf.parse(startDate);
-//            Date dateEnd = sdf.parse(endDate);
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(dateEnd);
-//            calendar.add(Calendar.DATE, 1);
-//            Date newEnd = calendar.getTime();
-//            switch (permission) {
-//                case "1":
-//                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
-//                    return voList;
-//                case "2":
-//                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
-//                    return voList;
-//                case "3":
-//                    voList = GenerateDataByStoreCode(dateBegin, newEnd, storeCode);
-//                    return voList;
-//                default:
-//                    voList = GenerateDataByUserId(dateBegin, newEnd, userId);
-//                    return voList;
-//            }
-//        } catch (Exception ex) {
-//            return null;
-//        }
-
-        String sql="select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount " +
+        String sql="select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount,0.0 as salesProfit " +
                 "FROM storage_out_ticket st LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode " +
                 "RIGHT JOIN storage_out_bill_detail sb on st.billCode=sb.outBillCode";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -258,6 +231,15 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             String excuteSql=buffer.toString();
             List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
             List<OutBoundVo> vos = EntityUtils.castEntity(list, OutBoundVo.class, new OutBoundVo());
+            //计算销售利润
+            for (OutBoundVo vo:vos){
+                if(vo.getReturnCount()>0){
+                    BigDecimal salesProfit=vo.getProfit().subtract(vo.getUnitProfit().multiply(new BigDecimal(vo.getReturnCount())));
+                    vo.setSalesProfit(salesProfit);
+                }else {
+                    vo.setSalesProfit(vo.getProfit());
+                }
+            }
             return  vos;
         }catch (Exception ex){
             return null;
@@ -289,6 +271,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         List<GoodsReturnRecord> backList=goodsReturnRecordDao.findByStoreCodeAndOutTicketCode(storeCode,tiketCode);
         if(backList!=null&&backList.size()>0){
             outTicket.setReturnList(backList);
+            //重新填充 退货数量和ticket 状态值
 //            Map<String,List<GoodsReturnRecord>> recordMap=new HashMap<>(backList.size());
 //            //退货记录按照Key 分类，以便填充details 退货数量 以及ticket 退货list
 //            for(GoodsReturnRecord record:backList){
