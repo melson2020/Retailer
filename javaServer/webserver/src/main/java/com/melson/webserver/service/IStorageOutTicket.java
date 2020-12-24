@@ -1,10 +1,7 @@
 package com.melson.webserver.service;
 
 import com.melson.base.IService;
-import com.melson.webserver.Vo.OutBoundVo;
-import com.melson.webserver.Vo.StorageOutRecordVo;
-import com.melson.webserver.Vo.StorageOutTicketDetailVo;
-import com.melson.webserver.Vo.StorageOutTicketVo;
+import com.melson.webserver.Vo.*;
 import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.StorageOutBillDetail;
 import com.melson.webserver.entity.StorageOutTicket;
@@ -32,4 +29,7 @@ public interface IStorageOutTicket extends IService<StorageOutTicket> {
     List<StorageOutTicket> FindTicketsWithCodeOrCustomerNameAndDate(String searchValue,String date,String storeCode);
 
     StorageOutTicket FindTicketForGoodsReturn(String storeCode,String tiketCode);
+
+    List<WechatOutBoundVo> findOutBoundListForWechat(String key, String storeCode);
+
 }

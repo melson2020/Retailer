@@ -3,8 +3,9 @@ import request from './utils/request.js'
 App({
   globalData: {
     userInfo: null,
-    baseUrl: 'https://www.melson.top/api', //真实环境
-    // baseUrl:'http://localhost:8080/retailer',      //测试环境
+    appUserInfo: {},
+    // baseUrl: 'https://www.melson.top/api', //真实环境
+    baseUrl:'http://localhost:8080/retailer',      //测试环境
 
   },
   myRequest() {

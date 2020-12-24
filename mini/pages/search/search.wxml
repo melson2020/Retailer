@@ -1,0 +1,69 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="mask" hidden="{{ !hide_mask }}">
+     loading......
+  </view>
+  <!--授权区域-->
+  <view wx:if="{{!hasUserInfo}}" class="authorize-area">
+    <view class="login-user-icon">
+      <view class="userImage">
+        <view class="iconfont icon-login-user"></view>
+      </view>
+      <view class="go-login-button" bindtap="goLogin">请先登入系统</view>
+      <text class="message">点击跳转至登录页面！</text>
+    </view>
+  </view>
+
+
+  <!--信息显示-->
+  <view wx:else>
+    <view class="userinfo-area">
+      <view class="userinfo">
+        <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </view>
+      <text class="userinfo-store">{{appUserInfo.storeName}}</text>
+    </view>
+    <!--搜索栏-->
+    <view class="search_bar">
+      <input class="weui-input srearch_bar_input" placeholder="查询商品名称、客户名" placeholder-class="weui-input__placeholder"
+        bindinput="searchInputChange" value="{{searchContent}}" />
+      <view class="srearch_bar_button" bindtap="outBoundSearch">
+        查 询
+      </view>
+    </view>
+
+    <!--库存展示-->
+    <view class="outBound_area">
+      <view wx:if="{{outBoundList.length<=0}}">
+        <view class="empty-data">
+          <view>暂无数据，请查询</view>
+        </view>
+      </view>
+
+      <view wx:else>
+        <view wx:for='{{outBoundList}}' wx:key='id' wx:for-item="outBound" class="outBound_card">
+          <view class="outBound_card_title">
+          <view class="color_blue">{{outBound.customerName}}</view>
+            <view>{{outBound.product}}</view>
+          </view>
+          <view class="outBound_card_content">
+            <view class="outBound_batch_info">
+              <view class="outBound_batch_info_row">
+                <view>{{outBound.date}}</view>
+                <view class="color_orange">单价：{{outBound.priceOut}}/{{outBound.countUnit}}</view>
+                <view>总价：{{outBound.totalPrice}}</view>
+              </view>
+              <view class="outBound_batch_info_row">
+                <view>{{outBound.supply}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+
+    </view>
+  </view>
+    <mp-toptips msg="{{toptip.msg}}" type="{{toptip.type}}" show="{{toptip.show}}" ext-class='toptip'></mp-toptips>
+</view>

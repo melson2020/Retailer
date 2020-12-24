@@ -247,6 +247,22 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
     }
 
     @Override
+    public List<WechatOutBoundVo> findOutBoundListForWechat(String key, String storeCode) {
+        String sql="select st.date,sd.customerName,sd.productName as product,sd.supplyName as supply,sd.outPrice as priceOut,sd.outCount as count,sd.totalPrice,sd.countUnit " +
+                "FROM storage_out_ticket st " +
+                "LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode ";
+        StringBuffer buffer = new StringBuffer(sql);
+        buffer.append(" where sd.customerName like '%"+key+"%' or sd.productName like '%"+key+"%'");
+        buffer.append(" and st.storeCode='"+storeCode+"'");
+        buffer.append(" ORDER BY st.date");
+        buffer.append(" limit 0,30");
+        String excuteSql=buffer.toString();
+        List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
+        List<WechatOutBoundVo> vos = EntityUtils.castEntity(list, WechatOutBoundVo.class, new WechatOutBoundVo());
+        return vos;
+    }
+
+    @Override
     public List<StorageOutTicket> FindTicketsWithCodeOrCustomerNameAndDate(String searchValue, String date, String storeCode) {
         String sql = "SELECT st.id,st.date,st.code,st.customerName,sd.productName,sd.storageInBatchNo as batchNo,sd.supplyName,sd.outCount,sd.countUnit,st.storeCode FROM `storage_out_ticket` st right JOIN  storage_out_detail sd on st.`code`=sd.outTicketCode where st.storeCode='" + storeCode + "'";
         StringBuffer sBuffer = new StringBuffer(sql);
@@ -305,6 +321,8 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         outTicket.setDetails(details);
         return outTicket;
     }
+
+
 
     private List<StorageOutTicket> GenerateOutTickes(List<StorageOutTicketInfoDto> dtos) {
         Map<String, StorageOutTicket> outTicketMap = new HashMap<>();

@@ -74,6 +74,7 @@ public class ProductResource extends BaseResource {
         }
     }
 
+
     @RequestMapping(value = "/importProductList",method = RequestMethod.POST)
     @RequiredPermission(SecurityLevel.Employee)
     public Result ImportProductList(@RequestBody ProductImportDto dto, HttpServletRequest request){

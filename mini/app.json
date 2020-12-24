@@ -1,6 +1,7 @@
 {
   "pages":[
-    "pages/index/index"
+    "pages/index/index",
+    "pages/search/search"
   ],
   "window":{
     "backgroundTextStyle":"light",
@@ -8,11 +9,28 @@
     "navigationBarTitleText": "Retailer",
     "navigationBarTextStyle":"white"
   },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "查询库存",
+        "iconPath": "./images/tobbar/search.png",
+        "selectedIconPath": "./images/tobbar/search-selected.png"
+      },
+      {
+        "pagePath": "pages/search/search",
+        "text": "销售记录",
+        "iconPath": "./images/tobbar/book.png",
+        "selectedIconPath": "./images/tobbar/book-selected.png"
+      }
+      
+    ]
+  },
   "permission": {
     "scope.userInfo": {
       "desc": "你的用户信息将用关联retailer系统账户，以便查询相关信息"
     }
-  },
-  "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  }
 }
