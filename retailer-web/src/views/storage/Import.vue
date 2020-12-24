@@ -340,13 +340,13 @@ export default {
             this.SetActiveSteps(5);
             this.SetTicketStatus(5);
             this.$message.success("盘点成功");
-            this.$router.push({ path: "/main/storageCount/complete" });
+            this.$router.replace({ path: "/main/storageCount/complete" });
           } else if (res.resultStatus == 2) {
             //有批次信息
             this.SetActiveSteps(4);
             this.SetTicketStatus(4);
             this.SetUpdateBatchList(res.data);
-            this.$router.push({ path: "/main/storageCount/updateBatch" });
+            this.$router.replace({ path: "/main/storageCount/updateBatch" });
           } else {
             this.$message.error(res.message);
           }
