@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.FileSystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +74,7 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
         Store store = storeDao.findByCode(ticket.getStoreCode());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat monthSdf = new SimpleDateFormat("yyyy-MM");
-        String wholeFolderPath = basePath + "\\" + ticket.getStoreCode() + "\\Export" + "\\" + monthSdf.format(ticket.getCreateTime());
+        String wholeFolderPath = basePath + File.separator + ticket.getStoreCode() +File.separator+"Export" + File.separator + monthSdf.format(ticket.getCreateTime());
         FilePathValidateUtils filePathValidateUtils = new FilePathValidateUtils();
         boolean folderCreated = filePathValidateUtils.validateFolderPath(wholeFolderPath);
         if (!folderCreated) {
@@ -86,11 +87,11 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
         String dateStr = sdf.format(ticket.getCreateTime());
         String subTitile = "出单人员:" + ticket.getEmployeeName() + "  类型:" + ticket.getType() + "  " + dateStr;
         PoiUtils poiUtils = new PoiUtils();
-        String filePath = filePathValidateUtils.ValidateFilePath(wholeFolderPath + "\\" + ticket.getDate() + "盘点单", ".xls");
+        String filePath = filePathValidateUtils.ValidateFilePath(wholeFolderPath + File.separator + ticket.getDate() + "盘点单", ".xls");
         ExcelExportResultVo vo = poiUtils.ExceptStorageCountDetail(title, subTitile, "盘点人员", headerNames, storageList, filePath);
         if (vo.getStatus() == 1) {
             ticket.setExcelExportPath(filePath);
-            String fileName = filePath.substring(filePath.lastIndexOf("\\") + 1);
+            String fileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
             ticket.setExcelExportFileName(fileName);
             ticket.setStatus(2);
             StorageCountTicket saved = storageCountTicketDao.save(ticket);
@@ -120,8 +121,8 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
         }
         String month = monthSdf.format(ticket.getCreateTime());
         String fileName = file.getOriginalFilename();
-        String fullFolder= basePtah + "\\" + ticket.getStoreCode() + "\\" + "Import\\" + month;
-        String fullPath =fullFolder+ "\\" + fileName;
+        String fullFolder= basePtah + File.separator + ticket.getStoreCode() + File.separator + "Import"+File.separator + month;
+        String fullPath =fullFolder+ File.separator + fileName;
         boolean folderCreated = filePathValidateUtils.validateFolderPath(fullFolder);
         if (!folderCreated) {
             result.setResultStatus(-1);
@@ -133,7 +134,7 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
         File dest = new File(filePath);
         try {
             file.transferTo(dest);
-            String savedFileName = filePath.substring(filePath.lastIndexOf("\\") + 1);
+            String savedFileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
             ticket.setExcelImportPath(filePath);
             ticket.setExcelImportFileName(savedFileName);
             ticket.setStatus(3);

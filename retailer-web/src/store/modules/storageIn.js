@@ -38,7 +38,6 @@ const actions={
        request.GetRecordDetail(params).then(res=>{
          if(res.resultStatus==1){
            commit("SetRecordDetails",res.data)
-           console.log(res.data)
          }else{
           Message.error(res.message)
          }

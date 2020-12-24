@@ -3,8 +3,10 @@ package com.melson.webserver.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.ResultType;
+import com.melson.webserver.Vo.DashBoardVo;
 import com.melson.webserver.Vo.StorageRecordVo;
 import com.melson.webserver.service.IProductStorage;
+import com.melson.webserver.service.IStorageOutTicket;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +23,11 @@ import java.util.List;
 @RequestMapping(value = "/report")
 public class ReportResource extends BaseResource {
     private final IProductStorage productStorageService;
+    private final IStorageOutTicket outTicketService;
 
-    public ReportResource(IProductStorage productStorageService) {
+    public ReportResource(IProductStorage productStorageService, IStorageOutTicket outTicketService) {
         this.productStorageService = productStorageService;
+        this.outTicketService = outTicketService;
     }
 
     @RequestMapping(value = "/productStorageRec")
@@ -44,5 +48,17 @@ public class ReportResource extends BaseResource {
             result.setMessage(ex.getMessage());
             return result;
         }
+    }
+
+    @RequestMapping(value = "/dashboard")
+    public Result GenerateDashboard(HttpServletRequest request) {
+        Result result = new Result();
+        String storeCode=request.getParameter("storeCode");
+        String startDate=request.getParameter("startDate");
+        String endDate=request.getParameter("endDate");
+        if(StringUtils.isEmpty(storeCode)||StringUtils.isEmpty(startDate)||StringUtils.isEmpty(endDate))return this.GenerateResult(ResultType.ParametersNeeded);
+        DashBoardVo vo=outTicketService.GenerateDashboard(storeCode,startDate,endDate);
+        result.setData(vo);
+        return result;
     }
 }

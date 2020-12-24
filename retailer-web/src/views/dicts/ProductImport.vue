@@ -373,7 +373,6 @@ export default {
       let mapExistingCategoryId = new Map();
       let result = new Array();
 
-      // console.log(this.productList);
       for (let i = 0; i < this.productList.length; i++) {
         if (!mapExisting.has(this.productList[i].name)) {
           mapExisting.set(this.productList[i].name, this.productList[i]);
@@ -644,7 +643,7 @@ export default {
         storeCode: this.userInfo.storeCode,
         productList: this.productListShow,
       };
-      console.log(this.productListShow);
+
       this.SaveExcelListNew(params);
     },
     setpageSize() {

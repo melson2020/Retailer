@@ -222,6 +222,9 @@ export default {
   GetProductStorageRecords(params){
     return service.get("/report/productStorageRec",params)
   },
+  GetDashBordData(params){
+    return service.get("/report/dashboard",params)
+  },
   /**
    * goodReturn
    */

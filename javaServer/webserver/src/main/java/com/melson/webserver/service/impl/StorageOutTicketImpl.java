@@ -4,6 +4,7 @@ import com.melson.base.AbstractService;
 import com.melson.base.utils.EntityManagerUtil;
 import com.melson.webserver.Vo.*;
 import com.melson.webserver.dao.*;
+import com.melson.webserver.dto.StorageOutTicketDashboardDto;
 import com.melson.webserver.dto.StorageOutTicketInfoDto;
 import com.melson.webserver.entity.*;
 import com.melson.webserver.service.IStorageOutTicket;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -92,7 +94,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             detailMap.put(key, detail);
             productIds.add(detail.getProductId());
         }
-        List<ProductBatch> productBatchList = productBatchDao.findByBatchNoInAndStoreCode(batchNos,outDetails.get(0).getStoreCode());
+        List<ProductBatch> productBatchList = productBatchDao.findByBatchNoInAndStoreCode(batchNos, outDetails.get(0).getStoreCode());
         List<ProductStorage> productStorageList = productStorageDao.findByProductIdIn(productIds);
         Map<Integer, ProductStorage> storageMap = new HashMap<>(productStorageList.size());
         //获取待更新库存，以便使用
@@ -200,8 +202,8 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
     }
 
     @Override
-    public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId,String customerId,String productId,String employeeId) {
-        String sql="select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount,0.0 as salesProfit " +
+    public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId, String customerId, String productId, String employeeId) {
+        String sql = "select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount,0.0 as salesProfit " +
                 "FROM storage_out_ticket st LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode " +
                 "RIGHT JOIN storage_out_bill_detail sb on st.billCode=sb.outBillCode";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -211,37 +213,37 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             calendar.setTime(dateEnd);
             calendar.add(Calendar.DATE, 1);
             Date newEnd = calendar.getTime();
-            String newDateEnd=sdf.format(newEnd);
+            String newDateEnd = sdf.format(newEnd);
             StringBuffer buffer = new StringBuffer(sql);
-            buffer.append(" where st.createTime>'"+startDate+"' and st.createTime<'"+newDateEnd+"'");
-            buffer.append(" and st.storeCode='"+storeCode+"'");
-            if(permission.equals("1")){
-                buffer.append(" and st.employeeId='"+userId+"'");
-            }else {
-                if(!StringUtils.isNullOrEmpty(employeeId)){
-                    buffer.append(" and st.employeeId='"+employeeId+"'");
+            buffer.append(" where st.createTime>'" + startDate + "' and st.createTime<'" + newDateEnd + "'");
+            buffer.append(" and st.storeCode='" + storeCode + "'");
+            if (permission.equals("1")) {
+                buffer.append(" and st.employeeId='" + userId + "'");
+            } else {
+                if (!StringUtils.isNullOrEmpty(employeeId)) {
+                    buffer.append(" and st.employeeId='" + employeeId + "'");
                 }
             }
-            if(!StringUtils.isNullOrEmpty(customerId)){
-                buffer.append(" and st.customerId="+customerId);
+            if (!StringUtils.isNullOrEmpty(customerId)) {
+                buffer.append(" and st.customerId=" + customerId);
             }
-            if(!StringUtils.isNullOrEmpty(productId)){
-                buffer.append(" and sd.productId="+productId);
+            if (!StringUtils.isNullOrEmpty(productId)) {
+                buffer.append(" and sd.productId=" + productId);
             }
-            String excuteSql=buffer.toString();
+            String excuteSql = buffer.toString();
             List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
             List<OutBoundVo> vos = EntityUtils.castEntity(list, OutBoundVo.class, new OutBoundVo());
             //计算销售利润
-            for (OutBoundVo vo:vos){
-                if(vo.getReturnCount()>0){
-                    BigDecimal salesProfit=vo.getProfit().subtract(vo.getUnitProfit().multiply(new BigDecimal(vo.getReturnCount())));
+            for (OutBoundVo vo : vos) {
+                if (vo.getReturnCount() > 0) {
+                    BigDecimal salesProfit = vo.getProfit().subtract(vo.getUnitProfit().multiply(new BigDecimal(vo.getReturnCount())));
                     vo.setSalesProfit(salesProfit);
-                }else {
+                } else {
                     vo.setSalesProfit(vo.getProfit());
                 }
             }
-            return  vos;
-        }catch (Exception ex){
+            return vos;
+        } catch (Exception ex) {
             return null;
         }
     }
@@ -261,15 +263,15 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         }
         List<Object[]> list = entityManagerUtil.ExcuteSql(sBuffer.toString());
         List<StorageOutTicketInfoDto> dtos = EntityUtils.castEntity(list, StorageOutTicketInfoDto.class, new StorageOutTicketInfoDto());
-        return GenerateOutTickes(dtos);
+        return GenerateOutTickets(dtos);
     }
 
     @Override
     public StorageOutTicket FindTicketForGoodsReturn(String storeCode, String tiketCode) {
         StorageOutTicket outTicket = storageOutTicketDao.findByStoreCodeAndCode(storeCode, tiketCode);
         List<StorageOutDetail> details = storageOutDetailDao.findByOutTicketCodeAndStoreCode(tiketCode, storeCode);
-        List<GoodsReturnRecord> backList=goodsReturnRecordDao.findByStoreCodeAndOutTicketCode(storeCode,tiketCode);
-        if(backList!=null&&backList.size()>0){
+        List<GoodsReturnRecord> backList = goodsReturnRecordDao.findByStoreCodeAndOutTicketCode(storeCode, tiketCode);
+        if (backList != null && backList.size() > 0) {
             outTicket.setReturnList(backList);
             //重新填充 退货数量和ticket 状态值
 //            Map<String,List<GoodsReturnRecord>> recordMap=new HashMap<>(backList.size());
@@ -306,7 +308,85 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         return outTicket;
     }
 
-    private List<StorageOutTicket> GenerateOutTickes(List<StorageOutTicketInfoDto> dtos) {
+    @Override
+    public DashBoardVo GenerateDashboard(String storeCode, String startDate, String endDate) {
+        List<Object[]> list = storageOutTicketDao.findDashboardDetail(startDate, endDate, storeCode);
+        List<StorageOutTicketDashboardDto> dtos = EntityUtils.castEntity(list, StorageOutTicketDashboardDto.class, new StorageOutTicketDashboardDto());
+        Map<Integer, DashBoardItemVo> pMap = new HashMap<>();
+        Map<String, DashBoardItemVo> eMap = new HashMap<>();
+        BigDecimal totalPriceAll = new BigDecimal(0);
+        for (StorageOutTicketDashboardDto dto : dtos) {
+            //所有的销售总额
+            totalPriceAll = totalPriceAll.add(dto.getTotalPrice());
+            //生成产品占比数据
+            DashBoardItemVo pItem = pMap.get(dto.getProductId());
+            if (pItem == null) {
+                pItem = new DashBoardItemVo();
+                pItem.setId(dto.getProductId().toString());
+                pItem.setItemName(dto.getProductName());
+                pItem.setItemValue(dto.getTotalPrice());
+                pMap.put(dto.getProductId(), pItem);
+            } else {
+                pItem.setItemValue(pItem.getItemValue().add(dto.getTotalPrice()));
+            }
+            //生成员工占比数据
+            DashBoardItemVo eItem = eMap.get(dto.getEmployeeId());
+            if (eItem == null) {
+                eItem = new DashBoardItemVo();
+                eItem.setId(dto.getEmployeeId());
+                eItem.setItemName(dto.getEmployeeName());
+                eItem.setItemValue(dto.getTotalPrice());
+                eMap.put(dto.getEmployeeId(), eItem);
+            } else {
+                eItem.setItemValue(eItem.getItemValue().add(dto.getTotalPrice()));
+            }
+        }
+
+        List<DashBoardItemVo> pList = new ArrayList<>(pMap.values());
+        pList.sort(new Comparator<DashBoardItemVo>() {
+            @Override
+            public int compare(DashBoardItemVo o1, DashBoardItemVo o2) {
+                return o2.getItemValue().compareTo(o1.getItemValue());
+            }
+        });
+        List<DashBoardItemVo> eList = new ArrayList<>(eMap.values());
+        eList.sort(new Comparator<DashBoardItemVo>() {
+            @Override
+            public int compare(DashBoardItemVo o1, DashBoardItemVo o2) {
+                return o2.getItemValue().compareTo(o1.getItemValue());
+            }
+        });
+        DashBoardVo vo = new DashBoardVo();
+        DecimalFormat df = new DecimalFormat("0.00%");
+        vo.setProductList(ReSizeListToSix(pList,totalPriceAll,df));
+        vo.setEmployeeList(ReSizeListToSix(eList,totalPriceAll,df));
+        vo.setSortList(pList);
+        return vo;
+    }
+
+    private List<DashBoardItemVo> ReSizeListToSix(List<DashBoardItemVo> list, BigDecimal totalPriceAll, DecimalFormat sf) {
+        List<DashBoardItemVo> reSizeList = new ArrayList<>();
+        DashBoardItemVo newVo = new DashBoardItemVo();
+        newVo.setItemName("Others");
+        newVo.setItemValue(new BigDecimal(0));
+        for (int i = 0; i < list.size(); i++) {
+            if (i < 5) {
+                String percent = sf.format(list.get(i).getItemValue().divide(totalPriceAll,4, BigDecimal.ROUND_HALF_UP));
+                list.get(i).setPercent(percent);
+                reSizeList.add(list.get(i));
+            } else {
+                newVo.setItemValue(newVo.getItemValue().add(list.get(i).getItemValue()));
+            }
+        }
+        if (list.size() > 5) {
+            String percentOther = sf.format(newVo.getItemValue().divide(totalPriceAll,4, BigDecimal.ROUND_HALF_UP));
+            newVo.setPercent(percentOther);
+            reSizeList.add(newVo);
+        }
+        return reSizeList;
+    }
+
+    private List<StorageOutTicket> GenerateOutTickets(List<StorageOutTicketInfoDto> dtos) {
         Map<String, StorageOutTicket> outTicketMap = new HashMap<>();
         for (StorageOutTicketInfoDto dto : dtos) {
             StorageOutTicket out = outTicketMap.get(dto.getCode());

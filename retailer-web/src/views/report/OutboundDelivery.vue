@@ -2,15 +2,15 @@
   <div>
     <div class="OutboundDelivery-content-header">
       <div>
-        <span class="OutboundDelivery-title-name">出库核算</span>
+        <span class="OutboundDelivery-title-name">销售核算</span>
       </div>
       <div>
         <el-popover placement="left" width="500" trigger="click">
-          <div class="popover-items-area">
-            <div class="message-info">*时间跨度最多30天</div>
+          <div class="outbound-popover-items-area">
+            <div class="outbound-message-info">*时间跨度最多30天</div>
             <el-date-picker
               v-model="date"
-              class="date-picker outbound-margin-top"
+              class="outbound-margin-top"
               type="daterange"
               align="right"
               size="small"
@@ -458,7 +458,7 @@ export default {
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
 }
-.message-info {
+.outbound-message-info {
   color: #79bbff;
   font-size: 20px;
 }
@@ -471,7 +471,7 @@ export default {
   color: #303133;
   justify-content: center;
 }
-.popover-items-area {
+.outbound-popover-items-area {
   display: flex;
   flex-direction: column;
   padding: 20px;

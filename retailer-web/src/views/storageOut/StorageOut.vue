@@ -493,6 +493,7 @@ export default {
         return item.checked & (item.outCount > 0);
       });
     },
+    //计算批次数据 主要为减去已选的库存
     storageComputedProductBtahList: function () {
       if (this.storageOutTicket.details.length >= 0) {
         this.storageOutTicket.details.map((item) => {
@@ -777,12 +778,18 @@ export default {
      */
     addToDetailCheck(value) {
       let vKey =
+        value.productId +
         value.storageInBatchNo +
         value.taxRate +
         value.outPrice +
         value.supplyId;
       let existProduct = this.storageOutTicket.details.filter((p) => {
-        let key = p.storageInBatchNo + p.taxRate + p.outPrice + p.supplyId;
+        let key =
+          p.productId +
+          p.storageInBatchNo +
+          p.taxRate +
+          p.outPrice +
+          p.supplyId;
         return vKey == key;
       })[0];
       if (existProduct) {

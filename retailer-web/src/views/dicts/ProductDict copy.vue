@@ -655,7 +655,6 @@ export default {
           })
     },
     CategoryChange(value){
-console.log("value:_"+value)
       this.editProduct.categoryId=value;
     },
     handleEditTagsClose(tag) {

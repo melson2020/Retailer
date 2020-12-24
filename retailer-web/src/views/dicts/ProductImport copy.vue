@@ -6,9 +6,31 @@
     element-loading-background="rgba(0, 0, 0, 0.6)"
   >
     <div class="productimport-header">
-      <el-button @click.prevent.stop="saveExcelList" class="productimport-top-button" type="primary" icon="el-icon-plus" size="small" :disabled="excelProductList.length<=0||excelCategroyList.length<=0">保存</el-button>
-      <el-button @click.prevent.stop="choseFile" class="productimport-top-button" type="primary" size="small">数据导入</el-button>
-      <el-button @click.prevent.stop="download" class="productimport-top-button" type="primary" size="small">模板下载</el-button>
+      <el-button
+        @click.prevent.stop="saveExcelList"
+        class="productimport-top-button"
+        type="primary"
+        icon="el-icon-plus"
+        size="small"
+        :disabled="
+          excelProductList.length <= 0 || excelCategroyList.length <= 0
+        "
+        >保存</el-button
+      >
+      <el-button
+        @click.prevent.stop="choseFile"
+        class="productimport-top-button"
+        type="primary"
+        size="small"
+        >数据导入</el-button
+      >
+      <el-button
+        @click.prevent.stop="download"
+        class="productimport-top-button"
+        type="primary"
+        size="small"
+        >模板下载</el-button
+      >
       <el-dialog
         title="文件加载"
         :visible.sync="uploadFileDialog"
@@ -31,11 +53,15 @@
             将文件拖到此处，或
             <em>点击上传</em>
           </div>
-          <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
+          <div class="el-upload__tip" slot="tip">
+            只能上传xls/xlsx文件，且不超过500kb
+          </div>
         </el-upload>
         <div slot="footer" class="dialog-footer">
           <el-button @click="closeDialog" v-if="!readingFile">取 消</el-button>
-          <el-button type="primary" :loading="readingFile" @click="submitFile">确 定</el-button>
+          <el-button type="primary" :loading="readingFile" @click="submitFile"
+            >确 定</el-button
+          >
         </div>
       </el-dialog>
     </div>
@@ -141,106 +167,119 @@
       </el-col> -->
 
       <!-- <el-col :span="16"> -->
-        <div class="productimport-show-dict">
-          <div class="productimport-content-header">
-            <div>
-              <span class="productimport-title-name">商品目录 ({{excelProductList.length}})</span>
-              <el-link
-                type="danger"
-                class="productimport-duplicate-link"
-                v-if="duplicateCount>0||isSrearchDuplicate"
-                @click.prevent.stop="duplicateSreach"
-              >名称重复:{{duplicateCount}} 个 {{isSrearchDuplicate?'显示全部':'点击查看'}}</el-link>
-            </div>
-            <div>
-              <el-input
+      <div class="productimport-show-dict">
+        <div class="productimport-content-header">
+          <div>
+            <span class="productimport-title-name"
+              >商品目录 ({{ excelProductList.length }})</span
+            >
+            <el-link
+              type="danger"
+              class="productimport-duplicate-link"
+              v-if="duplicateCount > 0 || isSrearchDuplicate"
+              @click.prevent.stop="duplicateSreach"
+              >名称重复:{{ duplicateCount }} 个
+              {{ isSrearchDuplicate ? "显示全部" : "点击查看" }}</el-link
+            >
+          </div>
+          <div>
+            <el-input
               class="productimport-fliter-input"
               size="small"
               v-model="searchContent"
               placeholder="请输入内容"
               suffix-icon="el-icon-search"
               @focus="productSearchFocus"
-              ></el-input>
-            </div>
-          </div>
-
-          <div class="productimport-content">
-            <el-table
-              border
-              :row-class-name="tableRowClassName"
-              class="productimport-table-top" size="small"
-              :height="tableHeight"
-              :data="products"
-              :header-row-style="{height:'40px'}"
-              :row-style="{height:'40px'}"
-              :cell-style="{ padding: '2px', color: '#909399' }"
-              :header-cell-style="{ background: '#808080', color: 'white'}">
-              <el-table-column type="index" label="#" :index="indexMethod" align="center"></el-table-column>
-              <el-table-column
-                v-for="(item,i) in productTableColums"
-                :prop="item.field"
-                :label="item.label"
-                :width="item.width"
-                :key="i"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.isSet">
-                    <el-input size="mini" v-model="scope.row[item.field]"></el-input>
-                  </span>
-                  <span v-else>{{scope.row[item.field]}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作" width="auto"  align="center">
-                <template slot-scope="scope">
-                  <div class="productimport-table-operation-template">
-                    <el-button
-                      size="mini"
-                      plain
-                      circle
-                      type="primary"
-                      icon="el-icon-edit"
-                      v-if="!scope.row.isSet"
-                      @click="handleEdit(scope.$index, scope.row)"
-                    ></el-button>
-                    <el-button
-                      size="mini"
-                      plain
-                      circle
-                      v-if="scope.row.isSet"
-                      type="success"
-                      icon="el-icon-s-claim"
-                      @click="handleSave(scope.$index, scope.row)"
-                    ></el-button>
-                    <el-button
-                      size="mini"
-                      plain
-                      circle
-                      v-if="!scope.row.isSet"
-                      type="danger"
-                      icon="el-icon-delete"
-                      @click="handleDelete(scope.$index, scope.row)"
-                    ></el-button>
-                  </div>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-
-          <div class="productimport-content-footer">
-            <el-pagination
-              background
-              :current-page="productTablePage.currentPage"
-              layout="prev, pager, next"
-              @current-change="pageChanged"
-              :page-size="productTablePage.pageSize"
-              :total="productListShow.length"
-              v-if="productListShow.length>=productTablePage.pageSize"
-            ></el-pagination>
+            ></el-input>
           </div>
         </div>
+
+        <div class="productimport-content">
+          <el-table
+            border
+            :row-class-name="tableRowClassName"
+            class="productimport-table-top"
+            size="small"
+            :height="tableHeight"
+            :data="products"
+            :header-row-style="{ height: '40px' }"
+            :row-style="{ height: '40px' }"
+            :cell-style="{ padding: '2px', color: '#909399' }"
+            :header-cell-style="{ background: '#808080', color: 'white' }"
+          >
+            <el-table-column
+              type="index"
+              label="#"
+              :index="indexMethod"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              v-for="(item, i) in productTableColums"
+              :prop="item.field"
+              :label="item.label"
+              :width="item.width"
+              :key="i"
+            >
+              <template slot-scope="scope">
+                <span v-if="scope.row.isSet">
+                  <el-input
+                    size="mini"
+                    v-model="scope.row[item.field]"
+                  ></el-input>
+                </span>
+                <span v-else>{{ scope.row[item.field] }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="auto" align="center">
+              <template slot-scope="scope">
+                <div class="productimport-table-operation-template">
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    type="primary"
+                    icon="el-icon-edit"
+                    v-if="!scope.row.isSet"
+                    @click="handleEdit(scope.$index, scope.row)"
+                  ></el-button>
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    v-if="scope.row.isSet"
+                    type="success"
+                    icon="el-icon-s-claim"
+                    @click="handleSave(scope.$index, scope.row)"
+                  ></el-button>
+                  <el-button
+                    size="mini"
+                    plain
+                    circle
+                    v-if="!scope.row.isSet"
+                    type="danger"
+                    icon="el-icon-delete"
+                    @click="handleDelete(scope.$index, scope.row)"
+                  ></el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <div class="productimport-content-footer">
+          <el-pagination
+            background
+            :current-page="productTablePage.currentPage"
+            layout="prev, pager, next"
+            @current-change="pageChanged"
+            :page-size="productTablePage.pageSize"
+            :total="productListShow.length"
+            v-if="productListShow.length >= productTablePage.pageSize"
+          ></el-pagination>
+        </div>
+      </div>
       <!-- </el-col> -->
     </div>
-
   </el-row>
 </template>
 <script>
@@ -250,7 +289,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      tableHeight: window.innerHeight  - 210,
+      tableHeight: window.innerHeight - 210,
       readingFile: false,
       isSrearchDuplicate: false,
       // isCategroyDuplicate: false,
@@ -258,7 +297,7 @@ export default {
       productTablePage: {
         pageSize: 12,
         currentPage: 1,
-        height:""
+        height: "",
       },
       // productCategroyPage: {
       //   pageSize: 12,
@@ -278,7 +317,7 @@ export default {
         { field: "unit", label: "单位", width: "auto" },
         { field: "categoryName", label: "类别", width: "auto" },
         // { field: "feature", label: "特征", width: "auto" }
-      ]
+      ],
     };
   },
   computed: {
@@ -288,68 +327,61 @@ export default {
       "excelProductList",
       "categroyDuplicateCount",
       "userInfo",
-      "productList"
+      "productList",
     ]),
-    compareExistingProduct(){
+    compareExistingProduct() {
       let mapExisting = new Map();
       let mapExistingCategoryId = new Map();
-      let result=new Array();
-
-
-
-// console.log(this.productList);
-      for(let i=0;i<this.productList.length;i++){
-        if(!mapExisting.has(this.productList[i].name))
-        {
-          mapExisting.set(this.productList[i].name,this.productList[i]);
-          mapExistingCategoryId.set(this.productList[i].categoryName,this.productList[i].categoryId)
+      let result = new Array();
+      for (let i = 0; i < this.productList.length; i++) {
+        if (!mapExisting.has(this.productList[i].name)) {
+          mapExisting.set(this.productList[i].name, this.productList[i]);
+          mapExistingCategoryId.set(
+            this.productList[i].categoryName,
+            this.productList[i].categoryId
+          );
         }
       }
-// console.log(mapExistingCategoryId)
-      for(let i=0;i<this.excelProductList.length;i++)
-      {
-// console.log(this.excelProductList[i].name);
-        if(!mapExisting.has(this.excelProductList[i].name))
-        {
-// console.log(this.excelProductList[i].name);
-// console.log(mapExistingCategoryId.get(this.excelProductList[i].categoryName));
+      for (let i = 0; i < this.excelProductList.length; i++) {
+        if (!mapExisting.has(this.excelProductList[i].name)) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.excelProductList[i].categoryId = mapExistingCategoryId.get(this.excelProductList[i].categoryName);
-// console.log(this.excelProductList[i].categoryId);
+          this.excelProductList[i].categoryId = mapExistingCategoryId.get(
+            this.excelProductList[i].categoryName
+          );
+
           result.push(this.excelProductList[i]);
         }
       }
       return result;
     },
-    productListShow: function() {
-// console.log(this.compareExistingProduct);
-
+    productListShow: function () {
       if (this.isSrearchDuplicate) {
         // return this.excelProductList.filter(item => {
-        return this.compareExistingProduct.filter(item => {
+        return this.compareExistingProduct.filter((item) => {
           return item.isRepeat;
         });
-      } 
-      else {
+      } else {
         // return this.excelProductList.filter(item => {
-        return this.compareExistingProduct.filter(item => {
-          let key =
-            item.name +
-            item.type +
-            item.specification +
-            item.unit;
-          if(item.feature){
-            key=key+item.feature;
-          }else{
-            key=key+"";
+        return this.compareExistingProduct.filter((item) => {
+          let key = item.name + item.type + item.specification + item.unit;
+          if (item.feature) {
+            key = key + item.feature;
+          } else {
+            key = key + "";
           }
-          let index = key.toUpperCase().indexOf(this.searchContent.toUpperCase());
+          let index = key
+            .toUpperCase()
+            .indexOf(this.searchContent.toUpperCase());
           return index != -1;
         });
       }
     },
-    products(){
-      return this.productListShow.slice((this.productTablePage.currentPage-1)*this.productTablePage.pageSize,this.productTablePage.currentPage*this.productTablePage.pageSize)
+    products() {
+      return this.productListShow.slice(
+        (this.productTablePage.currentPage - 1) *
+          this.productTablePage.pageSize,
+        this.productTablePage.currentPage * this.productTablePage.pageSize
+      );
     },
     // compareExistingCategory(){
     //   let mapExisting = new Map();
@@ -391,11 +423,11 @@ export default {
     //     return item.isRepeat;
     //   }).length;
     // },
-    duplicateCount: function() {
-      return this.compareExistingProduct.filter(item => {
+    duplicateCount: function () {
+      return this.compareExistingProduct.filter((item) => {
         return item.isRepeat;
       }).length;
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -424,7 +456,7 @@ export default {
       }
     },
     duplicateSreach() {
-      this.excelProductList.map(item => {
+      this.excelProductList.map((item) => {
         item.isSet = false;
       });
       this.productTablePage.currentPage = 1;
@@ -455,14 +487,14 @@ export default {
         return;
       }
       excelHelper
-        .fileToExcel(file,false)
-        .then(tabJson => {
+        .fileToExcel(file, false)
+        .then((tabJson) => {
           if (tabJson && tabJson.length > 0) {
             this.GenrateCategroyListAndProductList(tabJson);
-            this.$message.warning("系统已为你过滤掉已存在商品和类别！")
+            this.$message.warning("系统已为你过滤掉已存在商品和类别！");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           let mss = err.message ? err.message : err;
           this.$message.warning("解析excel错误：" + mss);
         });
@@ -481,7 +513,7 @@ export default {
     //   this.CheckDuplicateList(true);
     // },
     pageChanged(page) {
-      this.excelProductList.map(item => {
+      this.excelProductList.map((item) => {
         item.isSet = false;
       });
       this.productTablePage.currentPage = page;
@@ -489,7 +521,7 @@ export default {
     },
     CheckHaveUnSaveItem() {
       return (
-        this.productListShow.filter(item => {
+        this.productListShow.filter((item) => {
           return item.isSet == true;
         }).length > 0
       );
@@ -530,7 +562,7 @@ export default {
     //   this.CheckDuplicateList();
     // },
     saveExcelList() {
-      this.excelProductList.map(item => {
+      this.excelProductList.map((item) => {
         item.isSet = false;
       });
       this.CheckDuplicateList();
@@ -538,33 +570,33 @@ export default {
         this.$message.warning("存在重复名称，请修改");
         return;
       }
-      // console.log(this.excelCategroyListShow);
-      console.log(this.productListShow);
-      // let params={storeCode:this.userInfo.storeCode,productList:this.excelProductList,categoryList:this.excelCategroyList}
-      let params={storeCode:this.userInfo.storeCode,productList:this.productListShow,categoryList:this.excelCategroyListShow}
+      let params = {
+        storeCode: this.userInfo.storeCode,
+        productList: this.productListShow,
+        categoryList: this.excelCategroyListShow,
+      };
       this.SaveExcelList(params);
     },
     setpageSize() {
-      let rect = this.tableHeight-40;
-      this.productTablePage.height=rect+40;
+      let rect = this.tableHeight - 40;
+      this.productTablePage.height = rect + 40;
       // this.productCategroyPage.height=rect+40;
       let pageSize = Math.floor(rect / 40);
       // this.productCategroyPage.pageSize=pageSize;
-      this.productTablePage.pageSize=pageSize;
+      this.productTablePage.pageSize = pageSize;
     },
     // categroySearchFocus(){
     //   this.productCategroyPage.currentPage=1;
     // },
-    productSearchFocus(){
-      this.productTablePage.currentPage=1;
+    productSearchFocus() {
+      this.productTablePage.currentPage = 1;
     },
   },
-  mounted: function() {
-  this.$nextTick(function() {
-    this.setpageSize();
-  })
+  mounted: function () {
+    this.$nextTick(function () {
+      this.setpageSize();
+    });
   },
-
 };
 </script>
 <style>
@@ -592,10 +624,10 @@ export default {
 .productimport-fliter-input {
   width: 400px;
 }
-.productimport-content{
+.productimport-content {
   margin-top: 5px;
 }
-.productimport-content-footer{
+.productimport-content-footer {
   margin-top: 20px;
   height: 60px;
   align-items: center;
@@ -624,8 +656,6 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-top: 15px;
 }
-
-
 
 /* .title-name {
   float: left;

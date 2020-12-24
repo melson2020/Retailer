@@ -17,6 +17,10 @@ const actions = {
         }).catch(err => {
             Message.error(err.message);
         })
+    },
+    // eslint-disable-next-line no-empty-pattern
+    GetDashBoardData({},params){
+      return  request.GetDashBordData(params);
     }
 
 };

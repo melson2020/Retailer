@@ -26,6 +26,7 @@ const StorageOutRecordDetail = () => import("../views/storageOut/StorageOutRecor
 const OutboundDelivery = () => import("../views/report/OutboundDelivery.vue")
 const ProductStorageRecord = () => import("../views/report/ProductStorageRecord.vue")
 const GoodsReturn = () => import("../views/goodsReturn/GoodsReturn.vue")
+const Dashboard=()=>import("../views/report/Dashboard.vue")
 
 Vue.use(VueRouter);
 
@@ -164,6 +165,11 @@ const routes = [
         path: "goodsReturn",
         name: "goodsReturn",
         component: GoodsReturn
+      },
+      {
+        path: "dashboard",
+        name: "dashboard",
+        component: Dashboard
       },
       {
         path: "pageNotFound",

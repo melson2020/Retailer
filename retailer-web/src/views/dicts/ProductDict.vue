@@ -618,7 +618,6 @@ export default {
             this.compareExistingProduct(this.editProduct.name) &&
             this.editProduct.name.trim() !== this.oldEditName.trim()
           ) {
-            console.log(this.oldEditName);
             this.$message.warning("商品已存在！");
             return false;
           }
