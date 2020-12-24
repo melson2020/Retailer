@@ -59,6 +59,7 @@ public class ReportResource extends BaseResource {
         if(StringUtils.isEmpty(storeCode)||StringUtils.isEmpty(startDate)||StringUtils.isEmpty(endDate))return this.GenerateResult(ResultType.ParametersNeeded);
         DashBoardVo vo=outTicketService.GenerateDashboard(storeCode,startDate,endDate);
         result.setData(vo);
+        System.out.println("Rest Call: /report/dashboard ...");
         return result;
     }
 }
