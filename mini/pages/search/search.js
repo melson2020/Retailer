@@ -7,7 +7,7 @@ Page({
     //微信账户数据
     userInfo: {},
     //app账户数据，包含关联的retailer 用户信息
-    appUserInfo: {},
+    appUserInfo: app.globalData.appUserInfo,
     hasUserInfo: false,
     toptip: {},
     hide_mask:false,

@@ -5,13 +5,20 @@
   </view>
   <!--授权区域-->
   <view wx:if="{{!hasUserInfo}}" class="authorize-area">
-    <view class="login-user-icon">
+    <!-- <view class="login-user-icon">
       <view class="userImage">
         <view class="iconfont icon-login-user"></view>
       </view>
       <view class="go-login-button" bindtap="goLogin">请先登入系统</view>
       <text class="message">点击跳转至登录页面！</text>
-    </view>
+    </view> -->
+    <view class="login-user-icon">
+			<view class="empty-icon">
+				<view class="iconfont icon-smile"></view>
+			</view>
+			<view>请先登陆</view>
+			<view class="go-login-button" bindtap="goLogin">Go login</view>
+		</view>
   </view>
 
 
