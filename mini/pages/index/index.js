@@ -53,7 +53,8 @@ Page({
               key: "user",
               data: JSON.stringify(logUser)
             })
-            app.globalData.userInfo = detial.userInfo
+            app.globalData.userInfo = detial.userInfo,
+            app.globalData.appUserInfo=logUser,
             this.setData({
               userInfo: detial.userInfo,
               hasUserInfo: true,

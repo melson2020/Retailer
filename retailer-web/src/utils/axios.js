@@ -5,7 +5,7 @@ import store from "../store/store.js"
 axios.defaults.timeout = 30000;
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded;charset=UTF-8";
-axios.defaults.baseURL = "/api";
+axios.defaults.baseURL = "/api";                //dev 
 
 //请求拦截器
 axios.interceptors.request.use(

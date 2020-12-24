@@ -8,8 +8,11 @@ import com.melson.base.cache.CacheUtil;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
 import com.melson.base.utils.JsonToObjectUtil;
+import com.melson.webserver.Vo.OutBoundVo;
+import com.melson.webserver.Vo.WechatOutBoundVo;
 import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.service.IProductStorage;
+import com.melson.webserver.service.IStorageOutTicket;
 import com.melson.wechatmini.entity.WeChatApi;
 import com.melson.wechatmini.entity.WeChatAppInfo;
 import com.melson.wechatmini.entity.WeChatUser;
@@ -37,11 +40,13 @@ public class WeChatResource extends BaseResource {
     private final IProductStorage productStorageService;
     private final CacheUtil cacheUtil;
     private final IWeChatUser weChatUserService;
+    private final IStorageOutTicket outTicketService;
 
-    public WeChatResource(IProductStorage productStorageService, CacheUtil cacheUtil, IWeChatUser weChatUserService) {
+    public WeChatResource(IProductStorage productStorageService, CacheUtil cacheUtil, IWeChatUser weChatUserService, IStorageOutTicket outTicketService) {
         this.productStorageService = productStorageService;
         this.cacheUtil = cacheUtil;
         this.weChatUserService = weChatUserService;
+        this.outTicketService = outTicketService;
     }
 
     @RequestMapping(value = "/productStorage",method = RequestMethod.POST)
@@ -62,6 +67,26 @@ public class WeChatResource extends BaseResource {
         System.out.println("Rest Call: /weChat/productStorage ...");
         return result;
     }
+
+    @RequestMapping(value = "/outBoundList",method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Employee)
+    public Result findOutBoundList(@RequestBody JSONObject param, HttpServletRequest request) {
+        String key = param.getString("key");
+        String storeCode = param.getString("storeCode");
+        if (StringUtils.isEmpty(key) || StringUtils.isEmpty(storeCode))
+            return this.GenerateResult(ResultType.ParametersNeeded);
+        Result result = new Result();
+        List<WechatOutBoundVo> voList=outTicketService.findOutBoundListForWechat(key,storeCode);
+        if (voList == null) {
+            result.setResultStatus(2);
+            result.setMessage("empty result");
+        } else {
+            result.setData(voList);
+        }
+        System.out.println("Rest Call: /weChat/outBoundList ...");
+        return result;
+    }
+
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Result weChatLogin(@RequestBody WeChatLoginVo vo){

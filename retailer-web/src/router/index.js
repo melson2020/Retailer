@@ -197,6 +197,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: "history",
+  base:'/jxc/',     //for prod，URL地址前缀
   routes
 });
 

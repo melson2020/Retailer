@@ -31,4 +31,7 @@ public interface IStorageOutTicket extends IService<StorageOutTicket> {
     StorageOutTicket FindTicketForGoodsReturn(String storeCode,String tiketCode);
 
     DashBoardVo GenerateDashboard(String storeCode, String startDate, String endDate);
+
+    List<WechatOutBoundVo> findOutBoundListForWechat(String key, String storeCode);
+
 }

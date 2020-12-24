@@ -9,8 +9,8 @@
       <view class="userImage">
         <view class="iconfont icon-login-user"></view>
       </view>
-      <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary"> 使用微信登录 </button>
-      <text class="message">用户信息将用于关联Retailer系统账户，以便查询账户对应信息</text>
+      <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary"> 点击登录 </button>
+      <text class="message">关联Retailer系统账户，以便查询账户对应信息！</text>
     </view>
     <text wx:else>请更新微信版本</text>
   </view>
@@ -45,10 +45,10 @@
     </view>
     <!--搜索栏-->
     <view class="search_bar">
-      <input class="weui-input srearch_bar_input" placeholder="请输入商品名称" placeholder-class="weui-input__placeholder"
+      <input class="weui-input srearch_bar_input" placeholder="输入商品名称" placeholder-class="weui-input__placeholder"
         bindinput="searchInputChange" value="{{searchContent}}" />
       <view class="srearch_bar_button" bindtap="productStorageSearch">
-        Search
+        查 询
       </view>
     </view>
     <!--库存展示-->
@@ -65,14 +65,14 @@
         <view wx:for='{{productStorageList}}' wx:key='id' wx:for-item="product" class="product_card">
           <view class="product_card_title">
             <view>{{product.productName}}</view>
-            <view class="color_blue">{{product.count}}{{product.unit}}</view>
+            <view class="color_blue">库存：{{product.count}}{{product.unit}}</view>
           </view>
           <view class="product_card_content">
             <view wx:for='{{product.batchList}}' wx:key='id' class="product_batch_info">
               <view class="product_batch_info_row">
                 <view>{{item.batchNo}}</view>
-                <view class="color_orange">{{item.price}}/{{item.countUnit}}</view>
-                <view>{{item.count}}{{item.countUnit}}</view>
+                <view class="color_orange">单价：{{item.price}}/{{item.countUnit}}</view>
+                <view>余：{{item.count}}{{item.countUnit}}</view>
               </view>
               <view class="product_batch_info_row">
                 <view>{{item.supplyName}}</view>
