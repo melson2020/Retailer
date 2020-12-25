@@ -148,12 +148,12 @@
         </el-table-column>
         <el-table-column
           prop="outBoundNo"
-          label="出库单号"
+          label="单号"
           sortable
         ></el-table-column>
         <el-table-column
           prop="customerName"
-          label="客户名"
+          label="客户名称"
           width="auto"
           sortable
         >
@@ -161,11 +161,11 @@
         <el-table-column
           prop="salesName"
           label="销售人员"
-          width="auto"
+          width="120px" align="center"
           sortable
         >
         </el-table-column>
-        <el-table-column prop="product" label="产品名称" width="auto" sortable>
+        <el-table-column prop="product" label="产品" width="auto" sortable>
         </el-table-column>
         <el-table-column
           prop="supply"
@@ -174,10 +174,10 @@
         ></el-table-column>
         <el-table-column
           prop="batchNo"
-          label="入库批次"
+          label="批次"
           sortable
         ></el-table-column>
-        <el-table-column label="入库单价">
+        <!-- <el-table-column label="入库单价">
           <template slot-scope="scope">
             {{ scope.row.priceIn }}{{ scope.row.countUnit }}
           </template>
@@ -186,33 +186,34 @@
           <template slot-scope="scope">
             {{ scope.row.priceOut }}{{ scope.row.countUnit }}
           </template>
-        </el-table-column>
-        <el-table-column label="数量">
+        </el-table-column> -->
+        <el-table-column label="数量" width="70px" align="center">
           <template slot-scope="scope">
             {{ scope.row.outCount }}{{ scope.row.countUnit }}
           </template>
         </el-table-column>
         <el-table-column
           prop="totalPrice"
-          label="销售额"
+          label="总价" width="80px" align="center"
           sortable
         ></el-table-column>
         <el-table-column
           prop="unitProfit"
           label="单个利润"
+          width="100px" align="center"
           sortable
         ></el-table-column>
-        <el-table-column prop="returnCount" label="退货数量" sortable>
+        <el-table-column prop="returnCount" label="退货量" width="70px" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.returnCount > 0" class="color-green">
-              {{ scope.row.returnCount }}</span
-            >
+              {{ scope.row.returnCount }}{{ scope.row.countUnit }}</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="salesProfit"
-          label="销售利润"
-          width="auto"
+          label="总利润"
+          width="100px"
+          align="center"
           sortable
         >
           <template slot-scope="scope">
@@ -354,6 +355,7 @@ export default {
         returnCount: "退货数量",
         salesProfit: "销售利润",
         profit: "出库利润",
+        countUnit:"单位"
       };
       var json = [];
       var table = this.$refs.outBoundTable;
@@ -382,8 +384,9 @@ export default {
         outCount: "",
         profit: "",
         returnCount: "",
-        totalPrice: sum[10],
-        salesProfit: sum[13],
+        totalPrice: sum[8],
+        salesProfit: sum[11],
+        countUnit:""
       });
       excelHelper.export_json_to_excel({
         json: json,

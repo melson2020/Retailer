@@ -54,10 +54,11 @@ export default {
         backgroundColor: "white",
         title: {
           text: productOption.title,
-          left: "center",
-          top: 20,
+          left: "left",
+          top: 0,
           textStyle: {
             color: "#606266",
+            fontSize: 14,
           },
         },
         tooltip: {
@@ -66,12 +67,12 @@ export default {
         },
         series: productOption.series,
         color: [
-          "#7EC0EE",
-          "#FF9F7F",
-          "#FFD700",
-          "#C9C9C9",
-          "#E066FF",
-          "#C0FF3E",
+          "#9489fa",
+          "#f06464",
+          "#f7af59",
+          "#16afcc",
+          "#898989",
+          "#c4cc38",
         ],
       };
 
@@ -79,10 +80,11 @@ export default {
         backgroundColor: "white",
         title: {
           text: employeeOption.title,
-          left: "center",
-          top: 20,
+          left: "left",
+          top: 0,
           textStyle: {
             color: "#606266",
+            fontSize: 14,
           },
         },
         tooltip: {
@@ -92,17 +94,17 @@ export default {
         series: employeeOption.series,
 
         color: [
-          "#c23531",
-          "#2f4554",
-          "#61a0a8",
-          "#d48265",
-          "#91c7ae",
-          "#749f83",
-          "#ca8622",
-          "#bda29a",
-          "#6e7074",
-          "#546570",
-          "#c4ccd3",
+          "#9489fa",
+          "#f06464",
+          "#f7af59",
+          "#f0da49",
+          "#71c16f",
+          "#2aaaef",
+          "#5690dd",
+          "#bd88f5",
+          "#009db2",
+          "#024b51",
+          "#765005",
         ],
       };
 
@@ -111,9 +113,10 @@ export default {
       var sOption = {
         title: {
           text: sortOption.title,
-          left: "center",
+          left: "left",
           textStyle: {
             color: "#606266",
+            fontSize: 14,
           },
         },
         grid: {
@@ -212,11 +215,11 @@ export default {
             var productList = res.data.productList;
             var pSeries = [
               {
-                name: "产品销售占比",
+                name: "产品占比",
                 type: "pie",
                 clockwise: "true",
                 startAngle: "0",
-                radius: "70%",
+                radius: "80%",
                 center: ["50%", "50%"],
                 data: [],
               },
@@ -232,11 +235,11 @@ export default {
             var employeeList = res.data.employeeList;
             var eSeries = [
               {
-                name: "员工销售占比",
+                name: "员工占比",
                 type: "pie",
                 clockwise: "true",
                 startAngle: "0",
-                radius: "70%",
+                radius: "80%",
                 center: ["50%", "50%"],
                 data: [],
               },
@@ -260,17 +263,17 @@ export default {
                     //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                     color: function (params) {
                       var colorList = [
-                        "#c23531",
-                        "#2f4554",
-                        "#61a0a8",
-                        "#d48265",
-                        "#91c7ae",
-                        "#749f83",
-                        "#ca8622",
-                        "#bda29a",
-                        "#6e7074",
-                        "#546570",
-                        "#c4ccd3",
+                        "#9489fa",
+                        "#f06464",
+                        "#f7af59",
+                        "#f0da49",
+                        "#71c16f",
+                        "#2aaaef",
+                        "#5690dd",
+                        "#bd88f5",
+                        "#009db2",
+                        "#024b51",
+                        "#765005",
                       ];
                       return colorList[params.dataIndex];
                     },
@@ -299,8 +302,8 @@ export default {
                 sortYdata.push(index);
               }
             }
-            var pOption = { title: "产品销售占比", series: pSeries };
-            var eOption = { title: "员工销售占比", series: eSeries };
+            var pOption = { title: "产品占比", series: pSeries };
+            var eOption = { title: "员工占比", series: eSeries };
             var sOption = {
               title: "热销产品",
               series: sSeries,

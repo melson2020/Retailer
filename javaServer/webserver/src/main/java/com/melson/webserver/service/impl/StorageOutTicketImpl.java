@@ -203,7 +203,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
     @Override
     public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId, String customerId, String productId, String employeeId) {
-        String sql = "select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount,0.0 as salesProfit " +
+        String sql = "select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount,0.0 as salesProfit,sb.countUnit " +
                 "FROM storage_out_ticket st LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode " +
                 "RIGHT JOIN storage_out_bill_detail sb on st.billCode=sb.outBillCode";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -254,7 +254,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
                 "FROM storage_out_ticket st " +
                 "LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode ";
         StringBuffer buffer = new StringBuffer(sql);
-        buffer.append(" where sd.customerName like '%"+key+"%' or sd.productName like '%"+key+"%'");
+        buffer.append(" where (sd.customerName like '%"+key+"%' or sd.supplyName like '%"+key+"%' or sd.productName like '%"+key+"%')");
         buffer.append(" and st.storeCode='"+storeCode+"'");
         buffer.append(" ORDER BY st.date");
         buffer.append(" limit 0,30");
