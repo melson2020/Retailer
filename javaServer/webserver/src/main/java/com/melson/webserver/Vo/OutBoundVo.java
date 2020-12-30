@@ -21,11 +21,12 @@ public class OutBoundVo {
     private BigDecimal profit;
     private Integer returnCount;
     private BigDecimal salesProfit;
+    private String countUnit;
 
     public OutBoundVo() {
     }
 
-    public OutBoundVo(String date, String outBoundNo, String customerName, String salesName, String product, String supply, String batchNo, BigDecimal priceIn, BigDecimal priceOut, Integer outCount, BigDecimal totalPrice, BigDecimal unitProfit, BigDecimal profit, Integer returnCount, BigDecimal salesProfit) {
+    public OutBoundVo(String date, String outBoundNo, String customerName, String salesName, String product, String supply, String batchNo, BigDecimal priceIn, BigDecimal priceOut, Integer outCount, BigDecimal totalPrice, BigDecimal unitProfit, BigDecimal profit, Integer returnCount, BigDecimal salesProfit, String countUnit) {
         this.date = date;
         this.outBoundNo = outBoundNo;
         this.customerName = customerName;
@@ -41,6 +42,7 @@ public class OutBoundVo {
         this.profit = profit;
         this.returnCount = returnCount;
         this.salesProfit = salesProfit;
+        this.countUnit = countUnit;
     }
 
     public String getDate() {
@@ -161,5 +163,13 @@ public class OutBoundVo {
 
     public void setSalesProfit(BigDecimal salesProfit) {
         this.salesProfit = salesProfit;
+    }
+
+    public String getCountUnit() {
+        return countUnit;
+    }
+
+    public void setCountUnit(String countUnit) {
+        this.countUnit = countUnit;
     }
 }

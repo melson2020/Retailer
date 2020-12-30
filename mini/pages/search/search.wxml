@@ -14,7 +14,6 @@
 		</view>
   </view>
 
-
   <!--信息显示-->
   <view wx:else>
     <view class="userinfo-area">
@@ -26,7 +25,7 @@
     </view>
     <!--搜索栏-->
     <view class="search_bar">
-      <input class="weui-input srearch_bar_input" placeholder="查询商品名称、客户名" placeholder-class="weui-input__placeholder"
+      <input class="weui-input srearch_bar_input" placeholder="可查询商品名称、客户名、供应商" placeholder-class="weui-input__placeholder"
         bindinput="searchInputChange" value="{{searchContent}}" />
       <view class="srearch_bar_button" bindtap="outBoundSearch">
         查 询

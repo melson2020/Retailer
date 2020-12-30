@@ -4,8 +4,8 @@ App({
   globalData: {
     userInfo: null,
     appUserInfo: {},
-    // baseUrl: 'https://www.melson.top/api', //真实环境
-    baseUrl:'http://localhost:8080/retailer',      //测试环境
+    baseUrl: 'https://www.melson.top/api', //真实环境
+    // baseUrl:'http://localhost:8080/retailer',      //测试环境
 
   },
   myRequest() {

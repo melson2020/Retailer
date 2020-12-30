@@ -27,13 +27,32 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var that = this
+    let login = that.checkLoginStatus()
+    if (login.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true,
+        appUserInfo: app.globalData.appUserInfo,
+        hide_mask:false
+      })
+    }
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    var that = this
+    let login = that.checkLoginStatus()
+    if (login.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true,
+        appUserInfo: app.globalData.appUserInfo,
+        hide_mask:false
+      })
+    }
   },
 
   /**
@@ -82,6 +101,9 @@ Page({
       key: that.data.searchContent,
       storeCode: user.storeCode
     };
+
+    console.log(params)
+
     var token = user.retailerUserId
     that.triggerMask(true)
     http.postRequest('/weChat/outBoundList', params, token).then((res) => {
