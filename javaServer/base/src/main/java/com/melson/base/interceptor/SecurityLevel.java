@@ -1,5 +1,9 @@
 package com.melson.base.interceptor;
 
+import com.melson.base.entity.EmployeePermission;
+
+import java.util.List;
+
 /**
  * @Author Nelson
  * @Description
