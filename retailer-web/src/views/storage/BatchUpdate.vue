@@ -136,6 +136,7 @@ export default {
         }
         if (item.totalPrice && item.totalPrice !== "") {
           item.price = this.NumberDiv(item.totalPrice, item.count).toFixed(2);
+          this.computeBatchCost(item)
         }
         var dataCorrect =
           item.supplyId !== null &&
@@ -175,6 +176,24 @@ export default {
       SetTicketStatus: "SetTicketStatus",
       SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
     }),
+
+    computeBatchCost(batch) {
+      let discount = batch.discount ? this.NumberDiv(batch.discount, 100) : 0;
+      let costRate = this.NumberSub(1, discount);
+      let costPrice = this.NumberMul(batch.totalPrice, costRate);
+      batch.netIn = this.NumberDiv(costPrice, batch.count).toFixed(4);
+      if (batch.vat == 1) {
+        let tax = this.NumberDiv(batch.taxRate + 100, 100);
+        let price = this.NumberDiv(costPrice, tax);
+        batch.tepIn = this.NumberDiv(price, batch.count).toFixed(4);
+        batch.taxIn =
+        this.NumberDiv(costPrice, batch.count) -
+        this.NumberDiv(price, batch.count);
+      } else {
+        batch.tepIn = this.NumberDiv(costPrice, batch.count).toFixed(4);
+        batch.taxIn =0
+      }
+    },
     submit() {
       var updateList = this.updateBatchListShow.filter((item) => {
         return item.dataCorrect;
