@@ -16,12 +16,21 @@ public class StorageOutTicketInfoDto {
     private Integer outCount;
     private String countUnit;
     private String storeCode;
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public StorageOutTicketInfoDto() {
 
     }
 
-    public StorageOutTicketInfoDto(Integer id, String date, String code, String customerName, String productName, String batchNo, String supplyName, Integer outCount, String countUnit, String storeCode) {
+    public StorageOutTicketInfoDto(Integer id, String date, String code, String customerName, String productName, String batchNo, String supplyName, Integer outCount, String countUnit, String storeCode, Integer status) {
         this.id = id;
         this.date = date;
         this.code = code;
@@ -32,6 +41,7 @@ public class StorageOutTicketInfoDto {
         this.outCount = outCount;
         this.countUnit = countUnit;
         this.storeCode = storeCode;
+        this.status = status;
     }
 
     public String getStoreCode() {

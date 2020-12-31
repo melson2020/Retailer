@@ -131,7 +131,7 @@ export default {
         },
         xAxis: [
           {
-            type: "value",
+            type: "log",
             position: "top",
             splitLine: {
               show: true,
@@ -275,7 +275,7 @@ export default {
                         "#024b51",
                         "#765005",
                       ];
-                      return colorList[params.dataIndex];
+                      return colorList[params.dataIndex%colorList.length];
                     },
                   },
                   //鼠标悬停时：

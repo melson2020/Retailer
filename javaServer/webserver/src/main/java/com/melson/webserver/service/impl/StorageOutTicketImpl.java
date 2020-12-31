@@ -205,7 +205,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
     public List<OutBoundVo> FindOutBoundList(String startDate, String endDate, String storeCode, String permission, String userId, String customerId, String productId, String employeeId) {
         String sql = "select st.date,st.code as outBoundNo,sd.customerName,st.employeeName as salesName,sd.productName as product,sd.supplyName as supply,sd.storageInBatchNo as batchNo,sb.unitPriceIn as priceIn,sb.unitPriceOut as priceOut,sb.outCount,sd.totalPrice, sb.unitProfit, sb.profit,sd.returnCount,0.0 as salesProfit,sb.countUnit " +
                 "FROM storage_out_ticket st LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode " +
-                "RIGHT JOIN storage_out_bill_detail sb on st.billCode=sb.outBillCode";
+                "RIGHT JOIN storage_out_bill_detail sb on sd.code=sb.outDetailCode";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date dateEnd = sdf.parse(endDate);
@@ -266,7 +266,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
     @Override
     public List<StorageOutTicket> FindTicketsWithCodeOrCustomerNameAndDate(String searchValue, String date, String storeCode) {
-        String sql = "SELECT st.id,st.date,st.code,st.customerName,sd.productName,sd.storageInBatchNo as batchNo,sd.supplyName,sd.outCount,sd.countUnit,st.storeCode FROM `storage_out_ticket` st right JOIN  storage_out_detail sd on st.`code`=sd.outTicketCode where st.storeCode='" + storeCode + "'";
+        String sql = "SELECT st.id,st.date,st.code,st.customerName,sd.productName,sd.storageInBatchNo as batchNo,sd.supplyName,sd.outCount,sd.countUnit,st.storeCode,st.status FROM `storage_out_ticket` st right JOIN  storage_out_detail sd on st.`code`=sd.outTicketCode where st.storeCode='" + storeCode + "'";
         StringBuffer sBuffer = new StringBuffer(sql);
         if (org.springframework.util.StringUtils.isEmpty(searchValue)) {
             sBuffer.append("and st.date='" + date + "'");
@@ -426,6 +426,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         ticket.setCode(dto.getCode());
         ticket.setId(dto.getId());
         ticket.setStoreCode(dto.getStoreCode());
+        ticket.setStatus(dto.getStatus());
         ticket.setCustomerName(dto.getCustomerName());
         List<StorageOutDetail> details = new ArrayList<>();
         StorageOutDetail detail = CreateDetail(dto);

@@ -22,7 +22,10 @@
         </div>
       </div>
     </div>
-    <div v-if="storageOutTickets.length <= 0" class="goods-return-empty-data-div">
+    <div
+      v-if="storageOutTickets.length <= 0"
+      class="goods-return-empty-data-div"
+    >
       暂无数据，请查询
     </div>
     <div class="goods-return-result-area" v-else>
@@ -36,18 +39,24 @@
           class="goods-return-el-col-card"
         >
           <el-card>
-            <div slot="header">         
-              <span class="goods-return-font-bold color-title goods-return-float-left"
-                >{{ item.code }}</span
-              >
-              <span class="goods-return-color-light-orange">{{ item.date }}</span>
-              <span class="goods-return-margin-left goods-return-color-light-orange">{{
-                item.customerName
-              }}</span>
-              <el-button
-                style="float: right; padding: 3px 0"
-                type="text"
-                @click="goodsReturnOnClick(item)"
+            <div class="goods-return-card-header" slot="header">
+              <div>
+                <span class="goods-return-font-bold goods-return-color-title">{{
+                  item.code
+                }}</span>
+                <span
+                  class="goods-return-color-light-gary goods-return-margin-left"
+                  >{{ item.date }}</span
+                >
+                <span
+                  class="goods-return-margin-left goods-return-color-light-gary"
+                  >{{ item.customerName }}</span
+                >
+                <span v-if="item.status > 0" class="goods-return-color-warning"
+                  >（退）</span
+                >
+              </div>
+              <el-button type="text" @click="goodsReturnOnClick(item)"
                 >退货</el-button
               >
             </div>
@@ -105,7 +114,45 @@
         >
         退货
       </div>
-      <el-table :data="GoodsReturn_outTicketForReturn.details" size="small">
+      <div>
+        <div class="goods-return-dialog-info-area goods-return-space-betwween">
+          <span class="goods-return-color-title"
+            >日期：{{ GoodsReturn_outTicketForReturn.date }}</span
+          >
+          <span class="goods-return-color-title"
+            >单号：{{ GoodsReturn_outTicketForReturn.code }}</span
+          >
+          <span class="goods-return-color-title"
+            >人员：{{ GoodsReturn_outTicketForReturn.employeeName }}</span
+          >
+          <span class="goods-return-color-title"
+            >类型：{{
+              GoodsReturn_outTicketForReturn.type == "normal"
+                ? "正常出库"
+                : "零时出库"
+            }}</span
+          >
+          <span class="goods-return-color-title"
+            >客户：{{ GoodsReturn_outTicketForReturn.customerName }}</span
+          >
+        </div>
+        <div class="goods-return-dialog-info-area">
+          <div class="goods-return-color-title">描述：</div>
+          <p>{{ GoodsReturn_outTicketForReturn.description }}</p>
+        </div>
+        <div class="goods-return-dialog-info-area goods-return-color-title">
+          出库详细
+        </div>
+      </div>
+      <el-table
+        class="goods-return-detail-table"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#808080', color: 'white' }"
+        :data="GoodsReturn_outTicketForReturn.details"
+        size="small"
+      >
         <el-table-column prop="storageInBatchNo" label="批次" width="auto">
         </el-table-column>
         <el-table-column prop="productName" label="产品名称" width="auto">
@@ -121,9 +168,13 @@
         </el-table-column>
         <el-table-column prop="returnCount" label="已退数量" width="auto">
           <template slot-scope="scope">
-            <span class="goods-return-color-warning">
+            <span
+              v-if="scope.row.returnCount > 0"
+              class="goods-return-color-warning"
+            >
               {{ scope.row.returnCount }}{{ scope.row.countUnit }}</span
             >
+            <span v-else></span>
           </template>
         </el-table-column>
         <el-table-column label="退货" width="auto">
@@ -153,12 +204,14 @@
 
       <div class="dialog-footer-text">
         <span>退货金额:</span>
-        <span class="goods-return-color-light-orange font-bold">{{ returnBackPrice }}</span>
+        <span class="goods-return-color-light-orange font-bold">{{
+          returnBackPrice
+        }}</span>
       </div>
-     
+
       <span slot="footer" class="goods-return-dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="SubmitGoodsReturn">确 定</el-button>
+        <el-button type="primary" @click="SubmitGoodsReturn">退 货</el-button>
       </span>
     </el-dialog>
   </div>
@@ -242,11 +295,22 @@ export default {
         records: returnDetails,
         outDetails: this.GoodsReturn_outTicketForReturn.details,
       };
+
       this.SaveGoodsReturnRecords(params)
         .then((res) => {
           if (res.resultStatus == 1) {
-            this.$message.success("退货成功");
-            this.dialogVisible = !this.dialogVisible;
+            const h = this.$createElement;
+            this.$messageBox({
+              title: "保存成功，本次退款金额",
+              message: h("p", null, [
+                h("i", { style: "color:#e6a23c;font-size:1.3em" }, res.message),
+              ]),
+              showCancelButton: false,
+              confirmButtonText: "确定",
+            }).then(() => {
+              this.dialogVisible = !this.dialogVisible;
+            });
+           
           } else {
             this.$message.warning(res.message);
           }
@@ -298,6 +362,7 @@ export default {
 }
 .goods-return-color-title {
   color: #303133;
+  font-size: 1.2em;
 }
 .goods-return-button-area {
   padding: 20px 0;
@@ -325,6 +390,9 @@ export default {
 }
 .goods-return-color-light-orange {
   color: #e6a23c;
+}
+.goods-return-color-light-gary {
+  color: #909399;
 }
 .goods-return-font-bold {
   font-weight: bold;
@@ -381,5 +449,24 @@ export default {
   text-align: right;
   font-size: 30px;
   align-items: center;
+}
+.goods-return-card-header {
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.goods-return-dialog-info-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+}
+.goods-return-space-betwween {
+  justify-content: space-between;
+}
+.goods-return-detail-table {
+  margin: 20px 10px;
 }
 </style>

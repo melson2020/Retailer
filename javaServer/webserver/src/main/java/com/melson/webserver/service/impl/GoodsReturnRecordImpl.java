@@ -77,7 +77,7 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
         if (computed) {
 //            List<GoodsReturnRecord> saved = goodsReturnRecordDao.saveAll(returnRecords);
             //更新库存
-            if (returnRecords.size()>0) {
+            if (returnRecords.size() > 0) {
                 String storeCode = returnRecords.get(0).getStoreCode();
                 List<ProductBatch> productBatchList = productBatchDao.findByBatchNoInAndStoreCode(batchNos, storeCode);
                 List<ProductStorage> productStorageList = productStorageDao.findByProductIdIn(productIds);
@@ -97,10 +97,15 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
                     ProductBatch batch = batchMap.get(saveRecord.getBatchNo() + saveRecord.getProductId());
                     batch.setCount(batch.getCount() + saveRecord.getCount());
                 }
-                goodsReturnRecordDao.saveAll(returnRecords);
+               List<GoodsReturnRecord> savedRecords=  goodsReturnRecordDao.saveAll(returnRecords);
                 productBatchDao.saveAll(batchMap.values());
                 productStorageDao.saveAll(storageMap.values());
                 UpdateOutTicketAndDetailStatus(outDetails);
+                BigDecimal totalReturnPrice=new BigDecimal(0.0);
+                for (GoodsReturnRecord gr:savedRecords){
+                    totalReturnPrice=totalReturnPrice.add(gr.getTotalPrice());
+                }
+                result.setMessage(totalReturnPrice.toString());
             } else {
                 result.setResultStatus(-1);
                 result.setMessage("save records failed");
@@ -119,7 +124,9 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
         for (StorageOutDetail detail : outDetails) {
             Integer returnCount = detail.getReturnCount() + detail.getBackCount();
             detail.setReturnCount(returnCount);
-            if (detail.getOutCount() <= returnCount) {
+            if (returnCount == null || returnCount <= 0) {
+                detail.setStatus(0);
+            } else if (detail.getOutCount() <= returnCount) {
                 detail.setStatus(2);
             } else {
                 detail.setStatus(1);
