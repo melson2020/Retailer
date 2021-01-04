@@ -2,7 +2,7 @@ import request from "../../utils/request";
 import { Message } from "element-ui";
 
 const state = {
-    productStorageRecords: []
+    productStorageRecords: [],
 };
 
 const actions = {
@@ -21,18 +21,22 @@ const actions = {
     // eslint-disable-next-line no-empty-pattern
     GetDashBoardData({},params){
       return  request.GetDashBordData(params);
-    }
+    },
+     // eslint-disable-next-line no-empty-pattern
+    GetGoodsReturnRecords({},params){
+       return request.GetGoodsReturnRecord(params);}
 
 };
 
 const getters = {
     productStorageRecords: state => state.productStorageRecords,
+    goodsReturnRecords:state=>state.goodsReturnRecords
 };
 
 const mutations = {
     SetProductStorageRecords(state, data) {
         state.productStorageRecords = data;
-    }
+    },
 };
 
 export default {

@@ -5,6 +5,7 @@ import com.melson.base.Result;
 import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
+import com.melson.webserver.Vo.OutBoundDeliveryVo;
 import com.melson.webserver.Vo.OutBoundVo;
 import com.melson.webserver.Vo.StorageOutRecordVo;
 import com.melson.webserver.Vo.StorageOutTicketDetailVo;
@@ -76,7 +77,8 @@ public class StorageOutResource extends BaseResource {
         String employeeId= request.getParameter("employeeId");
         Result result=new Result();
         List<OutBoundVo> voList=outTicketService.FindOutBoundList(startDate,endDate,storeCode,permission,userId,customerId,productId,employeeId);
-        result.setData(voList);
+        OutBoundDeliveryVo vo=new OutBoundDeliveryVo(startDate,endDate,voList);
+        result.setData(vo);
         System.out.println("Rest Call: /storageOut/outboundList ...");
         return result;
     }

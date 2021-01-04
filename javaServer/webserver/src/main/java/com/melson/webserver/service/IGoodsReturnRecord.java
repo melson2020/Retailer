@@ -14,4 +14,5 @@ import java.util.List;
  */
 public interface IGoodsReturnRecord extends IService<GoodsReturnRecord> {
     Result SaveGoodsReturnRecords(List<GoodsReturnRecord> returnRecords,List<StorageOutDetail> details);
+    List<GoodsReturnRecord> FindRecords(String storeCode,String startDate,String endDate);
 }

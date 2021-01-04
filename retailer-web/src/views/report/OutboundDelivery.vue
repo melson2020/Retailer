@@ -84,7 +84,10 @@
           >查询</el-button
         >
         <el-button
-          :disabled="outBoundList.length <= 0"
+          :disabled="
+            !outBoundDelivery.outBoundVoList ||
+            outBoundDelivery.outBoundVoList.length <= 0
+          "
           type="primary"
           size="small"
           @click="exportOnClick"
@@ -112,9 +115,16 @@
               <span class="OutboundDelivery-Summary-card-title color-gray"
                 >退货额</span
               >
-              <div class="OutboundDelivery-Summary-card-content">
-                {{ summarys.returnTotal }}
-              </div>
+              <el-tooltip effect="light" content="点击查看详细" placement="top">
+                <el-button
+                  class="OutboundDelivery-Summary-card-content color-black"
+                  @click="goodsReturnDetail"
+                  type="text"
+                  :disabled="summarys.returnTotal <= 0"
+                >
+                  {{ summarys.returnTotal }}
+                </el-button>
+              </el-tooltip>
             </div>
           </el-col>
           <el-col :span="8">
@@ -132,7 +142,7 @@
         </el-row>
       </div>
       <el-table
-        :data="outBoundList"
+        :data="outBoundDelivery.outBoundVoList"
         ref="outBoundTable"
         border
         size="mini"
@@ -161,7 +171,8 @@
         <el-table-column
           prop="salesName"
           label="销售人员"
-          width="120px" align="center"
+          width="120px"
+          align="center"
           sortable
         >
         </el-table-column>
@@ -172,11 +183,7 @@
           label="供应商"
           sortable
         ></el-table-column>
-        <el-table-column
-          prop="batchNo"
-          label="批次"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="batchNo" label="批次" sortable></el-table-column>
         <!-- <el-table-column label="入库单价">
           <template slot-scope="scope">
             {{ scope.row.priceIn }}{{ scope.row.countUnit }}
@@ -194,19 +201,28 @@
         </el-table-column>
         <el-table-column
           prop="totalPrice"
-          label="总价" width="80px" align="center"
+          label="总价"
+          width="80px"
+          align="center"
           sortable
         ></el-table-column>
         <el-table-column
           prop="unitProfit"
           label="单个利润"
-          width="100px" align="center"
+          width="100px"
+          align="center"
           sortable
         ></el-table-column>
-        <el-table-column prop="returnCount" label="退货量" width="70px" align="center">
+        <el-table-column
+          prop="returnCount"
+          label="退货量"
+          width="70px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.returnCount > 0" class="color-green">
-              {{ scope.row.returnCount }}{{ scope.row.countUnit }}</span>
+              {{ scope.row.returnCount }}{{ scope.row.countUnit }}</span
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -224,6 +240,29 @@
         </el-table-column>
       </el-table>
     </div>
+    <el-dialog title="退货详细" :visible.sync="goodsReturnDetailVisible">
+      <el-table size="small" :data="goodsReturnRecords">
+        <el-table-column property="date" label="日期"></el-table-column>
+        <el-table-column
+          property="productName"
+          label="产品名称"
+        ></el-table-column>
+        <el-table-column property="supplyName" label="供应商"></el-table-column>
+        <el-table-column
+          property="customerName"
+          label="客户名称"
+        ></el-table-column>
+        <el-table-column
+          property="operationEmployeeName"
+          label="操作人员"
+        ></el-table-column>
+        <el-table-column property="count" label="数量"></el-table-column>
+        <el-table-column property="totalPrice" label="总价"></el-table-column>
+      </el-table>
+      <div class="outbound-goods-return-record-summary">
+        总计：<span class="color-orange">{{ goodsReturnSummaryPrice }}</span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -238,6 +277,8 @@ export default {
       employeeId: "",
       customerId: "",
       productId: "",
+      goodsReturnRecords: [],
+      goodsReturnDetailVisible: false,
       pickerOptions: {
         onPick: (obj) => {
           this.startDateMin = new Date(obj.minDate).getTime();
@@ -292,6 +333,7 @@ export default {
       GetEmployeeList: "GetEmployeeList",
       GetCustomerList: "GetCustomerList",
       GetProductList: "GetProductList",
+      GetGoodsReturnRecords: "GetGoodsReturnRecords",
     }),
     getSummaries(param) {
       const { columns, data } = param;
@@ -355,7 +397,7 @@ export default {
         returnCount: "退货数量",
         salesProfit: "销售利润",
         profit: "出库利润",
-        countUnit:"单位"
+        countUnit: "单位",
       };
       var json = [];
       var table = this.$refs.outBoundTable;
@@ -364,12 +406,13 @@ export default {
       data.map((item) => {
         json.push(item);
       });
-      if (!this.date) {
-        this.$message.warning("请选择时间范围");
-        return;
-      }
       var fileName =
-        "销售报表" + "(" + this.date[0] + "至" + this.date[1] + ")";
+        "销售报表" +
+        "(" +
+        this.outBoundDelivery.startDate +
+        "至" +
+        this.outBoundDelivery.endDate +
+        ")";
       json.push({
         date: "总计",
         outBoundNo: "",
@@ -386,7 +429,7 @@ export default {
         returnCount: "",
         totalPrice: sum[8],
         salesProfit: sum[11],
-        countUnit:""
+        countUnit: "",
       });
       excelHelper.export_json_to_excel({
         json: json,
@@ -397,34 +440,63 @@ export default {
         fileName: fileName,
       });
     },
+    goodsReturnDetail() {
+      let params = {
+        storeCode: this.userInfo.storeCode,
+        startDate: this.outBoundDelivery.startDate,
+        endDate: this.outBoundDelivery.endDate,
+      };
+      this.GetGoodsReturnRecords(params)
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.goodsReturnRecords = res.data;
+            this.goodsReturnDetailVisible = !this.goodsReturnDetailVisible;
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
   },
   computed: {
     ...mapGetters([
       "userInfo",
-      "outBoundList",
+      "outBoundDelivery",
       "employeeList",
       "customerList",
       "productList",
     ]),
     summarys() {
       var summary = { salesTotal: 0, returnTotal: 0, profit: 0 };
-      this.outBoundList.map((item) => {
-        summary.salesTotal = this.NumberAdd(
-          summary.salesTotal,
-          item.totalPrice
-        );
-        summary.profit = this.NumberAdd(summary.profit, item.salesProfit);
+      if (!this.outBoundDelivery.outBoundVoList) return summary;
+      this.outBoundDelivery.outBoundVoList.map((item) => {
+        summary.salesTotal = Number(
+          this.NumberAdd(summary.salesTotal, item.totalPrice)
+        ).toFixed(2);
+        summary.profit = Number(
+          this.NumberAdd(summary.profit, item.salesProfit)
+        ).toFixed(2);
         if (item.returnCount > 0) {
-          summary.returnTotal = this.NumberAdd(
-            summary.returnTotal,
-            this.NumberMul(item.returnCount, item.priceOut)
-          );
+          summary.returnTotal = Number(
+            this.NumberAdd(
+              summary.returnTotal,
+              this.NumberMul(item.returnCount, item.priceOut)
+            )
+          ).toFixed(2);
         }
       });
-      summary.profit = summary.profit.toFixed(2);
-      summary.returnTotal = summary.returnTotal.toFixed(2);
-      summary.salesTotal = summary.salesTotal.toFixed(2);
       return summary;
+    },
+    goodsReturnSummaryPrice() {
+      var totalPrice = 0;
+      if (this.goodsReturnRecords && this.goodsReturnRecords.length > 0) {
+        this.goodsReturnRecords.map(item=>{
+          totalPrice=this.NumberAdd(totalPrice,item.totalPrice).toFixed(2)
+        })
+      }
+      return totalPrice;
     },
   },
   mounted: function () {
@@ -487,7 +559,7 @@ export default {
 }
 .OutboundDelivery-Summart-card {
   border-radius: 10px;
-  height: 200px;
+  height: 7vh;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: row;
@@ -524,6 +596,9 @@ export default {
 .color-dark-yellow {
   color: #ff8c00;
 }
+.color-black {
+  color: #303133;
+}
 .OutboundDelivery-Summary-card-title {
   width: 200px;
   font-size: 35px;
@@ -532,5 +607,10 @@ export default {
 .OutboundDelivery-Summary-card-content {
   width: 100%;
   font-size: xx-large;
+}
+.outbound-goods-return-record-summary {
+  padding: 20px;
+  text-align: right;
+  font-size: large;
 }
 </style>

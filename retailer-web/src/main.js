@@ -55,7 +55,8 @@ import {
   Switch,
   Alert,
   RadioGroup,
-  Radio
+  Radio,
+  Tooltip
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -188,6 +189,7 @@ Vue.use(Alert);
 Vue.use(RadioGroup);
 Vue.use(Radio);
 Vue.use(elTableInfiniteScroll)
+Vue.use(Tooltip)
 
 localStorage.setItem("initState", JSON.stringify(store.state));
 

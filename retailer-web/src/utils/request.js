@@ -225,6 +225,9 @@ export default {
   GetDashBordData(params){
     return service.get("/report/dashboard",params)
   },
+  GetGoodsReturnRecord(params){
+    return service.get("/report/goodsReturnRecord",params)
+  },
   /**
    * goodReturn
    */

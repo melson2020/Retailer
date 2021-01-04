@@ -7,7 +7,7 @@ const state = {
     productBatchList: [],
     storageOutRecordList: [],
     storageOutDetails: {},
-    outBoundList: [],
+    outBoundDelivery:{},
     outTicketInfo: {}
 };
 
@@ -80,7 +80,7 @@ const getters = {
     productBatchList: state => state.productBatchList,
     storageOutRecordList: state => state.storageOutRecordList,
     storageOutDetails: state => state.storageOutDetails,
-    outBoundList: state => state.outBoundList,
+    outBoundDelivery: state => state.outBoundDelivery,
     outTicketInfo:state=>state.outTicketInfo
 };
 
@@ -103,7 +103,7 @@ const mutations = {
         state.storageOutRecordList = data
     },
     SetOutBoundList(state, data) {
-        state.outBoundList = data
+        state.outBoundDelivery = data
     },
     SetStorageOutRecordDetails(state, data) {
         state.storageOutDetails = data

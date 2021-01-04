@@ -242,4 +242,16 @@ router.beforeEach((to, from, next) => {
     } else { next({ path: "/login" }) }
   }
 });
+
+router.onError((error) => {
+  const pattern = /Loading chunk (\d)+ failed/g;
+  const isChunkLoadFailed = error.message.match(pattern);
+  if (isChunkLoadFailed) {
+    window.location.reload();
+    // router.replace(router.history.pending.fullPath);
+  }else{
+    console.log(error)
+  }
+});
+
 export default router;

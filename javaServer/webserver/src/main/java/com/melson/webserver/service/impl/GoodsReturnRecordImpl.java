@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -115,6 +116,22 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
             result.setMessage("can find return back bill detail");
         }
         return result;
+    }
+
+    @Override
+    public List<GoodsReturnRecord> FindRecords(String storeCode, String startDate, String endDate) {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date begin=sdf.parse(startDate);
+            Date end=sdf.parse(endDate);
+            Calendar calendar=Calendar.getInstance();
+            calendar.setTime(end);
+            calendar.add(Calendar.DATE,1);
+            Date newEnd=calendar.getTime();
+            return goodsReturnRecordDao.findByStoreCodeAndCreateTimeBetween(storeCode,begin,newEnd);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     private void UpdateOutTicketAndDetailStatus(List<StorageOutDetail> outDetails) {
