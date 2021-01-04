@@ -166,7 +166,7 @@
             :label="item.label"
             :width="item.width"
           ></el-table-column>
-           <el-table-column label="特征" align="center" width="auto">
+           <el-table-column label="标签" align="center" width="auto">
           <template slot-scope="scope">
             <el-tag
               class="el-tag"
