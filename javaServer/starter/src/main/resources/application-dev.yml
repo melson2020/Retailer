@@ -9,9 +9,9 @@ spring:
       #mysql驱动
       driver-class-name: com.mysql.jdbc.Driver
       #基本属性
-      url: jdbc:mysql://172.18.0.2:3306/retailer?Unicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://172.18.0.1:3306/retailer?Unicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
-      password: root
+      password: 123!@#jklJKL
       #配置初始化大小/最小/最大
       initial-size: 1
       min-idle: 1

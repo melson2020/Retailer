@@ -28,18 +28,19 @@
         }"
       >
         <el-table-column prop="customerName" label="客户名称"> </el-table-column>
+        <el-table-column prop="outTicketCode" label="出库单号"> </el-table-column>
         <el-table-column prop="productName" label="商品名称"> </el-table-column>
         <el-table-column
           prop="storageInBatchNo"
           label="入库批次号"
         ></el-table-column>
-        <el-table-column label="税">
+        <!-- <el-table-column label="税">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.vat == 1" size="mini">
               税 ({{ scope.row.taxRate }}%)
             </el-tag>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="出库数量">
           <template slot-scope="scope">
             {{ scope.row.outCount }}{{ scope.row.countUnit }}
@@ -50,7 +51,7 @@
       </el-table>
     </el-scrollbar>
     <div class="header-div">
-      <span class="title-name">出库单详细核算</span>
+      <span class="title-name">出库单核算</span>
     </div>
     <el-scrollbar  class="content-scrollbar scrollbar-height">
       <el-table
@@ -68,24 +69,25 @@
         <el-table-column prop="productName" label="商品名称"> </el-table-column>
         <el-table-column prop="batchNo" label="入库批次号"></el-table-column>
         <el-table-column prop="supplyName" label="供应商"></el-table-column>
-        <el-table-column label="入库税">
+        <el-table-column label="入库税点">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.vatIn == 1" size="mini">
+            <!-- <el-tag v-if="scope.row.vatIn == 1" size="mini"> -->
+            <el-tag size="mini">
               税 ({{ scope.row.taxRateIn }}%)
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="unitPriceIn" label="入库单价"> </el-table-column>
         <el-table-column prop="discount" label="入库回点"> </el-table-column>
-        <el-table-column prop="unitPriceOut" label="出库单价">
-        </el-table-column>
-        <el-table-column label="出库税">
+        <el-table-column label="出库税点">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.vatOut == 1" size="mini">
+            <!-- <el-tag v-if="scope.row.vatOut == 1" size="mini"> -->
+            <el-tag size="mini">
               税 ({{ scope.row.taxRateOut }}%)
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="unitPriceOut" label="出库单价"></el-table-column>
         <el-table-column label="出库数量">
           <template slot-scope="scope">
             {{ scope.row.outCount }}{{ scope.row.countUnit }}
