@@ -5,11 +5,17 @@ import com.melson.base.Result;
 import com.melson.webserver.dao.*;
 import com.melson.webserver.entity.*;
 import com.melson.webserver.service.IGoodsReturnRecord;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -119,7 +125,7 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
     }
 
     @Override
-    public List<GoodsReturnRecord> FindRecords(String storeCode, String startDate, String endDate) {
+    public List<GoodsReturnRecord> FindRecords(String storeCode,String startDate,String endDate,String customerId,String productId,String employeeId) {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date begin=sdf.parse(startDate);
@@ -128,7 +134,28 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
             calendar.setTime(end);
             calendar.add(Calendar.DATE,1);
             Date newEnd=calendar.getTime();
-            return goodsReturnRecordDao.findByStoreCodeAndCreateTimeBetween(storeCode,begin,newEnd);
+            List<GoodsReturnRecord> recordList=goodsReturnRecordDao.findAll(new Specification<GoodsReturnRecord>(){
+                @Nullable
+                @Override
+                public Predicate toPredicate(Root<GoodsReturnRecord> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    Predicate predicate=criteriaBuilder.conjunction();
+                    predicate.getExpressions().add(criteriaBuilder.equal(root.get("storeCode"),storeCode));
+                    predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"),begin));
+                    predicate.getExpressions().add(criteriaBuilder.lessThan(root.get("createTime"),newEnd));
+                    if(!StringUtils.isEmpty(customerId)){
+                        predicate.getExpressions().add(criteriaBuilder.equal(root.get("customerId"),Integer.parseInt(customerId)));
+                    }
+                    if(!StringUtils.isEmpty(productId)){
+                        predicate.getExpressions().add(criteriaBuilder.equal(root.get("productId"),Integer.parseInt(productId)));
+                    }
+                    if(!StringUtils.isEmpty(employeeId)){
+                        predicate.getExpressions().add(criteriaBuilder.equal(root.get("operationEmployeeUserId"),employeeId));
+                    }
+                    Predicate predicate1 = predicate;
+                    return predicate1;
+                }
+            });
+            return recordList;
         }catch (Exception e){
             return null;
         }

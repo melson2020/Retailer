@@ -23,7 +23,6 @@
               @focus="focusOn"
             ></el-date-picker>
             <el-select
-              v-if="this.userInfo.permission > 2"
               v-model="employeeId"
               placeholder="销售人员"
               class="outbound-margin-top"
@@ -445,6 +444,9 @@ export default {
         storeCode: this.userInfo.storeCode,
         startDate: this.outBoundDelivery.startDate,
         endDate: this.outBoundDelivery.endDate,
+        customerId: this.outBoundDelivery.customerId,
+        productId: this.outBoundDelivery.productId,
+        employeeId: this.outBoundDelivery.employeeId,
       };
       this.GetGoodsReturnRecords(params)
         .then((res) => {
@@ -492,17 +494,15 @@ export default {
     goodsReturnSummaryPrice() {
       var totalPrice = 0;
       if (this.goodsReturnRecords && this.goodsReturnRecords.length > 0) {
-        this.goodsReturnRecords.map(item=>{
-          totalPrice=this.NumberAdd(totalPrice,item.totalPrice).toFixed(2)
-        })
+        this.goodsReturnRecords.map((item) => {
+          totalPrice = this.NumberAdd(totalPrice, item.totalPrice).toFixed(2);
+        });
       }
       return totalPrice;
     },
   },
   mounted: function () {
-    if (this.userInfo.permission > 2) {
-      this.GetEmployeeList(this.userInfo);
-    }
+    this.GetEmployeeList(this.userInfo);
     this.GetCustomerList(this.userInfo);
     let params = { storeCode: this.userInfo.storeCode };
     this.GetProductList(params);

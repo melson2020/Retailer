@@ -77,7 +77,7 @@ public class StorageOutResource extends BaseResource {
         String employeeId= request.getParameter("employeeId");
         Result result=new Result();
         List<OutBoundVo> voList=outTicketService.FindOutBoundList(startDate,endDate,storeCode,permission,userId,customerId,productId,employeeId);
-        OutBoundDeliveryVo vo=new OutBoundDeliveryVo(startDate,endDate,voList);
+        OutBoundDeliveryVo vo=new OutBoundDeliveryVo(startDate,endDate,customerId,productId,employeeId,voList);
         result.setData(vo);
         System.out.println("Rest Call: /storageOut/outboundList ...");
         return result;

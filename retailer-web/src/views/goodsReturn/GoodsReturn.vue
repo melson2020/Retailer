@@ -281,6 +281,7 @@ export default {
             batchNo: item.storageInBatchNo,
             date: new Date().format("yyyy-MM-dd"),
             operationEmployeeName: this.userInfo.userName,
+            operationEmployeeUserId:this.userInfo.userId,
             billCode: this.GoodsReturn_outTicketForReturn.billCode,
             outDetailCode: item.code,
           };

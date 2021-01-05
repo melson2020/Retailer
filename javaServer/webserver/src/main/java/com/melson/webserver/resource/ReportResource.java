@@ -78,8 +78,11 @@ public class ReportResource extends BaseResource {
         String startDate=request.getParameter("startDate");
         String endDate=request.getParameter("endDate");
         if(StringUtils.isEmpty(storeCode)||StringUtils.isEmpty(startDate)||StringUtils.isEmpty(endDate))return this.GenerateResult(ResultType.ParametersNeeded);
+        String customerId= request.getParameter("customerId");
+        String productId= request.getParameter("productId");
+        String employeeId= request.getParameter("employeeId");
         Result result = new Result();
-        List<GoodsReturnRecord> records=goodsReturnRecordService.FindRecords(storeCode,startDate,endDate);
+        List<GoodsReturnRecord> records=goodsReturnRecordService.FindRecords(storeCode,startDate,endDate,customerId,productId,employeeId);
         if(records==null){
             result.setResultStatus(-1);
             result.setMessage("Null result,please check date format");

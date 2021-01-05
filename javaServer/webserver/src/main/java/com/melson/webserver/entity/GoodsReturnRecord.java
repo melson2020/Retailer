@@ -35,6 +35,7 @@ public class GoodsReturnRecord {
     private Date createTime;
     private String date;
     private String operationEmployeeName;
+    private String operationEmployeeUserId;
     private String billCode;
     private String outDetailCode;
     private Integer beforeCount;
@@ -222,5 +223,13 @@ public class GoodsReturnRecord {
 
     public void setAfterCount(Integer afterCount) {
         this.afterCount = afterCount;
+    }
+
+    public String getOperationEmployeeUserId() {
+        return operationEmployeeUserId;
+    }
+
+    public void setOperationEmployeeUserId(String operationEmployeeUserId) {
+        this.operationEmployeeUserId = operationEmployeeUserId;
     }
 }
