@@ -212,6 +212,7 @@ export default {
       this.GetDashBoardData(params)
         .then((res) => {
           if (res.resultStatus == 1) {
+            //产品饼图排序
             var productList = res.data.productList;
             var pSeries = [
               {
@@ -232,6 +233,7 @@ export default {
             } else {
               pSeries[0].data.push({ value: 1, name: "无数据" });
             }
+            //员工饼图排序
             var employeeList = res.data.employeeList;
             var eSeries = [
               {
@@ -252,6 +254,7 @@ export default {
             } else {
               eSeries[0].data.push({ value: 1, name: "无数据" });
             }
+            //柱状图排序
             var sortList = res.data.sortList;
             var sSeries = [
               {

@@ -102,27 +102,27 @@
           </div>
         </div>
       </el-scrollbar>
-      <el-dialog title="入库详细" :visible.sync="dialogVisible" width="40%">
+      <el-dialog title="入库详细" :visible.sync="dialogVisible" width="50%">
         <el-table :data="recordDetails" border size="mini">
           <el-table-column prop="productName" label="商品名" width="auto"></el-table-column>
           <el-table-column prop="supplyName" label="供应商" width="auto"></el-table-column>
-          <el-table-column label="是否含税" width="auto">
+          <el-table-column label="税点" width=100px>
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.vat==1" size="mini">税 ({{scope.row.taxRate}}%)</el-tag>
+              <el-tag size="mini">税 ({{scope.row.taxRate}}%)</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="discount" label="回点" width="auto"></el-table-column>
-          <el-table-column label="单价">
+          <el-table-column prop="discount" label="回点" width=60px></el-table-column>
+          <el-table-column label="单价" width=100px>
             <template slot-scope="scope">
               <span>{{scope.row.price}}￥</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量">
+          <el-table-column label="数量" width=100px>
             <template slot-scope="scope">
               <span>{{scope.row.count}}{{scope.row.countUnit}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="总价">
+          <el-table-column label="总价" width=100px>
             <template slot-scope="scope">
               <span>{{scope.row.totalPrice}}￥</span>
             </template>
