@@ -55,7 +55,7 @@
             plain circle type="primary" icon="el-icon-edit"/>
             <el-button
               size="mini"
-              :disabled="scope.row.permission >= userInfo.permission&&scope.row.userId!=userInfo.userId"
+              :disabled="scope.row.permission >=userInfo.permission"
               @click="handleDelete(scope.$index, scope.row)"
             plain circle type="danger" icon="el-icon-delete"/>
           </template>
@@ -91,7 +91,7 @@
         </el-form-item>
         <el-form-item label="用户角色" :label-width="formLabelWidth" prop="permission">
           <el-col :span="11">
-            <el-select v-model="editEmployee.permission" placeholder="性别" style="width: 100%;">
+            <el-select v-model="editEmployee.permission" placeholder="性别" style="width: 100%;" :disabled="editEmployee.permission==3">
               <el-option
                 v-for="permission in permissionList"
                 :label="permission.name"
