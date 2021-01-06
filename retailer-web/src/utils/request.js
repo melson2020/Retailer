@@ -22,6 +22,7 @@ export default {
     return service.get("/public/areaList", params);
   },
 
+  //system
   /**
    * 注册商户
    * @param {*} params 商户信息
@@ -43,6 +44,13 @@ export default {
   UserLogin(params) {
     return service.post("/system/login", params);
   },
+  CreateSharePath(params) {
+    return service.post("/system/createSharePath", params);
+  },
+  FindSharePath(params) {
+    return service.get("/system/getSharePath", params);
+  },
+
   GetStoreEmployeeList(params) {
     return service.get("/employee/employeeList", params);
   },
@@ -239,5 +247,11 @@ export default {
   },
   SaveGoodsReturnRecords(params){
     return service.post("/goodsReturn/saveGoodsReturnRecord",params)
+  },
+  /**
+   * share
+   */
+  FindShareProduct(params){
+    return service.get("/storage/findShareProduct",params)
   }
 };

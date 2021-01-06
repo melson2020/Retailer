@@ -27,6 +27,8 @@ const OutboundDelivery = () => import("../views/report/OutboundDelivery.vue")
 const ProductStorageRecord = () => import("../views/report/ProductStorageRecord.vue")
 const GoodsReturn = () => import("../views/goodsReturn/GoodsReturn.vue")
 const Dashboard=()=>import("../views/report/Dashboard.vue")
+const Sysconfig=()=>import("../views/dicts/Sysconfig.vue")
+const ShareView=()=>import('../views/ShareView.vue')
 
 Vue.use(VueRouter);
 
@@ -48,6 +50,11 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register
+  },
+  {
+    path: "/view",
+    name: "View",
+    component: ShareView
   },
   {
     path: "/main",
@@ -78,6 +85,11 @@ const routes = [
         path: "employee",
         name: "employee",
         component: Employee
+      },
+      {
+        path: "sysconfig",
+        name: "sysconfig",
+        component: Sysconfig
       },
       {
         path: "productStorage",
@@ -201,7 +213,7 @@ const router = new VueRouter({
   routes
 });
 
-const noPermissionPage = ['/', "/login", '/register'];
+const noPermissionPage = ['/', "/login", '/register','/view'];
 const messgaePage = ['/main/pageNotFound']
 
 /**

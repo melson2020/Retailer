@@ -2,18 +2,22 @@ package com.melson.webserver.resource;
 
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
+import com.melson.base.ResultType;
 import com.melson.base.entity.Store;
 import com.melson.base.entity.StoreEmployee;
+import com.melson.base.interceptor.RequiredPermission;
+import com.melson.base.interceptor.SecurityLevel;
 import com.melson.base.service.*;
+import com.melson.webserver.Vo.SharePathCreateVo;
 import com.melson.webserver.dto.StoreDto;
 import com.melson.webserver.entity.Menu;
+import com.melson.webserver.entity.StoreSharePath;
 import com.melson.webserver.service.ILogs;
 import com.melson.webserver.service.IMenu;
+import com.melson.webserver.service.IStoreSharePath;
+import com.melson.webserver.service.ISysConfig;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -33,13 +37,17 @@ public class SystemResource extends BaseResource {
     private final IStore storeService;
     private final IStoreEmployee employeeService;
     private final IMenu menuService;
+    private final ISysConfig sysConfigService;
     private final ILogs logsService;
+    private final IStoreSharePath storeSharePathService;
 
-    public SystemResource(IStore storeService, IStoreEmployee employeeService, IMenu menuService, ILogs loginLogsService) {
+    public SystemResource(IStore storeService, IStoreEmployee employeeService, IMenu menuService, ISysConfig sysConfigService, ILogs logsService, IStoreSharePath storeSharePathService) {
         this.storeService = storeService;
         this.employeeService = employeeService;
-        this.menuService=menuService;
-        this.logsService=loginLogsService;
+        this.menuService = menuService;
+        this.sysConfigService = sysConfigService;
+        this.logsService = logsService;
+        this.storeSharePathService = storeSharePathService;
     }
 
     @RequestMapping(value = "/registerStore", method = RequestMethod.POST)
@@ -99,6 +107,28 @@ public class SystemResource extends BaseResource {
         }
         result.setData(exist);
         System.out.println("Rest Call: /system/login ...");
+        return result;
+    }
+
+    @RequestMapping(value = "/createSharePath", method = RequestMethod.POST)
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result CreateSharePath(@RequestBody SharePathCreateVo vo){
+        String parentPath=sysConfigService.FindValueFromCache("sharePathParent");
+        if(StringUtils.isEmpty(vo.getStoreCode())||StringUtils.isEmpty(parentPath))this.GenerateResult(ResultType.ParametersNeeded);
+        Result result=new Result();
+        StoreSharePath path=storeSharePathService.CreateSharePath(vo.getStoreCode(),parentPath);
+        result.setData(path);
+        return result;
+    }
+
+    @RequestMapping(value = "/getSharePath", method = RequestMethod.GET)
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result GetSharePath(HttpServletRequest request){
+        String storeCode=request.getParameter("storeCode");
+        if(StringUtils.isEmpty(storeCode))this.GenerateResult(ResultType.ParametersNeeded);
+        Result result=new Result();
+        StoreSharePath path=storeSharePathService.FindSharePath(storeCode);
+        result.setData(path);
         return result;
     }
 }

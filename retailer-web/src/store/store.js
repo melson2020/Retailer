@@ -12,6 +12,8 @@ import storageIn from "./modules/storageIn"
 import storageOut from "./modules/storageOut"
 import report from "./modules/report"
 import goodsReturn from "./modules/goodsReturn"
+import system from "./modules/system"
+import share from './modules/share'
 
 Vue.use(Vuex);
 
@@ -32,6 +34,8 @@ export default new Vuex.Store({
     storageIn,
     storageOut,
     report,
-    goodsReturn
+    goodsReturn,
+    system,
+    share
   },
 });

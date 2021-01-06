@@ -9,10 +9,7 @@ import com.melson.webserver.Vo.StorageAndProductCountVo;
 import com.melson.webserver.Vo.StorageCountedVo;
 import com.melson.webserver.dto.DownLoadInfoDto;
 import com.melson.webserver.dto.ProductStorageDto;
-import com.melson.webserver.entity.ProductBatch;
-import com.melson.webserver.entity.ProductStorage;
-import com.melson.webserver.entity.StorageCountTicket;
-import com.melson.webserver.entity.StorageCountTicketDetail;
+import com.melson.webserver.entity.*;
 import com.melson.webserver.service.*;
 import com.melson.webserver.utils.PoiUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,13 +39,15 @@ public class ProductStorageResource extends BaseResource {
     private final ISysConfig sysConfigService;
     private final IStorageCountTicketDetail storageCountTicketDetailService;
     private final IProductBatch productBatchService;
+    private final IStoreSharePath storeSharePathService;
 
-    public ProductStorageResource(IProductStorage productStorageService, IStorageCountTicket storageCountTicketService, ISysConfig sysConfigService, IStorageCountTicketDetail storageCountTicketDetailService, IProductBatch productBatchService) {
+    public ProductStorageResource(IProductStorage productStorageService, IStorageCountTicket storageCountTicketService, ISysConfig sysConfigService, IStorageCountTicketDetail storageCountTicketDetailService, IProductBatch productBatchService, IStoreSharePath storeSharePathService) {
         this.productStorageService = productStorageService;
         this.storageCountTicketService = storageCountTicketService;
         this.sysConfigService = sysConfigService;
         this.storageCountTicketDetailService = storageCountTicketDetailService;
         this.productBatchService = productBatchService;
+        this.storeSharePathService = storeSharePathService;
     }
 
     @RequestMapping(value = "/storageAndProductCount")
@@ -351,4 +350,20 @@ public class ProductStorageResource extends BaseResource {
         return result;
     }
 
+    @RequestMapping(value = "/findShareProduct",method = RequestMethod.GET)
+    public  Result FindShareProductStorage(HttpServletRequest request){
+        System.out.println("Rest Call: /storage/findShareProduct ...");
+        String shareCode=request.getParameter("shareCode");
+        if(StringUtils.isEmpty(shareCode))return this.GenerateResult(ResultType.ParametersNeeded);
+        Result result=new Result();
+        StoreSharePath storeSharePath=storeSharePathService.FindSharePathWithShareCode(shareCode);
+        if(storeSharePath==null){
+            result.setResultStatus(-1);
+            result.setMessage("wrong shareCode");
+        }
+        //TODO 校验expireDate
+        List<ProductStorage> productStorageList=productStorageService.FindStorageListWithType(storeSharePath.getStoreCode(),"MZZ");
+        result.setData(productStorageList);
+        return result;
+    }
 }
