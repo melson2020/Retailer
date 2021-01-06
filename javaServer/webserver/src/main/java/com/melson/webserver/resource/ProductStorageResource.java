@@ -3,15 +3,17 @@ package com.melson.webserver.resource;
 import com.melson.base.BaseResource;
 import com.melson.base.Result;
 import com.melson.base.ResultType;
+import com.melson.base.entity.Store;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
+import com.melson.base.service.IStore;
+import com.melson.webserver.Vo.ShareProductListVo;
 import com.melson.webserver.Vo.StorageAndProductCountVo;
 import com.melson.webserver.Vo.StorageCountedVo;
 import com.melson.webserver.dto.DownLoadInfoDto;
 import com.melson.webserver.dto.ProductStorageDto;
 import com.melson.webserver.entity.*;
 import com.melson.webserver.service.*;
-import com.melson.webserver.utils.PoiUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,14 +42,18 @@ public class ProductStorageResource extends BaseResource {
     private final IStorageCountTicketDetail storageCountTicketDetailService;
     private final IProductBatch productBatchService;
     private final IStoreSharePath storeSharePathService;
+    private final IStore storeService;
+    private final IMenu menuService;
 
-    public ProductStorageResource(IProductStorage productStorageService, IStorageCountTicket storageCountTicketService, ISysConfig sysConfigService, IStorageCountTicketDetail storageCountTicketDetailService, IProductBatch productBatchService, IStoreSharePath storeSharePathService) {
+    public ProductStorageResource(IProductStorage productStorageService, IStorageCountTicket storageCountTicketService, ISysConfig sysConfigService, IStorageCountTicketDetail storageCountTicketDetailService, IProductBatch productBatchService, IStoreSharePath storeSharePathService, IStore storeService, IMenu menuService) {
         this.productStorageService = productStorageService;
         this.storageCountTicketService = storageCountTicketService;
         this.sysConfigService = sysConfigService;
         this.storageCountTicketDetailService = storageCountTicketDetailService;
         this.productBatchService = productBatchService;
         this.storeSharePathService = storeSharePathService;
+        this.storeService = storeService;
+        this.menuService = menuService;
     }
 
     @RequestMapping(value = "/storageAndProductCount")
@@ -362,8 +368,14 @@ public class ProductStorageResource extends BaseResource {
             result.setMessage("wrong shareCode");
         }
         //TODO 校验expireDate
+        ShareProductListVo listVo=new ShareProductListVo();
+        Store store=storeService.findByCode(storeSharePath.getStoreCode());
+        List<Menu> menuList = menuService.GetMenuListWithPermission(3); //默认给展示所有的菜单
         List<ProductStorage> productStorageList=productStorageService.FindStorageListWithType(storeSharePath.getStoreCode(),"MZZ");
-        result.setData(productStorageList);
+        listVo.setProductStorageList(productStorageList);
+        listVo.setStore(store);
+        listVo.setMenuList(menuList);
+        result.setData(listVo);
         return result;
     }
 }

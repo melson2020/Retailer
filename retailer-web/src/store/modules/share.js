@@ -1,31 +1,27 @@
 import request from "../../utils/request";
-import {Message} from "element-ui";
+// import {Message} from "element-ui";
 
 const state={
-    
+    shareProductStorage: {},
 };
 
 const actions={
-    // eslint-disable-next-line no-unused-vars
-    FindShareProductStorage({commit},params){
-           request.FindShareProduct(params).then(res=>{
-            if (res.resultStatus == 1) {
-               console.log(res.data)
-            } else {
-                Message.error(res.message);
-            }
-           }).catch(err=>{
-            Message.error(err.message);
-           })
-    }
+    FindShareProductStorage({ },params){
+        return request.FindShareProduct(params);
+    },
+    SetShareProductStorage({ commit }, data) {
+        commit("ComShareProductStorage", data);
+    },
 };
 
 const getters={
-
+    shareProductStorage: state => state.shareProductStorage
 };
 
 const mutations={
-
+    ComShareProductStorage(state,data){
+        state.shareProductStorage=data;
+    }
 };
 
 export default{
