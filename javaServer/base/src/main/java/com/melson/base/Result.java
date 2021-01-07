@@ -17,7 +17,6 @@ public class Result {
     }
 
     public Result(Object data) {
-
         this.data = data;
         resultStatus=1;
     }

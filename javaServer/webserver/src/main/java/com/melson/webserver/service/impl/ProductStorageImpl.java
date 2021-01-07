@@ -1,6 +1,8 @@
 package com.melson.webserver.service.impl;
 
 import com.melson.base.AbstractService;
+import com.melson.base.utils.EntityManagerUtil;
+import com.melson.webserver.Vo.ShareStorageVo;
 import com.melson.webserver.Vo.StorageAndProductCountVo;
 import com.melson.webserver.Vo.StorageRecordVo;
 import com.melson.webserver.dao.*;
@@ -9,7 +11,6 @@ import com.melson.webserver.entity.Product;
 import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.service.IProductStorage;
-import com.melson.webserver.service.IStorageInTicket;
 import com.melson.webserver.utils.EntityUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,9 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
     private final IStorageOutTicketDao storageOutTicketDao;
     private final IStorageCountTicketDao storageCountTicketDao;
     private final IGoodsReturnRecordDao goodsReturnRecordDao;
+    private final EntityManagerUtil entityManagerUtil;
 
-    public ProductStorageImpl(IProductStorageDao productStorageDao, IProductDao productDao, IProductBatchDao productBatchDao, IStorageInTicketDao storageInTicketDao, IStorageOutTicketDao storageOutTicketDao, IStorageCountTicketDao storageCountTicketDao, IGoodsReturnRecordDao goodsReturnRecordDao) {
+    public ProductStorageImpl(IProductStorageDao productStorageDao, IProductDao productDao, IProductBatchDao productBatchDao, IStorageInTicketDao storageInTicketDao, IStorageOutTicketDao storageOutTicketDao, IStorageCountTicketDao storageCountTicketDao, IGoodsReturnRecordDao goodsReturnRecordDao,  EntityManagerUtil entityManagerUtil) {
         this.productStorageDao = productStorageDao;
         this.productDao = productDao;
         this.productBatchDao = productBatchDao;
@@ -39,6 +41,7 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
         this.storageOutTicketDao = storageOutTicketDao;
         this.storageCountTicketDao = storageCountTicketDao;
         this.goodsReturnRecordDao = goodsReturnRecordDao;
+        this.entityManagerUtil = entityManagerUtil;
     }
 
     @Override
@@ -238,5 +241,13 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
             }
         }
         return new ArrayList<>(productStorageMap.values());
+    }
+
+    @Override
+    public List<ShareStorageVo> FindShareStorage(String shareCode) {
+        String sql="SELECT ps.productName,ps.productType,ps.productSpecification as specification,pb.supplyName,pb.count as subCount,ps.unit FROM `product_storage` ps RIGHT JOIN product_batch pb on ps.productId=pb.productId WHERE ps.count>0 and ps.storeCode='"+shareCode+"'";
+        List<Object[]> res=entityManagerUtil.ExcuteSql(sql);
+        List<ShareStorageVo> vos=EntityUtils.castEntity(res,ShareStorageVo.class,new ShareStorageVo());
+        return  vos;
     }
 }

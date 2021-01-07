@@ -32,30 +32,22 @@
       </el-menu>
     </el-aside>
     <el-container>
-      <el-header height="auto">
-        <div>
-          <el-dropdown trigger="click" class="main-icon-right">
-            <span class="el-dropdown-link main-user-info">
-              <i class="el-icon-user main-icon main-icon-right"></i>
-              {{ generateStoreName }}
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="logout">注册</el-dropdown-item>
-              <el-dropdown-item @click.native="resetPass"
-                >登录</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </el-header>
       <el-main>
-        <div class="productstorage-content-header">
+        <div class="shareView-content-header">
           <div>
-            <span class="productstorage-title-name">库存信息</span>
+            <span class="shareView-main-user-info shareView-title-name">
+              {{ generateStoreName }} -- 库存信息
+            </span>
           </div>
-          <div>
+          <div class="shareView-content-header-right-area">
+            <el-button type="text" @click="directionTo('/login')"
+              >登录</el-button
+            >
+            <el-button type="text" @click="directionTo('/register')"
+              >注册</el-button
+            >
             <el-input
-              class="productstorage-fliter-input"
+              class="shareView-search-box"
               size="small"
               v-model="searchContent"
               placeholder="搜索名称 / 型号"
@@ -63,112 +55,41 @@
             ></el-input>
           </div>
         </div>
-        <div class="productstorage-content">
+        <div class="shareView-content">
           <el-table
             :data="storageListShow"
             border
-            class="productstorage-storage-table"
-            size="small"
+            stripe
+             :header-cell-style="{ background: '#909399', color: 'white' }"
             ref="tableStorage"
-            :height="auto"
-            :header-row-style="{ height: '40px' }"
-            :row-style="{ height: '40px' }"
-            :cell-style="{ padding: '2px', color: '#909399' }"
-            :header-cell-style="{ background: '#808080', color: 'white' }"
-            @expand-change="expandChanged"
+            :span-method="objectSpanMethod"
           >
-            <el-table-column type="expand">
-              <template slot-scope="props">
-                <el-table
-                  v-if="props.row.batchList.length > 0"
-                  :data="props.row.batchList"
-                  class="productstorage-inner-table"
-                  border
-                  :show-header="false"
-                  :header-row-style="{ height: '30px' }"
-                  :header-cell-style="{ padding: '2px', background: '#606266' }"
-                  :row-style="{ height: '30px' }"
-                  :cell-style="{ padding: '2px', color: '#909399' }"
-                >
-                  <el-table-column
-                    prop="batchNo"
-                    label="批次号"
-                    width="auto"
-                  ></el-table-column>
-                  <el-table-column
-                    prop="supplyName"
-                    label="供应商"
-                    width="auto"
-                  ></el-table-column>
-                  <el-table-column label="税/回点" width="auto">
-                    <template slot-scope="scope">
-                      <el-tag v-if="scope.row.vat == 1" size="mini"
-                        >税 ({{ scope.row.taxRate }}%)</el-tag
-                      >
-                      <el-tag
-                        v-if="scope.row.discount > 0"
-                        type="success"
-                        size="mini"
-                        >回点 ({{ scope.row.discount }}%)</el-tag
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="单价">
-                    <template slot-scope="scope">
-                      <span
-                        >{{ scope.row.price }}{{ scope.row.priceUnit }}￥/{{
-                          scope.row.countUnit
-                        }}</span
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="数量">
-                    <template slot-scope="scope">
-                      <span
-                        >{{ scope.row.count }}{{ scope.row.countUnit }}</span
-                      >
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <div v-else class="no-batch-info">
-                  <span>无批次信息</span>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-for="(item, i) in tableColums"
-              :key="i"
-              :prop="item.field"
-              :label="item.label"
-              :width="item.width"
-            ></el-table-column>
-            <el-table-column label="标签" align="center" width="auto">
+            <el-table-column prop="productName" label="名称"></el-table-column>
+            <el-table-column label="类型">
               <template slot-scope="scope">
-                <el-tag
-                  class="el-tag"
-                  :key="tag"
-                  v-for="tag in scope.row.feature"
-                  :disable-transitions="false"
-                  size="mini"
-                  type="success"
-                >
-                  {{ tag }}
-                </el-tag>
+                <span class="shareView-sub-title">{{
+                  scope.row.productType
+                }}</span>
               </template>
             </el-table-column>
+            <el-table-column label="规格">
+              <template slot-scope="scope">
+                <span class="shareView-sub-title">{{
+                  scope.row.specification
+                }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="supplyName" label="供货商"></el-table-column>
+            <el-table-column label="数量">
+              <template slot-scope="scope">
+                <span class="shareView-color-warning"
+                  >{{ scope.row.subCount }}  {{ scope.row.unit }}</span
+                >
+              </template>
+            </el-table-column>
+            <!-- <el-table-column prop="count" label="总数量"></el-table-column> -->
           </el-table>
         </div>
-        <!-- <div class="productstorage-content-footer">
-          <el-pagination
-            background
-            :current-page="storageTable.currentPage"
-            layout="prev, pager, next, total, jumper"
-            @current-change="pageChanged"
-            :page-size="storageTable.pageSize"
-            :total="storageListShow.length"
-            v-if="storageListShow.length >= storageTable.pageSize"
-          ></el-pagination>
-        </div> -->
       </el-main>
     </el-container>
   </el-container>
@@ -179,24 +100,33 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      // tableHeight: window.innerHeight - 1500,
       searchContent: "",
-      // storageTable: {
-      //   pageSize: 15,
-      //   currentPage: 1,
-      //   height: "",
-      // },
-      tableColums: [
-        { field: "productName", label: "名称", width: "auto" },
-        { field: "productType", label: "型号", width: "auto" },
-        { field: "productSpecification", label: "规格", width: "auto" },
-        { field: "count", label: "数量", width: "auto" },
-        { field: "unit", label: "单位", width: "150px" },
-      ],
     };
   },
   computed: {
     ...mapGetters(["shareProductStorage"]),
+    spanArr() {
+      let spanRowArr = [];
+      let pos = 0;
+      for (let index = 0; index < this.storageListShow.length; index++) {
+        if (index == 0) {
+          spanRowArr.push(1);
+          pos = 0;
+        } else {
+          var pre = this.storageListShow[index - 1];
+          var current = this.storageListShow[index];
+          if (pre.productName === current.productName) {
+            spanRowArr[pos] += 1;
+            spanRowArr.push(0);
+          } else {
+            spanRowArr.push(1);
+            pos = index;
+          }
+        }
+      }
+      return spanRowArr;
+    },
+
     generateStoreName() {
       return this.shareProductStorage
         ? this.shareProductStorage.store.storeName
@@ -205,59 +135,39 @@ export default {
     generateMenu() {
       return this.shareProductStorage ? this.shareProductStorage.menuList : "";
     },
-    storageListShow () {
+    storageListShow() {
       return this.shareProductStorage.productStorageList.filter((item) => {
-        let key = item.productName + item.productType;
+        let key = item.productName + item.productType + item.supplyName;
         return (
           key.toUpperCase().indexOf(this.searchContent.toUpperCase()) != -1
         );
       });
     },
-    // storages() {
-    //   return this.storageListShow.slice(
-    //     (this.storageTable.currentPage - 1) * this.storageTable.pageSize,
-    //     this.storageTable.currentPage * this.storageTable.pageSize
-    //   );
-    // },
   },
   methods: {
     ...mapActions({
       FindShareProductStorage: "FindShareProductStorage",
       SetShareProductStorage: "SetShareProductStorage",
     }),
-  },
-  // pageChanged(page) {
-  //   console.log(page);
-  //   this.storageTable.currentPage = page;
-  // },
-  // setpageSize() {
-  //   let rect = this.tableHeight - 40;
-  //   this.storageTable.height = rect + 40;
-  //   let pageSize = Math.floor(rect / 40);
-  //   this.storageTable.pageSize = pageSize;
-  // },
-  // searchFocus() {
-  //   this.storageTable.currentPage = 1;
-  // },
-  expandChanged(row, sec) {
-    let index = sec.indexOf(row);
-    // var expanded = index != -1; //获取是否展开 row为当前行
-    // if (expanded) {
-    //   let payload = {
-    //     row: row,
-    //     params: {
-    //       storeCode: this.userInfo.storeCode,
-    //       productId: row.productId,
-    //     },
-    //   };
-    //   this.GetBatchList(payload);
-    // }
+    directionTo(path) {
+      this.$router.push({ path: path });
+    },
+    objectSpanMethod({ rowIndex, columnIndex }) {
+      if (columnIndex <= 2 || columnIndex == 5) {
+        const _row = this.spanArr[rowIndex];
+        const _col = _row > 0 ? 1 : 0;
+        return {
+          rowspan: _row,
+          colspan: _col,
+        };
+      }
+    },
   },
   beforeMount() {
     let fullPath = window.location.href;
     var pathCode = fullPath.substring(fullPath.indexOf("?") + 1).split("=")[1];
     if (!pathCode) {
-      this.$message.error("请输入正确的连接");
+      this.$router.push({ path: "/404" });
       return;
     }
     var params = { shareCode: pathCode };
@@ -266,18 +176,14 @@ export default {
         if (res.resultStatus == 1) {
           this.SetShareProductStorage(res.data);
         } else {
-          this.$message.error(res.message);
+          this.$router.push({ path: "/404" });
         }
       })
       .catch((err) => {
+        this.$router.push({ path: "/404" });
         this.$message.error(err.message);
       });
   },
-  // mounted: function () {
-  //   this.$nextTick(function () {
-  //     this.setpageSize();
-  //   });
-  // },
 };
 </script>
 <style>
@@ -331,49 +237,56 @@ export default {
   line-height: 320px;
 }
 
-.main-icon-left {
+.shareView-main-icon-left {
   float: left;
 }
-.main-icon-right {
+.shareView-main-icon-right {
   float: right;
 }
-.main-icon {
+.shareView-main-icon {
   font-size: 50px;
   margin: 20px;
   color: rgb(180, 176, 176);
 }
-.main-user-info {
-  float: right;
+.shareView-main-user-info {
+  float: left;
   color: #909399;
   height: 100px;
-  margin-left: 10px;
   margin-right: 10px;
   display: flex;
   align-items: center;
   font-size: 25px;
   letter-spacing: 5px;
 }
-.productstorage-content-header {
-  height: 60px;
+.shareView-content-header {
+  height: 80px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
 }
-.productstorage-content {
+.shareView-content {
   margin-top: 5px;
 }
-.productstorage-content-footer {
-  margin-top: 20px;
-  height: 60px;
-  align-items: center;
-  justify-content: space-between;
-}
-.productstorage-title-name {
+
+.shareView-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
+}
+.shareView-content-header-right-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.shareView-search-box {
   margin-left: 20px;
+}
+.shareView-color-warning {
+  color: #f56c6c;
+}
+.shareView-sub-title {
+  color: #c0c4cc;
 }
 </style>

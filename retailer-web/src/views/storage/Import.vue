@@ -372,7 +372,7 @@ export default {
           colspan: _col,
         };
       }
-    },
+    }
   },
 };
 </script>

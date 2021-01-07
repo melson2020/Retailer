@@ -7,6 +7,7 @@ import "lib-flexible";
 import store from "./store/store";
 //table 无限滚动插件
 import elTableInfiniteScroll from 'el-table-infinite-scroll';
+import VueClipboard from 'vue-clipboard2'
 import {
   Card,
   Form,
@@ -190,6 +191,7 @@ Vue.use(RadioGroup);
 Vue.use(Radio);
 Vue.use(elTableInfiniteScroll)
 Vue.use(Tooltip)
+Vue.use(VueClipboard)
 
 localStorage.setItem("initState", JSON.stringify(store.state));
 

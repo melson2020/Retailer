@@ -2,12 +2,13 @@ import request from "../../utils/request";
 // import {Message} from "element-ui";
 
 const state={
-    shareProductStorage: {},
+    shareProductStorage: {store:{storeName:''},productStorageList:[]},
 };
 
 const actions={
-    FindShareProductStorage({ },params){
-        return request.FindShareProduct(params);
+    // eslint-disable-next-line no-empty-pattern
+    FindShareProductStorage({},params){
+       return  request.FindShareProduct(params)
     },
     SetShareProductStorage({ commit }, data) {
         commit("ComShareProductStorage", data);

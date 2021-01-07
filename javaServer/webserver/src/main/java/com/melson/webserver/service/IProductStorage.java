@@ -1,6 +1,7 @@
 package com.melson.webserver.service;
 
 import com.melson.base.IService;
+import com.melson.webserver.Vo.ShareStorageVo;
 import com.melson.webserver.Vo.StorageAndProductCountVo;
 import com.melson.webserver.Vo.StorageRecordVo;
 import com.melson.webserver.dto.ProductStorageDto;
@@ -25,4 +26,6 @@ public interface IProductStorage extends IService<ProductStorage> {
     List<StorageRecordVo> FindProductStorageRec(Integer productId, String startDate, String endDate, String storeCode);
     ProductStorage FindByProductIdAndStoreCode(Integer id, String storeCode);
     List<ProductStorage> findStorageAndBatchByPName(String productNmae,String storeCode);
+
+    List<ShareStorageVo> FindShareStorage(String shareCode);
 }

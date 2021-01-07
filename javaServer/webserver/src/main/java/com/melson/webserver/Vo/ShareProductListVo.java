@@ -12,7 +12,7 @@ import java.util.List;
 public class ShareProductListVo {
     Store store;
     List<Menu> menuList;
-    List<ProductStorage> productStorageList;
+    List<ShareStorageVo> productStorageList;
 
     public Store getStore() {
         return store;
@@ -30,11 +30,11 @@ public class ShareProductListVo {
         this.menuList = menuList;
     }
 
-    public List<ProductStorage> getProductStorageList() {
+    public List<ShareStorageVo> getProductStorageList() {
         return productStorageList;
     }
 
-    public void setProductStorageList(List<ProductStorage> productStorageList) {
+    public void setProductStorageList(List<ShareStorageVo> productStorageList) {
         this.productStorageList = productStorageList;
     }
 }

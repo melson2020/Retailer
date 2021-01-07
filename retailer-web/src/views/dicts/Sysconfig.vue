@@ -22,7 +22,13 @@
 
       <!-- </div> -->
       <el-input placeholder="请创建链接" v-model="sharePath" readonly>
-        <template slot="prepend">分享链接：</template>
+        <el-button
+          slot="prepend"
+          v-clipboard:copy="sharePath"
+          v-clipboard:success="onCopy"
+          v-clipboard:error="onError"
+          >分享链接：</el-button
+        >
         <el-button slot="append" @click="createSharePath">创建链接</el-button>
       </el-input>
     </div>
@@ -49,6 +55,12 @@ export default {
     createSharePath() {
       var params = { storeCode: this.userInfo.storeCode };
       this.CreateSharePath(params);
+    },
+    onCopy: function () {
+      this.$message.success("已成功复制至剪贴板");
+    },
+    onError() {
+      this.$message.error("复制失败");
     },
   },
   beforeMount() {

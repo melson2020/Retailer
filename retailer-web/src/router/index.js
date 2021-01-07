@@ -57,6 +57,11 @@ const routes = [
     component: ShareView
   },
   {
+    path: "/404",
+    name: "4041",
+    component: Error
+  },
+  {
     path: "/main",
     name: "Main",
     component: Main,
@@ -204,7 +209,7 @@ const routes = [
     path: "/",
     name: "sysroot",
     component: Login
-  },
+  }
 ];
 
 const router = new VueRouter({
@@ -213,8 +218,8 @@ const router = new VueRouter({
   routes
 });
 
-const noPermissionPage = ['/', "/login", '/register','/view'];
-const messgaePage = ['/main/pageNotFound']
+const noPermissionPage = ['/', "/login", '/register','/view','/404'];
+const messgaePage = ['/main/pageNotFound','/404']
 
 /**
  * 路由守卫
@@ -227,7 +232,7 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     let userInfo = localStorage.getItem("userInfo");
-    if (userInfo) {
+    if (userInfo&&to.path.indexOf('/main')>=0) {
       if (messgaePage.indexOf(to.path) >= 0) {
         next()
       } else {
