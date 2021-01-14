@@ -23,7 +23,7 @@
           :header-row-style="{height:'40px'}"
           :row-style="{height:'40px'}"
           :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white'}">
+          :header-cell-style="{ background: '#909399', color: 'white'}">
         <el-table-column prop="name" label="客户名称" align="left"></el-table-column>
         <el-table-column prop="address" label="联系地址" align="left"></el-table-column>
         <el-table-column prop="phone" label="联系电话" align="left" width="200px"></el-table-column>

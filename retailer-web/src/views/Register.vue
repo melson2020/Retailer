@@ -313,11 +313,13 @@ export default {
 }
 .register {
   display: flex;
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
   margin: 0;
   align-items: center;
   justify-content: center;
   background-size: 100% 100%;
+  padding: 40px 0;
 }
 .register-card {
   width: 1500px;

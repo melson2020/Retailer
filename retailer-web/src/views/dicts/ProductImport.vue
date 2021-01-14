@@ -75,7 +75,7 @@
               :header-row-style="{height:'40px'}"
               :row-style="{height:'40px'}"
               :cell-style="{ padding: '2px', color: '#909399' }"
-              :header-cell-style="{ background: '#808080', color: 'white'}">
+              :header-cell-style="{ background: '#909399', color: 'white'}">
               <el-table-column type="index" label="#" align="center"></el-table-column>
               <el-table-column
                 v-for="(v,i) in categroyTableColums"
@@ -244,7 +244,7 @@
           :header-row-style="{ height: '40px' }"
           :row-style="{ height: '40px' }"
           :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#808080', color: 'white' }"
+          :header-cell-style="{ background: '#909399', color: 'white' }"
         >
           <el-table-column
             type="index"

@@ -60,6 +60,7 @@
             :data="storageListShow"
             border
             stripe
+            size="small"
              :header-cell-style="{ background: '#909399', color: 'white' }"
             ref="tableStorage"
             :span-method="objectSpanMethod"
@@ -287,6 +288,6 @@ export default {
   color: #f56c6c;
 }
 .shareView-sub-title {
-  color: #c0c4cc;
+  color: #909399;
 }
 </style>
