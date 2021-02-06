@@ -346,7 +346,7 @@
                       </div>
                       <div class="flex-left color-light-gray">
                         <!-- 利润：（未税售价 ({{ c.outPrice }} /({{c.outTaxRate+100}}/100) * 数量{{ c.outCount }} = {{ computeProfit(c) }}{{ c.profit }} -->
-                        RoE：(({{ c.outPrice }} /{{
+                        <!-- RoE：(({{ c.outPrice }} /{{
                           NumberAdd(NumberDiv(c.outTaxRate, 100), 1)
                         }}
                         - {{ c.netIn }} /{{
@@ -357,7 +357,7 @@
                         {{ c.outPrice }} /{{
                           NumberAdd(NumberDiv(c.outTaxRate, 100), 1)
                         }}*{{ NumberDiv(c.outTaxRate, 100) }})) * 数量
-                        {{ c.outCount }} = {{ computeRoE(c) }}{{ c.roe }}
+                        {{ c.outCount }} = {{ computeRoE(c) }}{{ c.roe }} -->
                       </div>
                     </div>
                     <!-- <div class="cost-area-result">

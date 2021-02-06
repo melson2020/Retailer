@@ -23,7 +23,7 @@ public class StorageOutBillDetail {
     private BigDecimal unitPriceIn;
     private Integer vatIn;
     private String taxRateIn;
-    private Integer discount;
+    private Double discount;
     private Integer vatOut;
     private String taxRateOut;
     private Integer outCount;
@@ -140,11 +140,11 @@ public class StorageOutBillDetail {
         this.taxRateIn = taxRateIn;
     }
 
-    public Integer getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Integer discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 

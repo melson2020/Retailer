@@ -417,7 +417,7 @@ export default {
         discount: this.addItem.discount,
         price: parseFloat(this.addItemPrice),
         vat: this.addItem.vat ? 1 : 0,
-        taxRate: this.addItem.taxRate,
+        taxRate: this.addItem.vat ? this.addItem.taxRate: 0,
         totalPrice: parseFloat(this.addItem.totalPrice),
         netIn:parseFloat(this.addItemCostPrice),
         tepIn:parseFloat(this.addItemTepIn),

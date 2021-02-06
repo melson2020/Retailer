@@ -20,7 +20,7 @@ public class StorageInDetail {
     private String supplyName;
     private Integer count;
     private String countUnit;
-    private Integer discount;
+    private Double discount;
     private BigDecimal price;
     private Integer vat;
     private String taxRate;
@@ -114,11 +114,11 @@ public class StorageInDetail {
         this.countUnit = countUnit;
     }
 
-    public Integer getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Integer discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 

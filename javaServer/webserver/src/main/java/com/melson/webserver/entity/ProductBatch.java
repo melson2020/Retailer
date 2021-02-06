@@ -29,7 +29,7 @@ public class ProductBatch {
     private String countUnit;
     //batchType 为IN时 入库单号  C时 盘点单号
     private String storageInCode;
-    private Integer discount;
+    private Double discount;
     private String taxRate;
     private BigDecimal totalPrice;
     //批次类型  IN 入库生成  C 盘点生成
@@ -152,11 +152,11 @@ public class ProductBatch {
         this.storageInCode = storageInCode;
     }
 
-    public Integer getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Integer discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 
