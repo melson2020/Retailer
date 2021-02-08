@@ -71,7 +71,7 @@
             <view wx:for='{{product.batchList}}' wx:key='id' class="product_batch_info">
               <view class="product_batch_info_row">
                 <view>{{item.batchNo}}</view>
-                <view class="color_orange">单价：{{item.price}}/{{item.countUnit}}</view>
+                <!-- <view class="color_orange">单价：{{item.price}}/{{item.countUnit}}</view> -->
                 <view>余：{{item.count}}{{item.countUnit}}</view>
               </view>
               <view class="product_batch_info_row">

@@ -21,7 +21,7 @@
         </div> -->
 
       <!-- </div> -->
-      <el-input placeholder="请创建链接" v-model="sharePath" readonly>
+      <el-input placeholder="请创建分享链接 -->" v-model="sharePath" readonly>
         <el-button
           slot="prepend"
           v-clipboard:copy="sharePath"
@@ -29,7 +29,7 @@
           v-clipboard:error="onError"
           >分享链接：</el-button
         >
-        <el-button slot="append" @click="createSharePath">创建链接</el-button>
+        <el-button slot="append" @click="createSharePath">创建连接</el-button>
       </el-input>
     </div>
   </div>

@@ -150,7 +150,7 @@
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"
         :cell-style="{ padding: '2px', color: '#909399' }"
-        :header-cell-style="{ background: '#808080', color: 'white' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }"
       >
         }" >
         <el-table-column prop="date" label="日期" width="90%" sortable>
