@@ -2,7 +2,7 @@ import axios from "axios";
 import { Message } from "element-ui";
 import store from "../store/store.js"
 
-axios.defaults.timeout = 30000;
+axios.defaults.timeout = 60000;
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded;charset=UTF-8";
 axios.defaults.baseURL = "/api";                //dev 

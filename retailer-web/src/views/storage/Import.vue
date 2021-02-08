@@ -38,7 +38,7 @@
               <em>点击上传</em>
             </div>
             <div class="el-upload__tip" slot="tip">
-              只能上传xls文件，且不超过500kb
+              只能上传xls文件，且不超过2M
             </div>
             <div class="el-upload__tip" slot="tip">
               <span class="red"
@@ -167,7 +167,7 @@ export default {
         return;
       }
       var fileType = file.name.endWith(".xls");
-      var size = file.size / 1024 > 500;
+      var size = file.size / 1024 > 2048;
       if (!fileType) {
         this.$message.warning("文件类型不匹配");
         return;

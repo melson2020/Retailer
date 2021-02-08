@@ -43,7 +43,7 @@
         <el-table-column
           prop="code"
           label="单号"
-          width="350px"
+          width="280px"
         ></el-table-column>
         <el-table-column prop="type" label="盘点类型" width="150px">
           <template slot-scope="scope">
@@ -54,14 +54,14 @@
         <el-table-column
           prop="employeeName"
           label="盘点人员"
-          width="150px"
+          width="auto"
         ></el-table-column>
         <el-table-column
           prop="date"
           label="盘点日期"
           width="150px"
         ></el-table-column>
-        <el-table-column prop="status" label="进度" width="150px">
+        <el-table-column prop="status" label="进度" width="auto">
           <template slot-scope="scope">
             <span class="yellow" v-if="scope.row.status == 1">已创建</span>
             <span class="yellow" v-else-if="scope.row.status == 2"

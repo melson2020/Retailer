@@ -22,9 +22,9 @@
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"
         :cell-style="{ padding: '2px', color: '#909399' }"
-        :header-cell-style="{ background: '#909399', color: 'white' }"
-        :span-method="objectSpanMethod"
+        :header-cell-style="{ background: '#909399', color: 'white' }"  
       >
+      <!-- :span-method="objectSpanMethod" -->
         <el-table-column
           v-for="(item, i) in tableColums"
           :key="i"
@@ -71,27 +71,27 @@ export default {
       "currentStorageCountTicket",
       "userInfo",
     ]),
-    spanArr() {
-      let spanRowArr = [];
-      let pos = 0;
-      for (let index = 0; index < this.previewStorageList.length; index++) {
-        if (index == 0) {
-          spanRowArr.push(1);
-          pos = 0;
-        } else {
-          var pre = this.previewStorageList[index - 1];
-          var current = this.previewStorageList[index];
-          if (pre.productId === current.productId) {
-            spanRowArr[pos] += 1;
-            spanRowArr.push(0);
-          } else {
-            spanRowArr.push(1);
-            pos = index;
-          }
-        }
-      }
-      return spanRowArr;
-    },
+    // spanArr() {
+    //   let spanRowArr = [];
+    //   let pos = 0;
+    //   for (let index = 0; index < this.previewStorageList.length; index++) {
+    //     if (index == 0) {
+    //       spanRowArr.push(1);
+    //       pos = 0;
+    //     } else {
+    //       var pre = this.previewStorageList[index - 1];
+    //       var current = this.previewStorageList[index];
+    //       if (pre.productId === current.productId) {
+    //         spanRowArr[pos] += 1;
+    //         spanRowArr.push(0);
+    //       } else {
+    //         spanRowArr.push(1);
+    //         pos = index;
+    //       }
+    //     }
+    //   }
+    //   return spanRowArr;
+    // },
   },
   methods: {
     ...mapActions({

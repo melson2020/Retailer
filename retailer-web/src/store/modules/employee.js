@@ -41,6 +41,7 @@ const actions = {
         Message.error(alert);
       });
   },
+
   // eslint-disable-next-line no-empty-pattern
   CreateEmployee({ }, payload) {
     return request.CreateEmployee(payload);
@@ -48,6 +49,7 @@ const actions = {
   AddEmployee({ commit }, employee) {
     commit("AddEmployee", employee);
   },
+  
   // eslint-disable-next-line no-empty-pattern
   CheckLoginName({ }, palyload) {
     return request.CheckLoginName(palyload);
