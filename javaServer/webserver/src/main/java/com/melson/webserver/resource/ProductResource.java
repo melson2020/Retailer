@@ -181,6 +181,7 @@ public class ProductResource extends BaseResource {
         ProductDto prod=productService.Query(productDto);
         Result result=new Result();
         result.setData(prod);
+        System.out.println("GET Rest Call: /product/query ...");
         return result;
     }
 

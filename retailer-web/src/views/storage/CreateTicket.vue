@@ -25,7 +25,7 @@
       </el-form-item>
       <el-form-item label="盘点内容" size="mini" prop="productType">
         <el-select v-model="ticket.productType" placeholder="请选择盘点产品">
-          <el-option label="全部" value="all"></el-option>
+          <!-- <el-option label="全部" value="all"></el-option> -->
           <el-option label="常用" value="normal"></el-option>
           <el-option label="数量大于0" value="morethanzero"></el-option>
         </el-select>
