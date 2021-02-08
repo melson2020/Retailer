@@ -30,6 +30,20 @@ spring:
         ddl-auto: none
         show-sql: true
     database-platform: org.hibernate.dialect.SQLServerDialect
+
+  server:
+    compression:
+      enabled: true
+      min-response-size: 2048
+      mime-types:
+        - image/png
+        - image/jpeg
+        - image/jpg
+        - text/html
+        - application/javascript
+        - text/css
+        - application/octet-stream
+        - application/json
   servlet:
     multipart:
      max-file-size: 10MB
