@@ -95,7 +95,7 @@ const actions = {
             Message.error(err.message ? err.message : err)
         })
     },
-    GetStorageCountTiketDetails({},params){
+    GetStorageCountTiketDetails({ }, params) {
         return request.GetStorageCountTiketDetails(params);
     },
     ExportCountTicket({ }, parmas) {
@@ -110,7 +110,7 @@ const actions = {
     SetActiveSteps({ commit }, data) {
         commit("SetActiveSteps", data)
     },
-    RefreshTicket({commit}){
+    RefreshTicket({ commit }) {
         commit("RefreshCurrentStorageCountTicket")
     },
     SetCurrentStorageCountTicket({ commit }, data) {
@@ -131,11 +131,14 @@ const actions = {
     UpdateCountTicket({ }, params) {
         return request.UpdateCountTicket(params)
     },
-    DownLoadFile({},params){
+    DownLoadFile({ }, params) {
         return request.DownLoadFile(params)
     },
-    GetUnFinishedCountTickets({},params){
+    GetUnFinishedCountTickets({ }, params) {
         return request.GetUnFinishedCountTickets(params)
+    },
+    UpdateOneInCountTickets({ commit }, data) {
+        commit("UpdateOneInCountTickets", data);
     }
 };
 
@@ -146,7 +149,7 @@ const getters = {
     previewStorageList: state => state.previewStorageList,
     currentStorageCountTicket: state => state.currentStorageCountTicket,
     updateBatchList: state => state.updateBatchList,
-    storageCountTickets:state=>state.storageCountTickets,
+    storageCountTickets: state => state.storageCountTickets,
 };
 
 const mutations = {
@@ -158,21 +161,22 @@ const mutations = {
             state.productStorageList.push(data[i])
         }
     },
-    RefreshCurrentStorageCountTicket(state){
-        state.currentStorageCountTicket={};
-        state.activeStep=0;
+    RefreshCurrentStorageCountTicket(state) {
+        state.currentStorageCountTicket = {};
+        state.activeStep = 0;
     },
     SetStorageCount(state, data) {
         state.productAndStorageCount.storageCount = data;
     },
     SetStorageList(state, data) {
-        data.map(item => { 
-            if (item.feature&&item.feature.length!=0) {
+        data.map(item => {
+            if (item.feature && item.feature.length != 0) {
                 item.feature = JSON.parse(item.feature);
-            }else{
-                item.feature=[];
+            } else {
+                item.feature = [];
             }
-            item.batchList = [] })
+            item.batchList = []
+        })
         state.productStorageList = data;
     },
     SetPreviewStorageList(state, data) {
@@ -196,6 +200,11 @@ const mutations = {
     },
     SetStorageCountRec(state, data) {
         state.storageCountTickets = data;
+    },
+    UpdateOneInCountTickets(state, data) {
+        var item = state.storageCountTickets.filter(d => d.code == data.code);
+        var index = state.storageCountTickets.indexOf(item)
+        state.storageCountTickets.splice(index, 1, data)
     }
 };
 

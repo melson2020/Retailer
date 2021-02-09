@@ -16,9 +16,15 @@
     <div v-if="previewStorageList.length > 0" class="table-div">
       <el-table
         border
-        :data="previewStorageList"
+        :data="
+          previewStorageList.slice(
+            (this.currentPage - 1) * this.tablePageSize,
+            this.currentPage * this.tablePageSize
+          )
+        "
         ref="storagePreviewTable"
         size="small"
+        :height="tableHeight"
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"
         :cell-style="{ padding: '2px', color: '#909399' }"
@@ -33,6 +39,17 @@
           :width="item.width"
         ></el-table-column>
       </el-table>
+      <div class="preview-content-footer">
+        <el-pagination
+          background
+          v-if="previewStorageList.length>tablePageSize"
+          :current-page="currentPage"
+          :page-size="tablePageSize"
+           @current-change="pageChanged"
+          :total="previewStorageList.length"
+          layout="prev, pager, next, total"
+        ></el-pagination>
+      </div>
     </div>
     <div v-else class="data-empty-info">
       <el-button
@@ -52,6 +69,9 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      currentPage: 1,
+      tableHeight: window.innerHeight - 280,
+      tablePageSize: 17,
       tableColums: [
         { field: "productName", label: "名称", width: "auto" },
         { field: "type", label: "型号", width: "auto" },
@@ -170,9 +190,23 @@ export default {
         this.GetPreviewStorageList(params);
       }
     },
+    setpageSize() {
+      let rect = this.tableHeight - 40;
+      let pageSize = Math.floor(rect / 40);
+      // this.productCategroyPage.pageSize=pageSize;
+      this.tablePageSize = pageSize;
+    },
+     pageChanged(page) {
+      this.currentPage = page;
+    },
   },
   beforeMount: function () {
     this.loadPreviewStorageList();
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.setpageSize();
+    });
   },
 };
 </script>
@@ -205,5 +239,12 @@ export default {
 }
 .preview-inner-table {
   font-size: 16px;
+}
+.preview-content-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 10px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="step-box">
-      <el-steps :active="activeStep" finish-status="success">
+      <el-steps class="steps" :active="activeStep" finish-status="success">
         <el-step title="创建"></el-step>
         <el-step title="预览"></el-step>
         <el-step title="导出"></el-step>
@@ -153,5 +153,8 @@ export default {
 }
 .step-container {
   padding: 50px 0px;
+}
+.steps{
+  height: 100px;
 }
 </style>

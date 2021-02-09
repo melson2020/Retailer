@@ -55,9 +55,15 @@
     </div>
     <div class="table-div">
       <el-table
-        :data="countedList"
+        :data="
+          countedList.slice(
+            (this.currentPage - 1) * this.tablePageSize,
+            this.currentPage * this.tablePageSize
+          )
+        "
         border
         size="small"
+        :height="tableHeight"
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"
         :cell-style="{ padding: '2px', color: '#909399' }"
@@ -89,6 +95,17 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="import-content-footer">
+        <el-pagination
+          background
+          v-if="countedList.length > tablePageSize"
+          :current-page="currentPage"
+          :page-size="tablePageSize"
+          @current-change="pageChanged"
+          :total="countedList.length"
+          layout="prev, pager, next, total"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -100,6 +117,9 @@ export default {
   data() {
     return {
       uploadDialogVisible: false,
+      currentPage: 1,
+      tableHeight: window.innerHeight - 280,
+      tablePageSize: 17,
       tableColums: [
         { field: "productId", label: "ID", width: "auto" },
         { field: "productName", label: "名称", width: "auto" },
@@ -372,7 +392,23 @@ export default {
           colspan: _col,
         };
       }
-    }
+    },
+
+    setpageSize() {
+      let rect = this.tableHeight - 40;
+      let pageSize = Math.floor(rect / 40);
+      // this.productCategroyPage.pageSize=pageSize;
+      this.tablePageSize = pageSize;
+    },
+    pageChanged(page) {
+      this.currentPage = page;
+    },
+  },
+
+  mounted: function () {
+    this.$nextTick(function () {
+      this.setpageSize();
+    });
   },
 };
 </script>
@@ -402,5 +438,12 @@ export default {
 }
 .yellow {
   color: #e6a23c;
+}
+.import-content-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 10px;
 }
 </style>

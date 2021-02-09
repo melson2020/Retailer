@@ -5,25 +5,27 @@ import { Message } from "element-ui";
 const state = {
     excelCategroyList: [],
     excelProductList: [],
+    existingProduct: [],
     uploadFileDialog: false,
     needToRecheckList: false,
     productList: [],
-    categoryList:[],
+    categoryList: [],
 };
 
 const actions = {
-    GenrateCategroyListAndProductList({ commit }, xlsJson) {
+    GenrateCategroyListAndProductList({ commit }, params) {
+        console.log("excel", params)
         let categroys = []
         let productions = []
-        for (let index = 0; index < xlsJson.length; index++) {
-            let element = xlsJson[index];
-            let categroy = {categoryId: index, name: element.sheetName.toUpperCase(), comment: "", isSet: false, isRepeat: false }
+        for (let index = 0; index < params.xlsJson.length; index++) {
+            let element = params.xlsJson[index];
+            let categroy = { categoryId: index, name: element.sheetName.toUpperCase(), comment: "", isSet: false, isRepeat: false }
 
             categroys.push(categroy)
             let products = element.sheet;
             for (let j = 0; j < products.length; j++) {
                 let p = products[j];
-                let product = { categoryId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"], isRepeat: false, isSet: false, categoryName: element.sheetName.toUpperCase(), comment: "",searchType:p['是否常用']=='Y'?'normal':'' }
+                let product = { categoryId: index, name: p["别名"], type: p["型号"], specification: p["规格"], unit: p["单位"], feature: p["特征"], isRepeat: false, isSet: false, categoryName: element.sheetName.toUpperCase(), comment: "", searchType: p['是否常用'] == 'Y' ? 'normal' : '' }
                 productions.push(product)
             }
         }
@@ -31,6 +33,19 @@ const actions = {
         commit("SetCategroyList", categroys)
         commit("SetUploadDialog", false)
         commit("CheckDuplicateList")
+        console.log("比较")
+        request.GetProductListReq({ storeCode: params.storeCode })
+            .then(res => {
+                if (res.resultStatus == 1) {
+                    commit("SetProductList", res.data)
+                    commit("CompareExistingProduct", params.storeCode)
+                } else {
+                    Message.warning(res.message)
+                }
+            })
+            .catch(err => {
+                Message.error(err.message ? err.message : err)
+            })
 
     },
     SetUploadDialog({ commit }, show) {
@@ -96,48 +111,48 @@ const actions = {
 
     GetProductList({ commit }, params) {
         request.GetProductListReq(params)
-        .then(res => {
-            if (res.resultStatus == 1) {
-                commit("SetProductList", res.data)
-            } else {
-                Message.warning(res.message)
-            }
-        })
-        .catch(err => {
-            Message.error(err.message ? err.message : err)
-        })
+            .then(res => {
+                if (res.resultStatus == 1) {
+                    commit("SetProductList", res.data)
+                } else {
+                    Message.warning(res.message)
+                }
+            })
+            .catch(err => {
+                Message.error(err.message ? err.message : err)
+            })
     },
-    GetCategoryList({commit},params){
+    GetCategoryList({ commit }, params) {
 
         request.GetCategoryListReq(params)
-        .then(res=>{
-            if(res.resultStatus==1){
-                commit("SetCategoryList",res.data);
-            }
-            else{
-                Message.warning(res.message);
-            }
-        })
-        .catch(err=>{
-            Message.error(err.message?err.message:err)
-        })
+            .then(res => {
+                if (res.resultStatus == 1) {
+                    commit("SetCategoryList", res.data);
+                }
+                else {
+                    Message.warning(res.message);
+                }
+            })
+            .catch(err => {
+                Message.error(err.message ? err.message : err)
+            })
     },
-    DeleteCategory({commit},category){
+    DeleteCategory({ commit }, category) {
         request
-        .DeleteCategoryReq(category)
-        .then(res=>{
-            if(res.resultStatus==1){
-                commit("DeleteCategoryMut",category)
-                Message.info("删除成功")
-            }
-            else{
-                Message.warning("删除失败:"+ res.message)
-            }
-        })
-        .catch(error=>{
-            let al=error.message?error.message:error
-            Message.error(al)
-        })
+            .DeleteCategoryReq(category)
+            .then(res => {
+                if (res.resultStatus == 1) {
+                    commit("DeleteCategoryMut", category)
+                    Message.info("删除成功")
+                }
+                else {
+                    Message.warning("删除失败:" + res.message)
+                }
+            })
+            .catch(error => {
+                let al = error.message ? error.message : error
+                Message.error(al)
+            })
     },
     DeleteProduct({ commit }, product) {
         request
@@ -148,7 +163,7 @@ const actions = {
                     Message.info("删除成功")
                 }
                 else {
-                    Message.info("删除失败:"+res.message);
+                    Message.info("删除失败:" + res.message);
                 }
             })
             .catch(error => {
@@ -162,22 +177,23 @@ const actions = {
     SaveProduct({ }, product) {
         return request.SaveProductReq(product)
     },
-    SaveCategory({},category){
+    SaveCategory({ }, category) {
         return request.SaveCategoryReq(category)
     },
-    PushCategoryList({commit},catetory){
-        commit("PushCategoryListMut",catetory)
+    PushCategoryList({ commit }, catetory) {
+        commit("PushCategoryListMut", catetory)
     },
 };
 
 const getters = {
     excelCategroyList: state => state.excelCategroyList,
     excelProductList: state => state.excelProductList,
+    existingProduct: state => state.existingProduct,
     uploadFileDialog: state => state.uploadFileDialog,
     needToRecheckList: state => state.needToRecheckList,
     categroyDuplicateCount: state => state.categroyDuplicateCount,
     productList: state => state.productList,
-    categoryList:state=>state.categoryList,
+    categoryList: state => state.categoryList,
 };
 
 const mutations = {
@@ -193,7 +209,7 @@ const mutations = {
     SetProductionList(state, data) {
         state.excelProductList = data
     },
-    ClearProductionList(state,data){
+    ClearProductionList(state, data) {
         state.excelProductList = data
     },
     DeleteOne(state, data) {
@@ -207,9 +223,9 @@ const mutations = {
         let index = state.excelCategroyList.indexOf(data)
         state.excelCategroyList.splice(index, 1)
     },
-    DeleteCategoryMut(state,data){
-        let index=state.categoryList.indexOf(data);
-        state.categoryList.splice(index,1);
+    DeleteCategoryMut(state, data) {
+        let index = state.categoryList.indexOf(data);
+        state.categoryList.splice(index, 1);
     },
     CheckDuplicateList(state) {
         if (state.excelProductList.length > 0 || state.excelCategroyList.length > 0) {
@@ -245,28 +261,52 @@ const mutations = {
     SetProductList(state, data) {
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            if (element.feature&&element.feature.length!=0) {
+            if (element.feature && element.feature.length != 0) {
                 element.feature = JSON.parse(element.feature);
-            }else{
-               element.feature=[];
+            } else {
+                element.feature = [];
             }
         }
         state.productList = data
     },
-    SetCategoryList(state,data){
-        let categs=[];
-        for (let index=0;index<data.length;index++){
-            const element=data[index];
-            let cate={id:element.id,name:element.name,storeCode:element.storecode,categoryId:element.categoryId,comment: "", isSet: false};
+    SetCategoryList(state, data) {
+        let categs = [];
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            let cate = { id: element.id, name: element.name, storeCode: element.storecode, categoryId: element.categoryId, comment: "", isSet: false };
             categs.push(cate);
         }
-        state.categoryList=categs;
+        state.categoryList = categs;
     },
-    PushCategoryListMut(state,data)
-    {
-        let cate={id:data.id,name:data.name,storeCode:data.storecode,categoryId:data.categoryId,comment: "", isSet: false};
+    PushCategoryListMut(state, data) {
+        let cate = { id: data.id, name: data.name, storeCode: data.storecode, categoryId: data.categoryId, comment: "", isSet: false };
         state.categoryList.push(cate);
     },
+    CompareExistingProduct(state, storeCode) {
+        if (state.productList.length <= 0 || state.excelProductList.length <= 0) return [];
+        let mapExisting = new Map();
+        let mapExistingCategoryId = new Map();
+        let result = [];
+
+        for (let i = 0; i < state.productList.length; i++) {
+            if (!mapExisting.has(state.productList[i].name)) {
+                mapExisting.set(state.productList[i].name, state.productList[i]);
+                mapExistingCategoryId.set(
+                    state.productList[i].categoryName,
+                    state.productList[i].categoryId
+                );
+            }
+        }
+        for (let i = 0; i < state.excelProductList.length; i++) {
+            if (!mapExisting.has(state.excelProductList[i].name)) {
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                state.excelProductList[i].storeCode = storeCode;
+                result.push(state.excelProductList[i]);
+            }
+        }
+        state.existingProduct = result;
+    }
 };
 
 export default {

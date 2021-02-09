@@ -5,143 +5,7 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.6)"
   >
-    <!-- <div class="productimport-header">
-      <el-button @click.prevent.stop="saveExcelList" class="productimport-top-button" type="primary" icon="el-icon-plus" size="small" :disabled="compareExistingProduct.length<=0||excelCategroyList.length<=0">保存</el-button>
-      <el-button @click.prevent.stop="choseFile" class="productimport-top-button" type="primary" size="small">数据导入</el-button>
-      <el-button @click.prevent.stop="download" class="productimport-top-button" type="primary" size="small">模板下载</el-button>
-      <el-dialog
-        title="文件加载"
-        :visible.sync="uploadFileDialog"
-        :close-on-click-modal="false"
-        :show-close="false"
-        @close="uploadFileDialogOnClose"
-      >
-        <el-upload
-          ref="upload"
-          class="upload-demo"
-          drag
-          action
-          :auto-upload="false"
-          :limit="1"
-          :on-exceed="onExceed"
-          accept=".xls, .xlsx"
-        >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">
-            将文件拖到此处，或
-            <em>点击上传</em>
-          </div>
-          <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
-        </el-upload>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="closeDialog" v-if="!readingFile">取 消</el-button>
-          <el-button type="primary" :loading="readingFile" @click="submitFile">确 定</el-button>
-        </div>
-      </el-dialog>
-    </div> -->
-
     <div>
-      <!-- <el-col :span="8">
-        <div class="productimport-show-categroy">
-          <div class="productimport-content-header">
-            <div>
-              <span class="productimport-title-name">商品类别 ({{excelCategroyList.length}})</span>
-              <el-link
-                type="danger"
-                class="productimport-duplicate-link"
-                v-if="categroyDuplicateCount>0||isCategroyDuplicate"
-                @click.prevent.stop="categroyDuplicateSreach"
-              >类别重复:{{categroyDuplicateCount}} 个 {{isCategroyDuplicate?'显示全部':'点击查看'}}</el-link>
-            </div>
-            <div>
-              <el-input
-              class="productimport-fliter-input"
-              size="small"
-              v-model="categroySearchContent"
-              placeholder="请输入内容"
-              suffix-icon="el-icon-search"
-              @focus="categroySearchFocus"
-              ></el-input>
-            </div>
-          </div>
-
-          <div class="productimport-content">
-            <el-table
-              border
-              :row-class-name="tableRowClassName"
-              class="productimport-table-top" size="small"
-              :height="tableHeight"
-              :data="categorys"
-              :header-row-style="{height:'40px'}"
-              :row-style="{height:'40px'}"
-              :cell-style="{ padding: '2px', color: '#909399' }"
-              :header-cell-style="{ background: '#909399', color: 'white'}">
-              <el-table-column type="index" label="#" align="center"></el-table-column>
-              <el-table-column
-                v-for="(v,i) in categroyTableColums"
-                :prop="v.field"
-                :label="v.label"
-                :width="v.width"
-                :key="i"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.isSet">
-                    <el-input size="mini" placeholder="请输入内容" v-model="scope.row[v.field]"></el-input>
-                  </span>
-                  <span v-else>{{scope.row[v.field]}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作" align="center">
-                <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    plain
-                    circle
-                    type="primary"
-                    icon="el-icon-edit"
-                    v-if="!scope.row.isSet"
-                    @click="categroyEdit(scope.$index, scope.row)"
-                  ></el-button>
-                  <el-button
-                    size="mini"
-                    plain
-                    circle
-                    v-if="scope.row.isSet"
-                    type="success"
-                    icon="el-icon-s-claim"
-                    @click="categroySave(scope.$index, scope.row)"
-                  ></el-button>
-                  <el-button
-                    size="mini"
-                    plain
-                    circle
-                    v-if="!scope.row.isSet"
-                    type="danger"
-                    icon="el-icon-delete"
-                    @click="categroyDelete(scope.$index, scope.row)"
-                  ></el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-
-          <div class="productimport-content-footer">
-            <el-pagination
-              background
-              :current-page="productCategroyPage.currentPage"
-              @current-change="categroyPageChanged"
-              layout="prev, pager, next"
-              :page-size="productCategroyPage.pageSize"
-              :total="excelCategroyListShow.length"
-              v-if="excelCategroyListShow.length>=productCategroyPage.pageSize"
-            ></el-pagination>
-          </div>
-
-        </div>
-      </el-col> -->
-
-      <!-- <el-col :span="16"> -->
-      <!-- <div class="productimport-show-dict"> -->
       <div class="productimport-content-header">
         <div>
           <span class="productimport-title-name"
@@ -186,8 +50,7 @@
             icon="el-icon-plus"
             size="small"
             :disabled="
-              compareExistingProduct.length <= 0 ||
-              excelCategroyList.length <= 0
+              existingProduct.length <= 0 || excelCategroyList.length <= 0
             "
             >保存</el-button
           >
@@ -272,24 +135,6 @@
           <el-table-column label="操作" width="auto" align="center">
             <template slot-scope="scope">
               <div class="productimport-table-operation-template">
-                <!-- <el-button
-                      size="mini"
-                      plain
-                      circle
-                      type="primary"
-                      icon="el-icon-edit"
-                      v-if="!scope.row.isSet"
-                      @click="handleEdit(scope.$index, scope.row)"
-                    ></el-button> -->
-                <!-- <el-button
-                      size="mini"
-                      plain
-                      circle
-                      v-if="scope.row.isSet"
-                      type="success"
-                      icon="el-icon-s-claim"
-                      @click="handleSave(scope.$index, scope.row)"
-                    ></el-button> -->
                 <el-button
                   size="mini"
                   plain
@@ -367,40 +212,17 @@ export default {
       "categroyDuplicateCount",
       "userInfo",
       "productList",
+      "existingProduct",
     ]),
-    compareExistingProduct() {
-      let mapExisting = new Map();
-      let mapExistingCategoryId = new Map();
-      let result = new Array();
-
-      for (let i = 0; i < this.productList.length; i++) {
-        if (!mapExisting.has(this.productList[i].name)) {
-          mapExisting.set(this.productList[i].name, this.productList[i]);
-          mapExistingCategoryId.set(
-            this.productList[i].categoryName,
-            this.productList[i].categoryId
-          );
-        }
-      }
-      for (let i = 0; i < this.excelProductList.length; i++) {     
-        if (!mapExisting.has(this.excelProductList[i].name)) {        
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.excelProductList[i].storeCode = this.userInfo.storeCode;
-          result.push(this.excelProductList[i]);
-        }
-      }
-      return result;
-    },
     productListShow: function () {
       if (this.isSrearchDuplicate) {
         // return this.excelProductList.filter(item => {
-        return this.compareExistingProduct.filter((item) => {
+        return this.existingProduct.filter((item) => {
           return item.isRepeat;
         });
       } else {
         // return this.excelProductList.filter(item => {
-        return this.compareExistingProduct.filter((item) => {
+        return this.existingProduct.filter((item) => {
           let key =
             item.name +
             item.type +
@@ -421,48 +243,8 @@ export default {
         this.productTablePage.currentPage * this.productTablePage.pageSize
       );
     },
-    // compareExistingCategory(){
-    //   let mapExisting = new Map();
-    //   let result=new Array();
-    //   for(let i=0;i<this.productList.length;i++){
-    //     if(!mapExisting.has(this.productList[i].categoryName))
-    //     {
-    //       mapExisting.set(this.productList[i].categoryName,this.productList[i])
-    //     }
-    //   }
-    //   for(let i=0;i<this.excelCategroyList.length;i++)
-    //   {
-    //     if(!mapExisting.has(this.excelCategroyList[i].name))
-    //     {
-    //       result.push(this.excelCategroyList[i]);
-    //     }
-    //   }
-    //   return result;
-    // },
-    // excelCategroyListShow: function() {
-    //   if (this.isCategroyDuplicate) {
-    //     // return this.excelCategroyList.filter(item => {
-    //     return this.compareExistingCategory.filter(item => {
-    //       return item.isRepeat;
-    //     });
-    //   } else {
-    //     // return this.excelCategroyList.filter(item=>{
-    //     return this.compareExistingCategory.filter(item=>{
-    //       let key=item.name+item.comment;
-    //     let index=key.toUpperCase().indexOf(this.categroySearchContent.toUpperCase())
-    //      return index != -1;
-    //   })
-    // }},
-    // categorys(){
-    //   return this.excelCategroyListShow.slice((this.productCategroyPage.currentPage-1)*this.productCategroyPage.pageSize,this.productCategroyPage.currentPage*this.productCategroyPage.pageSize)
-    // },
-    // categroyDuplicateCount: function() {
-    //   return this.compareExistingCategory.filter(item => {
-    //     return item.isRepeat;
-    //   }).length;
-    // },
     duplicateCount: function () {
-      return this.compareExistingProduct.filter((item) => {
+      return this.existingProduct.filter((item) => {
         return item.isRepeat;
       }).length;
     },
@@ -474,7 +256,6 @@ export default {
       DownloadProductDictTem: "DownloadProductDictTem",
       DeleteOneInImportedList: "DeleteOneInImportedList",
       CheckDuplicateList: "CheckDuplicateList",
-      // SaveExcelList: "SaveExcelList",
       SaveExcelListNew: "SaveExcelListNew",
       DeleteOneInCategroyList: "DeleteOneInCategroyList",
       GetProductList: "GetProductList",
@@ -488,6 +269,7 @@ export default {
       return index;
     },
     tableRowClassName({ row }) {
+      console.log(row);
       if (row.isRepeat) {
         return "warning-row";
       } else {
@@ -501,13 +283,6 @@ export default {
       this.productTablePage.currentPage = 1;
       this.isSrearchDuplicate = !this.isSrearchDuplicate;
     },
-    // categroyDuplicateSreach() {
-    //   this.excelCategroyList.map(item => {
-    //     item.isSet = false;
-    //   });
-    //   this.productCategroyPage.currentPage = 1;
-    //   this.isCategroyDuplicate = !this.isCategroyDuplicate;
-    // },
     choseFile() {
       this.SetUploadDialog(true);
     },
@@ -518,9 +293,9 @@ export default {
       this.SetUploadDialog(false);
     },
     //导入excel 至界面
-    submitFile() {
+    submitFile: function () {
       let params = { storeCode: this.userInfo.storeCode };
-      this.GetProductList(params);
+      // this.GetProductList(params);
       let file = this.$refs.upload.$children[0].fileList[0];
       if (!file) {
         this.$message.warning("请添加文件");
@@ -540,7 +315,9 @@ export default {
               this.$message.warning("导入文件格式错误");
               return;
             }
-            this.GenrateCategroyListAndProductList(tabJson);
+            params.xlsJson = tabJson;
+            this.GenrateCategroyListAndProductList(params);
+            // this.CompareExistingProduct(this.userInfo.storeCode);
             this.$message.warning("系统已为你过滤掉已存在商品！");
           }
         })
@@ -571,13 +348,6 @@ export default {
     download() {
       this.DownloadProductDictTem();
     },
-    // categroyPageChanged(page) {
-    //   this.excelCategroyList.map(item => {
-    //     item.isSet = false;
-    //   });
-    //   this.productCategroyPage.currentPage = page;
-    //   this.CheckDuplicateList(true);
-    // },
     pageChanged(page) {
       this.excelProductList.map((item) => {
         item.isSet = false;
@@ -592,41 +362,9 @@ export default {
         }).length > 0
       );
     },
-    // CheckUnSaveCategroy() {
-    //   return (
-    //     this.excelCategroyListShow.filter(item => {
-    //       return item.isSet;
-    //     }).length > 0
-    //   );
-    // },
     handleDelete(index, row) {
       this.DeleteOneInImportedList(row);
     },
-    // handleEdit(index, row) {
-    //   if (this.CheckHaveUnSaveItem()) {
-    //     this.$message.warning("有未保存项，请先保存");
-    //     return;
-    //   }
-    //   row.isSet = !row.isSet;
-    // },
-    // handleSave(index, row) {
-    //   row.isSet = !row.isSet;
-    //   this.CheckDuplicateList();
-    // },
-    // categroyDelete(index, row) {
-    //   this.DeleteOneInCategroyList(row);
-    // },
-    // categroyEdit(index, row) {
-    //   if (this.CheckUnSaveCategroy()) {
-    //     this.$message.warning("有未保存项，请先保存");
-    //     return;
-    //   }
-    //   row.isSet = !row.isSet;
-    // },
-    // categroySave(index, row) {
-    //   row.isSet = !row.isSet;
-    //   this.CheckDuplicateList();
-    // },
     saveExcelList() {
       this.excelProductList.map((item) => {
         item.isSet = false;
@@ -636,9 +374,7 @@ export default {
         this.$message.warning("存在重复名称，请修改");
         return;
       }
-      this.isSrearchDuplicate=false;
-      // let params={storeCode:this.userInfo.storeCode,productList:this.excelProductList,categoryList:this.excelCategroyList}
-      // let params={storeCode:this.userInfo.storeCode,productList:this.productListShow,categoryList:this.excelCategroyListShow}
+      this.isSrearchDuplicate = false;
       let params = {
         storeCode: this.userInfo.storeCode,
         productList: this.productListShow,
@@ -709,14 +445,13 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-top: 15px;
 }
-/* .productimport-show-dict {
-  min-height: 100%;
-  height: auto;
-  padding: 12px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
-  margin-left: 30px;
-  margin-top: 15px;
-} */
+.el-table .warning-row {
+  background: #FDE2E2;
+}
+
+.el-table .success-row {
+  background: #f0f9eb;
+}
 
 .productimport-show-dict {
   min-height: 100%;
@@ -725,70 +460,7 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   margin-top: 15px;
 }
-
-/* .title-name {
-  float: left;
-  font-size: 28px;
-  font-weight: bold;
-  color: #409eff;
+.productimport-duplicate-link {
+  margin-left: 20px;
 }
-.title-div-left {
-  display: flex;
-  align-items: center;
-}
-.duplicate-link {
-  margin-left: 10px;
-  font-size: 20px;
-}
-.title-div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 80px;
-}
-.table-top {
-  height: 80vh;
-}
-.show-categroy {
-  min-height: 100%;
-  height: auto;
-  padding: 12px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
-}
-.show-dict {
-  min-height: 100%;
-  height: auto;
-  padding: 12px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
-  margin-left: 30px;
-}
-
-.el-row {
-  height: 100%;
-}
-.el-col {
-  height: 1550px;
-}
-.el-table-pagination-row {
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  margin-top: 20px;
-  height: 80px;
-}
-
-.fliter-input {
-  width: 400px;
-  height: 80px;
-}
-.el-table .warning-row {
-  background: #f8bdbd;
-}
-.table-operation-template {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
 </style>

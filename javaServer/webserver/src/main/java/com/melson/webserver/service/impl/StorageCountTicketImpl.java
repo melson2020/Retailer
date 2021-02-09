@@ -65,7 +65,7 @@ public class StorageCountTicketImpl extends AbstractService<StorageCountTicket> 
 
     @Override
     public List<StorageCountTicket> FindUnFinishedTicket(String storeCode) {
-        return storageCountTicketDao.findByStoreCodeAndStatusLessThan(storeCode,5);
+        return storageCountTicketDao.findByStoreCodeAndStatusLessThanAndStatusGreaterThan(storeCode,5,0);
     }
 
     @Override

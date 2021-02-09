@@ -33,11 +33,12 @@
     </div>
     <div>
       <el-table
-        :data="storageCountTickets" size="small"
-        :header-row-style="{height:'40px'}"
-          :row-style="{height:'40px'}"
-          :cell-style="{ padding: '2px', color: '#909399' }"
-          :header-cell-style="{ background: '#909399', color: 'white'}"
+        :data="storageCountTickets"
+        size="small"
+        :header-row-style="{ height: '40px' }"
+        :row-style="{ height: '40px' }"
+        :cell-style="{ padding: '2px', color: '#909399' }"
+        :header-cell-style="{ background: '#909399', color: 'white' }"
         class="record-table"
       >
         <el-table-column
@@ -64,12 +65,11 @@
         <el-table-column prop="status" label="进度" width="auto">
           <template slot-scope="scope">
             <span class="yellow" v-if="scope.row.status == 1">已创建</span>
-            <span class="yellow" v-else-if="scope.row.status == 2"
-              >盘点单已导出</span
+            <span class="red" v-else-if="scope.row.status == -1"
+              >已作废</span
             >
-            <span class="yellow" v-else-if="scope.row.status == 3"
-              >盘点单已导入</span
-            >
+            <span class="yellow" v-else-if="scope.row.status == 2">已导出</span>
+            <span class="yellow" v-else-if="scope.row.status == 3">已导入</span>
             <span class="red" v-else-if="scope.row.status == 4"
               >批次信息未完整</span
             >
@@ -111,24 +111,29 @@
         >
         <el-table-column label="操作" width="150px">
           <template slot-scope="scope">
-            <el-button
-              v-if="scope.row.status == 5"
-              type="primary"
-              icon="el-icon-tickets"
-              plain
-              size="mini"
-              @click="detailOnClick(scope.row)"
-              >详细</el-button
-            >
-            <el-button
-              v-else
-              type="warning"
-              icon="el-icon-link"
-              plain
-              size="mini"
-              @click="loadTicketOnClick(scope.row)"
-              >加载</el-button
-            >
+            <span v-if="scope.row.status<0"></span>
+            <el-dropdown v-else>
+              <span class="el-dropdown-link">
+                操作<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  v-if="scope.row.status == 5"
+                  @click.native="detailOnClick(scope.row)"
+                  ><span class="el-dropdown-link">详细</span></el-dropdown-item
+                >
+                <el-dropdown-item
+                  @click.native="loadTicketOnClick(scope.row)"
+                  v-if="scope.row.status < 5"
+                  ><span class="yellow">加载</span></el-dropdown-item
+                >
+                <el-dropdown-item
+                  @click.native="invalid(scope.row)"
+                  v-if="scope.row.status < 5"
+                  ><span class="red">作废</span></el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
         <el-table-column
@@ -138,12 +143,15 @@
         ></el-table-column>
       </el-table>
       <el-dialog title="盘点详细(变动项)" :visible.sync="dialogTableVisible">
-        <el-table v-if="countTicketDetails.length>0" :data="countTicketDetails">
+        <el-table
+          v-if="countTicketDetails.length > 0"
+          :data="countTicketDetails"
+        >
           <el-table-column
             property="productName"
             label="商品名称"
           ></el-table-column>
-           <el-table-column
+          <el-table-column
             property="supplyName"
             label="供应商"
           ></el-table-column>
@@ -164,8 +172,8 @@
           </el-table-column>
           <el-table-column property="count" label="数量"></el-table-column>
         </el-table>
-          <span v-else>盘点无数量变动,盘点数量与原数量一致</span>
-      </el-dialog>    
+        <span v-else>盘点无数量变动,盘点数量与原数量一致</span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -246,6 +254,8 @@ export default {
     ...mapActions({
       GetStorageCountTickets: "GetStorageCountTickets",
       DownLoadFile: "DownLoadFile",
+      UpdateCountTicket: "UpdateCountTicket",
+      UpdateOneInCountTickets: "UpdateOneInCountTickets",
       GetStorageCountTiketDetails: "GetStorageCountTiketDetails",
       SetCurrentStorageCountTicket: "SetCurrentStorageCountTicket",
     }),
@@ -307,6 +317,21 @@ export default {
         },
       });
     },
+    invalid(ticket) {
+      ticket.status = -1;
+      this.UpdateCountTicket(ticket)
+        .then((res) => {
+          if (res.resultStatus == 1) {
+            this.UpdateOneInCountTickets(res.data);
+            this.$message.success("更新成功");
+          } else {
+            this.$message.warning(res.message);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.message);
+        });
+    },
   },
   beforeMount: function () {
     this.timeDefaultShow = new Date().setMonth(new Date().getMonth() - 1);
@@ -345,5 +370,12 @@ export default {
 }
 .yellow {
   color: #e6a23c;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
 }
 </style>

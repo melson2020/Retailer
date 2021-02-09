@@ -21,7 +21,7 @@ public class StorageCountTicket {
     private String storeCode;
     private String date;
     private Date createTime;
-    //盘点单状态标识  1 已创建 2已导出 3已导入 4 批次信息未填写 5完成
+    //盘点单状态标识  1 已创建 2已导出 3已导入 4 批次信息未填写 5完成 -1 作废
     private Integer status;
     private String description;
     private String productType;
