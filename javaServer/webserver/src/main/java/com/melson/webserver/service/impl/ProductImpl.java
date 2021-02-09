@@ -137,7 +137,7 @@ public class ProductImpl extends AbstractService<Product> implements IProduct {
             dto.setUnit(obj[4]==null?null:obj[4].toString());
             dto.setFeature(obj[5]==null?null:obj[5].toString());
             dto.setCategoryName(obj[6]==null?null:obj[6].toString());
-            dto.setSearchType(obj[7]==null?null:obj[7].toString());
+//            dto.setSearchType(obj[7]==null?null:obj[7].toString());
             dtoList.add(dto);
         }
         return dtoList;

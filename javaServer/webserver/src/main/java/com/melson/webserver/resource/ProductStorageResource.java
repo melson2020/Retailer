@@ -60,12 +60,14 @@ public class ProductStorageResource extends BaseResource {
     @RequestMapping(value = "/storageAndProductCount")
     @RequiredPermission(SecurityLevel.Employee)
     public Result GetStrogaeInfo(HttpServletRequest request) {
+        long t1 = new Date().getTime();
         String storeCode = request.getParameter("storeCode");
         if (StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
         Result result = new Result();
         StorageAndProductCountVo vo = productStorageService.GetProductAndStorageCount(storeCode);
         result.setData(vo);
-        System.out.println("Rest Call: /storage/storageAndProductCount ...");
+        long t2 = new Date().getTime();
+        System.out.println("Rest Call: /storage/storageAndProductCount ..."+(t2-t1));
         return result;
     }
 
@@ -89,6 +91,7 @@ public class ProductStorageResource extends BaseResource {
     @RequestMapping(value = "/storageList")
     @RequiredPermission(SecurityLevel.Employee)
     public Result GetStorageList(HttpServletRequest request) {
+        long t1 = new Date().getTime();
         String storeCode = request.getParameter("storeCode");
         String searchType = request.getParameter("searchType");
         if (StringUtils.isEmpty(storeCode) || StringUtils.isEmpty(searchType))
@@ -96,13 +99,15 @@ public class ProductStorageResource extends BaseResource {
         Result result = new Result();
         List<ProductStorage> list = productStorageService.FindStorageListWithType(storeCode, searchType);
         result.setData(list);
-        System.out.println("Rest Call: /storage/storageList ...");
+        long t2 = new Date().getTime();
+        System.out.println("Rest Call: /storage/storageList ..."+(t2-t1));
         return result;
     }
 
     @RequestMapping(value = "/storageCountList")
     @RequiredPermission(SecurityLevel.Employee)
     public Result GetStorageCountList(HttpServletRequest request) {
+        long t1 = new Date().getTime();
         String storeCode = request.getParameter("storeCode");
         String searchType = request.getParameter("searchType");
         if (StringUtils.isEmpty(storeCode) || StringUtils.isEmpty(searchType))
@@ -110,7 +115,8 @@ public class ProductStorageResource extends BaseResource {
         Result result = new Result();
         List<ProductStorageDto> list = productStorageService.FindWithProductType(storeCode, searchType);
         result.setData(list);
-        System.out.println("Rest Call: /storage/storageCountList ...");
+        long t2 = new Date().getTime();
+        System.out.println("Rest Call: /storage/storageCountList ..."+(t2-t1));
         return result;
     }
 
