@@ -117,6 +117,11 @@
                 :cell-style="{ padding: '2px', color: '#909399' }"
               >
                 <el-table-column
+                  prop="id"
+                  label="批次号"
+                  width="80px"
+                ></el-table-column>
+                <el-table-column
                   prop="batchNo"
                   label="批次号"
                   width="auto"

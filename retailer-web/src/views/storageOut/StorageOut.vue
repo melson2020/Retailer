@@ -84,6 +84,11 @@
               <el-form-item class="item" label="出库详细：" prop="details">
                 <el-table border size="mini" :data="storageOutTicket.details">
                   <el-table-column
+                    prop="storageInBatchId"
+                    label="ID"
+                    width="80px"
+                  ></el-table-column>
+                  <el-table-column
                     prop="productName"
                     label="商品名"
                     width="auto"
@@ -246,8 +251,9 @@
                 <el-col :span="7" class="ver">
                   <div class="flex-left">
                     <el-checkbox v-model="pb.checked"></el-checkbox>
+                    <!-- <el-radio v-model="pb.checked"></el-radio> -->
                     <span class="margin-left-10"
-                      >批次:{{ pb.batchNo }} ({{ pb.supplyName }})</span
+                      >批次:{{ pb.batchNo }}{{pb.id}} ({{ pb.supplyName }})</span
                     >
                   </div>
                   <div class="margin-top-10 flex-left">
@@ -498,9 +504,13 @@ export default {
       if (this.storageOutTicket.details.length >= 0) {
         this.storageOutTicket.details.map((item) => {
           let existProductBatch = this.productBatchList.filter((p) => {
+            // return (
+            //   p.batchNo +p.id==
+            //   item.storageInBatchNo+item.storageInBatchId
+            // );
             return (
-              p.batchNo + p.productId + p.supplyId ==
-              item.storageInBatchNo + item.productId + item.supplyId
+              p.batchNo +p.id+ p.productId + p.supplyId ==
+              item.storageInBatchNo+item.storageInBatchId + item.productId + item.supplyId
             );
           })[0];
           if (existProductBatch) {
@@ -710,15 +720,20 @@ export default {
 
       this.checkedOutList.map((item) => {
         let batch = this.storageComputedProductBtahList.filter((b) => {
+          // return (
+          //   b.batchNo +b.id ===
+          //   item.batchNo +item.id
+          // );
           return (
-            b.productId + b.batchNo + b.supplyId ===
-            item.productId + item.batchNo + item.supplyId
+            b.productId + b.batchNo +b.id+ b.supplyId ===
+            item.productId + item.batchNo +item.id+ item.supplyId
           );
         })[0];
         let addItem = {
           productId: item.productId,
           productName: pName,
           storageInBatchNo: item.batchNo,
+          storageInBatchId:item.id,
           supplyId: item.supplyId,
           supplyName: item.supplyName,
           priceIn: item.price,
@@ -764,6 +779,10 @@ export default {
         this.$message.warning("请添加出库详细");
         return false;
       }
+      // if (this.checkedOutList.length > 1) {
+      //   this.$message.warning("同一产品请分次添加！");
+      //   return false;
+      // }
       let misPriceList = this.checkedOutList.filter((mis) => {
         return mis.outPrice == "";
       });
@@ -780,6 +799,7 @@ export default {
       let vKey =
         value.productId +
         value.storageInBatchNo +
+        value.storageInBatchId+
         value.taxRate +
         value.outPrice +
         value.supplyId;
@@ -787,6 +807,7 @@ export default {
         let key =
           p.productId +
           p.storageInBatchNo +
+          p.storageInBatchId+
           p.taxRate +
           p.outPrice +
           p.supplyId;

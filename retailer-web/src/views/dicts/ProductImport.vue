@@ -214,7 +214,7 @@ export default {
       "productList",
       "existingProduct",
     ]),
-    productListShow: function () {
+    productListShow: function() {
       if (this.isSrearchDuplicate) {
         // return this.excelProductList.filter(item => {
         return this.existingProduct.filter((item) => {
@@ -243,7 +243,7 @@ export default {
         this.productTablePage.currentPage * this.productTablePage.pageSize
       );
     },
-    duplicateCount: function () {
+    duplicateCount: function() {
       return this.existingProduct.filter((item) => {
         return item.isRepeat;
       }).length;
@@ -269,7 +269,6 @@ export default {
       return index;
     },
     tableRowClassName({ row }) {
-      console.log(row);
       if (row.isRepeat) {
         return "warning-row";
       } else {
@@ -293,7 +292,7 @@ export default {
       this.SetUploadDialog(false);
     },
     //导入excel 至界面
-    submitFile: function () {
+    submitFile: function() {
       let params = { storeCode: this.userInfo.storeCode };
       // this.GetProductList(params);
       let file = this.$refs.upload.$children[0].fileList[0];
@@ -349,11 +348,11 @@ export default {
       this.DownloadProductDictTem();
     },
     pageChanged(page) {
-      this.excelProductList.map((item) => {
-        item.isSet = false;
-      });
+      // this.excelProductList.map((item) => {
+      //   item.isSet = false;
+      // });
       this.productTablePage.currentPage = page;
-      this.CheckDuplicateList(true);
+      // this.CheckDuplicateList(true);
     },
     CheckHaveUnSaveItem() {
       return (
@@ -375,11 +374,13 @@ export default {
         return;
       }
       this.isSrearchDuplicate = false;
+      this.productListShow.map((item) => {
+        item.storeCode = this.userInfo.storeCode;
+      });
       let params = {
         storeCode: this.userInfo.storeCode,
         productList: this.productListShow,
       };
-
       this.SaveExcelListNew(params);
     },
     setpageSize() {
@@ -397,8 +398,8 @@ export default {
       this.productTablePage.currentPage = 1;
     },
   },
-  mounted: function () {
-    this.$nextTick(function () {
+  mounted: function() {
+    this.$nextTick(function() {
       this.setpageSize();
     });
   },
@@ -446,7 +447,7 @@ export default {
   margin-top: 15px;
 }
 .el-table .warning-row {
-  background: #FDE2E2;
+  background: #fde2e2;
 }
 
 .el-table .success-row {

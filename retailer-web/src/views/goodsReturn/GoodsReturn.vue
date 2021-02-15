@@ -278,6 +278,7 @@ export default {
               2
             ),
             priceUnit: item.outPrice,
+            batchId:item.storageInBatchId,
             batchNo: item.storageInBatchNo,
             date: new Date().format("yyyy-MM-dd"),
             operationEmployeeName: this.userInfo.userName,

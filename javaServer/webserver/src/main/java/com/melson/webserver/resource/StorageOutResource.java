@@ -43,7 +43,7 @@ public class StorageOutResource extends BaseResource {
         boolean success=outTicketService.SaveStorageOutTiket(dto.getOutTicket(),dto.getBillDetailList());
         if(!success){
             result.setResultStatus(-1);
-            result.setMessage("save failure");
+            result.setMessage("出库单创建失败，请检查！");
         }
         System.out.println("Rest Call: /storageOut/saveOutTicket ...");
         return result;
@@ -105,9 +105,10 @@ public class StorageOutResource extends BaseResource {
         if (StringUtils.isEmpty(ticketCode)||StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
         Result result=new Result();
         StorageOutTicket ticket=outTicketService.GetTicketInfos(ticketCode,storeCode);
+        System.out.println("Rest Call: /storageOut/ticketInfo ...");
         if(ticket==null){
             result.setResultStatus(-1);
-            result.setMessage("no out bound ticket");
+            result.setMessage("没有此出库单号！");
         }else {
             result.setData(ticket);
         }

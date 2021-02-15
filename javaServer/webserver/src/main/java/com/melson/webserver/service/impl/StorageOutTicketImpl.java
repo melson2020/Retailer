@@ -83,7 +83,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         Map<String, StorageOutDetail> detailMap = new HashMap<>(outDetails.size());
         for (StorageOutDetail detail : outDetails) {
             batchNos.add(detail.getStorageInBatchNo());
-            String key = detail.getStorageInBatchNo() + detail.getSupplyId() + detail.getProductId() + detail.getStoreCode();
+            String key = detail.getStorageInBatchNo() + detail.getSupplyId() + detail.getProductId() + detail.getStoreCode()+detail.getStorageInBatchId();
             Integer batchCount = batchMap.get(key);
             if (batchCount == null) {
                 batchMap.put(key, detail.getOutCount());
@@ -103,12 +103,17 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         }
         //更新批次库存,同时刷新库存数据
         for (ProductBatch batch : productBatchList) {
-            String key = batch.getBatchNo() + batch.getSupplyId() + batch.getProductId() + batch.getStoreCode();
+            String key = batch.getBatchNo() + batch.getSupplyId() + batch.getProductId() + batch.getStoreCode()+batch.getId();
             Integer mins = batchMap.get(key);
             if (mins != null) {
-                batch.setCount(batch.getCount() - mins);
-                if (batch.getCount() <= 0) {
-                    batch.setFinished(1);
+                if(mins>batch.getCount()){
+                    return false;
+                }
+                else {
+                    batch.setCount(batch.getCount() - mins);
+                    if (batch.getCount() <= 0) {
+                        batch.setFinished(1);
+                    }
                 }
                 //库存减少
                 ProductStorage storage = storageMap.get(batch.getProductId());

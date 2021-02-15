@@ -75,9 +75,17 @@
                   <el-option
                     v-for="item in productList"
                     :key="item.id"
-                    :label="item.name+' ('+item.type+')'"
+                    :label="item.name"
                     :value="item.id"
                   ></el-option>
+
+                    <!-- <el-option
+                    v-for="item in productList"
+                    :key="item.id"
+                    :label="item.name+' ('+item.type+')'"
+                    :value="item.id"
+                  ></el-option> -->
+
                 </el-select>
                 <el-select
                   v-model="addItem.supplyId"

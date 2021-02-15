@@ -157,7 +157,7 @@ public class ProductStorageResource extends BaseResource {
         List<ProductBatch> savedList = productBatchService.SaveAll(batchList);
         if (savedList == null) {
             result.setResultStatus(-1);
-            result.setMessage("update failed");
+            result.setMessage("更新失败！");
         }
         System.out.println("Rest Call: /storage/updateBatchList ...");
         return result;
@@ -171,7 +171,7 @@ public class ProductStorageResource extends BaseResource {
         StorageCountTicket savedTicket = storageCountTicketService.SaveTicket(ticket);
         if (savedTicket == null) {
             result.setResultStatus(-1);
-            result.setMessage("update failed");
+            result.setMessage("更新失败！");
         } else {
             result.setData(ticket);
         }

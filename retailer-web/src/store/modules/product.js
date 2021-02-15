@@ -14,7 +14,6 @@ const state = {
 
 const actions = {
     GenrateCategroyListAndProductList({ commit }, params) {
-        console.log("excel", params)
         let categroys = []
         let productions = []
         for (let index = 0; index < params.xlsJson.length; index++) {
@@ -33,12 +32,13 @@ const actions = {
         commit("SetCategroyList", categroys)
         commit("SetUploadDialog", false)
         commit("CheckDuplicateList")
-        console.log("比较")
         request.GetProductListReq({ storeCode: params.storeCode })
             .then(res => {
                 if (res.resultStatus == 1) {
                     commit("SetProductList", res.data)
-                    commit("CompareExistingProduct", params.storeCode)
+                    params.excelList=productions
+                    params.productList=res.data
+                    commit("CompareExistingProduct", params)
                 } else {
                     Message.warning(res.message)
                 }
@@ -74,7 +74,8 @@ const actions = {
     },
     DeleteOneInImportedList({ commit }, product) {
         commit("DeleteOne", product)
-        commit("CheckDuplicateList")
+        // commit("CheckDuplicateList")
+        Message.info("删除成功")
     },
     DeleteOneInCategroyList({ commit }, categroy) {
         commit("DeleteOneCategroy", categroy)
@@ -211,6 +212,7 @@ const mutations = {
     },
     ClearProductionList(state, data) {
         state.excelProductList = data
+        state.existingProduct=data
     },
     DeleteOne(state, data) {
         let index = state.excelProductList.indexOf(data)
@@ -282,27 +284,32 @@ const mutations = {
         let cate = { id: data.id, name: data.name, storeCode: data.storecode, categoryId: data.categoryId, comment: "", isSet: false };
         state.categoryList.push(cate);
     },
-    CompareExistingProduct(state, storeCode) {
-        if (state.productList.length <= 0 || state.excelProductList.length <= 0) return [];
+    CompareExistingProduct(state, params) {
+        var excelList=params.excelList;
+        var productList=params.productList;
+        var storeCode=params.storeCode;
+        if (excelList.length <= 0 ) {
+            return []
+        };
         let mapExisting = new Map();
         let mapExistingCategoryId = new Map();
         let result = [];
 
-        for (let i = 0; i < state.productList.length; i++) {
-            if (!mapExisting.has(state.productList[i].name)) {
-                mapExisting.set(state.productList[i].name, state.productList[i]);
+        for (let i = 0; i < productList.length; i++) {
+            if (!mapExisting.has(productList[i].name)) {
+                mapExisting.set(productList[i].name, productList[i]);
                 mapExistingCategoryId.set(
-                    state.productList[i].categoryName,
-                    state.productList[i].categoryId
+                    productList[i].categoryName,
+                    productList[i].categoryId
                 );
             }
         }
-        for (let i = 0; i < state.excelProductList.length; i++) {
-            if (!mapExisting.has(state.excelProductList[i].name)) {
+        for (let i = 0; i < excelList.length; i++) {
+            if (!mapExisting.has(excelList[i].name)) {
                 // eslint-disable-next-line vue/no-side-effects-in-computed-properties
                 // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-                state.excelProductList[i].storeCode = storeCode;
-                result.push(state.excelProductList[i]);
+                excelList[i].storeCode = storeCode;
+                result.push(excelList[i]);
             }
         }
         state.existingProduct = result;
