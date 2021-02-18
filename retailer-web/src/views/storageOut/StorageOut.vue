@@ -98,9 +98,9 @@
                     label="批次号"
                     width="auto"
                   ></el-table-column>
-                  <el-table-column label="是否含税" width="auto">
+                  <el-table-column label="税(出)" width="auto">
                     <template slot-scope="scope">
-                      <el-tag v-if="scope.row.vat == 1" size="mini"
+                      <el-tag size="mini"
                         >税 ({{ scope.row.taxRate }}%)</el-tag
                       >
                     </template>
@@ -167,7 +167,7 @@
                   ></el-table-column>
                   <el-table-column prop="vatIn" label="税（进）" width="auto">
                     <template slot-scope="scope">
-                      <el-tag v-if="scope.row.vatIn == 1" size="mini">
+                      <el-tag size="mini">
                         税 ({{ scope.row.taxRateIn }}%)
                       </el-tag>
                     </template>
@@ -184,7 +184,7 @@
                   ></el-table-column>
                   <el-table-column label="税（出）" width="auto">
                     <template slot-scope="scope">
-                      <el-tag v-if="scope.row.vatOut == 1" size="mini">
+                      <el-tag size="mini">
                         税 ({{ scope.row.taxRateOut }}%)
                       </el-tag>
                     </template>
