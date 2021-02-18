@@ -91,7 +91,7 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
                 Map<String, ProductBatch> batchMap = new HashMap<>(productBatchList.size());
                 Map<Integer, ProductStorage> storageMap = new HashMap<>(productBatchList.size());
                 for (ProductBatch batch : productBatchList) {
-                    batchMap.put(batch.getBatchNo() + batch.getProductId(), batch);
+                    batchMap.put(batch.getBatchNo() + batch.getProductId()+batch.getSupplyId()+batch.getId(), batch);
                 }
                 for (ProductStorage storage : productStorageList) {
                     storageMap.put(storage.getProductId(), storage);
@@ -101,8 +101,9 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
                     saveRecord.setBeforeCount(storage.getCount());
                     storage.setCount(storage.getCount() + saveRecord.getCount());
                     saveRecord.setAfterCount(storage.getCount());
-                    ProductBatch batch = batchMap.get(saveRecord.getBatchNo() + saveRecord.getProductId());
+                    ProductBatch batch = batchMap.get(saveRecord.getBatchNo() + saveRecord.getProductId()+saveRecord.getSupplyId()+saveRecord.getBatchId());
                     batch.setCount(batch.getCount() + saveRecord.getCount());
+                    batch.setFinished(0);
                 }
                List<GoodsReturnRecord> savedRecords=  goodsReturnRecordDao.saveAll(returnRecords);
                 productBatchDao.saveAll(batchMap.values());

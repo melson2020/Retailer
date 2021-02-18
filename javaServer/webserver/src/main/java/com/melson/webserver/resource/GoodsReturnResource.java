@@ -46,6 +46,7 @@ public class GoodsReturnResource extends BaseResource {
         Result result=new Result();
         List<StorageOutTicket> tickets=outTicketService.FindTicketsWithCodeOrCustomerNameAndDate(searchValue,date,storeCode);
         result.setData(tickets);
+        System.out.println("Rest Call: /goodsReturn/findOutTickets ...");
         return result;
     }
 
@@ -58,6 +59,7 @@ public class GoodsReturnResource extends BaseResource {
         Result result=new Result();
         StorageOutTicket outTicket=outTicketService.FindTicketForGoodsReturn(storeCode,ticketCode);
         result.setData(outTicket);
+        System.out.println("Rest Call: /goodsReturn/findOutTicketDetails ...");
         return result;
     }
 
@@ -67,6 +69,7 @@ public class GoodsReturnResource extends BaseResource {
         List<GoodsReturnRecord> records=vo.getRecords();
         List<StorageOutDetail> details=vo.getOutDetails();
         if(records.size()<=0||details.size()<=0)return this.GenerateResult(ResultType.ParametersNeeded);
+        System.out.println("Rest Call: /goodsReturn/saveGoodsReturnRecord ...");
         return goodsReturnRecordService.SaveGoodsReturnRecords(records,details);
     }
 }

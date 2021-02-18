@@ -29,6 +29,7 @@
         <el-table-column prop="contact" label="联系人员" align="left"></el-table-column>
         <el-table-column prop="phone" label="联系电话" align="left"></el-table-column>
         <el-table-column prop="discount" label="厂家返点" align="left"></el-table-column>
+        <el-table-column prop="id" label="识别码" align="left"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" plain circle type="primary" icon="el-icon-edit"/>

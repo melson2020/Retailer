@@ -31,6 +31,7 @@ public class GoodsReturnRecord {
     //单利润
     private BigDecimal profitUnit;
     private BigDecimal totalProfit;
+    private Integer batchId;
     private String batchNo;
     private Date createTime;
     private String date;
@@ -159,6 +160,14 @@ public class GoodsReturnRecord {
 
     public void setTotalProfit(BigDecimal totalProfit) {
         this.totalProfit = totalProfit;
+    }
+
+    public Integer getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 
     public String getBatchNo() {

@@ -16,6 +16,7 @@ public class StorageOutDetail {
     private Integer id;
     private Integer productId;
     private String productName;
+    private Integer storageInBatchId;
     private String storageInBatchNo;
     private Integer vat;
     private String taxRate;
@@ -96,6 +97,14 @@ public class StorageOutDetail {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public Integer getStorageInBatchId() {
+        return storageInBatchId;
+    }
+
+    public void setStorageInBatchId(Integer storageInBatchId) {
+        this.storageInBatchId = storageInBatchId;
     }
 
     public String getStorageInBatchNo() {

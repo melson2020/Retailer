@@ -3,8 +3,7 @@
     <div class="header-div">
       <span class="title-name">完善批次信息</span>
       <div>
-        <el-button type="primary" @click="submit">提交</el-button>
-        <el-button>返回</el-button>
+        <el-button type="primary" size="small" @click="submit">提交</el-button>
       </div>
     </div>
     <div class="batch-update-div">
@@ -19,11 +18,17 @@
         v-else
         border
         size="small"
+        :height="tableHeight"
         :header-row-style="{ height: '40px' }"
         :row-style="{ height: '40px' }"
         :cell-style="{ padding: '2px', color: '#909399' }"
         :header-cell-style="{ background: '#909399', color: 'white' }"
-        :data="updateBatchListShow"
+        :data="
+          updateBatchListShow.slice(
+            (this.currentPage - 1) * this.tablePageSize,
+            this.currentPage * this.tablePageSize
+          )
+        "
       >
         <el-table-column prop="productName" label="产品名" width="auto">
         </el-table-column>
@@ -53,7 +58,7 @@
         </el-table-column>
         <el-table-column prop="taxRate" label="税率" width="auto">
           <template slot-scope="scope">
-            <el-select
+            <el-select size="small"
               v-model="scope.row.taxRate"
               placeholder="请选择"
               :disabled="scope.row.vat !== 1"
@@ -69,7 +74,7 @@
         </el-table-column>
         <el-table-column prop="supplyId" label="供货商" width="auto">
           <template slot-scope="scope">
-            <el-select
+            <el-select size="small"
               v-model="scope.row.supplyId"
               filterable
               placeholder="请选择供应商"
@@ -90,7 +95,7 @@
         </el-table-column>
         <el-table-column prop="totalPrice" label="总价" width="auto">
           <template slot-scope="scope">
-            <el-input
+            <el-input size="small"
               v-model="scope.row.totalPrice"
               placeholder="请输入总价"
             ></el-input>
@@ -106,6 +111,17 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="batchupdate-content-footer">
+        <el-pagination
+          background
+          v-if="updateBatchListShow.length > tablePageSize"
+          :current-page="currentPage"
+          :page-size="tablePageSize"
+          @current-change="pageChanged"
+          :total="updateBatchListShow.length"
+          layout="prev, pager, next, total"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -114,7 +130,11 @@ import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      currentPage: 1,
+      tableHeight: window.innerHeight - 280,
+      tablePageSize: 17,
+    };
   },
   computed: {
     ...mapGetters([
@@ -136,7 +156,7 @@ export default {
         }
         if (item.totalPrice && item.totalPrice !== "") {
           item.price = this.NumberDiv(item.totalPrice, item.count).toFixed(2);
-          this.computeBatchCost(item)
+          this.computeBatchCost(item);
         }
         var dataCorrect =
           item.supplyId !== null &&
@@ -187,11 +207,11 @@ export default {
         let price = this.NumberDiv(costPrice, tax);
         batch.tepIn = this.NumberDiv(price, batch.count).toFixed(4);
         batch.taxIn =
-        this.NumberDiv(costPrice, batch.count) -
-        this.NumberDiv(price, batch.count);
+          this.NumberDiv(costPrice, batch.count) -
+          this.NumberDiv(price, batch.count);
       } else {
         batch.tepIn = this.NumberDiv(costPrice, batch.count).toFixed(4);
-        batch.taxIn =0
+        batch.taxIn = 0;
       }
     },
     submit() {
@@ -249,11 +269,23 @@ export default {
     routerToSupply() {
       this.$router.push({ path: "/main/supply" });
     },
+    setpageSize() {
+      let rect = this.tableHeight - 40;
+      let pageSize = Math.floor(rect / 40);
+      // this.productCategroyPage.pageSize=pageSize;
+      this.tablePageSize = pageSize;
+    },
+    pageChanged(page) {
+      this.currentPage = page;
+    },
   },
-  mounted: function () {
+  mounted: function() {
     this.GetUpdateBatchList();
+    this.$nextTick(function() {
+      this.setpageSize();
+    });
   },
-  beforeMount: function () {
+  beforeMount: function() {
     if (this.taxRateList.length <= 0) {
       this.GetTaxRateList();
     }
@@ -273,5 +305,12 @@ export default {
 }
 .icon-red {
   color: #ff0000;
+}
+.batchupdate-content-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 10px;
 }
 </style>
