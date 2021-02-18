@@ -33,7 +33,6 @@ const actions = {
         commit("SetCategroyList", categroys)
         commit("SetUploadDialog", false)
         commit("CheckDuplicateList")
-        console.log("比较")
         request.GetProductListReq({ storeCode: params.storeCode })
             .then(res => {
                 if (res.resultStatus == 1) {
