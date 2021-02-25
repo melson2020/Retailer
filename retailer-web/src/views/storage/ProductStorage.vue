@@ -79,7 +79,7 @@
             <el-option label="常用" value="normal"></el-option>
             <el-option label="数量大于0" value="morethanzero"></el-option>
           </el-select>
-          <el-input
+          <el-input ref="input"
             class="productstorage-fliter-input"
             size="small"
             v-model="searchContent"
@@ -296,6 +296,7 @@ export default {
     });
   },
   mounted: function () {
+    this.$refs.input.focus();
     this.$nextTick(function () {
       this.setpageSize();
     });

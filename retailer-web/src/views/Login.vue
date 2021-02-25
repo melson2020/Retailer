@@ -12,7 +12,7 @@
           :rules="rules"
         >
           <el-form-item label="用户名称" prop="loginName">
-            <el-input
+            <el-input v-focus
               placeholder="注册手机号"
               v-model="loginUser.loginName"
             ></el-input>
@@ -113,6 +113,14 @@ export default {
       });
     },
   },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function (el) {
+        el.focus()
+      }
+    }
+  }
 };
 </script>
 <style>
