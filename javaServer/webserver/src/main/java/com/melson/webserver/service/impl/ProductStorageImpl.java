@@ -245,7 +245,7 @@ public class ProductStorageImpl extends AbstractService<ProductStorage> implemen
 
     @Override
     public List<ShareStorageVo> FindShareStorage(String shareCode) {
-        String sql="SELECT ps.productName,ps.productType,ps.productSpecification as specification,pb.supplyName,pb.count as subCount,ps.unit FROM `product_storage` ps RIGHT JOIN product_batch pb on ps.productId=pb.productId WHERE ps.count>0 and ps.storeCode='"+shareCode+"'";
+        String sql="SELECT ps.productName,ps.productType,ps.productSpecification as specification,pb.supplyName,pb.count as subCount,ps.unit FROM `product_storage` ps RIGHT JOIN product_batch pb on ps.productId=pb.productId WHERE ps.count>0 and pb.count>0  and ps.storeCode='"+shareCode+"'";
         List<Object[]> res=entityManagerUtil.ExcuteSql(sql);
         List<ShareStorageVo> vos=EntityUtils.castEntity(res,ShareStorageVo.class,new ShareStorageVo());
         return  vos;

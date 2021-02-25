@@ -144,7 +144,6 @@ export default {
                 width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
               },
             },
-           
           },
         ],
         yAxis: [
@@ -278,7 +277,7 @@ export default {
                         "#024b51",
                         "#765005",
                       ];
-                      return colorList[params.dataIndex%colorList.length];
+                      return colorList[params.dataIndex % colorList.length];
                     },
                   },
                   //鼠标悬停时：
@@ -346,8 +345,12 @@ export default {
 </script>
 <style>
 .echart-bar-1 {
-  height: 50%;
-  width: 100%;
+  height: 48%;
+  width: 96%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  margin: 2%;
+  border:1px solid #E9E9EB;
+  padding: 10px;
 }
 .dashboard-main {
   display: flex;
@@ -359,7 +362,11 @@ export default {
 }
 .dashboard-main-right-content {
   height: 100%;
-  width: 50%;
+  width: 48%;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  margin: 1%;
+  border:1px solid #E9E9EB;
+  padding: 10px;
 }
 .dashborad-header {
   height: 100px;
