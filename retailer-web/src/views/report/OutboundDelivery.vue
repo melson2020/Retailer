@@ -25,6 +25,7 @@
             <el-select
               v-model="employeeId"
               placeholder="销售人员"
+              filterable 
               class="outbound-margin-top"
               size="small"
               :clearable="true"
@@ -41,6 +42,7 @@
               v-model="customerId"
               placeholder="客户"
               class="outbound-margin-top"
+              filterable 
               size="small"
               :clearable="true"
             >
@@ -56,6 +58,7 @@
               v-model="productId"
               placeholder="产品"
               class="outbound-margin-top"
+              filterable 
               size="small"
               :clearable="true"
             >
@@ -481,6 +484,7 @@ export default {
           this.NumberAdd(summary.profit, item.salesProfit)
         ).toFixed(2);
         if (item.returnCount > 0) {
+          console.log(item )
           summary.returnTotal = Number(
             this.NumberAdd(
               summary.returnTotal,
@@ -501,7 +505,7 @@ export default {
       return totalPrice;
     },
   },
-  mounted: function () {
+  beforeMount: function () {
     this.GetEmployeeList(this.userInfo);
     this.GetCustomerList(this.userInfo);
     let params = { storeCode: this.userInfo.storeCode };

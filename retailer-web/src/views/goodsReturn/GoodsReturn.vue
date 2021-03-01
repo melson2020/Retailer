@@ -177,7 +177,7 @@
             <span v-else></span>
           </template>
         </el-table-column>
-        <el-table-column label="退货" width="auto">
+        <el-table-column label="退货" width="200px">
           <template slot-scope="scope">
             <el-input-number
               size="mini"
