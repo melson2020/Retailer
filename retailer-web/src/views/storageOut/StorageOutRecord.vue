@@ -43,7 +43,7 @@
           </div>
           <el-row :gutter="30">
             <el-col
-              :span="6"
+              :span="8"
               v-for="ticket in item.outTickets"
               :key="ticket.id"
             >
@@ -392,7 +392,7 @@ export default {
   overflow-x: hidden;
 }
 .content-scrollbar {
-  height: 85vh;
+  height: auto;
 }
 .message-info {
   color: #79bbff;
