@@ -56,10 +56,10 @@ public class StorageOutResource extends BaseResource {
         if (StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
-        List<StorageOutRecordVo> voList=outTicketService.FindRecordList(storeCode,startDate,endDate);
+        String searchValue=request.getParameter("searchValue");
+        List<StorageOutRecordVo> voList=outTicketService.FindRecordList(storeCode,startDate,endDate,searchValue);
         Result result=new Result();
         result.setData(voList);
-        System.out.println("Rest Call: /storageOut/ticketRecord ...");
         return result;
     }
 
@@ -111,6 +111,21 @@ public class StorageOutResource extends BaseResource {
             result.setMessage("没有此出库单号！");
         }else {
             result.setData(ticket);
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/updateOutTicket",method = RequestMethod.POST)
+    @RequiredPermission((SecurityLevel.Employee))
+    public Result UpdateOutTicketInfo(@RequestBody StorageOutTicket ticket){
+        if(ticket==null)this.GenerateResult(ResultType.ParametersNeeded);
+        StorageOutTicket saved=outTicketService.UpdateOutTicket(ticket);
+        Result result=new Result();
+        if(saved!=null){
+            result.setData(saved);
+        }else {
+            result.setResultStatus(-1);
+            result.setMessage("更新失败");
         }
         return result;
     }

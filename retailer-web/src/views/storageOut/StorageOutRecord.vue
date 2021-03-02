@@ -4,7 +4,7 @@
       <div>
         <span class="storageoutrecord-title-name">出库记录</span>
       </div>
-      <div>
+      <div class="storageoutrecord-title-right-area">
         <span class="message-info">*时间跨度最多30天</span>
         <el-date-picker
           v-model="date"
@@ -21,6 +21,12 @@
           :picker-options="pickerOptions"
           @focus="focusOn"
         ></el-date-picker>
+        <el-input
+        size="small"
+          class="search-area"
+          v-model="searchValue"
+          placeholder="出库单号/客户名称"
+        ></el-input>
         <el-button
           :disabled="date ? false : true"
           type="primary"
@@ -43,7 +49,7 @@
           </div>
           <el-row :gutter="30">
             <el-col
-              :span="8"
+              :span="6"
               v-for="ticket in item.outTickets"
               :key="ticket.id"
             >
@@ -76,7 +82,7 @@
                 <div>
                   <el-row class="card-content">
                     <el-col :span="6" class="card-content-col-name"
-                      >创建时间:</el-col
+                      >时间:</el-col
                     >
                     <el-col :span="15" class="card-content-col-content">{{
                       getFullTime(ticket.outTicket.createTime)
@@ -84,7 +90,7 @@
                   </el-row>
                   <el-row class="card-content">
                     <el-col :span="6" class="card-content-col-name"
-                      >客户名称:</el-col
+                      >客户:</el-col
                     >
                     <el-col :span="15" class="card-content-col-content">{{
                       ticket.outTicket.customerName
@@ -92,7 +98,37 @@
                   </el-row>
                   <el-row class="card-content">
                     <el-col :span="6" class="card-content-col-name"
-                      >类型:</el-col
+                      >快递号:</el-col
+                    >
+                    <el-col :span="15" class="card-content-col-content"
+                      >{{ ticket.outTicket.deliveryCode }}
+                      <el-button
+                        class="type-in-button"
+                        type="text"
+                        size="mini"
+                        @click="loadCurrentTicket(ticket.outTicket)"
+                        >录入</el-button
+                      >
+                    </el-col>
+                  </el-row>
+                  <el-row class="card-content">
+                    <el-col :span="6" class="card-content-col-name"
+                      >发票号:</el-col
+                    >
+                    <el-col :span="15" class="card-content-col-content"
+                      >{{ ticket.outTicket.invoiceCode }}
+                      <el-button
+                        class="type-in-button"
+                        type="text"
+                        size="mini"
+                        @click="loadCurrentTicket(ticket.outTicket)"
+                        >录入</el-button
+                      ></el-col
+                    >
+                  </el-row>
+                  <el-row class="card-content">
+                    <el-col :span="6" class="card-content-col-name"
+                      >出库类型:</el-col
                     >
                     <el-col :span="15" class="card-content-col-content">
                       <span
@@ -228,6 +264,26 @@
           <el-button type="primary" @click="printPdf">打印</el-button>
         </span>
       </el-dialog>
+      <el-dialog title="填写单号" :visible.sync="CodeDialogVisible" width="60%">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          :model="currentTicket"
+        >
+          <el-form-item label="快递单号">
+            <el-input v-model="currentTicket.deliveryCode"></el-input>
+          </el-form-item>
+          <el-form-item label="发票号">
+            <el-input v-model="currentTicket.invoiceCode"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="saveCurrentTicket"
+              >提 交</el-button
+            >
+            <el-button @click="codeUpdateCannel">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -242,6 +298,9 @@ export default {
       timeDefaultShow: "",
       startDateMin: null,
       printDialogVisible: false,
+      CodeDialogVisible: false,
+      searchValue: "",
+      currentTicket: {},
       pickerOptions: {
         onPick: (obj) => {
           this.startDateMin = new Date(obj.minDate).getTime();
@@ -298,12 +357,14 @@ export default {
       GetStorageOutRecordList: "GetStorageOutRecordList",
       GetStorageOutRecordDetails: "GetStorageOutRecordDetails",
       GetOutTicketInfo: "GetOutTicketInfo",
+      UpdateOutTicket: "UpdateOutTicket",
     }),
     searchOnClick() {
       let params = {
         storeCode: this.userInfo.storeCode,
         startDate: this.date[0],
         endDate: this.date[1],
+        searchValue:this.searchValue
       };
       this.GetStorageOutRecordList(params);
     },
@@ -346,6 +407,17 @@ export default {
     },
     cancelOnClick() {
       this.printDialogVisible = !this.printDialogVisible;
+    },
+    loadCurrentTicket(ticket) {
+      this.currentTicket = ticket;
+      this.CodeDialogVisible = !this.CodeDialogVisible;
+    },
+    codeUpdateCannel() {
+      this.CodeDialogVisible = !this.CodeDialogVisible;
+    },
+    saveCurrentTicket() {
+      console.log(1);
+      this.UpdateOutTicket(this.currentTicket);
     },
     printPdf() {
       print({
@@ -392,7 +464,7 @@ export default {
   overflow-x: hidden;
 }
 .content-scrollbar {
-  height: auto;
+  height: 90vh;
 }
 .message-info {
   color: #79bbff;
@@ -439,7 +511,7 @@ export default {
 }
 .card-content-col-name {
   text-align: right;
-  color: #606266;
+  color: #a6a8aa;
 }
 .detail-button {
   height: 30px !important;
@@ -484,5 +556,18 @@ export default {
   font-size: 25px;
   padding: 40px 10px;
   font-weight: 500;
+}
+.type-in-button {
+  padding: 0;
+  text-align: center;
+}
+.storageoutrecord-title-right-area{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.search-area{
+  width: 300px;
+  margin-right: 20px;
 }
 </style>

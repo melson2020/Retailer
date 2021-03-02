@@ -7,7 +7,7 @@ const state = {
     productBatchList: [],
     storageOutRecordList: [],
     storageOutDetails: {},
-    outBoundDelivery:{},
+    outBoundDelivery: {},
     outTicketInfo: {}
 };
 
@@ -73,6 +73,18 @@ const actions = {
         }).catch(err => {
             Message.error(err.message ? err.message : err)
         })
+    },
+    UpdateOutTicket({ commit }, params) {
+        request.UpdateOutTicket(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit("UpdateOutTicket", res.data)
+                Message.success("更新成功")
+            } else {
+                Message.error(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
     }
 };
 
@@ -81,7 +93,7 @@ const getters = {
     storageOutRecordList: state => state.storageOutRecordList,
     storageOutDetails: state => state.storageOutDetails,
     outBoundDelivery: state => state.outBoundDelivery,
-    outTicketInfo:state=>state.outTicketInfo
+    outTicketInfo: state => state.outTicketInfo
 };
 
 const mutations = {
@@ -110,6 +122,15 @@ const mutations = {
     },
     SetOutTicketInfo(state, data) {
         state.outTicketInfo = data
+    },
+    UpdateOutTicket(state,data){
+        state.storageOutRecordList.map(item=>{
+            item.outTickets.map(ticket=>{
+                if(ticket.outTicket.id==data.id){
+                    ticket.outTicket=data;
+                }          
+            })
+        })
     }
 };
 

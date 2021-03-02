@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface IStorageOutTicket extends IService<StorageOutTicket> {
     boolean SaveStorageOutTiket(StorageOutTicket ticket, List<StorageOutBillDetail> billList);
-    List<StorageOutRecordVo> FindRecordList(String storeCode,String startDate,String endDate);
+    List<StorageOutRecordVo> FindRecordList(String storeCode,String startDate,String endDate,String searchValue);
     StorageOutTicketDetailVo FindRecordDetail(String ticketCode,String billCode,String storeCode);
 
     /**
@@ -33,5 +33,5 @@ public interface IStorageOutTicket extends IService<StorageOutTicket> {
     DashBoardVo GenerateDashboard(String storeCode, String startDate, String endDate);
 
     List<WechatOutBoundVo> findOutBoundListForWechat(String key, String storeCode);
-
+    StorageOutTicket UpdateOutTicket(StorageOutTicket outTicket);
 }

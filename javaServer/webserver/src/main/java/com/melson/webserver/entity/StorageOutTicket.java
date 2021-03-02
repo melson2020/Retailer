@@ -29,11 +29,29 @@ public class StorageOutTicket {
     private Integer customerId;
     //出库单状态值  0 初始值 1 有退货 2已退完
     private Integer status;
+    private String deliveryCode;
+    private String invoiceCode;
 
     @Transient
     private List<StorageOutDetail> details;
     @Transient
     private List<GoodsReturnRecord> returnList;
+
+    public String getDeliveryCode() {
+        return deliveryCode;
+    }
+
+    public void setDeliveryCode(String deliveryCode) {
+        this.deliveryCode = deliveryCode;
+    }
+
+    public String getInvoiceCode() {
+        return invoiceCode;
+    }
+
+    public void setInvoiceCode(String invoiceCode) {
+        this.invoiceCode = invoiceCode;
+    }
 
     public List<StorageOutDetail> getDetails() {
         return details;

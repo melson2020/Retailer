@@ -83,7 +83,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         Map<String, StorageOutDetail> detailMap = new HashMap<>(outDetails.size());
         for (StorageOutDetail detail : outDetails) {
             batchNos.add(detail.getStorageInBatchNo());
-            String key = detail.getStorageInBatchNo() + detail.getSupplyId() + detail.getProductId() + detail.getStoreCode()+detail.getStorageInBatchId();
+            String key = detail.getStorageInBatchNo() + detail.getSupplyId() + detail.getProductId() + detail.getStoreCode() + detail.getStorageInBatchId();
             Integer batchCount = batchMap.get(key);
             if (batchCount == null) {
                 batchMap.put(key, detail.getOutCount());
@@ -103,13 +103,12 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         }
         //更新批次库存,同时刷新库存数据
         for (ProductBatch batch : productBatchList) {
-            String key = batch.getBatchNo() + batch.getSupplyId() + batch.getProductId() + batch.getStoreCode()+batch.getId();
+            String key = batch.getBatchNo() + batch.getSupplyId() + batch.getProductId() + batch.getStoreCode() + batch.getId();
             Integer mins = batchMap.get(key);
             if (mins != null) {
-                if(mins>batch.getCount()){
+                if (mins > batch.getCount()) {
                     return false;
-                }
-                else {
+                } else {
                     batch.setCount(batch.getCount() - mins);
                     if (batch.getCount() <= 0) {
                         batch.setFinished(1);
@@ -189,7 +188,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         bill.setProfit(profit);
     }
 
-    public List<StorageOutRecordVo> FindRecordList(String storeCode, String startDate, String endDate) {
+    public List<StorageOutRecordVo> FindRecordList(String storeCode, String startDate, String endDate, String searchValue) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date dateBegin = sdf.parse(startDate);
@@ -198,7 +197,12 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             calendar.setTime(dateEnd);
             calendar.add(Calendar.DATE, 1);
             Date newEnd = calendar.getTime();
-            List<StorageOutTicket> outTicketList = storageOutTicketDao.findByCreateTimeBetweenAndStoreCode(dateBegin, newEnd, storeCode);
+            List<StorageOutTicket> outTicketList;
+            if (StringUtils.isNullOrEmpty(searchValue)) {
+                outTicketList = storageOutTicketDao.findByCreateTimeBetweenAndStoreCode(dateBegin, newEnd, storeCode);
+            } else {
+                outTicketList=storageOutTicketDao.findByCreateTimeBetweenAndStoreCodeAndCodeLikeOrCustomerNameLike(dateBegin, newEnd, storeCode,"%"+searchValue+"%","%"+searchValue+"%");
+            }
             List<StorageOutBill> outBillList = storageOutBillDao.findByCreateTimeBetweenAndStoreCode(dateBegin, newEnd, storeCode);
             return GenerateVos(outTicketList, outBillList);
         } catch (Exception ex) {
@@ -255,18 +259,23 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
     @Override
     public List<WechatOutBoundVo> findOutBoundListForWechat(String key, String storeCode) {
-        String sql="select st.date,sd.customerName,sd.productName as product,sd.supplyName as supply,sd.outPrice as priceOut,sd.outCount as count,sd.totalPrice,sd.countUnit " +
+        String sql = "select st.date,sd.customerName,sd.productName as product,sd.supplyName as supply,sd.outPrice as priceOut,sd.outCount as count,sd.totalPrice,sd.countUnit " +
                 "FROM storage_out_ticket st " +
                 "LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode ";
         StringBuffer buffer = new StringBuffer(sql);
-        buffer.append(" where (sd.customerName like '%"+key+"%' or sd.supplyName like '%"+key+"%' or sd.productName like '%"+key+"%')");
-        buffer.append(" and st.storeCode='"+storeCode+"'");
+        buffer.append(" where (sd.customerName like '%" + key + "%' or sd.supplyName like '%" + key + "%' or sd.productName like '%" + key + "%')");
+        buffer.append(" and st.storeCode='" + storeCode + "'");
         buffer.append(" ORDER BY st.date");
         buffer.append(" limit 0,30");
-        String excuteSql=buffer.toString();
+        String excuteSql = buffer.toString();
         List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
         List<WechatOutBoundVo> vos = EntityUtils.castEntity(list, WechatOutBoundVo.class, new WechatOutBoundVo());
         return vos;
+    }
+
+    @Override
+    public StorageOutTicket UpdateOutTicket(StorageOutTicket outTicket) {
+        return storageOutTicketDao.save(outTicket);
     }
 
     @Override
@@ -380,8 +389,8 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         });
         DashBoardVo vo = new DashBoardVo();
         DecimalFormat df = new DecimalFormat("0.00%");
-        vo.setProductList(ReSizeListToSix(pList,totalPriceAll,df));
-        vo.setEmployeeList(ReSizeListToSix(eList,totalPriceAll,df));
+        vo.setProductList(ReSizeListToSix(pList, totalPriceAll, df));
+        vo.setEmployeeList(ReSizeListToSix(eList, totalPriceAll, df));
         vo.setSortList(pList);
         return vo;
     }
@@ -393,7 +402,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         newVo.setItemValue(new BigDecimal(0));
         for (int i = 0; i < list.size(); i++) {
             if (i < 5) {
-                String percent = sf.format(list.get(i).getItemValue().divide(totalPriceAll,4, BigDecimal.ROUND_HALF_UP));
+                String percent = sf.format(list.get(i).getItemValue().divide(totalPriceAll, 4, BigDecimal.ROUND_HALF_UP));
                 list.get(i).setPercent(percent);
                 reSizeList.add(list.get(i));
             } else {
@@ -401,7 +410,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             }
         }
         if (list.size() > 5) {
-            String percentOther = sf.format(newVo.getItemValue().divide(totalPriceAll,4, BigDecimal.ROUND_HALF_UP));
+            String percentOther = sf.format(newVo.getItemValue().divide(totalPriceAll, 4, BigDecimal.ROUND_HALF_UP));
             newVo.setPercent(percentOther);
             reSizeList.add(newVo);
         }
@@ -529,6 +538,20 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             vo.setOutTickets(voMap.get(date));
             voList.add(vo);
         }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //排序 时间从高到低
+        voList.sort(new Comparator<StorageOutRecordVo>() {
+            @Override
+            public int compare(StorageOutRecordVo o1, StorageOutRecordVo o2) {
+                try {
+                    Date o1Date = sdf.parse(o1.getDate());
+                    Date o2Date = sdf.parse(o2.getDate());
+                    return o1Date.after(o2Date) ? -1 : 1;
+                } catch (Exception ex) {
+                    return 0;
+                }
+            }
+        });
         return voList;
     }
 }

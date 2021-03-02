@@ -224,6 +224,9 @@ export default {
   GetOutTicketInfo(params){
     return service.get("/storageOut/ticketInfo",params)
   },
+  UpdateOutTicket(params){
+    return service.post('/storageOut/updateOutTicket',params)
+  },
   /**
    * reprot
    */
