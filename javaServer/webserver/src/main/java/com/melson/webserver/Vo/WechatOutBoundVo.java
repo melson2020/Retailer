@@ -14,12 +14,14 @@ public class WechatOutBoundVo {
     private Integer count;
     private BigDecimal totalPrice;
     private String countUnit;
+    private String deliveryCode;
+    private String invoiceCode;
 
     public WechatOutBoundVo() {
 
     }
 
-    public WechatOutBoundVo(String date, String customerName, String product, String supply, BigDecimal priceOut, Integer count, BigDecimal totalPrice, String countUnit) {
+    public WechatOutBoundVo(String date, String customerName, String product, String supply, BigDecimal priceOut, Integer count, BigDecimal totalPrice, String countUnit, String deliveryCode, String invoiceCode) {
         this.date = date;
         this.customerName = customerName;
         this.product = product;
@@ -28,6 +30,8 @@ public class WechatOutBoundVo {
         this.count = count;
         this.totalPrice = totalPrice;
         this.countUnit = countUnit;
+        this.deliveryCode = deliveryCode;
+        this.invoiceCode = invoiceCode;
     }
 
     public String getDate() {
@@ -92,5 +96,21 @@ public class WechatOutBoundVo {
 
     public void setCountUnit(String countUnit) {
         this.countUnit = countUnit;
+    }
+
+    public String getDeliveryCode() {
+        return deliveryCode;
+    }
+
+    public void setDeliveryCode(String deliveryCode) {
+        this.deliveryCode = deliveryCode;
+    }
+
+    public String getInvoiceCode() {
+        return invoiceCode;
+    }
+
+    public void setInvoiceCode(String invoiceCode) {
+        this.invoiceCode = invoiceCode;
     }
 }

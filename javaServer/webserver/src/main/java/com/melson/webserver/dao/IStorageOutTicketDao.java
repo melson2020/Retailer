@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Repository
 public interface IStorageOutTicketDao extends JpaRepository<StorageOutTicket, String> {
+
     List<StorageOutTicket> findByCreateTimeBetweenAndStoreCode(Date startDate, Date endDate, String stroeCode);
     List<StorageOutTicket> findByCreateTimeBetweenAndStoreCodeAndCodeLikeOrCustomerNameLike(Date startDate, Date endDate, String stroeCode,String searchValue1,String searchValue2);
     StorageOutTicket findByStoreCodeAndCode(String storeCode, String code);
@@ -35,4 +36,11 @@ public interface IStorageOutTicketDao extends JpaRepository<StorageOutTicket, St
     @Modifying
     @Query(value = "UPDATE StorageOutTicket st set st.status=?1 where st.code=?2 and st.storeCode=?3")
     void UpdateOutTicketStatus(Integer status, String code, String storeCode);
+
+    @Query(value = "SELECT id,createTime,date,`code`,storeCode,employeeId,employeeName,type,description,categroyCount,billCode,customerName,customerId,`status`,isTax,deliveryCode,invoiceCode from storage_out_ticket where isTax=1 and invoiceCode is NULL and storeCode=?3 and createTime>=?1 and createTime<=?2 and (customerName like ?4 or code like ?4)", nativeQuery = true)
+    List<Object[]>  findByCreateTimeBetweenAndCodeLikeOrCustomerNameLikeAndInvoiceCodeIsNull(Date startDate, Date endDate, String stroeCode,String searchValue1);
+
+    @Query(value = "SELECT id,createTime,date,`code`,storeCode,employeeId,employeeName,type,description,categroyCount,billCode,customerName,customerId,`status`,isTax,deliveryCode,invoiceCode from storage_out_ticket where isTax=1 and invoiceCode is NULL and storeCode=?3 and createTime>=?1 and createTime<=?2", nativeQuery = true)
+    List<Object[]> findByCreateTimeBetweenAndInvoiceCodeIsNull(Date startDate, Date endDate, String stroeCode);
+
 }

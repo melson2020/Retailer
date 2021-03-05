@@ -420,9 +420,10 @@ export default {
   justify-content: space-between;
 }
 .title-name {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
 .upload-demo {
   text-align: center;

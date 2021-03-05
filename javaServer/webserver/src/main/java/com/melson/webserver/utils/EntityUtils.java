@@ -3,6 +3,7 @@ package com.melson.webserver.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Transient;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -87,14 +88,17 @@ public class EntityUtils {
      */
     private static List<Map> getFiledsInfo(Object model) {
         Field[] fields = model.getClass().getDeclaredFields();
-        List<Map> list = new ArrayList(fields.length);
+        List<Map> list = new ArrayList();
         Map infoMap = null;
         for (int i = 0; i < fields.length; i++) {
             infoMap = new HashMap(3);
             infoMap.put("type", fields[i].getType());
             infoMap.put("name", fields[i].getName());
             infoMap.put("value", getFieldValueByName(fields[i].getName(), model));
-            list.add(infoMap);
+            Transient tr=  fields[i].getAnnotation(Transient.class);
+            if(tr==null){
+                list.add(infoMap);
+            }
         }
         return list;
     }

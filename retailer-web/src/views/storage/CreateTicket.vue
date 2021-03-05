@@ -238,10 +238,12 @@ export default {
 .header {
   height: 80px;
   line-height: 80px;
-  font-size: 30px;
-  font-weight: bold;
   color: #409eff;
   margin-bottom: 5px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #409eff;
+  margin-left: 20px;
 }
 .create-ticket-form {
   border: #e4e7ed solid 1px;

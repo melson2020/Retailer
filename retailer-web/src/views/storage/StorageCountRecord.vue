@@ -31,7 +31,7 @@
         >
       </div>
     </div>
-    <div>
+    <div class="storageCountRecord-content">
       <el-table
         :data="storageCountTickets"
         size="small"
@@ -351,6 +351,9 @@ export default {
   font-weight: bold;
   color: #409eff;
   margin-left: 20px;
+}
+.storageCountRecord-content {
+  margin-top: 5px;
 }
 .message-info {
   color: #79bbff;

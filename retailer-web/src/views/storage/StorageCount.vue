@@ -2,12 +2,12 @@
   <div>
     <div class="step-box">
       <el-steps class="steps" :active="activeStep" finish-status="success">
-        <el-step title="创建"></el-step>
-        <el-step title="预览"></el-step>
-        <el-step title="导出"></el-step>
-        <el-step title="导入"></el-step>
-        <el-step title="批次"></el-step>
-        <el-step title="完成"></el-step>
+        <el-step title="创建" class="steps-font"></el-step>
+        <el-step title="预览" class="steps-font"></el-step>
+        <el-step title="导出" class="steps-font"></el-step>
+        <el-step title="导入" class="steps-font"></el-step>
+        <el-step title="批次" class="steps-font"></el-step>
+        <el-step title="完成" class="steps-font"></el-step>
       </el-steps>
       <div class="step-container">
         <router-view />
@@ -136,12 +136,9 @@ export default {
   font-weight: bold;
   color: #409eff;
 }
-.button-box {
-  float: left;
-  width: 500px;
-  height: 200px;
-  font-size: 30px;
-  letter-spacing: 10px;
+.steps-font{
+  font-weight: bold;
+  font-size: 26px;
 }
 .count-steps {
   margin: 20px;

@@ -59,11 +59,16 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         ticket.setCreateTime(createDate);
         ticket.setCategroyCount(ticket.getDetails().size());
         ticket.setBillCode(bill.getCode());
+        ticket.setIsTax(0);
         for (StorageOutDetail d : ticket.getDetails()) {
             d.setOutTicketCode(ticket.getCode());
             d.setStoreCode(ticket.getStoreCode());
             d.setCustomerId(ticket.getCustomerId());
             d.setCustomerName(ticket.getCustomerName());
+            if(!d.getTaxRate().equals("0"))
+            {
+               ticket.setIsTax(1);
+            }
         }
         //添加出库以及出售单记录
         StorageOutTicket saveTicket = storageOutTicketDao.save(ticket);
@@ -188,7 +193,7 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
         bill.setProfit(profit);
     }
 
-    public List<StorageOutRecordVo> FindRecordList(String storeCode, String startDate, String endDate, String searchValue) {
+    public List<StorageOutRecordVo> FindRecordList(String storeCode, String startDate, String endDate, String searchValue, String isTax) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date dateBegin = sdf.parse(startDate);
@@ -199,9 +204,26 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
             Date newEnd = calendar.getTime();
             List<StorageOutTicket> outTicketList;
             if (StringUtils.isNullOrEmpty(searchValue)) {
-                outTicketList = storageOutTicketDao.findByCreateTimeBetweenAndStoreCode(dateBegin, newEnd, storeCode);
+                if (isTax.equals("Y"))
+                {
+                    //查出所有需要开发票，但尚未开票的单子
+                    List<Object[]> ObjectList = storageOutTicketDao.findByCreateTimeBetweenAndInvoiceCodeIsNull(dateBegin, newEnd, storeCode);
+                    outTicketList= EntityUtils.castEntity(ObjectList, StorageOutTicket.class, new StorageOutTicket());
+                }
+                else
+                {
+                    outTicketList = storageOutTicketDao.findByCreateTimeBetweenAndStoreCode(dateBegin, newEnd, storeCode);
+                }
             } else {
-                outTicketList=storageOutTicketDao.findByCreateTimeBetweenAndStoreCodeAndCodeLikeOrCustomerNameLike(dateBegin, newEnd, storeCode,"%"+searchValue+"%","%"+searchValue+"%");
+                if (isTax.equals("Y"))
+                {
+                    //查出所有需要开发票，但尚未开票的单子
+                    List<Object[]> ObjectList = storageOutTicketDao.findByCreateTimeBetweenAndCodeLikeOrCustomerNameLikeAndInvoiceCodeIsNull(dateBegin, newEnd, storeCode, "%" + searchValue + "%");
+                    outTicketList= EntityUtils.castEntity(ObjectList, StorageOutTicket.class, new StorageOutTicket());
+                }
+                else {
+                    outTicketList = storageOutTicketDao.findByCreateTimeBetweenAndStoreCodeAndCodeLikeOrCustomerNameLike(dateBegin, newEnd, storeCode, "%" + searchValue + "%", "%" + searchValue + "%");
+                }
             }
             List<StorageOutBill> outBillList = storageOutBillDao.findByCreateTimeBetweenAndStoreCode(dateBegin, newEnd, storeCode);
             return GenerateVos(outTicketList, outBillList);
@@ -259,13 +281,13 @@ public class StorageOutTicketImpl extends AbstractService<StorageOutTicket> impl
 
     @Override
     public List<WechatOutBoundVo> findOutBoundListForWechat(String key, String storeCode) {
-        String sql = "select st.date,sd.customerName,sd.productName as product,sd.supplyName as supply,sd.outPrice as priceOut,sd.outCount as count,sd.totalPrice,sd.countUnit " +
+        String sql = "select st.date,sd.customerName,sd.productName as product,sd.supplyName as supply,sd.outPrice as priceOut,sd.outCount as count,sd.totalPrice,sd.countUnit,st.deliveryCode,st.invoiceCode " +
                 "FROM storage_out_ticket st " +
                 "LEFT JOIN storage_out_detail sd on st.`code`=sd.outTicketCode ";
         StringBuffer buffer = new StringBuffer(sql);
         buffer.append(" where (sd.customerName like '%" + key + "%' or sd.supplyName like '%" + key + "%' or sd.productName like '%" + key + "%')");
         buffer.append(" and st.storeCode='" + storeCode + "'");
-        buffer.append(" ORDER BY st.date");
+        buffer.append(" ORDER BY st.date DESC");
         buffer.append(" limit 0,30");
         String excuteSql = buffer.toString();
         List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);

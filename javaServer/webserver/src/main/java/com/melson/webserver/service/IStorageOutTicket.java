@@ -2,7 +2,6 @@ package com.melson.webserver.service;
 
 import com.melson.base.IService;
 import com.melson.webserver.Vo.*;
-import com.melson.webserver.entity.ProductBatch;
 import com.melson.webserver.entity.StorageOutBillDetail;
 import com.melson.webserver.entity.StorageOutTicket;
 
@@ -15,7 +14,7 @@ import java.util.List;
  */
 public interface IStorageOutTicket extends IService<StorageOutTicket> {
     boolean SaveStorageOutTiket(StorageOutTicket ticket, List<StorageOutBillDetail> billList);
-    List<StorageOutRecordVo> FindRecordList(String storeCode,String startDate,String endDate,String searchValue);
+    List<StorageOutRecordVo> FindRecordList(String storeCode, String startDate, String endDate, String searchValue, String isTax);
     StorageOutTicketDetailVo FindRecordDetail(String ticketCode,String billCode,String storeCode);
 
     /**

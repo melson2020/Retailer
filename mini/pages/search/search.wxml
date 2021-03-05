@@ -56,6 +56,12 @@
               <view class="outBound_batch_info_row">
                 <view>{{outBound.supply}}</view>
               </view>
+              <view class="outBound_batch_info_row">
+                <view wx:if="{{outBound.invoiceCode}}">发票号：{{outBound.invoiceCode}}</view>
+              </view>
+              <view class="outBound_batch_info_row">
+                <view wx:if="{{outBound.deliveryCode}}">快递号：{{outBound.deliveryCode}}</view>
+              </view>
             </view>
           </view>
         </view>

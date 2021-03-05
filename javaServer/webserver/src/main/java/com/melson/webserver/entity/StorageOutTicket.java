@@ -29,8 +29,32 @@ public class StorageOutTicket {
     private Integer customerId;
     //出库单状态值  0 初始值 1 有退货 2已退完
     private Integer status;
+    private Integer isTax;    //出库单是否含税  0 不含税 ； 1 含税
     private String deliveryCode;
     private String invoiceCode;
+
+    public StorageOutTicket() {
+    }
+    public StorageOutTicket(Integer id, Date createTime, String date, String code, String storeCode, String employeeId, String employeeName, String type, String description, Integer categroyCount, String billCode, String customerName, Integer customerId, Integer status, Integer isTax, String deliveryCode, String invoiceCode) {
+        this.id = id;
+        this.createTime = createTime;
+        this.date = date;
+        this.code = code;
+        this.storeCode = storeCode;
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.type = type;
+        this.description = description;
+        this.categroyCount = categroyCount;
+        this.billCode = billCode;
+        this.customerName = customerName;
+        this.customerId = customerId;
+        this.status = status;
+        this.isTax = isTax;
+        this.deliveryCode = deliveryCode;
+        this.invoiceCode = invoiceCode;
+    }
+
 
     @Transient
     private List<StorageOutDetail> details;
@@ -171,6 +195,14 @@ public class StorageOutTicket {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsTax() {
+        return isTax;
+    }
+
+    public void setIsTax(Integer isTax) {
+        this.isTax = isTax;
     }
 
     public List<GoodsReturnRecord> getReturnList() {

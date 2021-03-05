@@ -13,7 +13,7 @@
         <el-select
           v-model="selectPid"
           placeholder="选择商品"
-          size="medium"
+          size="small"
           filterable
           class="margin-left"
           @change="productChanged"
@@ -29,7 +29,8 @@
          class="margin-left"
           type="primary"
           :disabled="selectPid == ''"
-          size="medium"
+          size="small"
+          icon="el-icon-refresh" 
           @click="fleshOnClick"
           >刷新</el-button
         >
@@ -175,12 +176,12 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
 }
 .ProductStorageRecord-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
 .ProductStorageRecord-content {
   margin-top: 5px;

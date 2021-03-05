@@ -511,7 +511,7 @@ export default {
 </script>
 <style>
 .storagein-header-div {
-  height: 80px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -520,6 +520,7 @@ export default {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
 .storagein-mian-content {
   padding: 10px;
