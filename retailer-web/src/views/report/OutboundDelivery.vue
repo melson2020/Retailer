@@ -524,15 +524,16 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
 }
 .OutboundDelivery-title-name {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
 .OutboundDelivery-content {
-  padding: 20px;
+  padding: 5px;
+  margin-top: 5px;
 }
 .content-scrollbar /deep/.el-scrollbar__wrap {
   overflow-x: hidden;
@@ -557,6 +558,7 @@ export default {
 }
 .outbound-margin-top {
   margin-top: 20px;
+  width: auto;
 }
 .outbound-margin-left {
   margin-left: 20px;

@@ -4,37 +4,54 @@
       <div>
         <span class="storageoutrecord-title-name">出库记录</span>
       </div>
-      <div class="storageoutrecord-title-right-area">
-        <span class="message-info">*时间跨度最多30天</span>
-        <el-date-picker
-          v-model="date"
-          class="date-picker"
-          type="daterange"
-          align="right"
-          size="small"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="yyyy-MM-dd"
-          :default-value="timeDefaultShow"
-          format="yyyy 年 MM 月 dd 日"
-          :picker-options="pickerOptions"
-          @focus="focusOn"
-        ></el-date-picker>
-        <el-input
-        size="small"
-          class="search-area"
-          v-model="searchValue"
-          placeholder="出库单号/客户名称"
-        ></el-input>
+      <div>
+        <el-popover placement="left" width="500" trigger="click">
+          <div class="storageoutrecord-popover-items-area">
+            <div class="message-info">*时间跨度最多30天</div>
+            <div class="datepickerrow">
+              <el-date-picker
+                v-model="date"
+                class="storageoutrecord-margin-top"
+                type="daterange"
+                align="right"
+                size="small"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
+                format="yyyy 年 MM 月 dd 日"
+                :picker-options="pickerOptions"
+                @focus="focusOn"
+              ></el-date-picker>
+              <el-checkbox
+                class="storageoutrecord-margin-top"
+                v-model="isTax"
+                :checked="isTax === 'Y'"
+                true-label="Y"
+                false-label="N"
+                >待开票</el-checkbox>
+            </div>
+            <el-input
+              size="small"
+              class="storageoutrecord-margin-top"
+              v-model="searchValue"
+              placeholder="出库单号/客户名称"
+            ></el-input>
+          </div>
+          <el-button slot="reference" type="primary" size="small"
+            >查询选项</el-button
+          >
+        </el-popover>
+
+
         <el-button
           :disabled="date ? false : true"
           type="primary"
           size="small"
+          class="storageoutrecord-margin-left"
           icon="el-icon-search"
           @click="searchOnClick"
-          >查询</el-button
-        >
+          >查询</el-button>
       </div>
     </div>
     <div class="content-no-shadow">
@@ -264,7 +281,7 @@
           <el-button type="primary" @click="printPdf">打印</el-button>
         </span>
       </el-dialog>
-      <el-dialog title="填写单号" :visible.sync="CodeDialogVisible" width="60%">
+      <el-dialog title="填写单号" :visible.sync="CodeDialogVisible" :close-on-click-modal="false" :show-close="false" width="60%">
         <el-form
           label-position="right"
           label-width="80px"
@@ -295,6 +312,7 @@ export default {
   data() {
     return {
       date: "",
+      isTax:"N",
       timeDefaultShow: "",
       startDateMin: null,
       printDialogVisible: false,
@@ -364,7 +382,8 @@ export default {
         storeCode: this.userInfo.storeCode,
         startDate: this.date[0],
         endDate: this.date[1],
-        searchValue:this.searchValue
+        searchValue:this.searchValue,
+        isTax:this.isTax
       };
       this.GetStorageOutRecordList(params);
     },
@@ -418,6 +437,7 @@ export default {
     saveCurrentTicket() {
       console.log(1);
       this.UpdateOutTicket(this.currentTicket);
+      this.CodeDialogVisible = false;
     },
     printPdf() {
       print({
@@ -451,8 +471,11 @@ export default {
   color: #409eff;
   margin-left: 20px;
 }
-.date-picker {
-  margin: 0px 20px;
+.datepickerrow{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 .content-no-shadow {
   height: 1450px;
@@ -476,6 +499,13 @@ export default {
   font-size: 30px;
   font-weight: bold;
   padding: 10px;
+}
+.storageoutrecord-margin-left{
+  margin-left: 20px;
+}
+.storageoutrecord-margin-top{
+    margin-top: 20px;
+  width: auto;
 }
 .record-card {
   display: flex;
@@ -561,13 +591,12 @@ export default {
   padding: 0;
   text-align: center;
 }
-.storageoutrecord-title-right-area{
+.storageoutrecord-popover-items-area{
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  padding: 20px;
 }
-.search-area{
-  width: 300px;
+/* .search-area{
   margin-right: 20px;
-}
+} */
 </style>

@@ -189,7 +189,7 @@
                       </el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column label="数量" width="auto">
+                  <el-table-column prop="outCount" label="数量" width="auto">
                     <template slot-scope="scope">
                       {{ scope.row.outCount }}{{ scope.row.countUnit }}
                     </template>
@@ -853,6 +853,14 @@ export default {
             sums[index] = "N/A";
           }
         }
+        if (column.property == "outCount") {
+           var totalPrice="0";
+           this.outTicketProfitList.map(item=>{
+             var tp=this.NumberMul(item.unitPriceOut,item.outCount);
+             totalPrice=this.NumberAdd(totalPrice,tp)
+           })
+           sums[index]=totalPrice.toFixed(4);
+        }
       });
       return sums;
     },
@@ -864,7 +872,6 @@ export default {
             outTicket: this.storageOutTicket,
             billDetailList: this.outTicketProfitList,
           };
-
           this.SaveStorageOutTicket(params)
             .then((res) => {
               if (res.resultStatus == 1) {
@@ -914,7 +921,7 @@ export default {
 </script>
 <style>
 .storageout-header-div {
-  height: 80px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -923,6 +930,7 @@ export default {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
 .storageout-create-storage-out {
   float: left;

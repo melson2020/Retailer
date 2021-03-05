@@ -51,6 +51,10 @@
 .color_blue{
   color: rgb(98, 194, 252);
 }
+.color_sky{
+  color: rgb(131, 236, 210);
+}
+
 .color_orange{
   color: rgb(240, 90, 21)
 }

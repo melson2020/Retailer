@@ -57,9 +57,11 @@ public class StorageOutResource extends BaseResource {
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
         String searchValue=request.getParameter("searchValue");
-        List<StorageOutRecordVo> voList=outTicketService.FindRecordList(storeCode,startDate,endDate,searchValue);
+        String isTax=request.getParameter("isTax");
+        List<StorageOutRecordVo> voList=outTicketService.FindRecordList(storeCode,startDate,endDate,searchValue,isTax);
         Result result=new Result();
         result.setData(voList);
+        System.out.println("Rest Call: /storageOut/ticketRecord ...");
         return result;
     }
 

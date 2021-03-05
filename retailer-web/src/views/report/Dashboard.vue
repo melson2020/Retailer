@@ -21,13 +21,14 @@
         >
       </div>
     </div>
-    <div id="dashbprad-content-div" class="dashboard-main">
-      <div class="dashboard-main-left-content">
-        <div id="chart-1" class="echart-bar-1"></div>
-        <div id="chart-2" class="echart-bar-1"></div>
+
+      <div id="dashbprad-content-div" class="dashboard-main">
+        <div class="dashboard-main-left-content">
+          <div id="chart-1" class="echart-bar-1"></div>
+          <div id="chart-2" class="echart-bar-2"></div>
+        </div>
+        <div id="chart-3" class="dashboard-main-right-content"></div>
       </div>
-      <div id="chart-3" class="dashboard-main-right-content"></div>
-    </div>
   </div>
 </template>
 <script>
@@ -345,12 +346,21 @@ export default {
 </script>
 <style>
 .echart-bar-1 {
-  height: 48%;
+  height: 49%;
   width: 96%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-  margin: 2%;
   border:1px solid #E9E9EB;
-  padding: 10px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.echart-bar-2 {
+  height: 49%;
+  width: 96%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  border:1px solid #E9E9EB;
+  margin-left: 20px;
+  margin-top: 15px;
 }
 .dashboard-main {
   display: flex;
@@ -360,20 +370,21 @@ export default {
   height: 100%;
   width: 50%;
 }
+
 .dashboard-main-right-content {
   height: 100%;
-  width: 48%;
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-  margin: 1%;
+  width: 49%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   border:1px solid #E9E9EB;
-  padding: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 .dashborad-header {
-  height: 100px;
+  height: 60px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
-  padding: 0 20px;
+  justify-content: space-between;
 }
 .dashborad-margin-left-10 {
   margin-left: 20px;
@@ -382,5 +393,6 @@ export default {
   font-size: 28px;
   font-weight: bold;
   color: #409eff;
+  margin-left: 20px;
 }
 </style>
