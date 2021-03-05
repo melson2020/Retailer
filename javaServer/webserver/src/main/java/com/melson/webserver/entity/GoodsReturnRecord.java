@@ -41,6 +41,7 @@ public class GoodsReturnRecord {
     private String outDetailCode;
     private Integer beforeCount;
     private Integer afterCount;
+    private Date outTicketTime;
 
     public Integer getId() {
         return id;
@@ -240,5 +241,13 @@ public class GoodsReturnRecord {
 
     public void setOperationEmployeeUserId(String operationEmployeeUserId) {
         this.operationEmployeeUserId = operationEmployeeUserId;
+    }
+
+    public Date getOutTicketTime() {
+        return outTicketTime;
+    }
+
+    public void setOutTicketTime(Date outTicketTime) {
+        this.outTicketTime = outTicketTime;
     }
 }

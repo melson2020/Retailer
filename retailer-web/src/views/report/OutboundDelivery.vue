@@ -244,7 +244,7 @@
     </div>
     <el-dialog title="退货详细" :visible.sync="goodsReturnDetailVisible">
       <el-table size="small" :data="goodsReturnRecords">
-        <el-table-column property="date" label="日期"></el-table-column>
+        <el-table-column property="date" label="退货日期"></el-table-column>
         <el-table-column
           property="productName"
           label="产品名称"
@@ -484,7 +484,6 @@ export default {
           this.NumberAdd(summary.profit, item.salesProfit)
         ).toFixed(2);
         if (item.returnCount > 0) {
-          console.log(item )
           summary.returnTotal = Number(
             this.NumberAdd(
               summary.returnTotal,

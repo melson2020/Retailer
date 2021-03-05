@@ -267,6 +267,7 @@ export default {
             storeCode: item.storeCode,
             outTicketCode: item.outTicketCode,
             productId: item.productId,
+            outTicketTime:this.GoodsReturn_outTicketForReturn.createTime,
             productName: item.productName,
             supplyId: item.supplyId,
             supplyName: item.supplyName,
@@ -297,7 +298,6 @@ export default {
         records: returnDetails,
         outDetails: this.GoodsReturn_outTicketForReturn.details,
       };
-
       this.SaveGoodsReturnRecords(params)
         .then((res) => {
           if (res.resultStatus == 1) {

@@ -141,8 +141,8 @@ public class GoodsReturnRecordImpl extends AbstractService<GoodsReturnRecord> im
                 public Predicate toPredicate(Root<GoodsReturnRecord> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                     Predicate predicate=criteriaBuilder.conjunction();
                     predicate.getExpressions().add(criteriaBuilder.equal(root.get("storeCode"),storeCode));
-                    predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"),begin));
-                    predicate.getExpressions().add(criteriaBuilder.lessThan(root.get("createTime"),newEnd));
+                    predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("outTicketTime"),begin));
+                    predicate.getExpressions().add(criteriaBuilder.lessThan(root.get("outTicketTime"),newEnd));
                     if(!StringUtils.isEmpty(customerId)){
                         predicate.getExpressions().add(criteriaBuilder.equal(root.get("customerId"),Integer.parseInt(customerId)));
                     }

@@ -59,7 +59,6 @@ public class GoodsReturnResource extends BaseResource {
         Result result=new Result();
         StorageOutTicket outTicket=outTicketService.FindTicketForGoodsReturn(storeCode,ticketCode);
         result.setData(outTicket);
-        System.out.println("Rest Call: /goodsReturn/findOutTicketDetails ...");
         return result;
     }
 

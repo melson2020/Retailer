@@ -168,29 +168,29 @@
                   </el-row>
                   <el-divider></el-divider>
                   <el-row class="card-content">
-                    <el-col :span="8">
+                    <el-col :span="12">
                       <span class="green-span"
                         >进价：{{ ticket.outBill.totalPriceIn }}</span
                       ></el-col
                     >
-                    <el-col :span="8"
+                    <el-col :span="12"
                       ><span class="green-span"
                         >成本：{{ ticket.outBill.cost }}</span
                       ></el-col
                     >
                   </el-row>
                   <el-row>
-                    <el-col :span="8"
+                    <el-col :span="12"
                       ><span class="crimson-span"
                         >售价：{{ ticket.outBill.totalPriceOut }}</span
                       ></el-col
                     >
-                    <el-col :span="8"
+                    <!-- <el-col :span="8"
                       ><span class="crimson-span"
                         >去税：{{ ticket.outBill.sales }}</span
                       ></el-col
-                    >
-                    <el-col :span="8"
+                    > -->
+                    <el-col :span="12"
                       ><span class="color-orange"
                         >利润：{{ ticket.outBill.profit }}</span
                       ></el-col
