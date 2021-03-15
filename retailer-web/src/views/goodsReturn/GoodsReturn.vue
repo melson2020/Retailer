@@ -383,6 +383,11 @@ export default {
 .goods-return-empty-data-div {
   padding: 50px;
   color: #909399;
+  color: #e6a23c;
+  font-size: 30px;
+  margin-top: 20px;
+  height: 100px;
+  line-height: 100px;
 }
 .goods-return-el-col-card {
   padding: 20px;

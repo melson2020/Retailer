@@ -55,6 +55,7 @@
       </div>
     </div>
     <div class="content-no-shadow">
+      <span v-if="storageOutRecordList.length<=0" class="non-data-info">未查询到数据</span>
       <el-scrollbar class="content-scrollbar">
         <div
           v-for="(item, index) in storageOutRecordList"
@@ -595,6 +596,14 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 20px;
+}
+.non-data-info {
+  color: #e6a23c;
+  font-size: 30px;
+  padding: 40px;
+  margin-top: 20px;
+  height: 100px;
+  line-height: 100px;
 }
 /* .search-area{
   margin-right: 20px;
