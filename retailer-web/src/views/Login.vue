@@ -83,8 +83,11 @@ export default {
               .then((res) => {
                 if (res.resultStatus == 1) {
                   if (res.data) {
+                    if(res.message!=null)
+                    {
+                      this.$message.warning(res.message);
+                    }
                     localStorage.setItem("userInfo", JSON.stringify(res.data));
-
                     this.SetLoginStatus(res.data);
                     this.ReSetAllStates(initState);
                     this.$router.push({ path: "/main/productStorage" });

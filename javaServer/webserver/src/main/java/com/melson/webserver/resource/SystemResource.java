@@ -88,15 +88,25 @@ public class SystemResource extends BaseResource {
             if(!StringUtils.isEmpty(store.getExpireDate())) {
                 Date date=new Date();
                 Date date2 = sdf.parse(store.getExpireDate());
-                if (date.getTime() > date2.getTime()) {
-                    result.setMessage("shop expired，please contact admin！");
+                long today=date.getTime();
+                long defineDate=date2.getTime();
+                int days = (int) Math.floor((defineDate-today)/(24*3600*1000));
+                if (today > defineDate) {
+                    result.setMessage("商户已过期，请联系软件服务商 melson2020@163.com续费！");
                     result.setResultStatus(-1);
                     return result;
+                }
+                else
+                {
+                    if(days<30)
+                    {
+                        result.setMessage("商户还有"+days+"天过期，请联系软件服务商 melson2020@163.com！");
+                    }
                 }
             }
             else
             {
-                result.setMessage("shop abnormal，please contact admin！");
+                result.setMessage("商户异常，请联系软件服务商 melson2020@163.com！");
                 result.setResultStatus(-1);
                 return result;
             }
