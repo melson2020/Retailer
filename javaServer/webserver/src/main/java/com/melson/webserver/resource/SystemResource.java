@@ -57,7 +57,8 @@ public class SystemResource extends BaseResource {
         store.setCreateDate(new Date());
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.YEAR, 1);
+//        cal.add(Calendar.YEAR, 1);
+        cal.add(Calendar.MONTH, 2);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String ds=df.format(cal.getTime());
         store.setExpireDate(ds);
