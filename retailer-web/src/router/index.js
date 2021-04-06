@@ -28,7 +28,8 @@ const ProductStorageRecord = () => import("../views/report/ProductStorageRecord.
 const GoodsReturn = () => import("../views/goodsReturn/GoodsReturn.vue")
 const Dashboard=()=>import("../views/report/Dashboard.vue")
 const Sysconfig=()=>import("../views/dicts/Sysconfig.vue")
-const ShareView=()=>import('../views/ShareView.vue')
+const ShareView=()=>import("../views/ShareView.vue")
+const InboundReport=()=>import("../views/report/InboundReport.vue")
 
 Vue.use(VueRouter);
 
@@ -187,6 +188,11 @@ const routes = [
         path: "dashboard",
         name: "dashboard",
         component: Dashboard
+      },
+      {
+        path: "InboundReport",
+        name: "InboundReport",
+        component: InboundReport
       },
       {
         path: "pageNotFound",

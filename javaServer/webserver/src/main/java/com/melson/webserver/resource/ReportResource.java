@@ -6,10 +6,12 @@ import com.melson.base.ResultType;
 import com.melson.base.interceptor.RequiredPermission;
 import com.melson.base.interceptor.SecurityLevel;
 import com.melson.webserver.Vo.DashBoardVo;
+import com.melson.webserver.Vo.StorageInReportVO;
 import com.melson.webserver.Vo.StorageRecordVo;
 import com.melson.webserver.entity.GoodsReturnRecord;
 import com.melson.webserver.service.IGoodsReturnRecord;
 import com.melson.webserver.service.IProductStorage;
+import com.melson.webserver.service.IStorageInTicket;
 import com.melson.webserver.service.IStorageOutTicket;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +31,13 @@ public class ReportResource extends BaseResource {
     private final IProductStorage productStorageService;
     private final IStorageOutTicket outTicketService;
     private final IGoodsReturnRecord goodsReturnRecordService;
+    private final IStorageInTicket storageInTicketService;
 
-    public ReportResource(IProductStorage productStorageService, IStorageOutTicket outTicketService, IGoodsReturnRecord goodsReturnRecordService) {
+    public ReportResource(IProductStorage productStorageService, IStorageOutTicket outTicketService, IGoodsReturnRecord goodsReturnRecordService, IStorageInTicket storageInTicketService) {
         this.productStorageService = productStorageService;
         this.outTicketService = outTicketService;
         this.goodsReturnRecordService = goodsReturnRecordService;
+        this.storageInTicketService = storageInTicketService;
     }
 
     @RequestMapping(value = "/productStorageRec")
@@ -90,6 +94,21 @@ public class ReportResource extends BaseResource {
             result.setData(records);
         }
         return result;
+    }
 
+    @RequestMapping(value = "/storageInReport")
+    @RequiredPermission(SecurityLevel.Manager)
+    public Result StorageInReport(HttpServletRequest request){
+        String storeCode = request.getParameter("storeCode");
+        String permission = request.getParameter("permission");
+        if (StringUtils.isEmpty(storeCode)) return this.GenerateResult(ResultType.ParametersNeeded);
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        String supplyId= request.getParameter("supplyId");
+        Result result = new Result();
+        List<StorageInReportVO> voList=storageInTicketService.FindVos(storeCode,startDate,endDate,supplyId);
+        result.setData(voList);
+        System.out.println("Rest Call: /report/storageInReport ...");
+        return result;
     }
 }

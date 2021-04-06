@@ -3,6 +3,8 @@ package com.melson.webserver.service.impl;
 import com.melson.base.AbstractService;
 import com.melson.base.utils.EntityManagerExcuteRs;
 import com.melson.base.utils.EntityManagerUtil;
+import com.melson.base.utils.EntityUtils;
+import com.melson.webserver.Vo.StorageInReportVO;
 import com.melson.webserver.Vo.StoreInTicketVo;
 import com.melson.webserver.dao.IProductBatchDao;
 import com.melson.webserver.dao.IProductStorageDao;
@@ -13,6 +15,7 @@ import com.melson.webserver.entity.ProductStorage;
 import com.melson.webserver.entity.StorageInDetail;
 import com.melson.webserver.entity.StorageInTicket;
 import com.melson.webserver.service.IStorageInTicket;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,6 +128,34 @@ public class StorageInTicketImpl extends AbstractService<StorageInTicket> implem
     @Override
     public List<StorageInDetail> FindTicketDetails(String code) {
         return storageInDetailDao.findByStorageInTicketCode(code);
+    }
+
+    @Override
+    public List<StorageInReportVO> FindVos(String storeCode, String startDate, String endDate, String supplyId) {
+        String sql = "SELECT stit.date,stid.batchNo,stit.employeeName,stid.supplyName,stid.productName,stid.discount,stid.count,stid.countUnit,stid.taxRate,stid.totalPrice from storage_in_ticket stit\n" +
+                "left join storage_in_detail stid on stit.`code`=stid.storageInTicketCode";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date dateEnd = sdf.parse(endDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateEnd);
+            calendar.add(Calendar.DATE, 1);
+            Date newEnd = calendar.getTime();
+            String newDateEnd = sdf.format(newEnd);
+            StringBuffer buffer = new StringBuffer(sql);
+            buffer.append(" where stit.createTime>'" + startDate + "' and stit.createTime<'" + newDateEnd + "'");
+            buffer.append(" and stid.storeCode='" + storeCode + "'");
+            if (!StringUtils.isNullOrEmpty(supplyId)) {
+                buffer.append(" and stid.supplyId=" + supplyId);
+            }
+            String excuteSql = buffer.toString();
+            List<Object[]> list = entityManagerUtil.ExcuteSql(excuteSql);
+            List<StorageInReportVO> vos= EntityUtils.castEntity(list,StorageInReportVO.class,new StorageInReportVO());
+            return vos;
+        }catch (Exception ex)
+        {
+            return null;
+        }
     }
 
     private ProductBatch GenerateBatch(StorageInDetail detail, StorageInTicket ticket) {

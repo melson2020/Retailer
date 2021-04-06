@@ -248,7 +248,7 @@
                 :key="pb.id"
                 class="batch-info-area"
               >
-                <el-col :span="7" class="ver">
+                <el-col :span="9" class="ver">
                   <div class="flex-left">
                     <el-checkbox v-model="pb.checked"></el-checkbox>
                     <!-- <el-radio v-model="pb.checked"></el-radio> -->
@@ -280,7 +280,7 @@
                     >库存:{{ pb.count }} {{ pb.countUnit }}</span
                   >
                 </el-col>
-                <el-col :span="14" class="out-info">
+                <el-col :span="12" class="out-info">
                   <!-- <el-checkbox :checked="pb.outVat == 1" v-model="pb.outVat" disabled
                     >税点</el-checkbox
                   > -->

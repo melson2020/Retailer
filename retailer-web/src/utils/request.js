@@ -239,6 +239,9 @@ export default {
   GetGoodsReturnRecord(params){
     return service.get("/report/goodsReturnRecord",params)
   },
+  GetInboundReportVosReq(params){
+    return service.get("/report/storageInReport",params)
+  },
   /**
    * goodReturn
    */

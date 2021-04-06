@@ -74,6 +74,7 @@ public class StorageInResource extends BaseResource {
             Collections.sort(ticketList);
             result.setData(ticketList);
         }
+        System.out.println("GET Rest Call: /storageIn/storageInRecord ...");
         return result;
     }
 
@@ -90,6 +91,7 @@ public class StorageInResource extends BaseResource {
         }else {
             result.setData(details);
         }
+        System.out.println("GET Rest Call: /storageIn/storageInRecordDetails ...");
         return  result;
     }
 

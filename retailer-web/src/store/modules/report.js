@@ -3,6 +3,7 @@ import { Message } from "element-ui";
 
 const state = {
     productStorageRecords: [],
+    inboundReports: [],
 };
 
 const actions = {
@@ -24,18 +25,34 @@ const actions = {
     },
      // eslint-disable-next-line no-empty-pattern
     GetGoodsReturnRecords({},params){
-       return request.GetGoodsReturnRecord(params);}
+       return request.GetGoodsReturnRecord(params);
+    },
+    GetInboundReportVos({ commit }, params) {
+        request.GetInboundReportVosReq(params).then(res => {
+            if (res.resultStatus == 1) {
+                commit("SetInBoundReportVos", res.data)
+            } else {
+                Message.error(res.message)
+            }
+        }).catch(err => {
+            Message.error(err.message ? err.message : err)
+        })
+    },
 
 };
 
 const getters = {
     productStorageRecords: state => state.productStorageRecords,
-    goodsReturnRecords:state=>state.goodsReturnRecords
+    goodsReturnRecords:state=>state.goodsReturnRecords,
+    inboundReports:state=>state.inboundReports
 };
 
 const mutations = {
     SetProductStorageRecords(state, data) {
         state.productStorageRecords = data;
+    },
+    SetInBoundReportVos(state, data) {
+        state.inboundReports = data;
     },
 };
 

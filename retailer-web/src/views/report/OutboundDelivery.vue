@@ -156,36 +156,32 @@
         :header-cell-style="{ background: '#909399', color: 'white' }"
       >
         }" >
-        <el-table-column prop="date" label="日期" width="90%" sortable>
+        <el-table-column prop="date" label="日期" width="90%" >
         </el-table-column>
         <el-table-column
           prop="outBoundNo"
           label="单号"
-          sortable
         ></el-table-column>
         <el-table-column
           prop="customerName"
           label="客户名称"
           width="auto"
-          sortable
         >
         </el-table-column>
         <el-table-column
           prop="salesName"
           label="销售人员"
-          width="120px"
+          width="100px"
           align="center"
-          sortable
         >
         </el-table-column>
-        <el-table-column prop="product" label="产品" width="auto" sortable>
+        <el-table-column prop="product" label="产品" width="auto" >
         </el-table-column>
         <el-table-column
           prop="supply"
           label="供应商"
-          sortable
         ></el-table-column>
-        <el-table-column prop="batchNo" label="批次" sortable></el-table-column>
+        <el-table-column prop="batchNo" label="批次" ></el-table-column>
         <!-- <el-table-column label="入库单价">
           <template slot-scope="scope">
             {{ scope.row.priceIn }}{{ scope.row.countUnit }}
@@ -204,16 +200,14 @@
         <el-table-column
           prop="totalPrice"
           label="总价"
-          width="80px"
+          width="100px"
           align="center"
-          sortable
         ></el-table-column>
         <el-table-column
           prop="unitProfit"
           label="单个利润"
           width="100px"
           align="center"
-          sortable
         ></el-table-column>
         <el-table-column
           prop="returnCount"
@@ -232,7 +226,6 @@
           label="总利润"
           width="100px"
           align="center"
-          sortable
         >
           <template slot-scope="scope">
             <span class="color-orange">
